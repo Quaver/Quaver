@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
 using Quaver.Shared.Input;
@@ -22,26 +21,58 @@ namespace Quaver.Shared.Screens.Edit.Input
 
         private EditorInputConfigModel _model;
 
-        private Dictionary<EditorKeybindActions, KeybindList> Keybinds => _model.Keybinds;
-        private Dictionary<Keybind, HashSet<EditorKeybindActions>> _keybindActions = [];
+        private InputActionMap<EditorKeybindActions> _keybinds;
 
         public ulong Version { get; private set; }
-
-        // For Yaml
-        public EditorInputConfig()
-        {
-        }
 
         public EditorInputConfig(EditorInputConfigModel model)
         {
             _model = model;
-            RebuildReverseDictionary();
+            _keybinds = new InputActionMap<EditorKeybindActions>(model.Keybinds);
             Version++;
         }
 
         /// <inheritdoc />
         public IReadOnlyDictionary<EditorKeybindActions, KeybindList> ReadOnlyKeybinds =>
-            new ReadOnlyDictionary<EditorKeybindActions, KeybindList>(Keybinds);
+            new ReadOnlyDictionary<EditorKeybindActions, KeybindList>(_model.Keybinds);
+
+        /// <inheritdoc />
+        public KeybindList GetOrDefault(EditorKeybindActions action)
+        {
+            return _keybinds.GetOrDefault(action);
+        }
+
+        /// <inheritdoc />
+        public void AddKeybindToAction(EditorKeybindActions action, Keybind keybind)
+        {
+            Version++;
+            _keybinds.AddKeybindToAction(action, keybind);
+        }
+
+        /// <inheritdoc />
+        public bool RemoveKeybindFromAction(EditorKeybindActions action, Keybind keybind)
+        {
+            if (!_keybinds.RemoveKeybindFromAction(action, keybind))
+                return false;
+
+            Version++;
+            return true;
+
+        }
+
+        /// <inheritdoc />
+        public KeybindList? SetKeybindsForAction(EditorKeybindActions action,
+            KeybindList keybindList)
+        {
+            Version++;
+            return _keybinds.SetKeybindsForAction(action, keybindList);
+        }
+
+        /// <inheritdoc />
+        public bool TryGetActionsFor(Keybind keybind, out HashSet<EditorKeybindActions>? set)
+        {
+            return _keybinds.TryGetActionsFor(keybind, out set);
+        }
 
         public IReadOnlyDictionary<string, KeybindList> PluginKeybinds =>
             new ReadOnlyDictionary<string, KeybindList>(_model.PluginKeybinds);
@@ -64,7 +95,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {
                 using (var file = File.OpenText(ConfigPath))
                     config = Deserialize(file);
-                config.RebuildReverseDictionary();
                 Logger.Debug("Loaded editor key config", LogType.Runtime);
                 config.SaveToConfig(); // Reformat after loading
             }
@@ -82,87 +112,6 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             return config;
         }
-
-        public KeybindList GetOrDefault(EditorKeybindActions action) =>
-            Keybinds.GetValueOrDefault(action, new KeybindList());
-
-        public void AddKeybindToAction(EditorKeybindActions action, Keybind keybind)
-        {
-            if (!Keybinds.TryGetValue(action, out KeybindList? value))
-                Keybinds.Add(action, new KeybindList(keybind));
-            else
-                value.Add(keybind);
-
-            foreach (var matchingKeybind in keybind.MatchingKeybinds())
-            {
-                if (!_keybindActions.TryGetValue(matchingKeybind, out var actions))
-                {
-                    actions = [];
-                    _keybindActions.Add(matchingKeybind, actions);
-                }
-
-                actions.Add(action);
-            }
-
-            Version++;
-        }
-
-        public bool RemoveKeybindFromAction(EditorKeybindActions action, Keybind keybind)
-        {
-            if (!Keybinds.TryGetValue(action, out KeybindList? value) || !value.Remove(keybind))
-                return false;
-
-            var remainingMatchingKeybinds =
-                value.SelectMany(k => k.MatchingKeybinds()).ToHashSet();
-
-            foreach (var matchingKeybind in keybind.MatchingKeybinds())
-            {
-                if (remainingMatchingKeybinds.Contains(matchingKeybind))
-                    continue;
-
-                if (_keybindActions.TryGetValue(matchingKeybind, out var actions))
-                    actions.Remove(action);
-            }
-
-            Version++;
-            return true;
-        }
-
-        /// <inheritdoc />
-        public KeybindList? SetKeybindsForAction(EditorKeybindActions action,
-            KeybindList keybindList)
-        {
-            // Remove from reverse dict
-            var previousList = Keybinds.GetValueOrDefault(action) ?? [];
-            foreach (var keybind in previousList.SelectMany(k => k.MatchingKeybinds()))
-            {
-                if (_keybindActions.TryGetValue(keybind, out var actions))
-                {
-                    actions.Remove(action);
-                }
-            }
-
-            Keybinds[action] = keybindList;
-
-            // Add to reverse dict
-            foreach (var keybind in keybindList.SelectMany(k => k.MatchingKeybinds()))
-            {
-                if (!_keybindActions.TryGetValue(keybind, out var actions))
-                {
-                    actions = [];
-                    _keybindActions.Add(keybind, actions);
-                }
-
-                actions.Add(action);
-            }
-
-            Version++;
-            return previousList;
-        }
-
-        /// <inheritdoc />
-        public bool TryGetActionsFor(Keybind keybind, out HashSet<EditorKeybindActions>? set) =>
-            _keybindActions.TryGetValue(keybind, out set);
 
         public void SaveToConfig()
         {
@@ -195,15 +144,10 @@ namespace Quaver.Shared.Screens.Edit.Input
 
             foreach (var (action, defaultBind) in s_defaultKeybinds)
             {
-                if (!Keybinds.ContainsKey(action))
-                {
-                    var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
-                    Keybinds.Add(action, bind);
+                var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
+                if (_keybinds.SetKeybindsForActionIfNotExits(action, bind))
                     count++;
-                }
             }
-
-            RebuildReverseDictionary();
 
             if (count > 0)
             {
@@ -224,28 +168,10 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             _model.Keybinds = s_defaultKeybinds;
             _model.PluginKeybinds.Clear();
-            RebuildReverseDictionary();
+            _keybinds = new InputActionMap<EditorKeybindActions>(_model.Keybinds);
             SaveToConfig();
             Version++;
             Logger.Debug("Reset editor keybind config file", LogType.Runtime);
-        }
-
-        private void RebuildReverseDictionary()
-        {
-            _keybindActions = new Dictionary<Keybind, HashSet<EditorKeybindActions>>();
-
-            foreach (var (action, keybinds) in Keybinds)
-            {
-                foreach (var keybind in keybinds.MatchingKeybinds())
-                {
-                    if (_keybindActions.ContainsKey(keybind))
-                        _keybindActions[keybind].Add(action);
-                    else
-                        _keybindActions[keybind] = [action];
-                }
-            }
-
-            Version++;
         }
 
         private static EditorInputConfig Deserialize(StreamReader file)
