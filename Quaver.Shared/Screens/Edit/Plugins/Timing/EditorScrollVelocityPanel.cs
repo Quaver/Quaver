@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorScrollVelocityPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
+        public EditorScrollVelocityPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(16), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();

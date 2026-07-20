@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, EditorImGuiOptions.GetOptions(16), screen.ImGuiScale) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, EditorImGuiOptions.GetOptions(18), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
@@ -481,6 +481,25 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
 
             if (!ImGui.BeginMenu("View"))
                 return;
+
+            if (Screen.View is EditScreenView view && ImGui.BeginMenu("Panels"))
+            {
+                if (ImGui.MenuItem("Details", "", view.Details.Visible))
+                    view.Details.SetVisibility(!view.Details.Visible);
+
+                if (ImGui.MenuItem("Composition Tools", "", view.CompositionTools.Visible))
+                    view.CompositionTools.SetVisibility(!view.CompositionTools.Visible);
+
+                if (ImGui.MenuItem("Layers", "", view.Layers.Visible))
+                    view.Layers.SetVisibility(!view.Layers.Visible);
+
+                if (ImGui.MenuItem("Hitsounds", "", view.Hitsounds.Visible))
+                    view.Hitsounds.SetVisibility(!view.Hitsounds.Visible);
+
+                ImGui.EndMenu();
+            }
+
+            ImGui.Separator();
 
             if (ImGui.MenuItem("Display Gameplay Preview", "", Screen.DisplayGameplayPreview.Value))
                 Screen.DisplayGameplayPreview.Value = !Screen.DisplayGameplayPreview.Value;
