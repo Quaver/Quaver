@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Screens.Edit;
+using Quaver.Shared.Screens.Edit.UI.Panels;
 using Wobble.Graphics;
 
 namespace Quaver.Shared.Config;
@@ -9,6 +10,7 @@ public class EditorPanelState
 {
     public Vector2 Position { get; set; } = Vector2.Zero;
     public bool Enabled { get; set; } = true;
+    public bool Collapsed { get; set; }
     public Alignment Alignment { get; set; }
 
     public EditorPanelState()
@@ -21,7 +23,7 @@ public class EditorPanelState
         Enabled = enabled;
     }
 
-    private Drawable GetPanelDrawable(EditorPanelType editorPanelType, EditScreenView editScreenView)
+    private EditorPanel GetPanelDrawable(EditorPanelType editorPanelType, EditScreenView editScreenView)
     {
         switch (editorPanelType)
         {
@@ -42,9 +44,10 @@ public class EditorPanelState
     {
         var targetDrawable = GetPanelDrawable(editorPanelType, editScreenView);
         targetDrawable.Parent = editScreenView.PanelContainer;
+        targetDrawable.Alignment = Alignment;
+        targetDrawable.SetCollapsed(Collapsed);
         targetDrawable.Position = new ScalableVector2(Position.X, Position.Y);
         targetDrawable.Visible = Enabled;
-        targetDrawable.Alignment = Alignment;
     }
 
     public void RetrieveState(EditorPanelType editorPanelType, EditScreenView editScreenView)
@@ -52,6 +55,7 @@ public class EditorPanelState
         var targetDrawable = GetPanelDrawable(editorPanelType, editScreenView);
         Position = new Vector2(targetDrawable.X, targetDrawable.Y);
         Enabled = targetDrawable.Visible;
+        Collapsed = targetDrawable.IsCollapsed;
         Alignment = targetDrawable.Alignment;
     }
 }

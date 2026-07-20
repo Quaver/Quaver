@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Parent = Header,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(20, 20),
-                X = -HeaderText.X
+                X = CollapseButton.X - CollapseButton.Width - HeaderText.X
             };
 
             DeleteLayer.Clicked += (sender, args) =>
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Parent = Header,
                 Alignment = Alignment.MidRight,
                 Size = DeleteLayer.Size,
-                X = DeleteLayer.X - DeleteLayer.Width + DeleteLayer.X
+                X = DeleteLayer.X - DeleteLayer.Width - HeaderText.X
             };
 
             CreateLayer.Clicked += (sender, args) =>
@@ -144,7 +144,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             {
                 Parent = Header,
                 Alignment = Alignment.MidRight,
-                X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
+                X = CreateLayer.X - CreateLayer.Width - HeaderText.X
             };
         }
 
