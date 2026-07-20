@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.API.Maps.Structures;
@@ -82,9 +82,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         public EditorPluginState(ImGuiOptions options) => Options = options;
 
         /// <summary>
-        ///     Pushes all styles to the current imgui context
+        ///     Applies plugin styles to the current imgui context.
+        ///     The renderer installs the configured font as the context default.
         /// </summary>
-        public void PushImguiStyle() => ImGui.PushFont(Options.Fonts.First().Context);
+        public void PushImguiStyle()
+        {
+        }
 
         /// <summary>
         ///     Creates the deep copy of this instance.

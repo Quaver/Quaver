@@ -1,8 +1,9 @@
 using System;
 using System.Numerics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Interop;
@@ -14,8 +15,209 @@ using Wobble.Logging;
 namespace Quaver.Shared.Scripting
 {
     [MoonSharpUserData]
+    public sealed class LuaImFont
+    {
+        [MoonSharpHidden]
+        internal ImFontPtr Pointer { get; }
+
+        public float FontSize => Pointer.LegacySize;
+
+        public float Scale => 1f;
+
+        internal LuaImFont(ImFontPtr pointer) => Pointer = pointer;
+    }
+
+    [MoonSharpUserData]
     public static class ImGuiRedirect
     {
+        [ThreadStatic]
+        private static System.Collections.Generic.HashSet<uint> s_scaledWindows;
+
+        public static LuaImFont GetFont() => new(ImGui.GetFont());
+
+        public static LuaImDrawList GetForegroundDrawList() => new(ImGui.GetForegroundDrawList());
+
+        public static LuaImDrawList GetBackgroundDrawList() => new(ImGui.GetBackgroundDrawList());
+
+        public static LuaImDrawList GetWindowDrawList() => new(ImGui.GetWindowDrawList());
+
+        public static void PushFont(ImFontPtr font) => PushFont(font, font.LegacySize);
+
+        public static void PushFont(LuaImFont font) => PushFont(font.Pointer, font.Pointer.LegacySize);
+
+        public static void PushStyleVar(ImGuiStyleVar styleVar, Vector2 value) => ImGui.PushStyleVar(styleVar, value);
+
+        public static void PushStyleVar(ImGuiStyleVar styleVar, float value)
+        {
+            // ImGui.NET historically allowed Lua to select the scalar overload for vector-valued
+            // style variables. Dear ImGui 1.92 diagnoses that as a type mismatch, so preserve the
+            // established plugin behavior by splatting the scalar across both vector components.
+            if (styleVar is ImGuiStyleVar.WindowPadding or ImGuiStyleVar.WindowMinSize or
+                ImGuiStyleVar.WindowTitleAlign or ImGuiStyleVar.FramePadding or
+                ImGuiStyleVar.ItemSpacing or ImGuiStyleVar.ItemInnerSpacing or
+                ImGuiStyleVar.CellPadding or ImGuiStyleVar.ButtonTextAlign or
+                ImGuiStyleVar.SelectableTextAlign or ImGuiStyleVar.SeparatorTextAlign or
+                ImGuiStyleVar.SeparatorTextPadding)
+            {
+                ImGui.PushStyleVar(styleVar, new Vector2(value));
+                return;
+            }
+
+            ImGui.PushStyleVar(styleVar, value);
+        }
+
+        public static void Text(string text) => ImGui.Text(text ?? string.Empty);
+
+        public static bool InputText(string label, ref string input, uint maxLength) =>
+            ImGui.InputText(label, ref input, maxLength);
+
+        public static bool InputText(
+            string label,
+            ref string input,
+            uint maxLength,
+            ImGuiInputTextFlags flags
+        ) => ImGui.InputText(label, ref input, maxLength, flags);
+
+        public static bool InputTextMultiline(
+            string label,
+            ref string input,
+            uint maxLength,
+            Vector2 size
+        ) => ImGui.InputTextMultiline(label, ref input, maxLength, size);
+
+        public static bool InputTextMultiline(
+            string label,
+            ref string input,
+            uint maxLength,
+            Vector2 size,
+            ImGuiInputTextFlags flags
+        ) => ImGui.InputTextMultiline(label, ref input, maxLength, size, flags);
+
+        public static bool InputTextWithHint(
+            string label,
+            string hint,
+            ref string input,
+            uint maxLength
+        ) => ImGui.InputTextWithHint(label, hint, ref input, maxLength);
+
+        public static bool InputTextWithHint(
+            string label,
+            string hint,
+            ref string input,
+            uint maxLength,
+            ImGuiInputTextFlags flags
+        ) => ImGui.InputTextWithHint(label, hint, ref input, maxLength, flags);
+
+        private static void PushFont(ImFontPtr font, float size) =>
+            ImGui.PushFont(font, size > 0 ? size : ImGui.GetStyle().FontSizeBase);
+
+        private static unsafe ImTextureRef TextureRef(IntPtr textureId) => new(null, textureId);
+
+        public static void Image(IntPtr textureId, Vector2 size) => ImGui.Image(TextureRef(textureId), size);
+
+        public static void Image(IntPtr textureId, Vector2 size, Vector2 uv0) =>
+            ImGui.Image(TextureRef(textureId), size, uv0);
+
+        public static void Image(IntPtr textureId, Vector2 size, Vector2 uv0, Vector2 uv1) =>
+            ImGui.Image(TextureRef(textureId), size, uv0, uv1);
+
+        public static void Image(IntPtr textureId, Vector2 size, Vector2 uv0, Vector2 uv1, Vector4 tint) =>
+            ImGui.ImageWithBg(TextureRef(textureId), size, uv0, uv1, Vector4.Zero, tint);
+
+        public static void Image(
+            IntPtr textureId,
+            Vector2 size,
+            Vector2 uv0,
+            Vector2 uv1,
+            Vector4 tint,
+            Vector4 border
+        ) => ImGui.ImageWithBg(TextureRef(textureId), size, uv0, uv1, border, tint);
+
+        public static bool ImageButton(string id, IntPtr textureId, Vector2 size) =>
+            ImGui.ImageButton(id, TextureRef(textureId), size);
+
+        public static bool ImageButton(string id, IntPtr textureId, Vector2 size, Vector2 uv0) =>
+            ImGui.ImageButton(id, TextureRef(textureId), size, uv0);
+
+        public static bool ImageButton(string id, IntPtr textureId, Vector2 size, Vector2 uv0, Vector2 uv1) =>
+            ImGui.ImageButton(id, TextureRef(textureId), size, uv0, uv1);
+
+        public static bool ImageButton(
+            string id,
+            IntPtr textureId,
+            Vector2 size,
+            Vector2 uv0,
+            Vector2 uv1,
+            Vector4 background
+        ) => ImGui.ImageButton(id, TextureRef(textureId), size, uv0, uv1, background);
+
+        public static bool ImageButton(
+            string id,
+            IntPtr textureId,
+            Vector2 size,
+            Vector2 uv0,
+            Vector2 uv1,
+            Vector4 background,
+            Vector4 tint
+        ) => ImGui.ImageButton(id, TextureRef(textureId), size, uv0, uv1, background, tint);
+
+        /// <summary>
+        ///     Dear ImGui 1.92 removed SetWindowFontScale in favor of dynamically-sized PushFont calls.
+        ///     Keep the Lua API compatible while requesting a newly rasterized size from the font atlas.
+        /// </summary>
+        public static void SetWindowFontScale(float scale)
+        {
+            var windowId = ImGui.GetID("###QuaverLegacyFontScale");
+            s_scaledWindows ??= new System.Collections.Generic.HashSet<uint>();
+
+            if (s_scaledWindows.Contains(windowId))
+                ImGui.PopFont();
+
+            var style = ImGui.GetStyle();
+            var globalScale = style.FontScaleMain * style.FontScaleDpi;
+            var unscaledSize = globalScale > 0 ? ImGui.GetFontSize() / globalScale : style.FontSizeBase;
+            ImGui.PushFont(ImGui.GetFont(), unscaledSize * scale);
+            s_scaledWindows.Add(windowId);
+        }
+
+        public static void End()
+        {
+            PopWindowFontScale();
+            ImGui.End();
+        }
+
+        public static void EndChild()
+        {
+            PopWindowFontScale();
+            ImGui.EndChild();
+        }
+
+        private static void PopWindowFontScale()
+        {
+            if (s_scaledWindows == null)
+                return;
+
+            var windowId = ImGui.GetID("###QuaverLegacyFontScale");
+
+            if (!s_scaledWindows.Remove(windowId))
+                return;
+
+            ImGui.PopFont();
+        }
+
+        [MoonSharpHidden]
+        public static void ResetWindowFontScales()
+        {
+            if (s_scaledWindows == null)
+                return;
+
+            while (s_scaledWindows.Count > 0)
+            {
+                ImGui.PopFont();
+                s_scaledWindows.Remove(s_scaledWindows.Last());
+            }
+        }
+
         public static void BeginPopupContextWindow() => ImGui.BeginPopupContextWindow();
 
         public static void BeginPopupContextWindow(string str_id) => ImGui.BeginPopupContextWindow(str_id);
@@ -247,11 +449,101 @@ namespace Quaver.Shared.Scripting
         public static void TreeAdvanceToLabelPos() =>
             ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetTreeNodeToLabelSpacing());
 
-        public static void TreePush() => ImGui.TreePush(null);
+        public static unsafe void TreePush() => ImGui.TreePush((byte*)null);
 
-        public static void TreePush(nint ptr_id) => ImGui.TreePush(ptr_id);
+        public static unsafe void TreePush(nint ptr_id) => ImGui.TreePush((void*)ptr_id);
 
         public static void TreePush(string str_id) => ImGui.TreePush(str_id);
+
+        private static bool ScalarInputResult(bool changed, ImGuiInputTextFlags flags) =>
+            (flags & ImGuiInputTextFlags.EnterReturnsTrue) != 0 ? ImGui.IsItemDeactivatedAfterEdit() : changed;
+
+        public static bool InputFloat(string label, ref float value) => ImGui.InputFloat(label, ref value);
+
+        public static bool InputFloat(string label, ref float value, float step) =>
+            ImGui.InputFloat(label, ref value, step);
+
+        public static bool InputFloat(string label, ref float value, float step, float step_fast) =>
+            ImGui.InputFloat(label, ref value, step, step_fast);
+
+        public static bool InputFloat(string label, ref float value, float step, float step_fast, string format) =>
+            ImGui.InputFloat(label, ref value, step, step_fast, format);
+
+        public static bool InputFloat(
+            string label,
+            ref float value,
+            float step,
+            float step_fast,
+            string format,
+            ImGuiInputTextFlags flags
+        ) => ScalarInputResult(
+            ImGui.InputFloat(label, ref value, step, step_fast, format,
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
+
+        public static bool InputDouble(string label, ref double value) => ImGui.InputDouble(label, ref value);
+
+        public static bool InputDouble(string label, ref double value, double step) =>
+            ImGui.InputDouble(label, ref value, step);
+
+        public static bool InputDouble(string label, ref double value, double step, double step_fast) =>
+            ImGui.InputDouble(label, ref value, step, step_fast);
+
+        public static bool InputDouble(string label, ref double value, double step, double step_fast, string format) =>
+            ImGui.InputDouble(label, ref value, step, step_fast, format);
+
+        public static bool InputDouble(
+            string label,
+            ref double value,
+            double step,
+            double step_fast,
+            string format,
+            ImGuiInputTextFlags flags
+        ) => ScalarInputResult(
+            ImGui.InputDouble(label, ref value, step, step_fast, format,
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
+
+        public static bool InputInt(string label, ref int value) => ImGui.InputInt(label, ref value);
+
+        public static bool InputInt(string label, ref int value, int step) => ImGui.InputInt(label, ref value, step);
+
+        public static bool InputInt(string label, ref int value, int step, int step_fast) =>
+            ImGui.InputInt(label, ref value, step, step_fast);
+
+        public static bool InputInt(
+            string label,
+            ref int value,
+            int step,
+            int step_fast,
+            ImGuiInputTextFlags flags
+        ) => ScalarInputResult(
+            ImGui.InputInt(label, ref value, step, step_fast, flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
+
+        public static bool InputFloat2(string label, ref Vector2 value) => ImGui.InputFloat2(label, ref value);
+
+        public static bool InputFloat2(string label, ref Vector2 value, string format) =>
+            ImGui.InputFloat2(label, ref value, format);
+
+        public static bool InputFloat2(string label, ref Vector2 value, string format, ImGuiInputTextFlags flags) =>
+            ScalarInputResult(ImGui.InputFloat2(label, ref value, format,
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
+
+        public static bool InputFloat3(string label, ref Vector3 value) => ImGui.InputFloat3(label, ref value);
+
+        public static bool InputFloat3(string label, ref Vector3 value, string format) =>
+            ImGui.InputFloat3(label, ref value, format);
+
+        public static bool InputFloat3(string label, ref Vector3 value, string format, ImGuiInputTextFlags flags) =>
+            ScalarInputResult(ImGui.InputFloat3(label, ref value, format,
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
+
+        public static bool InputFloat4(string label, ref Vector4 value) => ImGui.InputFloat4(label, ref value);
+
+        public static bool InputFloat4(string label, ref Vector4 value, string format) =>
+            ImGui.InputFloat4(label, ref value, format);
+
+        public static bool InputFloat4(string label, ref Vector4 value, string format, ImGuiInputTextFlags flags) =>
+            ScalarInputResult(ImGui.InputFloat4(label, ref value, format,
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
 
         public static bool DragInt2(string label, ref int[] v) => ImGui.DragInt2(label, ref Safe(v));
 
@@ -505,7 +797,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt2(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
 
         public static bool InputInt2(string label, ref int[] v, ImGuiInputTextFlags flags) =>
-            ImGui.InputInt2(label, ref Safe(v), flags);
+            ScalarInputResult(ImGui.InputInt2(label, ref Safe(v),
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
 
         public static bool InputInt2(string label, ref Vector2 v)
         {
@@ -519,7 +812,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt2(string label, ref Vector2 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y };
-            var ret = ImGui.InputInt2(label, ref span[0], flags);
+            var ret = ScalarInputResult(ImGui.InputInt2(label, ref span[0],
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
             v.X = span[0];
             v.Y = span[1];
             return ret;
@@ -528,7 +822,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt3(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
 
         public static bool InputInt3(string label, ref int[] v, ImGuiInputTextFlags flags) =>
-            ImGui.InputInt2(label, ref Safe(v), flags);
+            ScalarInputResult(ImGui.InputInt3(label, ref Safe(v),
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
 
         public static bool InputInt3(string label, ref Vector3 v)
         {
@@ -543,7 +838,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt3(string label, ref Vector3 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z };
-            var ret = ImGui.InputInt3(label, ref span[0], flags);
+            var ret = ScalarInputResult(ImGui.InputInt3(label, ref span[0],
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
             v.X = span[0];
             v.Y = span[1];
             v.Z = span[2];
@@ -553,7 +849,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt4(string label, ref int[] v) => ImGui.InputInt2(label, ref Safe(v));
 
         public static bool InputInt4(string label, ref int[] v, ImGuiInputTextFlags flags) =>
-            ImGui.InputInt2(label, ref Safe(v), flags);
+            ScalarInputResult(ImGui.InputInt4(label, ref Safe(v),
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
 
         public static bool InputInt4(string label, ref Vector4 v)
         {
@@ -569,7 +866,8 @@ namespace Quaver.Shared.Scripting
         public static bool InputInt4(string label, ref Vector4 v, ImGuiInputTextFlags flags)
         {
             Span<int> span = stackalloc[] { (int)v.X, (int)v.Y, (int)v.Z, (int)v.W };
-            var ret = ImGui.InputInt4(label, ref span[0], flags);
+            var ret = ScalarInputResult(ImGui.InputInt4(label, ref span[0],
+                flags & ~ImGuiInputTextFlags.EnterReturnsTrue), flags);
             v.X = span[0];
             v.Y = span[1];
             v.Z = span[2];
@@ -821,11 +1119,48 @@ namespace Quaver.Shared.Scripting
         /// <param name="str"></param>
         /// <returns></returns>
         [MoonSharpHidden]
-        public static DynValue GetWrappedFunctionThatPacksReturnedVectors(this IUserDataDescriptor that, string str) =>
-            that.Index(null, null, DynValue.NewString(str), true) is var ret &&
-            ret is { Callback.ClrCallback: { } clr }
-                ? DynValue.NewCallback((context, args) => PackVector(context, clr(context, args))).AsReadOnly()
-                : ret;
+        public static DynValue GetWrappedFunctionThatPacksReturnedVectors(this IUserDataDescriptor that, string str)
+        {
+            var ret = that.Index(null, null, DynValue.NewString(str), true);
+            if (ret is not { Callback.ClrCallback: { } clr })
+                return ret;
+
+            return DynValue.NewCallback(
+                (context, args) =>
+                {
+                    try
+                    {
+                        return PackVector(context, clr(context, args));
+                    }
+                    catch (ScriptRuntimeException e) when (e.Message.Contains("doesn't match any overload"))
+                    {
+                        var argumentTypes = string.Join(
+                            ", ",
+                            Enumerable.Range(0, args.Count).Select(i => DescribeLuaArgument(args[i]))
+                        );
+
+                        throw new ScriptRuntimeException($"imgui.{str}({argumentTypes}): {e.Message}");
+                    }
+                }
+            ).AsReadOnly();
+        }
+
+        [MoonSharpHidden]
+        private static string DescribeLuaArgument(DynValue value)
+        {
+            if (value.Type == DataType.UserData)
+                return $"userdata<{value.UserData?.Object?.GetType().FullName ?? "unknown"}>";
+
+            if (value.Type == DataType.Table)
+            {
+                var numericComponents = Enumerable.Range(1, 4)
+                    .TakeWhile(i => value.Table.Get(i).Type == DataType.Number)
+                    .Count();
+                return numericComponents > 0 ? $"table<Vector{numericComponents}>" : "table";
+            }
+
+            return value.Type.ToString().ToLowerInvariant();
+        }
 
         /// <summary>
         ///     Packs the numbers into a table.
@@ -848,7 +1183,7 @@ namespace Quaver.Shared.Scripting
         // Superseded by 'SetNextItemAllowOverlap' (called before an item)
         public static DynValue SetItemAllowOverlap(ScriptExecutionContext _, CallbackArguments __) => DynValue.Nil;
 
-        public static ImDrawListPtr GetOverlayDrawList() => ImGui.GetForegroundDrawList();
+        public static LuaImDrawList GetOverlayDrawList() => new(ImGui.GetForegroundDrawList());
 
         /// <summary>
         ///     Determines whether the given global is set to <see keyword="true"/>.

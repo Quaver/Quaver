@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
@@ -81,7 +81,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 24, 0));
 
             if (!ImGui.BeginMainMenuBar())
+            {
+                ImGui.PopStyleColor(2);
+                ImGui.PopStyleVar(3);
                 return;
+            }
 
             Height = ImGui.GetWindowSize().Y;
 
@@ -95,18 +99,18 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
             CreateKeybindsSection();
             CreateHelpSection();
 
-            ImGui.EndMenuBar();
+            ImGui.EndMainMenuBar();
             Button.IsGloballyClickable = !ImGui.IsAnyItemHovered();
             IsActive = ImGui.IsAnyItemActive() || ImGui.IsAnyItemHovered() || ImGui.IsAnyItemFocused();
 
-            ImGui.PopStyleVar();
+            ImGui.PopStyleColor(2);
+            ImGui.PopStyleVar(3);
         }
 
         /// <summary>
         /// </summary>
         private void CreateFileSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("File"))
                 return;
@@ -205,7 +209,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateEditSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Edit"))
                 return;
@@ -477,7 +480,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateViewSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("View"))
                 return;
@@ -851,7 +853,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateToolsSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Tools"))
                 return;
@@ -886,7 +887,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreatePluginsSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Plugins"))
                 return;
@@ -987,7 +987,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateHelpSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Help"))
                 return;
@@ -1017,7 +1016,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateWebSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Web"))
                 return;
@@ -1035,7 +1033,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateAudioSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Audio"))
                 return;
@@ -1095,7 +1092,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         /// </summary>
         private void CreateKeybindsSection()
         {
-            ImGui.PushFont(Options.Fonts.First().Context);
 
             if (!ImGui.BeginMenu("Keybinds"))
                 return;

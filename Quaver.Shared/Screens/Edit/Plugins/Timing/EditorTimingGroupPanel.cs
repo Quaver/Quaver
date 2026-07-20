@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Force.DeepCloner;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps;
@@ -132,7 +132,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 return;
 
             ImGui.SetNextWindowSizeConstraints(new Vector2(356, 0), new Vector2(600, float.MaxValue));
-            ImGui.PushFont(Options.Fonts.First().Context);
             ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
             ImGui.Begin(Name);
 
@@ -166,7 +165,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
 
             ImGui.End();
-            ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
+            ((IColoredImGuiTitle)this).ImGuiPopTitleColors();
         }
 
         private static void DrawObjectColoringToggle()

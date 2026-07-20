@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Input;
@@ -81,7 +81,6 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     protected override void RenderImguiLayout()
     {
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
-        ImGui.PushFont(Options.Fonts.First().Context);
         ImGui.Begin(Name);
         IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
