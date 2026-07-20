@@ -67,6 +67,10 @@ namespace Quaver.Shared.Screens.Edit
     {
         static readonly TimeSpan _backupInterval = TimeSpan.FromMinutes(5);
 
+        private const int ManualChangesCheckDelay = 250;
+        private const int ManualChangesCheckRetryDelay = 250;
+        private const int ManualChangesCheckRetryCount = 20;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -337,6 +341,18 @@ namespace Quaver.Shared.Screens.Edit
         /// <summary>
         /// </summary>
         private bool ManualChangesDialogOpen { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private bool ManualChangesCheckQueued { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private string LastKnownMapFileChecksum { get; set; } = string.Empty;
+
+        /// <summary>
+        /// </summary>
+        private string MapFilePath => $"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}";
 
         private double LastSeekDistance;
 
@@ -1521,14 +1537,25 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         private void SaveWorkingMap()
         {
-            if (Map.Game == MapGame.Quaver)
+            var filePath = MapFilePath;
+            var isFileWatcherEnabled = Map.Game == MapGame.Quaver && FileWatcher != null;
+
+            if (isFileWatcherEnabled)
                 FileWatcher.EnableRaisingEvents = false;
 
-            var map = WorkingMap.DeepClone();
-            map.Save($"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}");
+            try
+            {
+                var map = WorkingMap.DeepClone();
+                map.Save(filePath);
 
-            if (Map.Game == MapGame.Quaver)
-                FileWatcher.EnableRaisingEvents = true;
+                if (Map.Game == MapGame.Quaver)
+                    RefreshLastKnownMapFileChecksum(filePath);
+            }
+            finally
+            {
+                if (isFileWatcherEnabled)
+                    FileWatcher.EnableRaisingEvents = true;
+            }
         }
 
         /// <summary>
@@ -1541,6 +1568,16 @@ namespace Quaver.Shared.Screens.Edit
 
             NotificationManager.Show(NotificationLevel.Info,
                 $"The cached data for this file will be updated when you leave the editor.");
+        }
+
+        /// <summary>
+        ///     Loads the audio referenced by the current contents of the map file rather than the cached map metadata.
+        /// </summary>
+        public IAudioTrack LoadAudioTrackFromMapFile()
+        {
+            var path = $"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}";
+            var refreshedMap = Map.FromQua(Map.LoadQua(), path);
+            return AudioEngine.LoadMapAudioTrack(refreshedMap);
         }
 
         /// <summary>
@@ -1987,25 +2024,110 @@ namespace Quaver.Shared.Screens.Edit
                 return;
 
             FileWatcher = new FileSystemWatcher(dir) { NotifyFilter = NotifyFilters.LastWrite, Filter = $"{Map.Path}" };
+            RefreshLastKnownMapFileChecksum(MapFilePath);
 
-            FileWatcher.Changed += (sender, args) =>
-            {
-                lock (ManualChangesDialogLock)
-                {
-                    if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
-                        return;
-
-                    ManualChangesDialogOpen = true;
-                }
-
-                DialogManager.Show(new EditorManualChangesDialog(this, () =>
-                {
-                    lock (ManualChangesDialogLock)
-                        ManualChangesDialogOpen = false;
-                }));
-            };
+            FileWatcher.Changed += (sender, args) => QueueManualChangesCheck(args.FullPath);
 
             FileWatcher.EnableRaisingEvents = true;
+        }
+
+        private void QueueManualChangesCheck(string path)
+        {
+            lock (ManualChangesDialogLock)
+            {
+                if (ManualChangesCheckQueued)
+                    return;
+
+                ManualChangesCheckQueued = true;
+            }
+
+            ThreadScheduler.RunAfter(() => CheckForManualChanges(path, 0), ManualChangesCheckDelay);
+        }
+
+        private void CheckForManualChanges(string path, int retries)
+        {
+            var checksum = GetMapFileChecksum(path);
+
+            if (checksum == string.Empty && retries < ManualChangesCheckRetryCount)
+            {
+                ThreadScheduler.RunAfter(() => CheckForManualChanges(path, retries + 1), ManualChangesCheckRetryDelay);
+                return;
+            }
+
+            if (IsAnotherDialogOpen() && retries < ManualChangesCheckRetryCount)
+            {
+                ThreadScheduler.RunAfter(() => CheckForManualChanges(path, retries + 1), ManualChangesCheckRetryDelay);
+                return;
+            }
+
+            if (ShouldIgnoreFileChange(checksum))
+                return;
+
+            DialogManager.Show(new EditorManualChangesDialog(this, () =>
+            {
+                lock (ManualChangesDialogLock)
+                    ManualChangesDialogOpen = false;
+            }));
+        }
+
+        private bool IsAnotherDialogOpen()
+        {
+            lock (ManualChangesDialogLock)
+                return !ManualChangesDialogOpen && DialogManager.Dialogs.Count != 0;
+        }
+
+        private bool ShouldIgnoreFileChange(string checksum)
+        {
+            lock (ManualChangesDialogLock)
+            {
+                ManualChangesCheckQueued = false;
+
+                if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
+                    return true;
+
+                if (checksum == string.Empty)
+                    return true;
+
+                if (LastKnownMapFileChecksum == string.Empty)
+                {
+                    LastKnownMapFileChecksum = checksum;
+                    return true;
+                }
+
+                if (checksum == LastKnownMapFileChecksum)
+                    return true;
+
+                LastKnownMapFileChecksum = checksum;
+                ManualChangesDialogOpen = true;
+                return false;
+            }
+        }
+
+        private void RefreshLastKnownMapFileChecksum(string path)
+        {
+            var checksum = GetMapFileChecksum(path);
+
+            if (checksum == string.Empty)
+                return;
+
+            lock (ManualChangesDialogLock)
+                LastKnownMapFileChecksum = checksum;
+        }
+
+        private static string GetMapFileChecksum(string path)
+        {
+            try
+            {
+                return MapsetHelper.GetMd5Checksum(path);
+            }
+            catch (IOException)
+            {
+                return string.Empty;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return string.Empty;
+            }
         }
 
         private int StepAndWrapNumber(Direction direction, int i, int max)

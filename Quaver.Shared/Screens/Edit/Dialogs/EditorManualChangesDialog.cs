@@ -10,7 +10,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             "There were manual changes detected to the .qua file.\nWould you like to reload the editor?", () =>
             {
                 screen.RefreshFileCache();
-                screen.Exit(() => new EditScreen(screen.Map));
+                screen.Exit(() => new EditScreen(screen.Map, screen.LoadAudioTrackFromMapFile()));
             }, onDismiss)
         {
         }
