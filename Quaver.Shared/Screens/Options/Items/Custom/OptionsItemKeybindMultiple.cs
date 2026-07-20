@@ -65,6 +65,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             };
 
             ResetButton.SetIcon(UserInterface.HubDownloadRetry, new Vector2(20, 20));
+            ResetButton.SetChildrenAlpha = false;
 
             ResetButton.Clicked += (sender, args) =>
             {

@@ -171,9 +171,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public void UpdateLongNoteSizeAndAlpha()
         {
-            if (!Info.IsLongNote)
-                return;
-
             Body.Height = GetLongNoteHeight();
             Body.Y = -Body.Height + Height / 2f;
             Tail.Y = -Body.Height;
