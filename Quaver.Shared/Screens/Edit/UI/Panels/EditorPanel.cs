@@ -22,6 +22,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
         private NineSliceSprite CollapsedBackground { get; }
 
+        private bool StopUpdatingAfterFrame { get; set; }
+
         /// <summary>
         /// </summary>
         public Container Header { get; private set; }
@@ -76,6 +78,24 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         {
             if (!IsCollapsed)
                 base.DrawToSpriteBatch();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Allows disabled buttons to clear their transient input state before a hidden panel stops updating.
+        /// </summary>
+        public override void Update(GameTime gameTime)
+        {
+            if (StopUpdatingAfterFrame)
+                SetInteractionEnabled(this, false);
+
+            base.Update(gameTime);
+
+            if (!StopUpdatingAfterFrame)
+                return;
+
+            StopUpdatingAfterFrame = false;
+            UpdateWhenInvisible = false;
         }
 
         /// <summary>
@@ -148,6 +168,33 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
 
             if (!collapsed)
                 ClampToWindow();
+        }
+
+        /// <summary>
+        ///     Shows or hides the panel and keeps its button subtree from receiving input while hidden.
+        /// </summary>
+        /// <param name="visible"></param>
+        public void SetVisibility(bool visible)
+        {
+            Visible = visible;
+            SetInteractionEnabled(this, visible);
+
+            UpdateWhenInvisible = true;
+            StopUpdatingAfterFrame = !visible;
+        }
+
+        /// <summary>
+        ///     Enables or disables interaction for all buttons in a drawable subtree.
+        /// </summary>
+        /// <param name="drawable"></param>
+        /// <param name="enabled"></param>
+        private static void SetInteractionEnabled(Drawable drawable, bool enabled)
+        {
+            if (drawable is Button button)
+                button.IsInteractionEnabled = enabled;
+
+            foreach (var child in drawable.Children)
+                SetInteractionEnabled(child, enabled);
         }
 
         /// <summary>

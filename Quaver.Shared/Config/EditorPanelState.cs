@@ -47,7 +47,7 @@ public class EditorPanelState
         targetDrawable.Alignment = Alignment;
         targetDrawable.SetCollapsed(Collapsed);
         targetDrawable.Position = new ScalableVector2(Position.X, Position.Y);
-        targetDrawable.Visible = Enabled;
+        targetDrawable.SetVisibility(Enabled);
     }
 
     public void RetrieveState(EditorPanelType editorPanelType, EditScreenView editScreenView)
