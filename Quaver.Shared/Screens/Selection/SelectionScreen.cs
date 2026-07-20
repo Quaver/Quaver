@@ -937,6 +937,7 @@ namespace Quaver.Shared.Screens.Selection
                 if (index >= 0 && index < AvailableMapsets.Value.Count)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value[index]);
+                    ShowActiveScrollContainer();
                     return;
                 }
 
@@ -969,6 +970,7 @@ namespace Quaver.Shared.Screens.Selection
                 if (mapsetIndex == -1 && AvailableMapsets.Value.Count != 0)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value.First());
+                    ShowActiveScrollContainer();
                     return;
                 }
 
@@ -995,6 +997,11 @@ namespace Quaver.Shared.Screens.Selection
                 ActiveScrollContainer.Value = SelectScrollContainerType.Playlists);
             return true;
         }
+
+        /// <summary>
+        ///     Moves the active scroll container back on-screen after the mapset list has been refreshed.
+        /// </summary>
+        private void ShowActiveScrollContainer() => View.Container.AddScheduledUpdate(ActiveScrollContainer.TriggerChange);
 
         /// <summary>
         /// </summary>
