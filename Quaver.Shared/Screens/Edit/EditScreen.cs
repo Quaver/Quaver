@@ -69,6 +69,7 @@ namespace Quaver.Shared.Screens.Edit
 
         private const int ManualChangesCheckDelay = 250;
         private const int ManualChangesCheckRetryDelay = 250;
+        private const int ManualChangesCheckBlockedRetryDelay = 1000;
         private const int ManualChangesCheckRetryCount = 20;
 
         /// <inheritdoc />
@@ -348,6 +349,10 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        private bool ManualChangesWatcherStopped { get; set; }
+
+        /// <summary>
+        /// </summary>
         private string LastKnownMapFileChecksum { get; set; } = string.Empty;
 
         /// <summary>
@@ -391,7 +396,15 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null)
+        public EditScreen(Map map, IAudioTrack track = null, EditorVisualTestBackground visualTestBackground = null) : this(map, track, visualTestBackground, false)
+        {
+        }
+
+        private EditScreen(Map map, bool loadAudioTrackFromMapFile) : this(map, null, null, loadAudioTrackFromMapFile)
+        {
+        }
+
+        private EditScreen(Map map, IAudioTrack track, EditorVisualTestBackground visualTestBackground, bool loadAudioTrackFromMapFile)
         {
             EditorPluginUtils.EditScreen = this;
             Map = map;
@@ -402,9 +415,13 @@ namespace Quaver.Shared.Screens.Edit
                 OriginalQua = map.LoadQua();
                 WorkingMap = OriginalQua.DeepClone();
                 heldLivemapHitObjectInfos = new HitObjectInfo[WorkingMap.GetKeyCount() + 1];
+
+                if (loadAudioTrackFromMapFile)
+                    track = LoadAudioTrackFromMapFile(OriginalQua);
             }
             catch (Exception e)
             {
+                track?.Dispose();
                 Exit(() => new SelectionScreen());
 
                 Logger.Error(e, LogType.Runtime);
@@ -517,6 +534,18 @@ namespace Quaver.Shared.Screens.Edit
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="delay"></param>
+        /// <param name="type"></param>
+        public override void Exit(Func<QuaverScreen> screen, int delay = 0, QuaverScreenChangeType type = QuaverScreenChangeType.CompleteChange)
+        {
+            StopManualChangesWatcher();
+            base.Exit(screen, delay, type);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public override void Destroy()
         {
             Track.Seeked -= OnTrackSeeked;
@@ -540,7 +569,7 @@ namespace Quaver.Shared.Screens.Edit
             SelectedHitObjects.Dispose();
             SelectedLayer.Dispose();
             ActiveLeftPanel.Dispose();
-            FileWatcher?.Dispose();
+            StopManualChangesWatcher();
 
             if (PlayfieldScrollSpeed != ConfigManager.EditorScrollSpeedKeys)
                 PlayfieldScrollSpeed.Dispose();
@@ -1571,12 +1600,26 @@ namespace Quaver.Shared.Screens.Edit
         }
 
         /// <summary>
+        ///     Reloads the editor after confirmed external changes to the current .qua file.
+        /// </summary>
+        public void ReloadFromManualChanges()
+        {
+            lock (ManualChangesDialogLock)
+            {
+                if (ManualChangesWatcherStopped || Exiting)
+                    return;
+            }
+
+            RefreshFileCache();
+            Exit(() => new EditScreen(Map, true));
+        }
+
+        /// <summary>
         ///     Loads the audio referenced by the current contents of the map file rather than the cached map metadata.
         /// </summary>
-        public IAudioTrack LoadAudioTrackFromMapFile()
+        private IAudioTrack LoadAudioTrackFromMapFile(Qua qua)
         {
-            var path = $"{ConfigManager.SongDirectory}/{Map.Directory}/{Map.Path}";
-            var refreshedMap = Map.FromQua(Map.LoadQua(), path);
+            var refreshedMap = Map.FromQua(qua, MapFilePath);
             return AudioEngine.LoadMapAudioTrack(refreshedMap);
         }
 
@@ -2026,6 +2069,9 @@ namespace Quaver.Shared.Screens.Edit
             FileWatcher = new FileSystemWatcher(dir) { NotifyFilter = NotifyFilters.LastWrite, Filter = $"{Map.Path}" };
             RefreshLastKnownMapFileChecksum(MapFilePath);
 
+            lock (ManualChangesDialogLock)
+                ManualChangesWatcherStopped = false;
+
             FileWatcher.Changed += (sender, args) => QueueManualChangesCheck(args.FullPath);
 
             FileWatcher.EnableRaisingEvents = true;
@@ -2035,33 +2081,41 @@ namespace Quaver.Shared.Screens.Edit
         {
             lock (ManualChangesDialogLock)
             {
+                if (ShouldStopManualChangesCheck())
+                    return;
+
                 if (ManualChangesCheckQueued)
                     return;
 
                 ManualChangesCheckQueued = true;
             }
 
-            ThreadScheduler.RunAfter(() => CheckForManualChanges(path, 0), ManualChangesCheckDelay);
+            ScheduleManualChangesCheck(path, 0, ManualChangesCheckDelay);
         }
 
         private void CheckForManualChanges(string path, int retries)
         {
+            if (CancelManualChangesCheckIfStopped())
+                return;
+
             var checksum = GetMapFileChecksum(path);
 
-            if (checksum == string.Empty && retries < ManualChangesCheckRetryCount)
+            if (CancelManualChangesCheckIfStopped())
+                return;
+
+            if (checksum == string.Empty)
             {
-                ThreadScheduler.RunAfter(() => CheckForManualChanges(path, retries + 1), ManualChangesCheckRetryDelay);
+                ScheduleManualChangesRetry(path, retries);
                 return;
             }
 
-            if (IsAnotherDialogOpen() && retries < ManualChangesCheckRetryCount)
+            if (!TryBeginManualChangesDialog(checksum, out var retry))
             {
-                ThreadScheduler.RunAfter(() => CheckForManualChanges(path, retries + 1), ManualChangesCheckRetryDelay);
+                if (retry)
+                    ScheduleManualChangesRetry(path, retries);
+
                 return;
             }
-
-            if (ShouldIgnoreFileChange(checksum))
-                return;
 
             DialogManager.Show(new EditorManualChangesDialog(this, () =>
             {
@@ -2070,37 +2124,83 @@ namespace Quaver.Shared.Screens.Edit
             }));
         }
 
-        private bool IsAnotherDialogOpen()
+        private void ScheduleManualChangesRetry(string path, int retries)
         {
-            lock (ManualChangesDialogLock)
-                return !ManualChangesDialogOpen && DialogManager.Dialogs.Count != 0;
+            var delay = retries < ManualChangesCheckRetryCount
+                ? ManualChangesCheckRetryDelay
+                : ManualChangesCheckBlockedRetryDelay;
+
+            var nextRetries = retries < ManualChangesCheckRetryCount
+                ? retries + 1
+                : ManualChangesCheckRetryCount;
+
+            ScheduleManualChangesCheck(path, nextRetries, delay);
         }
 
-        private bool ShouldIgnoreFileChange(string checksum)
+        private void ScheduleManualChangesCheck(string path, int retries, int delay)
+            => ThreadScheduler.RunAfter(() => CheckForManualChanges(path, retries), delay);
+
+        private bool TryBeginManualChangesDialog(string checksum, out bool retry)
         {
+            retry = false;
+
             lock (ManualChangesDialogLock)
             {
+                if (ShouldStopManualChangesCheck() || ManualChangesDialogOpen)
+                {
+                    ManualChangesCheckQueued = false;
+                    return false;
+                }
+
+                if (DialogManager.Dialogs.Count != 0 || checksum == string.Empty)
+                {
+                    retry = true;
+                    return false;
+                }
+
                 ManualChangesCheckQueued = false;
-
-                if (ManualChangesDialogOpen || DialogManager.Dialogs.Count != 0)
-                    return true;
-
-                if (checksum == string.Empty)
-                    return true;
 
                 if (LastKnownMapFileChecksum == string.Empty)
                 {
                     LastKnownMapFileChecksum = checksum;
-                    return true;
+                    return false;
                 }
 
                 if (checksum == LastKnownMapFileChecksum)
-                    return true;
+                    return false;
 
                 LastKnownMapFileChecksum = checksum;
                 ManualChangesDialogOpen = true;
-                return false;
+                return true;
             }
+        }
+
+        private bool CancelManualChangesCheckIfStopped()
+        {
+            lock (ManualChangesDialogLock)
+            {
+                if (!ShouldStopManualChangesCheck())
+                    return false;
+
+                ManualChangesCheckQueued = false;
+                ManualChangesDialogOpen = false;
+                return true;
+            }
+        }
+
+        private bool ShouldStopManualChangesCheck() => ManualChangesWatcherStopped || Exiting;
+
+        private void StopManualChangesWatcher()
+        {
+            lock (ManualChangesDialogLock)
+            {
+                ManualChangesWatcherStopped = true;
+                ManualChangesCheckQueued = false;
+                ManualChangesDialogOpen = false;
+            }
+
+            FileWatcher?.Dispose();
+            FileWatcher = null;
         }
 
         private void RefreshLastKnownMapFileChecksum(string path)
