@@ -19,7 +19,6 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
-using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Skinning;
 using Wobble;
@@ -240,11 +239,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             e.Input.Qua = e.Result.Map;
 
-            LoadedGameplayScreen = e.Result;
+            var screen = e.Result;
+            LoadedGameplayScreen = screen;
 
             AddScheduledUpdate(() =>
             {
-                var playfield = (GameplayPlayfieldKeys)LoadedGameplayScreen.Ruleset.Playfield;
+                if (!ReferenceEquals(LoadedGameplayScreen, screen) || screen.IsDisposed)
+                    return;
+
+                var playfield = (GameplayPlayfieldKeys)screen.Ruleset.Playfield;
 
                 playfield.Stage.HealthBar.Visible = false;
                 playfield.Stage.HitBubbles.Visible = ShowHitBubbles;
@@ -263,9 +266,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                     x.StopHolding();
                 });
 
-                var scroll = ConfigManager.ScrollDirections[LoadedGameplayScreen.Map.Mode];
-
-                var skin = SkinManager.Skin.Keys[e.Result.Map.Mode];
+                var scroll = ConfigManager.ScrollDirections[screen.Map.Mode];
 
                 const int filterPanelHeight = 88;
 
@@ -322,7 +323,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 }
 
                 ShowTestPlayPrompt();
-                CreateSeekBar(e.Input.Qua, playfield);
+                CreateSeekBar(screen.Map, playfield);
             });
         }
 
@@ -564,16 +565,15 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         /// </summary>
         protected void RefreshScreen()
         {
-            if (LoadedGameplayScreen == null || LoadedGameplayScreen.IsDisposed)
+            var screen = LoadedGameplayScreen;
+
+            if (screen == null || screen.IsDisposed)
                 return;
 
-            if (LoadedGameplayScreen.InReplayMode)
-                LoadedGameplayScreen.HandleReplaySeeking();
+            if (screen.InReplayMode)
+                screen.HandleReplaySeeking();
             else
-            {
-                var hitobjectManager = (HitObjectManagerKeys)LoadedGameplayScreen.Ruleset.HitObjectManager;
-                hitobjectManager.HandleSkip();
-            }
+                screen.HandlePreviewTestPlaySeeking();
         }
 
         /// <summary>
