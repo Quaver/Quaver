@@ -1580,6 +1580,20 @@ namespace Quaver.Shared.Screens.Gameplay
         }
 
         /// <summary>
+        ///     Handles seeking while test playing in the gameplay preview.
+        /// </summary>
+        public void HandlePreviewTestPlaySeeking()
+        {
+            if (!IsPlayTesting || InReplayMode)
+                return;
+
+            var hitobjectManager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
+            hitobjectManager.HandleSkip();
+
+            Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
+        }
+
+        /// <summary>
         /// </summary>
         public void ExitToNewEditor(bool seekToTime = false)
         {
