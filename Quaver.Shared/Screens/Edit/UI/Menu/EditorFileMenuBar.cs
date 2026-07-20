@@ -66,7 +66,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
         private static bool DestroyContext { get; } = true;
 #endif
 
-        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, EditorImGuiOptions.GetOptions(16), screen.ImGuiScale) => Screen = screen;
+        public EditorFileMenuBar(EditScreen screen) : base(DestroyContext, EditorImGuiOptions.GetOptions(18), screen.ImGuiScale) => Screen = screen;
 
 
         /// <inheritdoc />
