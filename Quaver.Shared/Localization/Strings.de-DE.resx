@@ -271,7 +271,7 @@
     <value>Globaler Rang</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
-    <value>GRUPPIEREN NACH:</value>
+    <value>GRUPPIEREN:</value>
   </data>
   <data name="Screen_Selection_HighestRatedScore" xml:space="preserve">
     <value>Höchster bewerteter Score</value>
@@ -322,7 +322,7 @@
     <value>Keine Scores verfügbar. Sei der Erste!</value>
   </data>
   <data name="Screen_Selection_NoPersonalBestSet" xml:space="preserve">
-    <value>KEIN PERSÖNLICHE BESTLEISTUNG GESETZT</value>
+    <value>KEINE PERSÖNLICHE BESTLEISTUNG</value>
   </data>
   <data name="Screen_Selection_None" xml:space="preserve">
     <value>Nichts</value>
@@ -385,7 +385,7 @@
     <value>TYP:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Geschwindigkeit</value>
+    <value>Rate</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Zuletzt gespielt</value>
@@ -403,7 +403,7 @@
     <value>AUSWÄHLEN:</value>
   </data>
   <data name="Screen_Selection_SortBy" xml:space="preserve">
-    <value>SORTIEREN NACH:</value>
+    <value>SORTIEREN:</value>
   </data>
   <data name="Screen_Selection_Source" xml:space="preserve">
     <value>Quelle</value>
@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Abweichung</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Genauigkeit</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>GENAUIGKEIT</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Leben</value>
@@ -649,13 +649,13 @@
     <value>Bewertung</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mittelwert:</value>
+    <value>MW:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Std. Abw:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Verhältnis:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>VERHÄLTNIS</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistiken nicht verfügbar</value>
@@ -718,8 +718,14 @@ Wenn die Map nicht fertig gespielt wurde, dann wird zusätzlich die Genauigkeit 
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Note</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Max. Combo</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAX. COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANKED GENAUIGKEIT</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -995,16 +1001,16 @@ Wenn die Map nicht fertig gespielt wurde, dann wird zusätzlich die Genauigkeit 
     <value>Zuschauer anzeigen</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyWithCustomJudgements" xml:space="preserve">
-    <value>Display Ranked Accuracy With Custom Judgements</value>
+    <value>Ranked Genauigkeit mit benutzerdefinierter Bewertungen anzeigen</value>
   </data>
   <data name="Screen_Options_HitErrorFadeTime" xml:space="preserve">
-    <value>Hit Error Fade Time</value>
+    <value>Hit Error Überblendzeit</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateColoring" xml:space="preserve">
-    <value>Hit Error Early / Late Coloring</value>
+    <value>Hit Error Früh / Spät Färbung</value>
   </data>
   <data name="Screen_Options_HitErrorEarlyLateWindow" xml:space="preserve">
-    <value>Hit Error Early / Late Window</value>
+    <value>Hit Error Früh / Spät Fenster</value>
   </data>
   <data name="Screen_Options_EnableComboAlerts" xml:space="preserve">
     <value>Combo Meldungen aktivieren</value>
@@ -1013,7 +1019,7 @@ Wenn die Map nicht fertig gespielt wurde, dann wird zusätzlich die Genauigkeit 
     <value>Unschlagbare Scores anzeigen</value>
   </data>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
-    <value>Keep Playing Upon Failing</value>
+    <value>Nach Fehlschlagen weiterspielen</value>
   </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
     <value>Normalise Scroll Velocity By Rate Percentage</value>
@@ -1428,7 +1434,7 @@ für den ausgewählten Spielmodus finden?</value>
     <value>MODUS: </value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
-    <value>SORTIEREN NACH: </value>
+    <value>SORTIEREN: </value>
   </data>
   <data name="Screen_Download_Newest" xml:space="preserve">
     <value>Neuste</value>
@@ -1532,16 +1538,16 @@ Mit den Filtern unten kannst du deine Suche eingrenzen.</value>
     <value>Max. LN%</value>
   </data>
   <data name="Screen_Download_MinLN" xml:space="preserve">
-    <value>Min LN%</value>
+    <value>Min. LN%</value>
   </data>
   <data name="Screen_Download_LengthSeconds" xml:space="preserve">
-    <value>Length (Seconds)</value>
+    <value>Länge (Sekunden)</value>
   </data>
   <data name="Screen_Download_MaxLength" xml:space="preserve">
-    <value>Max Length</value>
+    <value>Max. Länge</value>
   </data>
   <data name="Screen_Download_MinLength" xml:space="preserve">
-    <value>Min Length</value>
+    <value>Min. Länge</value>
   </data>
   <data name="Screen_Download_SkillLevel" xml:space="preserve">
     <value>Skill Level</value>

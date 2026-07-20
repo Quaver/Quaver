@@ -639,8 +639,8 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>Afvigelse</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
-    <value>Nøjagtighed</value>
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
+    <value>NØJAGTIGHED</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>Liv</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>Standardafvigelse:</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>Ratio:</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>Statistik ikke tilgængelig</value>
@@ -718,8 +718,14 @@ Hvis mappet ikke blev fuldført, vil det også vise præstationen hvis alle efte
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Karakter</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
-    <value>Højeste combo</value>
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
+    <value>MAKS. COMBO</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>PERFORMANCE RATING</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>RANGERET NØJAGTIGHED</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>

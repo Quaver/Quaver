@@ -41,6 +41,11 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         private double TimeLastProgressChange { get; set; }
 
         /// <summary>
+        ///     Time accumulated since the visual progress fill was last refreshed.
+        /// </summary>
+        private double TimeSinceLastVisualProgressUpdate { get; set; } = 1000d / 60;
+
+        /// <summary>
         ///    Used to turn off text for the mini progress bar.
         /// </summary>
         private readonly bool _isMini;
@@ -94,7 +99,13 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         {
             Visible = ConfigManager.DisplayGameplayOverlay?.Value ?? true;
 
-            Bindable.Value = Screen.Timing.Time / ModHelper.GetRateFromMods(ModManager.Mods);
+            TimeSinceLastVisualProgressUpdate += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (TimeSinceLastVisualProgressUpdate >= 1000d / 60)
+            {
+                Bindable.Value = Screen.Timing.Time / ModHelper.GetRateFromMods(ModManager.Mods);
+                TimeSinceLastVisualProgressUpdate = 0;
+            }
 
             // Only update time each second.
             if (Math.Abs(Screen.Timing.Time - TimeLastProgressChange) < 1000)

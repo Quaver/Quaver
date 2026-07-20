@@ -291,6 +291,39 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         }
 
         /// <summary>
+        ///     Replaces the dropdown options and rebuilds the item list.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="selectedIndex"></param>
+        public void SetOptions(List<string> options, int selectedIndex = 0)
+        {
+            if (options == null || options.Count == 0)
+                throw new InvalidOperationException("You cannot create a dropdown with zero elements");
+
+            Close(0);
+
+            if (Items != null)
+            {
+                foreach (var item in Items)
+                {
+                    ItemContainer.RemoveContainedDrawable(item);
+                    item.Destroy();
+                }
+            }
+
+            Options.Clear();
+            Options.AddRange(options);
+            SelectedIndex = Math.Clamp(selectedIndex, 0, Options.Count - 1);
+            SelectedText.Text = Options[SelectedIndex];
+
+            if (MaxWidth != 0)
+                SelectedText.TruncateWithEllipsis(MaxWidth);
+
+            ItemContainer.ContentContainer.Height = Height * Options.Count;
+            CreateItems();
+        }
+
+        /// <summary>
         ///     Opens the dropdown menu
         /// </summary>
         public void Open(int time = 500)

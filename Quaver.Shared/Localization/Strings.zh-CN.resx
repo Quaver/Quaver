@@ -301,7 +301,7 @@
     <value>个谱面</value>
   </data>
   <data name="Screen_Selection_MarvelousPerfectRatio" xml:space="preserve">
-    <value>黄彩比</value>
+    <value>彩黄比</value>
   </data>
   <data name="Screen_Selection_MaxCombo" xml:space="preserve">
     <value>最高连击</value>
@@ -418,7 +418,7 @@
     <value>此谱面没有上传！</value>
   </data>
   <data name="Screen_Selection_TimesPlayed" xml:space="preserve">
-    <value>次游玩</value>
+    <value>游玩次数</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
     <value>标题</value>
@@ -639,14 +639,14 @@
   <data name="Screen_Results_Deviance" xml:space="preserve">
     <value>偏差</value>
   </data>
-  <data name="Screen_Results_Accuracy" xml:space="preserve">
+  <data name="Screen_Results_ACCURACY" xml:space="preserve">
     <value>准度</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
     <value>血量</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
-    <value>Rating</value>
+    <value>评分</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
     <value>平均：</value>
@@ -654,8 +654,8 @@
   <data name="Screen_Results_StdDev" xml:space="preserve">
     <value>标准差：</value>
   </data>
-  <data name="Screen_Results_Ratio" xml:space="preserve">
-    <value>彩黄比：</value>
+  <data name="Screen_Results_RATIO" xml:space="preserve">
+    <value>彩黄比</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
     <value>数据不可用</value>
@@ -672,7 +672,7 @@
     <value>过早（-{0} ms）</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
-    <value>此图记录Rating变化过程。
+    <value>此图记录评分变化过程。
 
 如果中途失败，将假设之后判定全部为Marvelous，显示对应的变化过程。</value>
   </data>
@@ -686,7 +686,7 @@
     <value>国家/地区排名</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
-    <value>总体 Rating</value>
+    <value>总体评分</value>
   </data>
   <data name="Screen_Results_OverallAccuracy" xml:space="preserve">
     <value>总体准度</value>
@@ -718,8 +718,14 @@
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>成绩</value>
   </data>
-  <data name="Screen_Results_MaxCombo" xml:space="preserve">
+  <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
     <value>最大连击</value>
+  </data>
+  <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
+    <value>评分</value>
+  </data>
+  <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
+    <value>排位准度</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -884,7 +890,7 @@
     <value>将皮肤上传至创意工坊</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>音符和判定线缩放</value>
+    <value>物件与判定线缩放</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
     <value>游玩界面缩放</value>
@@ -977,7 +983,7 @@
     <value>主游玩模式</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
-    <value>以总体Rating推荐难度</value>
+    <value>以总体评分推荐难度</value>
   </data>
   <data name="Screen_Options_UseSmoothAudioFrameTimingDuringGameplay" xml:space="preserve">
     <value>游玩时使用平滑音频/帧计时</value>

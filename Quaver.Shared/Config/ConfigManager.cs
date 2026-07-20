@@ -144,7 +144,7 @@ namespace Quaver.Shared.Config
         internal static BindableInt VolumeMusic { get; private set; }
 
         /// <summary>
-        ///     The music volume used everywhere outside of gameplay (menus, song select, editor, etc).
+        ///     The music volume used in menus and song select.
         /// </summary>
         internal static BindableInt VolumeMenuMusic { get; private set; }
 
@@ -319,6 +319,11 @@ namespace Quaver.Shared.Config
         ///     Dictates how to order the mapsets during song select.Get
         /// </summary>
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
+
+        /// <summary>
+        ///     Dictates how to order the playlists during song select.
+        /// </summary>
+        internal static Bindable<OrderPlaylistsBy> SelectOrderPlaylistsBy { get; private set; }
 
         /// <summary>
         ///     Dictates how to group mapsets in song select
@@ -1080,7 +1085,7 @@ namespace Quaver.Shared.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
-            VolumeMenuMusic = ReadInt(@"VolumeMenuMusic", 50, 0, 100, data);
+            VolumeMenuMusic = ReadInt(@"VolumeMenuMusic", VolumeMusic.Value, 0, 100, data);
             DevicePeriod = ReadInt(@"DevicePeriod", 2, 1, 100, data);
             DeviceBufferLengthMultiplier = ReadInt(@"DeviceBufferLengthMultiplier", 4, 2, 10, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
@@ -1109,6 +1114,7 @@ namespace Quaver.Shared.Config
             DisplayRankedAccuracy = ReadValue(@"DisplayRankedAccuracy", false, data);
             LeaderboardRankedAccuracy = ReadValue(@"LeaderboardRankedAccuracy", false, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
+            SelectOrderPlaylistsBy = ReadValue(@"SelectOrderPlaylistsBy", OrderPlaylistsBy.Title, data);
             LeaderboardSection = ReadValue(@"LeaderboardSection", LeaderboardType.Local, data);
             OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             EtternaDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaDbPath", "", data);

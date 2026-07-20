@@ -196,7 +196,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                 Image = avatar,
             };
 
-            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "?.", 20)
+            RankText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "?.", 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -232,7 +232,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             ScheduleAvatarMaskBlend(Avatar.Image);
 
             // Create username text.
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), GetUsernameFormatted(), 21, cacheStaticText && Type != ScoreboardUserType.Self)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), GetUsernameFormatted(), 15, cacheStaticText && Type != ScoreboardUserType.Self)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -242,7 +242,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.00 / 0.00%", 19, cacheStaticText && !hasLiveScoreText)
+            Score = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.00 / 0.00%", 15, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -252,7 +252,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             };
 
             // Create score text.
-            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{Processor.Combo:N0}x", 18, cacheStaticText && !hasLiveScoreText)
+            Combo = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{Processor.Combo:N0}x", 14, cacheStaticText && !hasLiveScoreText)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
