@@ -52,6 +52,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             CreateTextDifficulty();
             CreateTextMode();
             CreateTextStatus();
+            Height = Status.Y + Status.Height + SpacingY;
             CreateRefreshMapButton();
 
             Panel.AutoMod.ValueChanged += OnAutoModUpdated;

@@ -41,6 +41,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private const int SpacingY = 16;
 
+        private const int PaddingBottom = 12;
+
         public EditorAutoModPanel(Qua map, List<Qua> mapset, EditorAutoModPanelContainer container) : base(UserInterface.AutoModPanel)
         {
             Map = map;
@@ -122,13 +124,19 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             IssueCount.ChangeValue($"{count:n0}");
         });
 
-        private void CreateScrollPanel() => ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod,
-            FilterCategory, this)
+        private void CreateScrollPanel()
         {
-            Parent = this,
-            Alignment = Alignment.BotCenter,
-            Y = -12
-        };
+            ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod, FilterCategory, this)
+            {
+                Parent = this,
+                Alignment = Alignment.BotCenter,
+                Y = -PaddingBottom
+            };
+
+            var top = IssueCount.Y + IssueCount.Height + SpacingY;
+            ScrollPanel.Height = Height - top - PaddingBottom;
+            ScrollPanel.RecalculateContainerHeight();
+        }
 
         private void OnAutoModUpdated(object sender, BindableValueChangedEventArgs<AutoModMapset> e)
             => UpdateIssueCount();
