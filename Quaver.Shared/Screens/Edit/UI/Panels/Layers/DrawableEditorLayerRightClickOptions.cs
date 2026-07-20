@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         private const string MoveLayerDown = "Move Layer Down";
 
         public DrawableEditorLayerRightClickOptions(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap)
-            : base(GetOptions(), new ScalableVector2(200, 40), 22)
+            : base(GetOptions(), new ScalableVector2(200, 40), 18)
         {
             ItemSelected += (sender, args) =>
             {
