@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Quaver.API.Maps;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -22,13 +25,27 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
     }
 
     /// <inheritdoc />
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void HandleAction(GlobalKeybindActions action, bool isKeyPress = true,
         bool isRelease = false)
     {
-        switch (action)
+        var scopes = GlobalInputManager.ScopeTokens.AsEnumerable().Reverse().ToList();
+        foreach (var scope in scopes)
         {
-            default:
-                return;
+            var shouldBreak = false;
+            switch (scope.Handle(action, isKeyPress, isRelease))
+            {
+                case GlobalInputHandleResult.Consumed:
+                    shouldBreak = true;
+                    break;
+                case GlobalInputHandleResult.Pass:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (shouldBreak)
+                break;
         }
     }
 
@@ -54,16 +71,9 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
     /// <inheritdoc />
     public IEnumerable<GlobalKeybindActions> HoldAndReleaseActions => HoldAndReleaseActionsSet;
 
-    public GlobalInputHandler(GlobalInputConfig globalInputConfig)
-    {
-        GlobalInputConfig = globalInputConfig;
-    }
-
     /// <inheritdoc />
     public bool IsKeybindBlocked(GenericKey key) => false;
 
     /// <inheritdoc />
     public bool InFocus => DialogManager.Dialogs.Count != 0;
-
-    private GlobalInputConfig GlobalInputConfig { get; set; }
 }

@@ -1,6 +1,35 @@
 namespace Quaver.Shared.Input.Global;
 
-public class GlobalKeybindActions
+public enum GlobalKeybindActions
 {
-    
+    Screenshot,
+    OpenOptions,
+    ToggleFullscreen,
+    TogglePause,
+    CycleFpsLimiter,
+    ToggleOnlineHub,
+    Back,
+    IncreaseRate,
+    DecreaseRate,
+    TogglePitch,
+    RemoveMods,
+    ToggleMirror,
+    IncreaseScrollSpeed,
+    DecreaseScrollSpeed,
+    IncreaseLocalScrollSpeed,
+    DecreaseLocalScrollSpeed,
+    IncreaseOffset,
+    DecreaseOffset,
+    IncreaseOffsetSmall,
+    DecreaseOffsetSmall,
+    GameplayPause,
+    GameplayPauseUp,
+    GameplayPauseDown,
+    GameplayToggleScoreboard,
+    GameplayToggleOverlay,
+    GameplayRetry,
+    ResultsRetry,
+    ResultsTab,
+    DialogConfirm,
+    DialogCancel,
 }

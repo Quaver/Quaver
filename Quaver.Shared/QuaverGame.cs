@@ -41,6 +41,7 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Imgur;
@@ -158,6 +159,41 @@ namespace Quaver.Shared
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
+
+        private readonly GlobalInputScopeToken _token = new Token();
+
+        private class Token : GlobalInputScopeToken
+        {
+            /// <inheritdoc />
+            public override GlobalInputScope Scope => GlobalInputScope.Global;
+
+            /// <inheritdoc />
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false)
+            {
+                switch (action)
+                {
+                    case GlobalKeybindActions.Screenshot:
+                        break;
+                    case GlobalKeybindActions.OpenOptions:
+                        break;
+                    case GlobalKeybindActions.ToggleFullscreen:
+                        break;
+                    case GlobalKeybindActions.TogglePause:
+                        break;
+                    case GlobalKeybindActions.CycleFpsLimiter:
+                        break;
+                    case GlobalKeybindActions.ToggleOnlineHub:
+                        break;
+                    case GlobalKeybindActions.Back:
+                        break;
+                }
+
+                return GlobalInputHandleResult.Consumed;
+            }
+        }
+
+        public GlobalInputManager InputManager { get; } = new();
 
         /// <summary>
         ///     Unique identifier of the client's assembly version.
@@ -784,6 +820,7 @@ namespace Quaver.Shared
             HandleKeyPressAltEnter();
             HandleKeyPressScreenshot();
             HandleKeyPressCtrlP();
+            InputManager.HandleInput();
         }
 
         private void HandleKeyPressCtrlP()
