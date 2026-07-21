@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -13,7 +14,8 @@ namespace Quaver.Shared.Input.Global
     [Serializable]
     public class GlobalInputConfig : IInputConfig<GlobalKeybindActions>
     {
-        public static string ConfigPath => ConfigManager.GameDirectory?.Value + "/quaver-keybinds.yaml";
+        public static string ConfigPath =>
+            ConfigManager.GameDirectory?.Value + "/quaver-keybinds.yaml";
 
         private GlobalInputConfigModel _model;
 
@@ -53,7 +55,6 @@ namespace Quaver.Shared.Input.Global
 
             Version++;
             return true;
-
         }
 
         /// <inheritdoc />
@@ -137,7 +138,7 @@ namespace Quaver.Shared.Input.Global
 
             foreach (var (action, defaultBind) in s_defaultKeybinds)
             {
-                var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
+                var bind = fillWithDefaultBinds ? defaultBind : [];
                 if (_keybinds.SetKeybindsForActionIfNotExits(action, bind))
                     count++;
             }
@@ -200,7 +201,18 @@ namespace Quaver.Shared.Input.Global
 #pragma warning disable format // @formatter:off
         [YamlIgnore]
         private static Dictionary<GlobalKeybindActions, KeybindList> s_defaultKeybinds = new()
-        { };
+        {
+            [GlobalKeybindActions.Screenshot] = new KeybindList(new Keybind(KeyModifiers.Free, Keys.F12)),
+            [GlobalKeybindActions.OpenOptions] = new KeybindList(new Keybind([KeyModifiers.Ctrl, KeyModifiers.Free], Keys.O)),
+            [GlobalKeybindActions.ToggleFullscreen] = new KeybindList(new Keybind([KeyModifiers.Alt, KeyModifiers.Free], Keys.Enter)),
+            [GlobalKeybindActions.TogglePause] = new KeybindList(new Keybind([KeyModifiers.Ctrl, KeyModifiers.Free], Keys.P)),
+            [GlobalKeybindActions.CycleFpsLimiter] = new KeybindList(new Keybind(KeyModifiers.Free, Keys.F7)),
+            [GlobalKeybindActions.ToggleOnlineHub] = new KeybindList([
+                new Keybind(KeyModifiers.Free, Keys.F8),
+                new Keybind(KeyModifiers.Free, Keys.F9)
+            ]),
+            [GlobalKeybindActions.ReloadSkin] = new KeybindList(new Keybind([KeyModifiers.Ctrl, KeyModifiers.Free], Keys.S)),
+        };
 #pragma warning restore format // @formatter:on
     }
 }

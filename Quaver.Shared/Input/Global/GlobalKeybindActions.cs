@@ -8,6 +8,7 @@ public enum GlobalKeybindActions
     TogglePause,
     CycleFpsLimiter,
     ToggleOnlineHub,
+    ReloadSkin,
     Back,
     IncreaseRate,
     DecreaseRate,

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Quaver.API.Maps;
 using Wobble.Bindables;
-using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
 namespace Quaver.Shared.Input.Global;
@@ -75,5 +73,5 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
     public bool IsKeybindBlocked(GenericKey key) => false;
 
     /// <inheritdoc />
-    public bool InFocus => DialogManager.Dialogs.Count != 0;
+    public bool InFocus => false;
 }
