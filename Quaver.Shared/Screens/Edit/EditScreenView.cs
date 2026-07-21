@@ -322,8 +322,6 @@ namespace Quaver.Shared.Screens.Edit
                 Alignment = Alignment.TopCenter
             };
 
-            Selector.ExcludedPlayfield = UnEditablePlayfield;
-
             // Reset the parent of the footer, so it draws over this playfield.
             Footer.Parent = Container;
         }

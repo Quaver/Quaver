@@ -31,11 +31,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
         private EditorPlayfield Playfield { get; }
 
         /// <summary>
-        ///     A read-only playfield that must not start selections for the working map.
-        /// </summary>
-        public EditorPlayfield ExcludedPlayfield { private get; set; }
-
-        /// <summary>
         /// </summary>
         private EditorFooter Footer { get; }
 
@@ -128,10 +123,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (!Button.IsGloballyClickable)
                 return;
 
-            if (ExcludedPlayfield is { IsDisposed: false } &&
-                GraphicsHelper.RectangleContains(ExcludedPlayfield.ScreenRectangle, MouseManager.CurrentState.Position))
-                return;
-
             if (Playfield.GetHoveredHitObject() != null)
                 return;
 
@@ -214,8 +205,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
                 var playfieldRight = playfieldLeft + Playfield.ScreenRectangle.Width;
 
                 // GetLaneFromX clamps out-of-bounds coordinates to the first/last lane. Only perform lane
-                // selection when the rectangle actually overlaps the editable playfield, otherwise a selection
-                // beside a reference difficulty would incorrectly select the outermost editor lane.
+                // selection when the rectangle actually overlaps the editable playfield, otherwise an
+                // out-of-bounds selection would incorrectly select the outermost lane.
                 if (selectionRight > playfieldLeft && selectionLeft < playfieldRight)
                 {
                     var startLane = Playfield.GetLaneFromX(Math.Max(selectionLeft, playfieldLeft));
