@@ -202,7 +202,7 @@
     <value>คุณสามารถปรับค่า Offset ได้ในเมนูการตั้งค่า</value>
   </data>
   <data name="Screen_Main_TipDefaultJudgement" xml:space="preserve">
-    <value>Standard* is the default judgement window preset.</value>
+    <value>Standard* คือช่วงเวลาตัดสินที่เป็นค่าเริ่มต้น</value>
   </data>
   <data name="Screen_Main_TipPlaybackRate" xml:space="preserve">
     <value>Ctrl + +/- จะเปลี่ยนความเร็วของเพลง</value>
@@ -256,7 +256,7 @@
     <value>แก้ไข</value>
   </data>
   <data name="Screen_Selection_Export" xml:space="preserve">
-    <value>ส่งออก</value>
+    <value>นำออก</value>
   </data>
   <data name="Screen_Selection_Friends" xml:space="preserve">
     <value>เพื่อน</value>
@@ -511,7 +511,7 @@
     <value>กระดานคะแนน</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progress Bar</value>
+    <value>แถบความคืบหน้า</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
     <value>Lane Cover</value>
@@ -547,7 +547,7 @@
     <value>Navigation &amp; Maintenance</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
-    <value>Installed Games</value>
+    <value>เกมที่ติดตั้ง</value>
   </data>
   <data name="Screen_Options_Notifications" xml:space="preserve">
     <value>การแจ้งเตือน</value>
@@ -565,7 +565,7 @@
     <value>เปิดหน้าต่างไร้ขอบ</value>
   </data>
   <data name="Screen_Options_FrameLimiter" xml:space="preserve">
-    <value>Frame Limiter</value>
+    <value>ตัวจำกัดเฟรม</value>
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
     <value>ตั้งค่า FPS แบบกำหนดเอง</value>
@@ -604,10 +604,10 @@
     <value>ดูรีเพลย์</value>
   </data>
   <data name="Screen_Results_ExportReplay" xml:space="preserve">
-    <value>ส่งออกรีเพลย์</value>
+    <value>นำออกรีเพลย์</value>
   </data>
   <data name="Screen_Results_FixOffset" xml:space="preserve">
-    <value>Fix Offset</value>
+    <value>แก้ค่า Offset</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
     <value>Convert Score</value>
@@ -631,19 +631,19 @@
     <value>เมื่อวันที่ {0} เวลา {1}</value>
   </data>
   <data name="Screen_Results_JudgementPreset" xml:space="preserve">
-    <value>Judgement Preset:</value>
+    <value>ช่วงเวลาตัดสิน:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
     <value>กราฟ:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>Deviance</value>
+    <value>ความคลาดเคลื่อน</value>
   </data>
   <data name="Screen_Results_ACCURACY" xml:space="preserve">
-    <value>ACCURACY</value>
+    <value>ความแม่นยำ</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>Health</value>
+    <value>พลังชีวิต</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
     <value>คะแนน</value>
@@ -655,30 +655,26 @@
     <value>ส่วนเบี่ยงเบนมาตรฐาน:</value>
   </data>
   <data name="Screen_Results_RATIO" xml:space="preserve">
-    <value>RATIO</value>
+    <value>อัตราส่วน</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
-    <value>Statistics Not Available</value>
+    <value>สถิติไม่พร้อมใช้งาน</value>
   </data>
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
-    <value>This displays the course of accuracy throughout the score.
+    <value>กราฟนี้แสดงค่าความแม่นยำตลอดทั้งคะแนนนี้
 
-If the map was not completed, then it will additionally
-show the accuracy if all subsequent hits had been
-Marvelous instead.</value>
+ถ้าเล่นแมพไม่จบ กราฟนี้จะแสดงค่าความแม่นยำถ้ากดโน้ตที่เหลือได้ Marvelous ด้วย</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
-    <value>Late (+{0} ms)</value>
+    <value>ช้า (+{0} ms)</value>
   </data>
   <data name="Screen_Results_Earlyhitwindow" xml:space="preserve">
-    <value>Early (-{0} ms)</value>
+    <value>เร็ว (-{0} ms)</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
-    <value>This displays the course of performance throughout the score.
+    <value>กราฟนี้แสดงค่าประสิทธิภาพตลอดทั้งคะแนนนี้
 
-If the map was not completed, then it will additionally
-show the performance if all subsequent hits had been
-Marvelous instead.</value>
+ถ้าเล่นแมพไม่จบ กราฟนี้จะแสดงค่าประสิทธิภาพถ้ากดโน้ตที่เหลือได้ Marvelous ด้วย</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
     <value>กำลังส่งคะแนน...</value>
@@ -723,13 +719,13 @@ Marvelous instead.</value>
     <value>ระดับ</value>
   </data>
   <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
-    <value>MAX COMBO</value>
+    <value>คอมโบสูงสุด</value>
   </data>
   <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
-    <value>PERFORMANCE RATING</value>
+    <value>คะแนนประสิทธิภาพ</value>
   </data>
   <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
-    <value>RANKED ACCURACY</value>
+    <value>ความแม่นยำที่จัดอันดับ</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Marv</value>
@@ -753,13 +749,13 @@ Marvelous instead.</value>
     <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Results_Loadingresults" xml:space="preserve">
-    <value>Loading results</value>
+    <value>กำลังโหลดผลคะแนน</value>
   </data>
   <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
-    <value>Failed to retrieve players' scores!</value>
+    <value>ดึงข้อมูลคะแนนของผู้เล่นไม่สำเร็จ!</value>
   </data>
   <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
-    <value>There was an issue while retrieving the replay for this score!</value>
+    <value>มีปัญหาขณะดึงข้อมูลรีเพลย์ของคะแนนนี้!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
     <value>ไม่สามารถดาวน์โหลดรีเพลย์ของคะแนนนี้ได้</value>
@@ -771,25 +767,25 @@ Marvelous instead.</value>
     <value>กำลังดาวน์โหลดรีเพลย์! โปรดรอสักครู่...</value>
   </data>
   <data name="Screen_Results_Pleasewaitwhileyourreplayisbeingexported" xml:space="preserve">
-    <value>Please wait while your replay is being exported...</value>
+    <value>โปรดรอสักครู่ขณะกำลังนำออกรีเพลย์...</value>
   </data>
   <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
-    <value>เกิดปัญหาระหว่างส่งออกรีเพลย์!</value>
+    <value>เกิดปัญหาระหว่างการนำออกรีเพลย์!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>You have already fixed your local offset for this map! There's no need to do it again.</value>
+    <value>ได้แก้ค่า Offset เฉพาะของแมพนี้ไปแล้ว! ไม่จำเป็นต้องแก้อีกรอบ</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>There is no data to be able to fix your local offset!</value>
+    <value>ไม่มีข้อมูลที่จะช่วยแก้ค่า Offset เฉพาะของแมพนี้ให้ได้!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
-    <value>FIX LOCAL OFFSET</value>
+    <value>แก้ค่า Offset เฉพาะ</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
-    <value>Your local offset for this map will be changed from {0} ms to {1} ms.</value>
+    <value>ค่า Offset เฉพาะของแมพนี้จะเปลี่ยนจาก {0} ms เป็น {1} ms</value>
   </data>
   <data name="Screen_Results_Localoffsetset" xml:space="preserve">
-    <value>Local offset for this map was set to {0} ms.</value>
+    <value>ได้ตั้งค่า Offset เฉพาะของแมพนี้เป็น {0} ms</value>
   </data>
   <data name="Screen_Results_FailedtosavelocalscoretothedatabasePleasecheckthelogs" xml:space="preserve">
     <value>Failed to save local score to the database. Please check the logs!</value>
@@ -888,7 +884,7 @@ Marvelous instead.</value>
     <value>เปิดโฟลเดอร์สกิน</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>ส่งออกสกิน</value>
+    <value>นำออกสกิน</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
     <value>Upload Skin To Steam Workshop</value>
@@ -1444,7 +1440,7 @@ for the selected game mode?</value>
     <value>Newest</value>
   </data>
   <data name="Screen_Download_DateSubmitted" xml:space="preserve">
-    <value>Date Submitted</value>
+    <value>วันที่อัปโหลด</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>Length</value>
@@ -1518,13 +1514,13 @@ for the selected game mode?</value>
     <value>Start Date</value>
   </data>
   <data name="Screen_Download_DifficultyRating" xml:space="preserve">
-    <value>Difficulty Rating</value>
+    <value>ระดับความยาก</value>
   </data>
   <data name="Screen_Download_MaxRating" xml:space="preserve">
-    <value>Max Rating</value>
+    <value>ระดับความยากสูงสุด</value>
   </data>
   <data name="Screen_Download_MinRating" xml:space="preserve">
-    <value>Min Rating</value>
+    <value>ระดับความยากต่ำสุด</value>
   </data>
   <data name="Screen_Download_RankedPlayCount" xml:space="preserve">
     <value>Ranked Play Count</value>
@@ -1675,20 +1671,19 @@ sure you would like to start without all players ready?</value>
     <value>Enter a password...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOAD UNSUBMITTED MAPSET</value>
+    <value>อัปโหลดแมพเซตที่ไม่ได้อัปโหลด</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetConfirmMessage" xml:space="preserve">
-    <value>Would you like to temporarily upload the current mapset
-for other players to download?</value>
+    <value>ต้องการอัปโหลดแมพเซตนี้ชั่วคราวเพื่อให้ผู้เล่นคนอื่นดาวน์โหลดหรือไม่?</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetTitle" xml:space="preserve">
-    <value>UPLOADING UNSUBMITTED MAPSET</value>
+    <value>กำลังอัปโหลดแมพเซตที่ไม่ได้อัปโหลด</value>
   </data>
   <data name="Screen_Multi_UploadingUnsubmittedMapsetMessage" xml:space="preserve">
-    <value>Please wait while the mapset is being uploaded...</value>
+    <value>โปรดรอสักครู่ขณะกำลังอัปโหลดแมพเซต...</value>
   </data>
   <data name="Screen_Multi_SuccessfullyUploadedUnsubmittedMapset" xml:space="preserve">
-    <value>Successfully uploaded unsubmitted mapset for the multiplayer game!</value>
+    <value>อัพโหลดแมพเซตที่ไม่ได้อัปโหลดสำหรับห้องผู้เล่นหลายคนสำเร็จ!</value>
   </data>
   <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
     <value>There was an error while uploading the mapset.</value>
@@ -1937,7 +1932,7 @@ for other players to download?</value>
     <value>Uploaded</value>
   </data>
   <data name="Screen_MultiplayerLobby_Unsubmitted" xml:space="preserve">
-    <value>Unsubmitted</value>
+    <value>ไม่ได้อัปโหลด</value>
   </data>
   <data name="Screen_MultiplayerLobby_RoomVisibilityLabel" xml:space="preserve">
     <value>ROOM VISIBILITY: </value>
