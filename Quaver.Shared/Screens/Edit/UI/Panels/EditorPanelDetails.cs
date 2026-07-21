@@ -80,6 +80,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         public EditorPanelDetails(Qua workingMap, BindableInt beatSnap, IAudioTrack track, EditorActionManager actionManager)
             : base("Details")
         {
+            Depth = 1;
+
             WorkingMap = workingMap;
             BeatSnap = beatSnap;
             Track = track;
