@@ -31,6 +31,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
         private EditorPlayfield Playfield { get; }
 
         /// <summary>
+        ///     A read-only playfield that must not start selections for the working map.
+        /// </summary>
+        public EditorPlayfield ExcludedPlayfield { private get; set; }
+
+        /// <summary>
         /// </summary>
         private EditorFooter Footer { get; }
 
@@ -123,6 +128,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (!Button.IsGloballyClickable)
                 return;
 
+            if (ExcludedPlayfield is { IsDisposed: false } &&
+                GraphicsHelper.RectangleContains(ExcludedPlayfield.ScreenRectangle, MouseManager.CurrentState.Position))
+                return;
+
             if (Playfield.GetHoveredHitObject() != null)
                 return;
 
@@ -199,24 +208,34 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Selection
             if (IsSelecting && StartingPoint -  new Vector2(MouseManager.CurrentState.X, MouseManager.CurrentState.Y) != Vector2.Zero)
             {
                 var timeDragEnd = Playfield.GetTimeFromY(MouseManager.CurrentState.Y) / Playfield.TrackSpeed;
+                var selectionLeft = Math.Min(StartingPoint.X, MouseManager.CurrentState.X);
+                var selectionRight = Math.Max(StartingPoint.X, MouseManager.CurrentState.X);
+                var playfieldLeft = Playfield.ScreenRectangle.X;
+                var playfieldRight = playfieldLeft + Playfield.ScreenRectangle.Width;
 
-                var startLane = Playfield.GetLaneFromX(StartingPoint.X);
-                var endLane = Playfield.GetLaneFromX(MouseManager.CurrentState.X);
-
-                var foundObjects = WorkingMap.HitObjects.FindAll(x =>
+                // GetLaneFromX clamps out-of-bounds coordinates to the first/last lane. Only perform lane
+                // selection when the rectangle actually overlaps the editable playfield, otherwise a selection
+                // beside a reference difficulty would incorrectly select the outermost editor lane.
+                if (selectionRight > playfieldLeft && selectionLeft < playfieldRight)
                 {
-                    var yInbetween = TimeDragStart > timeDragEnd ?
-                        IsBetween(x.StartTime, timeDragEnd, TimeDragStart)
-                        : IsBetween(x.StartTime, TimeDragStart, timeDragEnd);
+                    var startLane = Playfield.GetLaneFromX(Math.Max(selectionLeft, playfieldLeft));
+                    var endLane = Playfield.GetLaneFromX(Math.Min(selectionRight, playfieldRight));
 
-                    return yInbetween && (startLane < endLane ? IsBetween(x.Lane, startLane, endLane) :
-                               IsBetween(x.Lane, endLane, startLane));
-                });
+                    var foundObjects = WorkingMap.HitObjects.FindAll(x =>
+                    {
+                        var yInbetween = TimeDragStart > timeDragEnd ?
+                            IsBetween(x.StartTime, timeDragEnd, TimeDragStart)
+                            : IsBetween(x.StartTime, TimeDragStart, timeDragEnd);
 
-                foreach (var ho in foundObjects)
-                {
-                    if (!SelectedHitObjects.Value.Contains(ho))
-                        SelectedHitObjects.Add(ho);
+                        return yInbetween && (startLane < endLane ? IsBetween(x.Lane, startLane, endLane) :
+                                   IsBetween(x.Lane, endLane, startLane));
+                    });
+
+                    foreach (var ho in foundObjects)
+                    {
+                        if (!SelectedHitObjects.Value.Contains(ho))
+                            SelectedHitObjects.Add(ho);
+                    }
                 }
             }
 
