@@ -10,6 +10,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Screens.Options.Content;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Items.Custom;
@@ -299,7 +300,11 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay)
+                        new OptionsItemKeybindGeneric(containerRect, "Open Options", GlobalKeybindActions.OpenOptions),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Fullscreen", GlobalKeybindActions.ToggleFullscreen),
+                        new OptionsItemKeybind(containerRect, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Online Hub", GlobalKeybindActions.ToggleOnlineHub),
+                        new OptionsItemKeybindGeneric(containerRect, "Pause/Unpause Music", GlobalKeybindActions.TogglePause),
                     }),
                     new OptionsSubcategory("Song Selection", new List<OptionsItem>()
                     {
@@ -317,7 +322,9 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot),
+                        new OptionsItemKeybindGeneric(containerRect, "Take Screenshot", GlobalKeybindActions.Screenshot),
+                        new OptionsItemKeybindGeneric(containerRect, "Cycle FPS Limiter", GlobalKeybindActions.CycleFpsLimiter),
+                        new OptionsItemKeybindGeneric(containerRect, "Reload Skin", GlobalKeybindActions.ReloadSkin),
                     })
                 }),
                 // new OptionsSection("Gamemode specific", UserInterface.OptionsInput, new List<OptionsSubcategory>{
