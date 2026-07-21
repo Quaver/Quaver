@@ -322,6 +322,8 @@ namespace Quaver.Shared.Screens.Edit
                 Alignment = Alignment.TopCenter
             };
 
+            Selector.ExcludedPlayfield = UnEditablePlayfield;
+
             // Reset the parent of the footer, so it draws over this playfield.
             Footer.Parent = Container;
         }
@@ -344,6 +346,9 @@ namespace Quaver.Shared.Screens.Edit
 
             // Makes it so that the playfield bookmark tooltips appear above reference difficulty
             Playfield.Parent = Container;
+
+            // Keep the selection rectangle above both playfields and their hit objects.
+            Selector.Parent = Container;
         }
 
         /// <summary>
