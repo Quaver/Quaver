@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Input;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
@@ -17,7 +21,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
     {
         /// <summary>
         /// </summary>
-        private IconButton Button { get; }
+        private IconButton Button { get; set; }
 
         /// <summary>
         /// </summary>
@@ -25,11 +29,24 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
         /// <summary>
         /// </summary>
-        private SpriteTextPlus Text { get; }
+        private GlobalKeybindActions? Action { get; }
+
+        /// <summary>
+        /// </summary>
+        private SpriteTextPlus Text { get; set; }
         
         /// <summary>
         /// </summary>
-        private List<GenericKey> PreviousPressedKeys { get; set; }
+        private GenericKeyState PreviousKeyState { get; set; } =
+            new GenericKeyState(new List<GenericKey>());
+
+        /// <summary>
+        /// </summary>
+        private GlobalInputScopeToken BlockGlobalInputToken { get; set; }
+
+        /// <summary>
+        /// </summary>
+        private GlobalInputConfig GlobalInputConfig => ((QuaverGame) GameBase.Game).InputManager.InputConfig;
 
         /// <summary>
         /// </summary>
@@ -41,7 +58,24 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         public OptionsItemKeybindGeneric(RectangleF containerRect, string name, Bindable<GenericKey> bindedKey) : base(containerRect, name)
         {
             BindedKey = bindedKey;
+            CreateContent();
+        }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="containerRect"></param>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        public OptionsItemKeybindGeneric(RectangleF containerRect, string name, GlobalKeybindActions action) : base(containerRect, name)
+        {
+            Action = action;
+            CreateContent();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void CreateContent()
+        {
             Button = new IconButton(UserInterface.DropdownClosed)
             {
                 Parent = this,
@@ -56,9 +90,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.ClickedOutside += (sender, args) =>
             {
-                Focused = false;
-                InitializeText();
-                Text.Tint = Colors.MainAccent;
+                ClearFocusedState();
             };
 
             Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
@@ -79,20 +111,56 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
         public override void Update(GameTime gameTime)
         {
             HandleKeySelect();
+            ReleaseGlobalInputBlockWhenKeysClear();
             base.Update(gameTime);
         }
 
         /// <summary>
         /// </summary>
-        private void InitializeText() => Text.Text = BindedKey.Value.GetName();
+        private void InitializeText()
+        {
+            Text.Text = Action.HasValue ? GlobalInputConfig.GetOrDefault(Action.Value).ToString() : BindedKey.Value.GetName();
+
+            if (string.IsNullOrWhiteSpace(Text.Text))
+                Text.Text = "None";
+        }
 
         /// <summary>
         /// </summary>
         private void SetFocusedText()
         {
             Focused = true;
+            PreviousKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+            BlockGlobalInputToken ??= new BlockGlobalInputScopeToken();
             Text.Text = "Press a key...";
             Text.Tint = Color.Crimson;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ClearFocusedState(bool waitForInputClear = false)
+        {
+            Focused = false;
+
+            if (!waitForInputClear)
+            {
+                BlockGlobalInputToken?.Dispose();
+                BlockGlobalInputToken = null;
+            }
+
+            InitializeText();
+            Text.Tint = Colors.MainAccent;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void ReleaseGlobalInputBlockWhenKeysClear()
+        {
+            if (Focused || BlockGlobalInputToken == null || GenericKeyManager.GetPressedKeys().Count != 0)
+                return;
+
+            BlockGlobalInputToken.Dispose();
+            BlockGlobalInputToken = null;
         }
 
         /// <summary>
@@ -102,17 +170,43 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             if (!Focused)
                 return;
 
-            var keys = GenericKeyManager.GetPressedKeys();
+            var currentKeyState = new GenericKeyState(GenericKeyManager.GetPressedKeys());
+            var keys = currentKeyState.UniqueKeyPresses(PreviousKeyState);
+            PreviousKeyState = currentKeyState;
 
-            if (keys.Count != 0 && !PreviousPressedKeys.Contains(keys[0]))
+            if (keys.Count == 0)
+                return;
+
+            var keybind = keys.First();
+            if (Action.HasValue)
             {
-                BindedKey.Value = keys[0];
-                Focused = false;
-                InitializeText();
-                Text.Tint = Colors.MainAccent;
+                GlobalInputConfig.SetKeybindsForAction(Action.Value, new KeybindList(keybind));
+                GlobalInputConfig.SaveToConfig();
+            }
+            else
+            {
+                BindedKey.Value = keybind.Key;
             }
 
-            PreviousPressedKeys = keys;
+            ClearFocusedState(true);
+        }
+
+        /// <inheritdoc />
+        public override void Destroy()
+        {
+            BlockGlobalInputToken?.Dispose();
+            BlockGlobalInputToken = null;
+            base.Destroy();
+        }
+
+        private class BlockGlobalInputScopeToken : GlobalInputScopeToken
+        {
+            /// <inheritdoc />
+            public override GlobalInputScope Scope => GlobalInputScope.Options;
+
+            /// <inheritdoc />
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => GlobalInputHandleResult.Consumed;
         }
     }
 }

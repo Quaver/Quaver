@@ -3,7 +3,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     internal sealed class KeybindYamlTypeConverter : IYamlTypeConverter
     {

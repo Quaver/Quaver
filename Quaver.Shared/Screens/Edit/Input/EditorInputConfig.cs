@@ -1,35 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
-using Wobble.Bindables;
+using Quaver.Shared.Input;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using static Quaver.Shared.Screens.Edit.Input.KeybindActions;
+using static Quaver.Shared.Screens.Edit.Input.EditorKeybindActions;
 
 namespace Quaver.Shared.Screens.Edit.Input
 {
     [Serializable]
-    public class EditorInputConfig
+    public class EditorInputConfig : IInputConfig<EditorKeybindActions>
     {
-        [YamlIgnore] public static string ConfigPath = ConfigManager.GameDirectory?.Value + "/editor_keys.yaml";
+        public static string ConfigPath => ConfigManager.GameDirectory?.Value + "/editor_keys.yaml";
 
-        public Dictionary<KeybindActions, KeybindList> Keybinds { get; private set; }
-        public Dictionary<string, KeybindList> PluginKeybinds { get; private set; }
+        private EditorInputConfigModel _model;
 
-        public EditorInputConfig()
+        private InputActionMap<EditorKeybindActions> _keybinds;
+
+        public ulong Version { get; private set; }
+
+        public EditorInputConfig(EditorInputConfigModel model)
         {
-            Keybinds = DefaultKeybinds;
-            PluginKeybinds = new Dictionary<string, KeybindList>();
+            _model = model;
+            _keybinds = new InputActionMap<EditorKeybindActions>(model.Keybinds);
+            Version++;
         }
+
+        /// <inheritdoc />
+        public IReadOnlyDictionary<EditorKeybindActions, KeybindList> ReadOnlyKeybinds =>
+            new ReadOnlyDictionary<EditorKeybindActions, KeybindList>(_model.Keybinds);
+
+        /// <inheritdoc />
+        public KeybindList GetOrDefault(EditorKeybindActions action)
+        {
+            return _keybinds.GetOrDefault(action);
+        }
+
+        /// <inheritdoc />
+        public void AddKeybindToAction(EditorKeybindActions action, Keybind keybind)
+        {
+            Version++;
+            _keybinds.AddKeybindToAction(action, keybind);
+        }
+
+        /// <inheritdoc />
+        public bool RemoveKeybindFromAction(EditorKeybindActions action, Keybind keybind)
+        {
+            if (!_keybinds.RemoveKeybindFromAction(action, keybind))
+                return false;
+
+            Version++;
+            return true;
+
+        }
+
+        /// <inheritdoc />
+        public KeybindList? SetKeybindsForAction(EditorKeybindActions action,
+            KeybindList keybindList)
+        {
+            Version++;
+            return _keybinds.SetKeybindsForAction(action, keybindList);
+        }
+
+        /// <inheritdoc />
+        public bool TryGetActionsFor(Keybind keybind, out HashSet<EditorKeybindActions>? set)
+        {
+            return _keybinds.TryGetActionsFor(keybind, out set);
+        }
+
+        public IReadOnlyDictionary<string, KeybindList> PluginKeybinds =>
+            new ReadOnlyDictionary<string, KeybindList>(_model.PluginKeybinds);
+
+        private static EditorInputConfig Default() =>
+            new(new EditorInputConfigModel(s_defaultKeybinds));
 
         public static EditorInputConfig LoadFromConfig()
         {
-            var config = new EditorInputConfig();
+            var config = Default();
 
             if (!File.Exists(ConfigPath))
             {
@@ -47,33 +100,17 @@ namespace Quaver.Shared.Screens.Edit.Input
             }
             catch (YamlException e)
             {
-                Logger.Error($"Could not load editor key config, using default: Failed to parse configuration in line {e.Start.Line}", LogType.Runtime);
+                Logger.Error(
+                    $"Could not load editor key config, using default: {e}",
+                    LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Error($"Could not load editor key config, using default: {e.Message}", LogType.Runtime);
+                Logger.Error($"Could not load editor key config, using default: {e.Message}",
+                    LogType.Runtime);
             }
 
             return config;
-        }
-
-        public KeybindList GetOrDefault(KeybindActions action) => Keybinds.GetValueOrDefault(action, new KeybindList());
-
-        public KeybindList GetPluginKeybindOrDefault(string name) => PluginKeybinds.GetValueOrDefault(name, new KeybindList());
-
-        public void AddKeybindToAction(KeybindActions action, Keybind keybind)
-        {
-            if (!Keybinds.ContainsKey(action))
-                Keybinds.Add(action, new KeybindList(keybind));
-            else
-                Keybinds[action].Add(keybind);
-        }
-
-        public bool RemoveKeybindFromAction(KeybindActions action, Keybind keybind)
-        {
-            if (Keybinds.ContainsKey(action))
-                return Keybinds[action].Remove(keybind);
-            return false;
         }
 
         public void SaveToConfig()
@@ -105,52 +142,36 @@ namespace Quaver.Shared.Screens.Edit.Input
         {
             var count = 0;
 
-            foreach (var (action, defaultBind) in DefaultKeybinds)
+            foreach (var (action, defaultBind) in s_defaultKeybinds)
             {
-                if (!Keybinds.ContainsKey(action))
-                {
-                    var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
-                    Keybinds.Add(action, bind);
+                var bind = fillWithDefaultBinds ? defaultBind : new KeybindList();
+                if (_keybinds.SetKeybindsForActionIfNotExits(action, bind))
                     count++;
-                }
             }
 
             if (count > 0)
             {
                 SaveToConfig();
-                Logger.Debug($"Filled {count} missing action keybinds in key config file", LogType.Runtime);
+                Logger.Debug($"Filled {count} missing action keybinds in key config file",
+                    LogType.Runtime);
             }
 
+            Version++;
             return count;
         }
 
+        /// <inheritdoc />
+        public KeybindList DefaultKeybindsFor(EditorKeybindActions action) =>
+            s_defaultKeybinds[action];
+
         public void ResetConfigFile()
         {
-            Keybinds = DefaultKeybinds;
-            PluginKeybinds = new Dictionary<string, KeybindList>();
+            _model.Keybinds = s_defaultKeybinds;
+            _model.PluginKeybinds.Clear();
+            _keybinds = new InputActionMap<EditorKeybindActions>(_model.Keybinds);
             SaveToConfig();
+            Version++;
             Logger.Debug("Reset editor keybind config file", LogType.Runtime);
-        }
-
-        public Dictionary<Keybind, HashSet<KeybindActions>> ReverseDictionary(
-            Dictionary<KeybindActions, Bindable<bool>> invertScrollingActions)
-        {
-            var dict = new Dictionary<Keybind, HashSet<KeybindActions>>();
-
-            foreach (var (action, keybinds) in Keybinds)
-            {
-                var invertScrolling = invertScrollingActions.TryGetValue(action, out var invert)
-                                      && invert.Value;
-                foreach (var keybind in keybinds.MatchingKeybinds(invertScrolling))
-                {
-                    if (dict.ContainsKey(keybind))
-                        dict[keybind].Add(action);
-                    else
-                        dict[keybind] = new HashSet<KeybindActions>() { action };
-                }
-            }
-
-            return dict;
         }
 
         private static EditorInputConfig Deserialize(StreamReader file)
@@ -160,15 +181,15 @@ namespace Quaver.Shared.Screens.Edit.Input
                 .IgnoreUnmatchedProperties()
                 .Build();
 
-            var config = ds.Deserialize<EditorInputConfig>(file);
+            var config = ds.Deserialize<EditorInputConfigModel>(file);
 
             if (config == null)
             {
                 Logger.Debug("Config file was empty, creating new default", LogType.Runtime);
-                config = new EditorInputConfig();
+                return Default();
             }
 
-            return config;
+            return new(config);
         }
 
         private string Serialize()
@@ -180,12 +201,13 @@ namespace Quaver.Shared.Screens.Edit.Input
                 .Build();
 
             var stringWriter = new StringWriter { NewLine = "\r\n" };
-            serializer.Serialize(stringWriter, this);
+            serializer.Serialize(stringWriter, _model);
             return stringWriter.ToString();
         }
 
+#pragma warning disable format // @formatter:off
         [YamlIgnore]
-        public static Dictionary<KeybindActions, KeybindList> DefaultKeybinds = new Dictionary<KeybindActions, KeybindList>()
+        private static Dictionary<EditorKeybindActions, KeybindList> s_defaultKeybinds = new()
         {
             {ExitEditor, new KeybindList(Keys.Escape)},
             {PlayPause, new KeybindList(new[] {new Keybind(KeyModifiers.Free, Keys.Space), new Keybind(KeyModifiers.Free, Keys.Enter)})},
@@ -319,5 +341,6 @@ namespace Quaver.Shared.Screens.Edit.Input
             {SeekToLastBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Left)},
             {SeekToNextBookmark, new KeybindList(KeyModifiers.Ctrl, Keys.Right)}
         };
+#pragma warning restore format // @formatter:on
     }
 }

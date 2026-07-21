@@ -4,7 +4,7 @@ using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.EventEmitters;
 
-namespace Quaver.Shared.Screens.Edit.Input
+namespace Quaver.Shared.Input
 {
     public sealed class KeybindListYamlFlowStyle : ChainedEventEmitter
     {

@@ -41,6 +41,7 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Localization;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.Imgur;
@@ -158,6 +159,52 @@ namespace Quaver.Shared
         ///     The current activated screen.
         /// </summary>
         public QuaverScreen CurrentScreen { get; set; }
+
+        private readonly GlobalInputScopeToken _token;
+
+        private class Token(QuaverGame game) : GlobalInputScopeToken
+        {
+            /// <inheritdoc />
+            public override GlobalInputScope Scope => GlobalInputScope.Global;
+
+            /// <inheritdoc />
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false)
+            {
+                switch (action)
+                {
+                    case GlobalKeybindActions.Screenshot:
+                        game.Screenshot();
+                        break;
+                    case GlobalKeybindActions.OpenOptions:
+                        game.OpenOptions();
+                        break;
+                    case GlobalKeybindActions.ToggleFullscreen:
+                        game.ToggleFullscreen();
+                        break;
+                    case GlobalKeybindActions.TogglePause:
+                        game.TogglePause();
+                        break;
+                    case GlobalKeybindActions.CycleFpsLimiter:
+                        game.CycleFpsLimiter();
+                        break;
+                    case GlobalKeybindActions.ToggleOnlineHub:
+                        game.ToggleOnlineHub();
+                        break;
+                    case GlobalKeybindActions.ReloadSkin:
+                        game.ReloadSkin();
+                        break;
+                    case GlobalKeybindActions.Back:
+                        return GlobalInputHandleResult.Pass;
+                    default:
+                        return GlobalInputHandleResult.Pass;
+                }
+
+                return GlobalInputHandleResult.Consumed;
+            }
+        }
+
+        public GlobalInputManager InputManager { get; } = new();
 
         /// <summary>
         ///     Unique identifier of the client's assembly version.
@@ -307,6 +354,7 @@ namespace Quaver.Shared
 #endif
         {
             Content.RootDirectory = "Content";
+            _token = new Token(this);
 
             if (Environment.GetEnvironmentVariable("QUAVER_LOGLEVEL") is null)
                 Logger.MinimumLogLevel = IsDeployedBuild ? LogLevel.Important : LogLevel.Debug;
@@ -451,7 +499,6 @@ namespace Quaver.Shared
             DialogManager.Update(gameTime);
 
             HandleGlobalInput(gameTime);
-            HandleOnlineHubInput();
 
             NotificationManager.Update(gameTime);
             VolumeController?.Update(gameTime);
@@ -778,19 +825,11 @@ namespace Quaver.Shared
         /// <param name="gameTime"></param>
         private void HandleGlobalInput(GameTime gameTime)
         {
-            HandleKeyPressF7();
-            HandleKeyPressCtrlO();
-            HandleKeyPressCtrlS();
-            HandleKeyPressAltEnter();
-            HandleKeyPressScreenshot();
-            HandleKeyPressCtrlP();
+            InputManager.HandleInput();
         }
 
-        private void HandleKeyPressCtrlP()
+        private void TogglePause()
         {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
-
             switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Gameplay:
@@ -798,7 +837,7 @@ namespace Quaver.Shared
                     break;
                 default:
                     // Pause/Unpause music
-                    if (KeyboardManager.IsUniqueKeyPress(Keys.P) && AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
+                    if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
                     {
                         if (AudioEngine.Track.IsPaused)
                         {
@@ -819,12 +858,8 @@ namespace Quaver.Shared
         ///     Handles when the user presses the F7 button
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void HandleKeyPressF7()
+        private void CycleFpsLimiter()
         {
-            // Handles FPS limiter changes
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F7))
-                return;
-
             var availableFpsLimitTypes = GetAvailableFpsLimitTypes();
             var index = availableFpsLimitTypes.IndexOf(ConfigManager.FpsLimiterType.Value);
 
@@ -876,18 +911,12 @@ namespace Quaver.Shared
         /// <summary>
         ///     Handles when the user holds either Control (CTRL) button and presses O
         /// </summary>
-        private void HandleKeyPressCtrlO()
+        private void OpenOptions()
         {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.O))
-                return;
-
             if (DialogManager.Dialogs.Count > 0)
                 return;
 
-            switch (CurrentScreen.Type)
+            switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
@@ -905,17 +934,10 @@ namespace Quaver.Shared
         /// <summary>
         ///    Handles when the user holds Control, Shift and Alt, and presses R
         /// </summary>
-        private void HandleKeyPressCtrlS()
+        private void ReloadSkin()
         {
-            // Check for modifier keys
-            if (!KeyboardManager.IsCtrlDown())
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.S))
-                return;
-
             // Handle skin reloading
-            switch (CurrentScreen.Type)
+            switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Menu:
                 case QuaverScreenType.Select:
@@ -928,17 +950,10 @@ namespace Quaver.Shared
         /// <summary>
         ///    Handles when the user holds either Alt (ALT) button and presses Enter
         /// </summary>
-        private void HandleKeyPressAltEnter()
+        private void ToggleFullscreen()
         {
             // Don't allow to change to fullscreen when playing
             if (CurrentScreen?.Type == QuaverScreenType.Gameplay)
-                return;
-
-            // Check for modifier keys
-            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 return;
 
             ConfigManager.WindowFullScreen.Value = !ConfigManager.WindowFullScreen.Value;
@@ -947,11 +962,8 @@ namespace Quaver.Shared
         /// <summary>
         ///     Handles taking screenshots of the game when the user presses F12, and shift to upload.
         /// </summary>
-        private void HandleKeyPressScreenshot()
+        private void Screenshot()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScreenshot.Value))
-                return;
-
             try
             {
                 SkinManager.Skin.SoundScreenshot?.CreateChannel()?.Play();
@@ -1134,11 +1146,8 @@ namespace Quaver.Shared
         /// <summary>
         ///     Handles input when opening the online hub
         /// </summary>
-        private void HandleOnlineHubInput()
+        private void ToggleOnlineHub()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F8) && !KeyboardManager.IsUniqueKeyPress(Keys.F9))
-                return;
-
             if (CloseOnlineHubDialog())
                 return;
 
