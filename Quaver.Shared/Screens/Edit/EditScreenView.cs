@@ -344,6 +344,9 @@ namespace Quaver.Shared.Screens.Edit
 
             // Makes it so that the playfield bookmark tooltips appear above reference difficulty
             Playfield.Parent = Container;
+
+            // Keep the selection rectangle above both playfields and their hit objects.
+            Selector.Parent = Container;
         }
 
         /// <summary>

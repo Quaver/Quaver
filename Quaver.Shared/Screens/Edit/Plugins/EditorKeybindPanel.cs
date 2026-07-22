@@ -385,6 +385,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     /// <returns></returns>
     public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
     {
-        new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf", 16),
+        new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf",
+            ConfigManager.EditorImGuiFontSize.Value),
     }, false);
 }

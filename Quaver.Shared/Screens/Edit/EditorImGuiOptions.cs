@@ -11,11 +11,11 @@ public static class EditorImGuiOptions
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    public static ImGuiOptions GetOptions(int size)
+    public static ImGuiOptions GetOptions()
     {
         var notoSansCjkPath = $@"{WobbleGame.WorkingDirectory}/Fonts/noto-sans-cjk.ttc";
         return new ImGuiOptions([
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/inter.ttf", size,
+            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/inter.ttf", ConfigManager.EditorImGuiFontSize.Value,
             [
                 new ImGuiFontFallback(notoSansCjkPath,
                     QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
