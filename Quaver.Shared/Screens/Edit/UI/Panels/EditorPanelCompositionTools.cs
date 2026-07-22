@@ -26,17 +26,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <summary>
         /// </summary>
         /// <param name="tool"></param>
-        public EditorPanelCompositionTools(Bindable<EditorCompositionTool> tool) : base("Composition Tools")
+        public EditorPanelCompositionTools(Bindable<EditorCompositionTool> tool)
+            : base(LocalizationManager.Get("Screen_Editor_CompositionTools"))
         {
             Tool = tool;
             Depth = 1;
 
             ToolList = new List<DrawableEditorCompositionTool>
             {
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Select, UserInterface.EditorIconSelect, "Select"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Note, UserInterface.EditorIconNote, "Note"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.LongNote, UserInterface.EditorIconLongNote, "Long Note"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Mine, UserInterface.EditorIconMine, "Mine"),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Select, UserInterface.EditorIconSelect,
+                    LocalizationManager.Get("Screen_Editor_SelectTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Note, UserInterface.EditorIconNote,
+                    LocalizationManager.Get("Screen_Editor_NoteTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.LongNote, UserInterface.EditorIconLongNote,
+                    LocalizationManager.Get("Screen_Editor_LongNoteTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Mine, UserInterface.EditorIconMine,
+                    LocalizationManager.Get("Screen_Editor_MineTool")),
             };
 
             AlignTools();

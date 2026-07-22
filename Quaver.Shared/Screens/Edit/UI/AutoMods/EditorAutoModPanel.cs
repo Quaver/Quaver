@@ -6,6 +6,7 @@ using Quaver.API.Maps.AutoMod;
 using Quaver.API.Maps.AutoMod.Issues;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Wobble.Managers;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -40,6 +41,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         private EditorAutoModScrollPanel ScrollPanel { get; set; }
 
         private const int SpacingY = 16;
+
+        private const int PaddingBottom = 12;
 
         public EditorAutoModPanel(Qua map, List<Qua> mapset, EditorAutoModPanelContainer container) : base(UserInterface.AutoModPanel)
         {
@@ -104,7 +107,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private void CreateIssueCount()
         {
-            IssueCount = new TextKeyValue("Issue Count:", "0", 22, Color.White)
+            IssueCount = new TextKeyValue(LocalizationManager.Get("Screen_Editor_IssueCountLabel"), "0", 22, Color.White)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -122,13 +125,19 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             IssueCount.ChangeValue($"{count:n0}");
         });
 
-        private void CreateScrollPanel() => ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod,
-            FilterCategory, this)
+        private void CreateScrollPanel()
         {
-            Parent = this,
-            Alignment = Alignment.BotCenter,
-            Y = -12
-        };
+            ScrollPanel = new EditorAutoModScrollPanel(Map, AutoMod, FilterCategory, this)
+            {
+                Parent = this,
+                Alignment = Alignment.BotCenter,
+                Y = -PaddingBottom
+            };
+
+            var top = IssueCount.Y + IssueCount.Height + SpacingY;
+            ScrollPanel.Height = Height - top - PaddingBottom;
+            ScrollPanel.RecalculateContainerHeight();
+        }
 
         private void OnAutoModUpdated(object sender, BindableValueChangedEventArgs<AutoModMapset> e)
             => UpdateIssueCount();

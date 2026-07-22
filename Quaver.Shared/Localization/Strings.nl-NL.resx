@@ -385,7 +385,7 @@
     <value>RANKING:</value>
   </data>
   <data name="Screen_Selection_Rate" xml:space="preserve">
-    <value>Beoordeling</value>
+    <value>Snelheid</value>
   </data>
   <data name="Screen_Selection_RecentlyPlayed" xml:space="preserve">
     <value>Recent Gespeeld</value>
@@ -807,7 +807,7 @@ als Uitstekend werden geraakt.</value>
     <value>Visuele Afwijking</value>
   </data>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
-    <value>Calibreer Afwijking</value>
+    <value>Kalibreer Afwijking</value>
   </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
     <value>Pitch Audio Met Afspeelsnelheid</value>

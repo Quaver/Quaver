@@ -6,6 +6,7 @@ using MonoGame.Extended.Timers;
 using MoreLinq.Extensions;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
+using Wobble.Managers;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks;
@@ -287,7 +288,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             if (!DenseLinesDetected && FrameSkipFactor > 1)
             {
                 DenseLinesDetected = true;
-                NotificationManager.Show(NotificationLevel.Warning, "Dense lines detected. Lines will be drawn less frequently.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_DenseLinesDetected"));
             }
             
             if (_frameCounter++ % FrameSkipFactor != 0)

@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
+using Wobble.Managers;
 using Quaver.Shared.Screens.Edit.UI.Playfield;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble.Bindables;
@@ -44,7 +45,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// <summary>
         /// </summary>
         public EditorPanelLayers(EditorActionManager actionManager, Qua workingMap, Bindable<EditorLayerInfo> selectedLayer,
-            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects, Bindable<HitObjectColoring> hitObjectColoring) : base("Layers")
+            EditorLayerInfo defaultLayer, BindableList<HitObjectInfo> selectedHitObjects, Bindable<HitObjectColoring> hitObjectColoring)
+            : base(LocalizationManager.Get("Screen_Editor_Layers"))
         {
             ActionManager = actionManager;
             WorkingMap = workingMap;
@@ -90,14 +92,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Parent = Header,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(20, 20),
-                X = -HeaderText.X
+                X = CollapseButton.X - CollapseButton.Width - HeaderText.X
             };
 
             DeleteLayer.Clicked += (sender, args) =>
             {
                 if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        LocalizationManager.Get("Screen_Editor_CannotDeleteDefaultLayer"));
                     return;
                 }
 
@@ -115,14 +118,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
                 Parent = Header,
                 Alignment = Alignment.MidRight,
                 Size = DeleteLayer.Size,
-                X = DeleteLayer.X - DeleteLayer.Width + DeleteLayer.X
+                X = DeleteLayer.X - DeleteLayer.Width - HeaderText.X
             };
 
             CreateLayer.Clicked += (sender, args) =>
             {
                 var layer = new EditorLayerInfo
                 {
-                    Name = $"Layer {WorkingMap.EditorLayers.Count + 1}",
+                    Name = LocalizationManager.Get("Screen_Editor_Layer", WorkingMap.EditorLayers.Count + 1),
                     ColorRgb = "255,255,255"
                 };
 
@@ -144,7 +147,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             {
                 Parent = Header,
                 Alignment = Alignment.MidRight,
-                X = CreateLayer.X - CreateLayer.Width + DeleteLayer.X
+                X = CreateLayer.X - CreateLayer.Width - HeaderText.X
             };
         }
 

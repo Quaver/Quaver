@@ -27,7 +27,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ColorDialog(string header = "SELECT COLOR", string confirmationText = "Enter a new RGB color...") : base(header, confirmationText)
+        public ColorDialog(string header = null, string confirmationText = null) : base(
+            header ?? LocalizationManager.Get("Screen_Editor_SelectColor"),
+            confirmationText ?? LocalizationManager.Get("Screen_Editor_SelectColorMessage"))
         {
             CreateTextbox();
             CreateColorBox();
@@ -48,7 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             var val = $"{color.R},{color.G},{color.B}";
 
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, val, "Enter RGB color (ex: 255,255,255)...", OnSubmit)
+                20, val, LocalizationManager.Get("Screen_Editor_RgbColorPlaceholder"), OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotLeft,

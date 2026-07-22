@@ -14,8 +14,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
     {
         private RoundedButton YellowNoButton { get; }
 
-        public SaveAndExitDialog(EditScreen screen) : base("EXIT EDITOR",
-            "You have unsaved changes. Would you like to save?")
+        public SaveAndExitDialog(EditScreen screen) : base(LocalizationManager.Get("Screen_Editor_ExitEditor"),
+            LocalizationManager.Get("Screen_Editor_SaveBeforeExit"))
         {
             YesAction += () =>
             {
@@ -41,7 +41,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Tint = ColorHelper.HexToColor("#F2994A")
             };
 
-            YellowNoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "NO", 20, Color.White);
+            YellowNoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Editor_No"), 20, Color.White);
 
             YesButton.X -= 80;
             NoButton.X = -YesButton.X;

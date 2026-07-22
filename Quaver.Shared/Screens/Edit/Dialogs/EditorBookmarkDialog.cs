@@ -27,7 +27,10 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         protected Textbox Textbox { get; set; }
 
         public EditorBookmarkDialog(EditorActionManager manager, IAudioTrack track, BookmarkInfo editingBookmark)
-            : base(editingBookmark == null ? "ADD BOOKMARK" : "EDIT BOOKMARK", "Add a custom note for your bookmark...")
+            : base(LocalizationManager.Get(editingBookmark == null
+                    ? "Screen_Editor_AddBookmark"
+                    : "Screen_Editor_EditBookmark"),
+                LocalizationManager.Get("Screen_Editor_BookmarkDialogMessage"))
         {
             ActionManager = manager;
             Track = track;
@@ -53,7 +56,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, EditingBookmark?.Note ?? "", "Add a bookmark note...", OnSubmit)
+                20, EditingBookmark?.Note ?? "", LocalizationManager.Get("Screen_Editor_BookmarkNotePlaceholder"), OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,

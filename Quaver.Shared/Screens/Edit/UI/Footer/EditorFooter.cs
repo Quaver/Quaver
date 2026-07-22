@@ -187,8 +187,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             FastForwardButton.Clicked += (o, e) => Screen.SeekToNearestBookmark(Direction.Forward);
             FastForwardButton.Hovered += (o, e) =>
             {
-                Screen.ActivateTooltip(new Tooltip("Seek to the next bookmark in the timeline.\n" +
-                                                   "" + "Hotkey: CTRL + Right", ColorHelper.HexToColor("#808080")));
+                Screen.ActivateTooltip(new Tooltip(LocalizationManager.Get("Screen_Editor_NextBookmarkTooltip"),
+                    ColorHelper.HexToColor("#808080")));
             };
             FastForwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }
@@ -209,8 +209,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             BackwardButton.Clicked += (sender, args) => Screen.SeekToNearestBookmark(Direction.Backward);
             BackwardButton.Hovered += (o, e) =>
             {
-                Screen.ActivateTooltip(new Tooltip("Seek to the previous bookmark in the timeline.\n" +
-                                                   "Hotkey: CTRL + Left", ColorHelper.HexToColor("#808080")));
+                Screen.ActivateTooltip(new Tooltip(LocalizationManager.Get("Screen_Editor_PreviousBookmarkTooltip"),
+                    ColorHelper.HexToColor("#808080")));
             };
             BackwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }

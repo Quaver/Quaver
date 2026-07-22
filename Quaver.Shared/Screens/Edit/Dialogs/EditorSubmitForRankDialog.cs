@@ -13,13 +13,16 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
+using Wobble.Managers;
 using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorSubmitForRankDialog : LoadingDialog
     {
-        public EditorSubmitForRankDialog(EditScreen screen) : base("SUBMIT FOR RANK", $"Please wait while your map is being submitted for rank...", () =>
+        public EditorSubmitForRankDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_SubmitForRank"),
+            LocalizationManager.Get("Screen_Editor_SubmittingForRankMessage"), () =>
         {
             // Run AutoMod and search for any issues.
             var autoMod = new AutoModMapset(screen.Map.Mapset.Maps.Select(x => x.LoadQua()).ToList());
@@ -30,8 +33,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
             if (mapsetIssues || mapIssues)
             {
-                NotificationManager.Show(NotificationLevel.Error, $"Your mapset has issues that prevent it from being ranked. Please " +
-                                                                  $"review the AutoMod for each difficulty, and then try again.");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_RankingIssuesFound"));
 
                 var view = screen.View as EditScreenView;
 
@@ -71,7 +74,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             }
             catch (Exception e)
             {
-                NotificationManager.Show(NotificationLevel.Error, $"An error occured while submitting your mapset for rank.");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_SubmitForRankError"));
                 Logger.Error(e, LogType.Runtime);
             }
         })

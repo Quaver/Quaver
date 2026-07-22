@@ -6,6 +6,7 @@ using ManagedBass.Fx;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Graphics.Notifications;
+using Wobble.Managers;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Audio.Tracks;
@@ -103,7 +104,8 @@ namespace Quaver.Shared.Screens.Edit.Components
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "Failed to detect BPM and offset!");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        LocalizationManager.Get("Screen_Editor_DetectBpmAndOffsetError"));
                 }
                 finally
                 {

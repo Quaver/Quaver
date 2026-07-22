@@ -82,7 +82,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Waveform
 
         public override void Destroy()
         {
-            _chunks.Destroy();
+            if (_chunks == null)
+                DisposeDecoder();
+            else
+                _chunks.Destroy();
+
             base.Destroy();
         }
 

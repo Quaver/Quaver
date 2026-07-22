@@ -457,6 +457,8 @@ namespace Quaver.Shared.Screens.Options
             }
 
             options.Add(new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage));
+            options.Add(new OptionsSlider(containerRect, "Editor ImGui Font Size", ConfigManager.EditorImGuiFontSize,
+                value => $"{value}px"));
 
             return options;
         }
