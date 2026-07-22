@@ -13,7 +13,7 @@ using Wobble.Logging;
 namespace Quaver.Shared.Screens
 {
     /// <summary>
-    ///     Creates menu screens from either the legacy implementation set or the partial v2 set.
+    ///     Creates menu screens from either the legacy implementation set or the replacement set.
     /// </summary>
     internal static class QuaverScreenFactory
     {
@@ -28,47 +28,47 @@ namespace Quaver.Shared.Screens
             Theater = () => new TheaterScreen()
         };
 
-        private static readonly ScreenFactorySet V2 = V2ScreenRegistry.CreateFactorySet();
+        private static readonly ScreenFactorySet NewScreens = NewScreenRegistry.CreateFactorySet();
 
         /// <summary>
-        ///     The startup snapshot of the v2 configuration value.
+        ///     The startup snapshot of the replacement-screen configuration value.
         /// </summary>
-        private static bool UseV2 { get; set; }
+        private static bool UseNewScreens { get; set; }
 
-        internal static void Initialize(bool useV2) => UseV2 = useV2;
+        internal static void Initialize(bool useNewScreens) => UseNewScreens = useNewScreens;
 
         internal static QuaverScreen CreateMainMenu() =>
-            Resolve(nameof(ScreenFactorySet.MainMenu), Legacy.MainMenu!, V2.MainMenu)();
+            Resolve(nameof(ScreenFactorySet.MainMenu), Legacy.MainMenu!, NewScreens.MainMenu)();
 
         internal static QuaverScreen CreateSelection(
             SelectScrollContainerType? activeScrollContainer = null,
             SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard) =>
-            Resolve(nameof(ScreenFactorySet.Selection), Legacy.Selection!, V2.Selection)(activeScrollContainer, activeLeftPanel);
+            Resolve(nameof(ScreenFactorySet.Selection), Legacy.Selection!, NewScreens.Selection)(activeScrollContainer, activeLeftPanel);
 
         internal static QuaverScreen CreateDownloading(QuaverScreenType previousScreen = QuaverScreenType.Menu) =>
-            Resolve(nameof(ScreenFactorySet.Downloading), Legacy.Downloading!, V2.Downloading)(previousScreen);
+            Resolve(nameof(ScreenFactorySet.Downloading), Legacy.Downloading!, NewScreens.Downloading)(previousScreen);
 
         internal static QuaverScreen CreateMultiplayerLobby() =>
-            Resolve(nameof(ScreenFactorySet.MultiplayerLobby), Legacy.MultiplayerLobby!, V2.MultiplayerLobby)();
+            Resolve(nameof(ScreenFactorySet.MultiplayerLobby), Legacy.MultiplayerLobby!, NewScreens.MultiplayerLobby)();
 
         internal static QuaverScreen CreateMusicPlayer() =>
-            Resolve(nameof(ScreenFactorySet.MusicPlayer), Legacy.MusicPlayer!, V2.MusicPlayer)();
+            Resolve(nameof(ScreenFactorySet.MusicPlayer), Legacy.MusicPlayer!, NewScreens.MusicPlayer)();
 
         internal static QuaverScreen CreateTheater() =>
-            Resolve(nameof(ScreenFactorySet.Theater), Legacy.Theater!, V2.Theater)();
+            Resolve(nameof(ScreenFactorySet.Theater), Legacy.Theater!, NewScreens.Theater)();
 
-        private static T Resolve<T>(string screen, T legacy, T? v2) where T : Delegate
+        private static T Resolve<T>(string screen, T legacy, T? replacement) where T : Delegate
         {
-            if (!UseV2)
+            if (!UseNewScreens)
                 return legacy;
 
-            if (v2 != null)
+            if (replacement != null)
             {
-                Logger.Debug($"Screens v2 resolved `{screen}` to its v2 implementation.", LogType.Runtime);
-                return v2;
+                Logger.Debug($"New screens resolved `{screen}` to its replacement implementation.", LogType.Runtime);
+                return replacement;
             }
 
-            Logger.Debug($"Screens v2 has no `{screen}` implementation; falling back to legacy.", LogType.Runtime);
+            Logger.Debug($"New screens has no `{screen}` implementation; falling back to legacy.", LogType.Runtime);
             return legacy;
         }
     }

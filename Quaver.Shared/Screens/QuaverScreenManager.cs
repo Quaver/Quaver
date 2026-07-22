@@ -6,6 +6,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
@@ -13,6 +15,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.V2;
 using Wobble;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Logging;
@@ -35,7 +38,7 @@ namespace Quaver.Shared.Screens
 
         public static void Initialize()
         {
-            QuaverScreenFactory.Initialize(ConfigManager.UseScreensV2.Value);
+            QuaverScreenFactory.Initialize(ConfigManager.UseNewScreens.Value);
             ScreenLoadTask = new TaskHandler<Func<QuaverScreen>, QuaverScreen>(LoadScreen);
             ScreenLoadTask.OnCompleted += OnCompleted;
         }
@@ -100,8 +103,19 @@ namespace Quaver.Shared.Screens
         {
             var game = (QuaverGame)GameBase.Game;
 
-            ScreenManager.ChangeScreen(screen, switchImmediately);
+            IReadOnlyCollection<string> retainedElements = Array.Empty<string>();
+
+            if (game.CurrentScreen is IPersistentScreen currentPersistent &&
+                screen is IPersistentScreen nextPersistent)
+            {
+                retainedElements = currentPersistent.PersistentElementKeys
+                    .Intersect(nextPersistent.PersistentElementKeys, StringComparer.Ordinal)
+                    .ToArray();
+            }
+
+            ScreenManager.ChangeScreen(screen, retainedElements, switchImmediately);
             game.CurrentScreen = screen;
+            game.RefreshFpsCounterVisibility();
 
             // Update client status on the server.
             var status = screen.GetClientStatus();

@@ -1,9 +1,9 @@
 namespace Quaver.Shared.Screens.V2
 {
     /// <summary>
-    ///     Explicit registration point for completed v2 screens.
+    ///     Explicit registration point for completed replacement screens.
     /// </summary>
-    internal static class V2ScreenRegistry
+    internal static class NewScreenRegistry
     {
         internal static ScreenFactorySet CreateFactorySet() => new()
         {

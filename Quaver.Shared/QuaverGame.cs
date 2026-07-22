@@ -116,6 +116,7 @@ using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
+using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
 
 namespace Quaver.Shared
@@ -638,14 +639,21 @@ namespace Quaver.Shared
                 Visible = false
             };
 
-            ShowFpsCounter(Fps);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(Fps);
+            RefreshFpsCounterVisibility();
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => RefreshFpsCounterVisibility();
         }
 
         /// <summary>
-        ///     Shows the FPS counter based on the current config variable.
+        ///     Shows the FPS counter based on the current config variable and screen.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
+        internal void RefreshFpsCounterVisibility()
+        {
+            if (Fps == null)
+                return;
+
+            Fps.Visible = ConfigManager.FpsCounter.Value &&
+                          !(CurrentScreen is NewMainMenuScreen);
+        }
 
         /// <summary>
         ///     Uses a custom fps config
