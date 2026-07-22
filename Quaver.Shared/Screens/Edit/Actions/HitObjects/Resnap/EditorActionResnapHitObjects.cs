@@ -6,6 +6,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.Edit.Actions.HitObjects.PlaceBatch;
 using Wobble.Logging;
+using Wobble.Managers;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Interop;
 using Quaver.Shared.Audio;
@@ -128,7 +129,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
             {
                 if (ShowNotif)
                 {
-                    var notifMessage = $"Resnapped {resnapCount} note{(resnapCount == 1 ? "" : "s")}";
+                    var notifMessage = LocalizationManager.Get(resnapCount == 1
+                        ? "Screen_Editor_ResnappedNote"
+                        : "Screen_Editor_ResnappedNotes", resnapCount);
                     NotificationManager.Show(NotificationLevel.Info, notifMessage);
                 }
 
@@ -137,7 +140,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
             }
             else if (ShowNotif)
             {
-                NotificationManager.Show(NotificationLevel.Info, $"No notes resnapped");
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Screen_Editor_NoNotesResnapped"));
             }
         }
 
@@ -215,7 +219,9 @@ namespace Quaver.Shared.Screens.Edit.Actions.HitObjects.Resnap
             if (ShowNotif)
             {
                 var offsnapCount = NoteTimeAdjustments.Values.Count(x => x.StartTimeWasChanged || x.EndTimeWasChanged);
-                var notifMessage = $"Unsnapped {offsnapCount} note{(offsnapCount == 1 ? "" : "s")}";
+                var notifMessage = LocalizationManager.Get(offsnapCount == 1
+                    ? "Screen_Editor_UnsnappedNote"
+                    : "Screen_Editor_UnsnappedNotes", offsnapCount);
                 NotificationManager.Show(NotificationLevel.Info, notifMessage);
             }
 

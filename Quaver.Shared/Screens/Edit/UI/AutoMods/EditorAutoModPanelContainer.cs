@@ -21,6 +21,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using Wobble.Managers;
 using Wobble.Platform;
 
 namespace Quaver.Shared.Screens.Edit.UI.AutoMods
@@ -185,7 +186,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
         /// </summary>
         /// <param name="issue"></param>
         private void OnNoBackground(AutoModIssueNoBackground issue)
-            => NotificationManager.Show(NotificationLevel.Info, "To add a background image, drag a .png or .jpg into the window.");
+            => NotificationManager.Show(NotificationLevel.Info,
+                LocalizationManager.Get("Screen_Editor_AddBackgroundImageInstructionPngJpg"));
 
         /// <summary>
         /// </summary>

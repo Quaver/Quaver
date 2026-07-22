@@ -1,13 +1,15 @@
 ﻿using System;
 using Quaver.Shared.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorSubmitForRankConfirmationDialog : YesNoDialog
     {
-        public EditorSubmitForRankConfirmationDialog(EditScreen screen) : base("SUBMIT FOR RANK",
-            "Are you sure you would like to submit your mapset for rank?\nNote: It must follow the ranking criteria in order to be accepted.",
+        public EditorSubmitForRankConfirmationDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_SubmitForRank"),
+            LocalizationManager.Get("Screen_Editor_SubmitForRankConfirmation"),
             () => DialogManager.Show(new EditorSubmitForRankDialog(screen)))
         {
         }

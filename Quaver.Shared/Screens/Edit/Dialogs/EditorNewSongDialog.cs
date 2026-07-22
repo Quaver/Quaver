@@ -3,13 +3,14 @@ using Quaver.Shared.Graphics;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorNewSongDialog : YesNoDialog
     {
-        public EditorNewSongDialog() : base("CREATE NEW MAPSET",
-            "To create a new mapset, drag a .mp3 file into the game window...")
+        public EditorNewSongDialog() : base(LocalizationManager.Get("Screen_Editor_CreateNewMapset"),
+            LocalizationManager.Get("Screen_Editor_CreateNewMapsetMessage"))
         {
             YesButton.Visible = false;
             YesButton.IsClickable = false;

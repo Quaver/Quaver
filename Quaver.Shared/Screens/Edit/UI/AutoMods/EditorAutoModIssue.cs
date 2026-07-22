@@ -127,15 +127,15 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 switch (Item.Level)
                 {
                     case AutoModIssueLevel.Warning:
-                        text = "This is a warning of a potential error. You can ignore this if it isn't an issue.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModWarningTooltip");
                         color = Color.Yellow;
                         break;
                     case AutoModIssueLevel.Critical:
-                        text = "This is a critical error which affects the playability of your map.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModCriticalTooltip");
                         color = Color.Crimson;
                         break;
                     case AutoModIssueLevel.Ranking:
-                        text = "This is a ranking criteria error. Without fixing this, your map cannot be ranked.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModRankingTooltip");
                         color = Colors.MainBlue;
                         break;
                     default:

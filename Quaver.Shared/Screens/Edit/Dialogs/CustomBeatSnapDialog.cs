@@ -29,8 +29,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public CustomBeatSnapDialog(BindableInt beatSnap, List<int> availableBeatSnaps) : base("CUSTOM BEAT SNAP",
-            "Enter a value or range of values for the custom beat snap divisor (1/?)...")
+        public CustomBeatSnapDialog(BindableInt beatSnap, List<int> availableBeatSnaps) : base(
+            LocalizationManager.Get("Screen_Editor_CustomBeatSnap"),
+            LocalizationManager.Get("Screen_Editor_CustomBeatSnapMessage"))
         {
             BeatSnap = beatSnap;
             AvailableBeatSnaps = availableBeatSnaps;
@@ -49,7 +50,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, "", "Enter a beat snap value or range (max 48, e.g. \"7\" or \"5-9\")", s => OnSubmit(s))
+                20, "", LocalizationManager.Get("Screen_Editor_CustomBeatSnapPlaceholder"), s => OnSubmit(s))
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,

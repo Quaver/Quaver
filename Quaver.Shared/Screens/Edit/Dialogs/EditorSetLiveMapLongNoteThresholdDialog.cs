@@ -22,8 +22,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorSetLiveMapLongNoteThresholdDialog(EditScreen screen) : base("SET LIVEMAP LN THRESHOLD",
-            "Enter the minimum length of a long note during live-mapping...")
+        public EditorSetLiveMapLongNoteThresholdDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_SetLiveMapLongNoteThreshold"),
+            LocalizationManager.Get("Screen_Editor_SetLiveMapLongNoteThresholdMessage"))
         {
             Screen = screen;
             CreateTextbox();
@@ -42,7 +43,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50),
                 FontManager.GetWobbleFont(Fonts.InterBold),
                 20, ConfigManager.EditorLiveMapLongNoteThreshold.Value.ToString(),
-                "Enter a threshold of LNs during livemapping...", OnSubmit)
+                LocalizationManager.Get("Screen_Editor_SetLiveMapLongNoteThresholdPlaceholder"), OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,
@@ -68,7 +69,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         {
             if (!int.TryParse(s, out var val))
             {
-                NotificationManager.Show(NotificationLevel.Error, $"Invalid value: '{s}'");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_InvalidValue", s));
                 return;
             }
 

@@ -13,10 +13,13 @@ public static class EditorImGuiOptions
     /// <returns></returns>
     public static ImGuiOptions GetOptions()
     {
+        var interPath = $@"{WobbleGame.WorkingDirectory}/Fonts/inter.ttf";
         var notoSansCjkPath = $@"{WobbleGame.WorkingDirectory}/Fonts/noto-sans-cjk.ttc";
         return new ImGuiOptions([
-            new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/inter.ttf", ConfigManager.EditorImGuiFontSize.Value,
+            new ImGuiFont(interPath, ConfigManager.EditorImGuiFontSize.Value,
             [
+                new ImGuiFontFallback(interPath, glyphRanges: ImGuiGlyphRanges.Cyrillic),
+
                 new ImGuiFontFallback(notoSansCjkPath,
                     QuaverLocalization.GetNotoCjkFaceIndex(ConfigManager.Language.Value),
                     ImGuiGlyphRanges.ChineseFull),
