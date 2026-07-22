@@ -82,8 +82,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         public EditorFooter(EditScreen screen, IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
         {
             new IconTextButtonExit(screen),
-            new IconTextButtonOptions(),
-            new IconTextButtonAddBookmark(screen)
+            new IconTextButtonOptions()
         }, new List<Drawable>()
         {
             new IconTextButtonTestPlay(screen),

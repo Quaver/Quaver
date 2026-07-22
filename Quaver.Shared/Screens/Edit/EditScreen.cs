@@ -43,6 +43,7 @@ using Quaver.Shared.Screens.Edit.Dialogs;
 using Quaver.Shared.Screens.Edit.Dialogs.Metadata;
 using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.Plugins;
+using Quaver.Shared.Screens.Edit.Plugins.Bookmarks;
 using Quaver.Shared.Screens.Edit.Plugins.Timing;
 using Quaver.Shared.Screens.Edit.UI;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
@@ -1037,6 +1038,7 @@ namespace Quaver.Shared.Screens.Edit
             BuiltInPlugins = new Dictionary<EditorBuiltInPlugin, IEditorPlugin>()
             {
                 {EditorBuiltInPlugin.TimingPointEditor, new EditorTimingPointPanel(this)},
+                {EditorBuiltInPlugin.BookmarkEditor, new EditorBookmarkPanel(this)},
                 {EditorBuiltInPlugin.ScrollVelocityEditor, new EditorScrollVelocityPanel(this)},
                 {EditorBuiltInPlugin.ScrollSpeedFactorEditor, new EditorScrollSpeedFactorPanel(this)},
                 {EditorBuiltInPlugin.TimingGroupEditor, new EditorTimingGroupPanel(this)},
