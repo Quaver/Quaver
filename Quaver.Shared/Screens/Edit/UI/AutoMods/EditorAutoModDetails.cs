@@ -6,6 +6,7 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps.AutoMod;
 using Quaver.API.Maps.AutoMod.Issues;
 using Quaver.Shared.Assets;
+using Wobble.Managers;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -52,6 +53,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             CreateTextDifficulty();
             CreateTextMode();
             CreateTextStatus();
+            Height = Status.Y + Status.Height + SpacingY;
             CreateRefreshMapButton();
 
             Panel.AutoMod.ValueChanged += OnAutoModUpdated;
@@ -65,7 +67,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             base.Destroy();
         }
 
-        private void CreateTextDifficulty() => Difficulty = new TextKeyValue("Difficulty:",
+        private void CreateTextDifficulty() => Difficulty = new TextKeyValue(
+            LocalizationManager.Get("Screen_Editor_DifficultyLabel"),
             Panel.Map.DifficultyName, FontSize, ColorHelper.HexToColor("#5EC4FF"))
         {
             Parent = this,
@@ -75,7 +78,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private void CreateTextMode()
         {
-            Mode = new TextKeyValue("Mode:", ModeHelper.ToShortHand(Panel.Map.Mode), FontSize,
+            Mode = new TextKeyValue(LocalizationManager.Get("Screen_Editor_ModeLabel"),
+                ModeHelper.ToShortHand(Panel.Map.Mode), FontSize,
                 Color.White)
             {
                 Parent = this,
@@ -99,7 +103,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private void CreateTextStatus()
         {
-            Status = new TextKeyValue("Status:", "None", FontSize, Color.White)
+            Status = new TextKeyValue(LocalizationManager.Get("Screen_Editor_StatusLabel"),
+                LocalizationManager.Get("Screen_Editor_None"), FontSize, Color.White)
             {
                 Parent = this,
                 X = PaddingX,
@@ -132,12 +137,12 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             if (mapsetIssues || mapIssues)
             {
-                Status.Value.Text = "Not ready for rank!";
+                Status.Value.Text = LocalizationManager.Get("Screen_Editor_NotReadyForRank");
                 Status.Value.Tint = ColorHelper.HexToColor("#F9645D");
                 return;
             }
 
-            Status.Value.Text = $"Ready for rank!";
+            Status.Value.Text = LocalizationManager.Get("Screen_Editor_ReadyForRank");
             Status.Value.Tint = ColorHelper.HexToColor("#5EFF75");
         }
 

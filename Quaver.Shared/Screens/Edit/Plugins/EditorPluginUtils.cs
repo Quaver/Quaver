@@ -174,16 +174,18 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="note"></param>
+        /// <param name="colorRgb"></param>
         /// <returns></returns>
-        public static BookmarkInfo CreateBookmark(int startTime, string note)
+        public static BookmarkInfo CreateBookmark(int startTime, string note, string colorRgb = null)
         {
-            var layer = new BookmarkInfo
+            var bookmark = new BookmarkInfo
             {
                 StartTime = startTime,
                 Note = note,
+                ColorRgb = colorRgb ?? BookmarkInfo.DefaultColorRgb
             };
 
-            return layer;
+            return bookmark;
         }
 
         /// <summary>

@@ -934,10 +934,14 @@ namespace Quaver.Shared.Screens.Selection
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
+                if (TryShowPlaylistListOnEmptyPlaylist())
+                    return;
+
                 // Change the map
                 if (index >= 0 && index < AvailableMapsets.Value.Count)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value[index]);
+                    ShowActiveScrollContainer();
                     return;
                 }
 
@@ -962,11 +966,15 @@ namespace Quaver.Shared.Screens.Selection
                 lock (AvailableMapsets.Value)
                     AvailableMapsets.Value = MapsetHelper.FilterMapsets(CurrentSearchQuery);
 
+                if (TryShowPlaylistListOnEmptyPlaylist())
+                    return;
+
                 var mapsetIndex = AvailableMapsets.Value.FindIndex(x => x.Maps.Contains(e.Map));
 
                 if (mapsetIndex == -1 && AvailableMapsets.Value.Count != 0)
                 {
                     MapManager.SelectMapFromMapset(AvailableMapsets.Value.First());
+                    ShowActiveScrollContainer();
                     return;
                 }
 
@@ -978,6 +986,26 @@ namespace Quaver.Shared.Screens.Selection
                 }
             });
         }
+
+        /// <summary>
+        ///     Returns to the playlist list when deletion emptied the selected playlist.
+        /// </summary>
+        /// <returns></returns>
+        private bool TryShowPlaylistListOnEmptyPlaylist()
+        {
+            if (ConfigManager.SelectGroupMapsetsBy.Value != GroupMapsetsBy.Playlists ||
+                PlaylistManager.Selected.Value?.Maps.Count != 0)
+                return false;
+
+            View.Container.AddScheduledUpdate(() =>
+                ActiveScrollContainer.Value = SelectScrollContainerType.Playlists);
+            return true;
+        }
+
+        /// <summary>
+        ///     Moves the active scroll container back on-screen after the mapset list has been refreshed.
+        /// </summary>
+        private void ShowActiveScrollContainer() => View.Container.AddScheduledUpdate(ActiveScrollContainer.TriggerChange);
 
         /// <summary>
         /// </summary>

@@ -21,6 +21,7 @@ using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
+using Wobble.Managers;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
@@ -37,7 +38,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public string Name { get; } = "Timing Group Editor";
+        public string Name { get; } = LocalizationManager.Get("Screen_Editor_TimingGroupEditor");
 
         /// <inheritdoc />
         /// <summary>
@@ -84,7 +85,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorTimingGroupPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
+        public EditorTimingGroupPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(), screen.ImGuiScale)
         {
             Screen = screen;
             Initialize();
@@ -172,7 +173,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private static void DrawObjectColoringToggle()
         {
             var colorByTimingGroup = ConfigManager.EditorObjectColoring.Value == HitObjectColoring.TimingGroup;
-            if (ImGui.Checkbox("Color Objects By Timing Group", ref colorByTimingGroup))
+            if (ImGui.Checkbox(LocalizationManager.Get("Screen_Editor_ColorObjectsByTimingGroup"), ref colorByTimingGroup))
             {
                 ConfigManager.EditorObjectColoring.Value = colorByTimingGroup
                     ? HitObjectColoring.TimingGroup
@@ -183,7 +184,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawMoveObjectsButton()
         {
             ImGui.BeginDisabled(Screen.SelectedHitObjects.Value.Count == 0 || SelectedTimingGroups.Count != 1);
-            if (ImGui.Button("Move Selected Objects To Group"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_MoveSelectedObjectsToGroup")))
             {
                 Screen.ActionManager.MoveObjectsToTimingGroup(Screen.SelectedHitObjects.Value, SelectedTimingGroups.First());
             }
@@ -192,11 +193,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
         private void DrawSelectTimingGroupOfSelectedNotesButton()
         {
-            if (ImGui.Button("Select Timing Group Of Selected Notes"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_SelectTimingGroupOfSelectedNotes")))
             {
                 if (Screen.SelectedHitObjects.Value.Count == 0)
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "No Notes Selected");
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        LocalizationManager.Get("Screen_Editor_NoNotesSelected"));
                     return;
                 }
                 var groups = Screen.SelectedHitObjects.Value
@@ -217,13 +219,14 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 SelectedTimingGroups.Clear();
                 SelectedTimingGroups.Add(newGroupId);
                 Screen.SelectedScrollGroupId = newGroupId;
-                NotificationManager.Show(NotificationLevel.Success, $"Selected timing group: {newGroupId}");
+                NotificationManager.Show(NotificationLevel.Success,
+                    LocalizationManager.Get("Screen_Editor_SelectedTimingGroup", newGroupId));
             }
         }
 
         private void DrawSelectNotesButton()
         {
-            if (ImGui.Button($"Select Notes"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_SelectNotes")))
             {
                 if (KeyboardManager.IsCtrlDown() || KeyboardManager.IsShiftDown())
                 {
@@ -239,11 +242,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 }
             }
 
-            ImGui.SetItemTooltip("Selects all notes in the selected timing group(s).");
+            ImGui.SetItemTooltip(LocalizationManager.Get("Screen_Editor_SelectNotesInTimingGroupsTooltip"));
 
             ImGui.SameLine();
 
-            if (ImGui.Button($"Filter Selection"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_FilterSelection")))
             {
                 var filtered = Screen.SelectedHitObjects.Value
                     .Where(h => SelectedTimingGroups.Contains(h.TimingGroup))
@@ -252,21 +255,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 Screen.SelectedHitObjects.AddRange(filtered);
             }
 
-            ImGui.SetItemTooltip("Deselect any note that is not in any of the selected timing group(s).");
+            ImGui.SetItemTooltip(LocalizationManager.Get("Screen_Editor_FilterSelectionTooltip"));
         }
 
         /// <summary>
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1f), "(What is this?)");
+            ImGui.TextColored(new Vector4(0.5f, 0.5f, 0.5f, 1f),
+                LocalizationManager.Get("Screen_Editor_WhatIsThis"));
             if (ImGui.BeginItemTooltip())
             {
                 ImGui.PushTextWrapPos(300);
-                ImGui.TextWrapped(
-                    "Timing Groups allow you to change the visuals of a group of notes.");
-                ImGui.TextWrapped(
-                    "You can click on an individual timing group to edit it and double-click to go to the first note in the group.");
+                ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_TimingGroupHelp"));
+                ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_TimingGroupInteractionHelp"));
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
@@ -276,7 +278,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawAddButton()
         {
-            if (ImGui.Button("Add"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Add")))
             {
                 var newGroupId = Screen.AddNewTimingGroup();
                 SelectedTimingGroups.Clear();
@@ -293,7 +295,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.BeginDisabled(SelectedTimingGroups.Count == 0 ||
                                 SelectedTimingGroups.Contains(Qua.DefaultScrollGroupId) ||
                                 SelectedTimingGroups.Contains(Qua.GlobalScrollGroupId));
-            if (ImGui.Button("Remove"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Remove")))
             {
                 Screen.ActionManager.PerformBatch(SelectedTimingGroups.Select(
                         IEditorAction (id) =>
@@ -311,7 +313,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             if (SelectedTimingGroups.Count == 1)
             {
-                if (ImGui.Button("Edit in SV Editor"))
+                if (ImGui.Button(LocalizationManager.Get("Screen_Editor_EditInSvEditor")))
                 {
                     var svPanel =
                         (EditorScrollVelocityPanel)Screen.BuiltInPlugins[EditorBuiltInPlugin.ScrollVelocityEditor];
@@ -326,22 +328,23 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (SelectedTimingGroups.Count != 1)
                 return;
 
-            ImGui.TextWrapped("Name");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Name"));
 
             if (_lastNameEditError)
             {
-                ImGui.TextColored(new Vector4(255, 0, 0, 255), "Invalid name!");
+                ImGui.TextColored(new Vector4(255, 0, 0, 255),
+                    LocalizationManager.Get("Screen_Editor_InvalidName"));
             }
 
             var id = SelectedTimingGroups.First();
             var newId = id;
-            var hint = "Alphanumeric characters or underscore are allowed";
+            var hint = LocalizationManager.Get("Screen_Editor_TimingGroupNamePlaceholder");
             var inputTextFlags = ImGuiInputTextFlags.EnterReturnsTrue;
 
             if (id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
             {
                 inputTextFlags |= ImGuiInputTextFlags.ReadOnly;
-                hint = "This timing group cannot be renamed!";
+                hint = LocalizationManager.Get("Screen_Editor_TimingGroupCannotBeRenamed");
             }
 
             ImGui.BeginDisabled(id is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId);
@@ -382,7 +385,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             ImGui.Dummy(new Vector2(0, 10));
             var count = SelectedTimingGroups.Count;
-            var labelText = count > 1 ? $"{count} timing groups selected" : "";
+            var labelText = count > 1
+                ? LocalizationManager.Get("Screen_Editor_TimingGroupsSelected", count)
+                : "";
             ImGui.Text(labelText);
         }
 
@@ -397,9 +402,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
 
             ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableSetupColumn("ID");
-            ImGui.TableSetupColumn("Color");
-            ImGui.TableSetupColumn("Visible");
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Id"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Color"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Visible"));
             ImGui.TableHeadersRow();
             var clipperRaw = new ImGuiListClipper();
             var clipper = new ImGuiListClipperPtr(&clipperRaw);
@@ -501,10 +506,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             switch (id)
             {
                 case Qua.DefaultScrollGroupId:
-                    ImGui.SetItemTooltip("Applied to all notes that are not in a timing group.");
+                    ImGui.SetItemTooltip(LocalizationManager.Get("Screen_Editor_DefaultTimingGroupTooltip"));
                     break;
                 case Qua.GlobalScrollGroupId:
-                    ImGui.SetItemTooltip("The SVs in this group are interlaced to every other scroll groups.");
+                    ImGui.SetItemTooltip(LocalizationManager.Get("Screen_Editor_GlobalTimingGroupTooltip"));
                     break;
             }
         }

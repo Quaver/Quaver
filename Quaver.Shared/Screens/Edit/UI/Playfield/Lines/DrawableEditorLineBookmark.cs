@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble;
 using Wobble.Graphics;
@@ -16,6 +17,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
     public class DrawableEditorLineBookmark : DrawableEditorLine
     {
+        private const int MaximumNoteWidth = 360;
+
         private EditorPlayfield Playfield { get; }
         
         public BookmarkInfo Bookmark { get;  }
@@ -30,7 +33,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Bookmark = bookmark;
             DrawIfOffScreen = true;
 
-            Tooltip = new Tooltip(Bookmark.Note, Color.Yellow, false)
+            Tooltip = new Tooltip(Bookmark.Note, GetColor(), maxTextWidth: MaximumNoteWidth)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -53,6 +56,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 
         public override void Draw(GameTime gameTime)
         {
+            Tint = GetColor();
+            Tooltip.Border.Tint = Tint;
+
             if (Tooltip.Text.Text != Bookmark.Note)
             {
                 Tooltip.ChangeText(Bookmark.Note);
@@ -62,7 +68,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             base.Draw(gameTime);
         }
 
-        public override Color GetColor() => Color.Yellow;
+        public override Color GetColor() => Bookmark == null
+            ? Color.Yellow
+            : ColorHelper.ToXnaColor(Bookmark.GetColor());
 
         public override string GetValue() => "";
 

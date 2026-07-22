@@ -14,11 +14,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     public class IconTextButtonBeatSnap : IconTextButton
     {
         public IconTextButtonBeatSnap(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_sun),
-            FontManager.GetWobbleFont(Fonts.InterBold),"Beat Snap",
+            FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Editor_BeatSnap"),
             (sender, args) => screen?.ActivateRightClickOptions(new BeatSnapRightClickOptions(screen.BeatSnap, EditScreen.AvailableBeatSnaps)))
         {
-            var tooltip = new Tooltip("Change the current beat snap divisor.\n" +
-                                      "Hotkeys: CTRL + Up/Down/Scroll Wheel", ColorHelper.HexToColor("#808080"));
+            var tooltip = new Tooltip(LocalizationManager.Get("Screen_Editor_BeatSnapTooltip"),
+                ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();

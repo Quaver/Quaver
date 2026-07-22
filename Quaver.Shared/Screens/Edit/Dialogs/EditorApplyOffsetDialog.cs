@@ -21,8 +21,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorApplyOffsetDialog(EditScreen screen) : base("APPLY OFFSET TO MAP",
-            "Enter a value to apply an offset to all of your map's objects, timing points,\n and scroll velocities...")
+        public EditorApplyOffsetDialog(EditScreen screen) : base(LocalizationManager.Get("Screen_Editor_ApplyOffsetToMap"),
+            LocalizationManager.Get("Screen_Editor_ApplyOffsetToMapMessage"))
         {
             Screen = screen;
             CreateTextbox();
@@ -39,7 +39,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private void CreateTextbox()
         {
             Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, "", "Enter an offset to apply to your map...", OnSubmit)
+                20, "", LocalizationManager.Get("Screen_Editor_ApplyOffsetPlaceholder"), OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,

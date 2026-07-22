@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics
     {
         public SpriteTextPlus Text { get; }
 
-        public Tooltip(string text, Color color, bool cacheText = true)
+        public Tooltip(string text, Color color, bool cacheText = true, float? maxTextWidth = null)
         {
             Tint = ColorHelper.HexToColor("#161616");
             AddBorder(color, 2);
@@ -26,6 +26,7 @@ namespace Quaver.Shared.Graphics
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
+                MaxWidth = maxTextWidth
             };
 
             ChangeText(text);

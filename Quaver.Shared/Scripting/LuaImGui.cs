@@ -227,7 +227,7 @@ namespace Quaver.Shared.Scripting
         /// <param name="isResource"></param>
         /// <param name="name"></param>
         public LuaImGui(string filePath, bool isResource = false, string name = null)
-            : base(false, EditorImGuiOptions.GetOptions(16), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
+            : base(false, EditorImGuiOptions.GetOptions(), ConfigManager.EditorImGuiScalePercentage.Value / 100f)
         {
             FilePath = filePath;
             IsResource = isResource;

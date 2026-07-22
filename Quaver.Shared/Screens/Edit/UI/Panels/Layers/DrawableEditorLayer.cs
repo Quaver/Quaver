@@ -166,7 +166,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             {
                 if (Item == Container.AvailableItems.First())
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        LocalizationManager.Get("Screen_Editor_CannotEditDefaultLayer"));
                     return;
                 }
 
@@ -227,7 +228,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
             {
                 if (Item == Container.AvailableItems.First())
                 {
-                    NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the default layer!");
+                    NotificationManager.Show(NotificationLevel.Warning,
+                        LocalizationManager.Get("Screen_Editor_CannotEditDefaultLayer"));
                     return;
                 }
 
@@ -241,7 +243,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

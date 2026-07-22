@@ -10,60 +10,58 @@ using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers
 {
     public class DrawableEditorLayerRightClickOptions : RightClickOptions
     {
-        private const string EditName = "Edit Name";
+        private static string EditName => LocalizationManager.Get("Screen_Editor_EditName");
 
-        private const string ChangeColor = "Change Color";
+        private static string ChangeColor => LocalizationManager.Get("Screen_Editor_ChangeColor");
 
-        private const string MoveLayerUp = "Move Layer Up";
+        private static string MoveLayerUp => LocalizationManager.Get("Screen_Editor_MoveLayerUp");
 
-        private const string MoveLayerDown = "Move Layer Down";
+        private static string MoveLayerDown => LocalizationManager.Get("Screen_Editor_MoveLayerDown");
 
         public DrawableEditorLayerRightClickOptions(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap)
-            : base(GetOptions(), new ScalableVector2(200, 40), 22)
+            : base(GetOptions(), new ScalableVector2(200, 40), 18)
         {
             ItemSelected += (sender, args) =>
             {
-                switch (args.Text)
+                if (args.Text == EditName)
                 {
-                    case EditName:
-                        DialogManager.Show(new DialogRenameLayer(layer, manager, workingMap));
-                        break;
-                    case ChangeColor:
-                        DialogManager.Show(new DialogChangeLayerColor(layer, manager, workingMap));
-                        break;
-                    case MoveLayerUp:
-                        {
-                            var targetIndex = workingMap.EditorLayers.IndexOf(layer);
-                            if (targetIndex < 1)
-                            {
-                                NotificationManager.Show(NotificationLevel.Error,
-                                    "Cannot move layer past the default layer!");
-                            }
-                            else
-                            {
-                                manager.MoveLayer(layer, targetIndex);
-                            }
-                        }
-                        break;
-                    case MoveLayerDown:
-                        {
-                            var targetIndex = workingMap.EditorLayers.IndexOf(layer) + 2;
-                            if (targetIndex > workingMap.EditorLayers.Count)
-                            {
-                                NotificationManager.Show(NotificationLevel.Error,
-                                    "Layer is already at the top!");
-                            }
-                            else
-                            {
-                                manager.MoveLayer(layer, targetIndex);
-                            }
-                        }
-                        break;
+                    DialogManager.Show(new DialogRenameLayer(layer, manager, workingMap));
+                }
+                else if (args.Text == ChangeColor)
+                {
+                    DialogManager.Show(new DialogChangeLayerColor(layer, manager, workingMap));
+                }
+                else if (args.Text == MoveLayerUp)
+                {
+                    var targetIndex = workingMap.EditorLayers.IndexOf(layer);
+                    if (targetIndex < 1)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error,
+                            LocalizationManager.Get("Screen_Editor_CannotMoveLayerPastDefault"));
+                    }
+                    else
+                    {
+                        manager.MoveLayer(layer, targetIndex);
+                    }
+                }
+                else if (args.Text == MoveLayerDown)
+                {
+                    var targetIndex = workingMap.EditorLayers.IndexOf(layer) + 2;
+                    if (targetIndex > workingMap.EditorLayers.Count)
+                    {
+                        NotificationManager.Show(NotificationLevel.Error,
+                            LocalizationManager.Get("Screen_Editor_LayerAlreadyAtTop"));
+                    }
+                    else
+                    {
+                        manager.MoveLayer(layer, targetIndex);
+                    }
                 }
             };
         }

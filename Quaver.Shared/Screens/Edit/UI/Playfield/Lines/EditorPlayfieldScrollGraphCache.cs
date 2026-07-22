@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         private const float DefaultLineWidth = 40;
         private const float MinimumLineWidth = 10;
         private const float MaximumLineWidth = 150;
-        private const float ScrollLineHeight = 2;
+        private const float ScrollLineHeight = 1;
         private const float TimingLineHeight = 4;
         private const float SvRightPadding = 2;
 

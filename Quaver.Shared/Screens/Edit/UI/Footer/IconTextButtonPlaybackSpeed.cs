@@ -15,13 +15,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     public class IconTextButtonPlaybackSpeed : IconTextButton
     {
         public IconTextButtonPlaybackSpeed(EditScreen screen, IAudioTrack track) : base(FontAwesome.Get(FontAwesomeIcon.fa_time),
-            FontManager.GetWobbleFont(Fonts.InterBold),"Playback Speed", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Editor_PlaybackSpeed"), (sender, args) =>
             {
                 screen?.ActivateRightClickOptions(new PlaybackSpeedRightClickOptions(track));
             })
         {
-            var tooltip = new Tooltip("Change the audio playback rate.\n" +
-                                      "Hotkeys: CTRL + -/+", ColorHelper.HexToColor("#808080"));
+            var tooltip = new Tooltip(LocalizationManager.Get("Screen_Editor_PlaybackSpeedTooltip"),
+                ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();

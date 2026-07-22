@@ -23,10 +23,12 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <param name="screen"></param>
         /// <param name="file"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public EditorChangeBackgroundDialog(EditScreen screen, string file) : base("CHANGE BACKGROUND / BANNER",
-            $"Would you like to change the background or the banner?")
+        public EditorChangeBackgroundDialog(EditScreen screen, string file) : base(
+            LocalizationManager.Get("Screen_Editor_ChangeBackgroundOrBanner"),
+            LocalizationManager.Get("Screen_Editor_ChangeBackgroundOrBannerMessage"))
         {
-            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "BACKGROUND", 20, Color.White);
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Editor_Background"), 20, Color.White);
             YesAction += () => ChangeBackground(screen, file);
 
             const float scale = 0.90f;
@@ -42,7 +44,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 Tint = ConfirmColor
             };
 
-            BannerButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "BANNER", 20, Color.White);
+            BannerButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Editor_Banner"), 20, Color.White);
 
             YesButton.X -= 80;
             NoButton.X = -YesButton.X;
@@ -93,13 +96,15 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 screen.Map.BackgroundPath = name;
                 screen.Save(true, true);
 
-                NotificationManager.Show(NotificationLevel.Success, "Your background has been successfully changed!");
+                NotificationManager.Show(NotificationLevel.Success,
+                    LocalizationManager.Get("Screen_Editor_BackgroundChangedSuccessfully"));
                 BackgroundHelper.Load(screen.Map);
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue changing your background!");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_ChangeBackgroundError"));
             }
         }
 
@@ -112,7 +117,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         {
             Close();
 
-            DialogManager.Show(new LoadingDialog("CHANGING BANNER", "Please wait while your banner is being changed...", () =>
+            DialogManager.Show(new LoadingDialog(LocalizationManager.Get("Screen_Editor_ChangingBanner"),
+                LocalizationManager.Get("Screen_Editor_ChangingBannerMessage"), () =>
             {
                 try
                 {
@@ -152,12 +158,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                     screen.Map.BannerPath = name;
                     screen.Save(true, true);
 
-                    NotificationManager.Show(NotificationLevel.Success, "Your banner has successfully changed!");
+                    NotificationManager.Show(NotificationLevel.Success,
+                        LocalizationManager.Get("Screen_Editor_BannerChangedSuccessfully"));
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue changing your banner!");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        LocalizationManager.Get("Screen_Editor_ChangeBannerError"));
                 }
             }));
         }

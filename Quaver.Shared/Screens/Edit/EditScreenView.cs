@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -13,6 +14,7 @@ using Quaver.Shared.Graphics.Graphs;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Quaver.Shared.Screens.Edit.UI.AutoMods;
 using Quaver.Shared.Screens.Edit.UI.Footer;
 using Quaver.Shared.Screens.Edit.UI.Menu;
@@ -29,6 +31,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.ImGUI;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
@@ -101,6 +104,11 @@ namespace Quaver.Shared.Screens.Edit
         public bool IsImGuiHovered { get; private set; }
 
         /// <summary>
+        ///     The back-to-front draw order of editor plugins.
+        /// </summary>
+        private List<IEditorPlugin> PluginDrawOrder { get; }
+
+        /// <summary>
         ///     Saves the layout of current windows when the screen is exited
         /// </summary>
         public bool SaveWindowLayoutOnExit { get; set; } = true;
@@ -116,6 +124,8 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="screen"></param>
         public EditScreenView(Screen screen) : base(screen)
         {
+            PluginDrawOrder = new List<IEditorPlugin>(EditScreen.Plugins);
+
             if (ConfigManager.FpsLimiterType.Value == FpsLimitType.Custom &&
                 ConfigManager.CustomFpsLimit.Value > MaximumCustomFps)
             {
@@ -334,6 +344,9 @@ namespace Quaver.Shared.Screens.Edit
 
             // Makes it so that the playfield bookmark tooltips appear above reference difficulty
             Playfield.Parent = Container;
+
+            // Keep the selection rectangle above both playfields and their hit objects.
+            Selector.Parent = Container;
         }
 
         /// <summary>
@@ -394,18 +407,29 @@ namespace Quaver.Shared.Screens.Edit
         /// <param name="gameTime"></param>
         private void DrawPlugins(GameTime gameTime)
         {
-            for (var i = 0; i < EditScreen.Plugins.Count; i++)
+            IEditorPlugin activatedPlugin = null;
+
+            for (var i = 0; i < PluginDrawOrder.Count; i++)
             {
-                var plugin = EditScreen.Plugins[i];
+                var plugin = PluginDrawOrder[i];
 
                 if (!plugin.IsActive)
                     continue;
 
                 plugin.Draw(gameTime);
 
+                if (plugin is SpriteImGui { WasActivatedByMouse: true })
+                    activatedPlugin = plugin;
+
                 if (ImGui.IsAnyItemHovered() || plugin.IsWindowHovered)
                     IsImGuiHovered = true;
             }
+
+            if (activatedPlugin == null || PluginDrawOrder[^1] == activatedPlugin)
+                return;
+
+            PluginDrawOrder.Remove(activatedPlugin);
+            PluginDrawOrder.Add(activatedPlugin);
         }
 
         /// <summary>
