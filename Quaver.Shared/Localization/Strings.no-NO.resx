@@ -719,13 +719,13 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Karakter</value>
   </data>
   <data name="Screen_Results_MAXCOMBO" xml:space="preserve">
-    <value>MAKS COMBO</value>
+    <value>MAKS KOMBO</value>
   </data>
   <data name="Screen_Results_PERFORMANCERATING" xml:space="preserve">
     <value>YTELSES VURDERING</value>
   </data>
   <data name="Screen_Results_RANKEDACCURACY" xml:space="preserve">
-    <value>SAMLEY NØYAKTIGHET</value>
+    <value>SAMLET NØYAKTIGHET</value>
   </data>
   <data name="Screen_Results_Marv" xml:space="preserve">
     <value>Strål</value>
@@ -1543,7 +1543,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Lengde (Sekunder)</value>
   </data>
   <data name="Screen_Download_MaxLength" xml:space="preserve">
-    <value>Maks lengde</value>
+    <value>Maks Lengde</value>
   </data>
   <data name="Screen_Download_MinLength" xml:space="preserve">
     <value>Min lengde</value>
