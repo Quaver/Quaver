@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     public class IconTextButtonTestPlay : IconTextButton
     {
         public IconTextButtonTestPlay(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-            FontManager.GetWobbleFont(Fonts.InterBold),"Test Play", (sender, args) => screen.ExitToTestPlay())
+            FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Editor_TestPlay"),
+            (sender, args) => screen.ExitToTestPlay())
         {
-            var tooltip = new Tooltip("Save and test play your map.\n" +
-                         "Right-clicking will allow you to select modifers to use while test playing.\n" +
-                         "Hotkey: F4", ColorHelper.HexToColor("#808080"));
+            var tooltip = new Tooltip(LocalizationManager.Get("Screen_Editor_TestPlayTooltip"),
+                ColorHelper.HexToColor("#808080"));
 
             Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
             LeftHover += (sender, args) => screen?.DeactivateTooltip();

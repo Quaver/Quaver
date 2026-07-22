@@ -6,6 +6,7 @@ using Quaver.API.Maps.AutoMod;
 using Quaver.API.Maps.AutoMod.Issues;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
+using Wobble.Managers;
 using Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata;
 using Wobble.Assets;
 using Wobble.Bindables;
@@ -106,7 +107,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private void CreateIssueCount()
         {
-            IssueCount = new TextKeyValue("Issue Count:", "0", 22, Color.White)
+            IssueCount = new TextKeyValue(LocalizationManager.Get("Screen_Editor_IssueCountLabel"), "0", 22, Color.White)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

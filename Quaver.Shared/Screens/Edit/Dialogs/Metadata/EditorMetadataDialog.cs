@@ -51,20 +51,17 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         private LabelledCheckbox BpmAffectsScrollVelocity { get; set; }
 
         private Tooltip BpmAffectsScrollVelocityTooltip { get; } = new(
-            "When set to ON, A BPM change will also change the Scroll Velocity.\nFor instance, going from 120BPM to 240BPM effectively creates\nan implicit 2x Scroll Velocity multiplier starting from the beginning\nof that BPM change until the next. Scroll Velocity is still applied.",
-            Color.White
-        );
+            LocalizationManager.Get("Screen_Editor_BpmAffectsSvTooltip"), Color.White);
 
         private LabelledCheckbox LegacyLNRendering { get; set; }
 
         private Tooltip LegacyLNRenderingTooltip { get; } = new(
-            "When set to ON, forces the use of the old LN renderer. If your map has no Scroll\nVelocity changes, you can safely ignore this option. The current LN renderer places\nthe head and tail to the earliest and latest positions reached, respectively. The old LN\nrenderer instead places them both wherever the playfield happens to be at the time.",
-            Color.White
-        );
+            LocalizationManager.Get("Screen_Editor_LegacyLnRenderingTooltip"), Color.White);
 
         private RoundedButton SyncMetadataButton { get; set; }
 
-        private Tooltip SyncMetadataTooltip { get; } = new("Copy all of the metadata from this difficulty to all of the difficulties from this mapset", Color.White);
+        private Tooltip SyncMetadataTooltip { get; } = new(
+            LocalizationManager.Get("Screen_Editor_SyncMetadataTooltip"), Color.White);
 
         private TextboxTabControl TabControl { get; }
 
@@ -76,7 +73,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private const int Spacing = 23;
 
-        public EditorMetadataDialog(EditScreen screen) : base("EDIT METADATA", "Edit the values to change the metadata...")
+        public EditorMetadataDialog(EditScreen screen) : base(LocalizationManager.Get("Screen_Editor_EditMetadata"),
+            LocalizationManager.Get("Screen_Editor_EditMetadataMessage"))
         {
             Screen = screen;
             Panel.Image = UserInterface.MetadataPanel;
@@ -146,8 +144,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateArtistTextbox()
         {
-            Artist = new LabelledTextbox(Panel.Width * 0.9f * 0.95f * 0.5f, "Artist Name", LabelSize, TextboxHeight,
-                LabelSize, TextboxLabelSpacing, "Name of the artist", WorkingMap.Artist)
+            Artist = new LabelledTextbox(Panel.Width * 0.9f * 0.95f * 0.5f,
+                LocalizationManager.Get("Screen_Editor_ArtistName"), LabelSize, TextboxHeight,
+                LabelSize, TextboxLabelSpacing, LocalizationManager.Get("Screen_Editor_ArtistNamePlaceholder"), WorkingMap.Artist)
             {
                 Parent = Panel,
                 Y = Banner.Height + 20,
@@ -160,8 +159,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateSongTitleTextbox()
         {
-            Title = new LabelledTextbox(Artist.Width, "Song Title", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Title of the song", WorkingMap.Title)
+            Title = new LabelledTextbox(Artist.Width, LocalizationManager.Get("Screen_Editor_SongTitle"), LabelSize,
+                TextboxHeight, LabelSize, TextboxLabelSpacing,
+                LocalizationManager.Get("Screen_Editor_SongTitlePlaceholder"), WorkingMap.Title)
             {
                 Parent = Panel,
                 Y = Artist.Y,
@@ -174,8 +174,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateDifficultyNameTextbox()
         {
-            DifficultyName = new LabelledTextbox(Artist.Width, "Difficulty Name", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Name of the difficulty", WorkingMap.DifficultyName)
+            DifficultyName = new LabelledTextbox(Artist.Width, LocalizationManager.Get("Screen_Editor_DifficultyName"),
+                LabelSize, TextboxHeight, LabelSize, TextboxLabelSpacing,
+                LocalizationManager.Get("Screen_Editor_DifficultyNamePlaceholder"), WorkingMap.DifficultyName)
             {
                 Parent = Panel,
                 Y = Artist.Y + Artist.Height + Spacing,
@@ -188,8 +189,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateSourceTextbox()
         {
-            Source = new LabelledTextbox(Artist.Width, "Source", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Source of the song (album, mixtape, etc)",
+            Source = new LabelledTextbox(Artist.Width, LocalizationManager.Get("Screen_Editor_Source"), LabelSize,
+                TextboxHeight, LabelSize, TextboxLabelSpacing, LocalizationManager.Get("Screen_Editor_SourcePlaceholder"),
                 WorkingMap.Source)
             {
                 Parent = Panel,
@@ -203,8 +204,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateTagsTextbox()
         {
-            Tags = new LabelledTextbox(Panel.Width * 0.9f, "Tags", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Comma-separated tags to help players find your map",
+            Tags = new LabelledTextbox(Panel.Width * 0.9f, LocalizationManager.Get("Screen_Editor_Tags"), LabelSize,
+                TextboxHeight, LabelSize, TextboxLabelSpacing, LocalizationManager.Get("Screen_Editor_TagsPlaceholder"),
                 WorkingMap.Tags)
             {
                 Parent = Panel,
@@ -217,8 +218,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateCreatorTextbox()
         {
-            Creator = new LabelledTextbox(Artist.Width, "Creator Username", LabelSize, TextboxHeight, LabelSize,
-                TextboxLabelSpacing, "Your username", WorkingMap.Creator)
+            Creator = new LabelledTextbox(Artist.Width, LocalizationManager.Get("Screen_Editor_CreatorUsername"),
+                LabelSize, TextboxHeight, LabelSize, TextboxLabelSpacing,
+                LocalizationManager.Get("Screen_Editor_CreatorUsernamePlaceholder"), WorkingMap.Creator)
             {
                 Parent = Panel,
                 Y = Tags.Y + Tags.Height + Spacing,
@@ -239,7 +241,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                     regex += "|";
             }
 
-            KeyCount = new LabelledTextbox(Artist.Width, "Key Count", LabelSize, TextboxHeight, LabelSize,
+            KeyCount = new LabelledTextbox(Artist.Width, LocalizationManager.Get("Screen_Editor_KeyCount"), LabelSize, TextboxHeight, LabelSize,
             TextboxLabelSpacing, $"1-{ModeHelper.MaxKeyCount}", ModeHelper.ToKeyCount(WorkingMap.Mode).ToString())
             {
                 Parent = Panel,
@@ -257,7 +259,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateBpmAffectsSvCheckbox()
         {
-            BpmAffectsScrollVelocity = new LabelledCheckbox("BPM AFFECTS SV:", 18,
+            BpmAffectsScrollVelocity = new LabelledCheckbox(LocalizationManager.Get("Screen_Editor_BpmAffectsSv"), 18,
                 new QuaverCheckbox(new Bindable<bool>(!WorkingMap.BPMDoesNotAffectScrollVelocity)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -269,7 +271,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateScratchKeyCheckbox()
         {
-            ScratchKey = new LabelledCheckbox("SCRATCH KEY:", 18,
+            ScratchKey = new LabelledCheckbox(LocalizationManager.Get("Screen_Editor_ScratchKey"), 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.HasScratchKey)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -281,7 +283,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
 
         private void CreateLegacyLNRenderingCheckbox()
         {
-            LegacyLNRendering = new LabelledCheckbox("LEGACY LN RENDERING:", 18,
+            LegacyLNRendering = new LabelledCheckbox(LocalizationManager.Get("Screen_Editor_LegacyLnRendering"), 18,
                 new QuaverCheckbox(new Bindable<bool>(WorkingMap.LegacyLNRendering)) { DisposeBindableOnDestroy = true })
             {
                 Parent = Panel,
@@ -307,7 +309,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 Tint = ColorHelper.HexToColor("#0968AC")
             };
 
-            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SYNC METADATA", 18, Color.White);
+            SyncMetadataButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Editor_SyncMetadata"), 18, Color.White);
         }
 
         private bool CanSyncMetadata() => Screen.Map.Mapset?.Maps?.Count >= 2;
@@ -333,7 +336,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         {
             if (Screen.Map.Game != MapGame.Quaver)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the metadata for a map loaded from another game.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_CannotEditImportedMapMetadata"));
                 return;
             }
 
@@ -343,7 +347,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
             Screen.Exit(() =>
             {
                 Screen.Save(true, true);
-                NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                NotificationManager.Show(NotificationLevel.Success,
+                    LocalizationManager.Get("Screen_Editor_MapSavedSuccessfully"));
 
                 return new EditScreen(Screen.Map, AudioEngine.LoadMapAudioTrack(Screen.Map));
             }
@@ -385,7 +390,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
         {
             if (Screen.Map.Game != MapGame.Quaver)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot edit the metadata for a map loaded from another game.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_CannotEditImportedMapMetadata"));
                 return;
             }
 
@@ -398,7 +404,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 return;
 
             Screen.Save(true, true);
-            NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+            NotificationManager.Show(NotificationLevel.Success,
+                LocalizationManager.Get("Screen_Editor_MapSavedSuccessfully"));
 
             var syncedMaps = 0;
 
@@ -430,7 +437,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs.Metadata
                 syncedMaps++;
             }
 
-            NotificationManager.Show(NotificationLevel.Success, $"Metadata synced to {syncedMaps} map(s)!");
+            NotificationManager.Show(NotificationLevel.Success,
+                LocalizationManager.Get("Screen_Editor_MetadataSynced", syncedMaps));
         }
 
         private void DeactivateTooltip()

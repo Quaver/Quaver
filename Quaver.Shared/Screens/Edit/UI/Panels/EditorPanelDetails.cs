@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="track"></param>
         /// <param name="actionManager"></param>
         public EditorPanelDetails(Qua workingMap, BindableInt beatSnap, IAudioTrack track, EditorActionManager actionManager)
-            : base("Details")
+            : base(LocalizationManager.Get("Screen_Editor_Details"))
         {
             Depth = 1;
 
@@ -137,7 +137,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateObjectCount()
         {
-            ObjectCount = new EditorDetailsPanelKeyValue("Object Count", $"{WorkingMap.HitObjects.Count:n0}", Width)
+            ObjectCount = new EditorDetailsPanelKeyValue(LocalizationManager.Get("Screen_Editor_ObjectCount"),
+                $"{WorkingMap.HitObjects.Count:n0}", Width)
             {
                 Parent = Content,
                 Y = 12
@@ -148,7 +149,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateBeatSnapText()
         {
-            BeatSnapText = new EditorDetailsPanelKeyValue("Beat Snap", $"1/{StringHelper.AddOrdinal(BeatSnap.Value)}", Width)
+            BeatSnapText = new EditorDetailsPanelKeyValue(LocalizationManager.Get("Screen_Editor_BeatSnap"),
+                $"1/{StringHelper.AddOrdinal(BeatSnap.Value)}", Width)
             {
                 Parent = Content,
                 Y = Bpm.Y + Bpm.Height + SpacingY,
@@ -163,7 +165,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreatePlaybackSpeed()
         {
-            PlaybackSpeed = new EditorDetailsPanelKeyValue($"Playback Speed", $"{(int) (Track.Rate * 100)}%", Width)
+            PlaybackSpeed = new EditorDetailsPanelKeyValue(LocalizationManager.Get("Screen_Editor_PlaybackSpeed"),
+                $"{(int) (Track.Rate * 100)}%", Width)
             {
                 Parent = Content,
                 Y = ObjectCount.Y + ObjectCount.Height + SpacingY
@@ -174,7 +177,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateDifficultyRating()
         {
-            DifficultyRating = new EditorDetailsPanelKeyValue("Difficulty Rating", "0.00", Width)
+            DifficultyRating = new EditorDetailsPanelKeyValue(LocalizationManager.Get("Screen_Editor_DifficultyRating"),
+                "0.00", Width)
             {
                 Parent = Content,
                 Y = BeatSnapText.Y + BeatSnapText.Height + SpacingY
@@ -187,7 +191,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateBpm()
         {
-            Bpm = new EditorDetailsPanelKeyValue("BPM", "0", Width)
+            Bpm = new EditorDetailsPanelKeyValue(LocalizationManager.Get("Screen_Editor_Bpm"), "0", Width)
             {
                 Parent = Content,
                 Y = PlaybackSpeed.Y + PlaybackSpeed.Height + SpacingY

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
+using Wobble.Managers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
@@ -702,7 +703,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingWaveform = new LoadingWheelText(18, "Loading Waveform...")
+            LoadingWaveform = new LoadingWheelText(18, LocalizationManager.Get("Screen_Editor_LoadingWaveform"))
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,
@@ -741,7 +742,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             if (IsUneditable)
                 return;
 
-            LoadingSpectrogram = new LoadingWheelText(18, "Loading Spectrogram...")
+            LoadingSpectrogram = new LoadingWheelText(18, LocalizationManager.Get("Screen_Editor_LoadingSpectrogram"))
             {
                 Alignment = Alignment.TopCenter,
                 Y = 200,

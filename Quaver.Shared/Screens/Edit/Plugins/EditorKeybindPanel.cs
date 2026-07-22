@@ -6,7 +6,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit.Input;
-using Wobble;
+using Wobble.Managers;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
 using Wobble.Logging;
@@ -16,7 +16,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins;
 
 public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 {
-    public EditorKeybindPanel(EditScreen screen) : base(false, GetOptions(), screen.ImGuiScale)
+    public EditorKeybindPanel(EditScreen screen) : base(false, EditorImGuiOptions.GetOptions(), screen.ImGuiScale)
     {
         Screen = screen;
         Initialize();
@@ -24,9 +24,9 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
     public bool IsActive { get; set; }
     public bool IsWindowHovered { get; private set; }
-    public string Name => "Keybind Editor";
+    public string Name => LocalizationManager.Get("Screen_Editor_KeybindEditor");
     public string Author => "WilliamQiufeng";
-    public string Description { get; set; } = "Change the keymap of the editor";
+    public string Description { get; set; } = LocalizationManager.Get("Screen_Editor_KeybindEditorDescription");
     public bool IsBuiltIn { get; set; } = true;
     public string Directory { get; set; }
     public bool IsWorkshop { get; set; }
@@ -87,7 +87,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         DrawDescription();
 
-        if (ImGui.Button("Show Keybind File"))
+        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_ShowKeybindFile")))
         {
             try
             {
@@ -120,9 +120,9 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
     private void DrawDescription()
     {
-        ImGui.TextWrapped("To change the keybind of an action, first click on the action.");
-        ImGui.TextWrapped("You can then choose to change or remove any keys from the action.");
-        ImGui.TextWrapped("You can also add a key by clicking on the '+' button.");
+        ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_KeybindEditorHelpSelectAction"));
+        ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_KeybindEditorHelpChangeOrRemove"));
+        ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_KeybindEditorHelpAdd"));
     }
 
     private void HandleInput()
@@ -156,11 +156,14 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     private void DrawEdit()
     {
         var selected = SelectedAction.HasValue;
-        ImGui.TextWrapped($"Selected Keybind: {(selected ? SelectedAction.ToString() : "None")}");
+        var selectedAction = selected
+            ? SelectedAction.ToString()
+            : LocalizationManager.Get("Screen_Editor_None");
+        ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_SelectedKeybind", selectedAction));
         ImGui.BeginDisabled(!selected);
 
         var keybindDictionary = Screen.InputManager.InputConfig.Keybinds;
-        if (ImGui.Button("Reset to Default"))
+        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_ResetToDefault")))
         {
             keybindDictionary[SelectedAction!.Value] = EditorInputConfig.DefaultKeybinds[SelectedAction!.Value];
             FlushConfig();
@@ -170,7 +173,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         {
             if (selected)
             {
-                ImGui.TableSetupColumn("Keys");
+                ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Keys"));
                 ImGui.TableHeadersRow();
                 var keybinds = keybindDictionary[SelectedAction.Value].ToList();
                 if (Equals(RebindingKeybind, _emptyKeybind))
@@ -183,7 +186,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                     if (isKeybindRebinding)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
-                        ImGui.TextWrapped("Please enter a new keybind...");
+                        ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_EnterNewKeybind"));
                         ImGui.PopStyleColor();
                     }
                     else
@@ -194,7 +197,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
                         // Don't allow input when search keybind is being recorded
                         ImGui.BeginDisabled(Equals(SearchKeybind, _emptyKeybind) || RebindingKeybind != null);
-                        if (ImGui.Button($"Change##{SelectedAction.Value}_{keybind}"))
+                        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Change") +
+                                         $"##{SelectedAction.Value}_{keybind}"))
                         {
                             RebindingKeybind = keybind;
                             PreviousKeyState = new GenericKeyState(new GenericKey[]
@@ -202,7 +206,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                         }
 
                         ImGui.SameLine();
-                        if (ImGui.Button($"Remove##{SelectedAction.Value}_{keybind}"))
+                        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Remove") +
+                                         $"##{SelectedAction.Value}_{keybind}"))
                         {
                             keybindDictionary[SelectedAction.Value].Remove(keybind);
                             FlushConfig();
@@ -210,7 +215,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
                         ImGui.SameLine();
                         var free = keybind.Modifiers.Contains(KeyModifiers.Free);
-                        if (ImGui.Checkbox($"Free##{SelectedAction.Value}_{keybind}", ref free))
+                        if (ImGui.Checkbox(LocalizationManager.Get("Screen_Editor_Free") +
+                                           $"##{SelectedAction.Value}_{keybind}", ref free))
                         {
                             var newKeybind = new Keybind(keybind.Modifiers, keybind.Key);
                             if (!newKeybind.Modifiers.Add(KeyModifiers.Free))
@@ -222,8 +228,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
                             FlushConfig();
                         }
 
-                        ImGui.SetItemTooltip(
-                            "Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.");
+                        ImGui.SetItemTooltip(LocalizationManager.Get("Screen_Editor_FreeKeybindTooltip"));
 
                         ImGui.EndDisabled();
                     }
@@ -283,7 +288,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
     private unsafe void DrawTable()
     {
-        if (ImGui.InputTextWithHint("##Search", "Search Actions", ref _searchQuery, 100))
+        if (ImGui.InputTextWithHint("##Search", LocalizationManager.Get("Screen_Editor_SearchActions"),
+                ref _searchQuery, 100))
         {
             ApplyFilter();
         }
@@ -292,8 +298,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         if (!ImGui.BeginTable("Keybinds", 2, ImGuiTableFlags.ScrollY | ImGuiTableFlags.BordersH)) return;
         ImGui.TableSetupScrollFreeze(0, 1);
-        ImGui.TableSetupColumn("Name");
-        ImGui.TableSetupColumn("Keybind");
+        ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Name"));
+        ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Keybind"));
         ImGui.TableHeadersRow();
         var clipperRaw = new ImGuiListClipper();
         var clipper = new ImGuiListClipperPtr(&clipperRaw);
@@ -345,10 +351,11 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         {
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 0, 0, 1));
             flags |= ImGuiInputTextFlags.ReadOnly;
-            str = "Input a keybind to search...";
+            str = LocalizationManager.Get("Screen_Editor_InputKeybindToSearch");
         }
 
-        if (ImGui.InputTextWithHint("##SearchKeybind", "Search Keybind", ref str, 20, flags))
+        if (ImGui.InputTextWithHint("##SearchKeybind", LocalizationManager.Get("Screen_Editor_SearchKeybind"),
+                ref str, 20, flags))
         {
             SearchKeybind = string.IsNullOrWhiteSpace(str) || !Keybind.TryParse(str, out var newSearchKeybind)
                 ? null
@@ -361,7 +368,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         // Don't allow input when a keybind is being rebound
         ImGui.BeginDisabled(RebindingKeybind != null);
-        if (ImGui.Button("Input"))
+        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Input")))
         {
             SearchKeybind = _emptyKeybind;
             PreviousKeyState = new GenericKeyState(new GenericKey[]
@@ -369,7 +376,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
         }
 
         ImGui.SameLine();
-        if (ImGui.Button("Clear"))
+        if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Clear")))
         {
             SearchKeybind = null;
             ApplyFilter();
@@ -379,13 +386,4 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         ImGui.EndDisabled();
     }
-
-    /// <summary>
-    /// </summary>
-    /// <returns></returns>
-    public static ImGuiOptions GetOptions() => new ImGuiOptions(new List<ImGuiFont>
-    {
-        new ImGuiFont($@"{WobbleGame.WorkingDirectory}/Fonts/lato-black.ttf",
-            ConfigManager.EditorImGuiFontSize.Value),
-    }, false);
 }

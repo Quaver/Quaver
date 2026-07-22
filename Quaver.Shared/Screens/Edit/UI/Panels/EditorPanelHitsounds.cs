@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <param name="selectedHitObjects"></param>
         /// <param name="manager"></param>
         public EditorPanelHitsounds(BindableList<HitObjectInfo> selectedHitObjects, EditorActionManager manager)
-            : base("Hitsounds")
+            : base(LocalizationManager.Get("Screen_Editor_Hitsounds"))
         {
             ActionManager = manager;
             SelectedHitObjects = selectedHitObjects;
@@ -208,7 +208,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         {
             if (SelectedHitObjects.Value.Count == 0)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You need to select objects before changing their hitsounds!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_SelectObjectsBeforeChangingHitsounds"));
                 return;
             }
 
@@ -275,7 +276,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Sound.ToString(), 18)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                LocalizationManager.Get("Screen_Editor_Hitsound_" + Sound), 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

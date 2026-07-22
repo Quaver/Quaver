@@ -14,6 +14,7 @@ using TagLib.Riff;
 using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
+using Wobble.Managers;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
@@ -30,7 +31,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public string Name { get; } = "Timing Point Editor";
+        public string Name { get; } = LocalizationManager.Get("Screen_Editor_TimingPointEditor");
 
         /// <inheritdoc />
         /// <summary>
@@ -164,16 +165,16 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawHeaderText()
         {
-            ImGui.TextWrapped("Timing Points are individual BPM sections within your map. This will allow you to place objects at the correct times in the song.");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_TimingPointHelp"));
             ImGui.Dummy(new Vector2(0, 5));
-            ImGui.TextWrapped("You can click on an individual Timing Point to edit it or double-click to go to its position in time.");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_TimingPointInteractionHelp"));
         }
 
         /// <summary>
         /// </summary>
         private void DrawAddButton()
         {
-            if (ImGui.Button("Add"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Add")))
             {
                 var currentPoint = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
                 var bpm = currentPoint?.Bpm ?? 0;
@@ -198,7 +199,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawRemoveButton()
         {
-            if (ImGui.Button("Remove"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_Remove")))
             {
                 if (SelectedTimingPoints.Count == 0)
                     return;
@@ -234,7 +235,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         /// </summary>
         private void DrawSelectCurrentTimingPointButton()
         {
-            if (ImGui.Button("Select current timing point"))
+            if (ImGui.Button(LocalizationManager.Get("Screen_Editor_SelectCurrentTimingPoint")))
             {
                 var currentPoint = Screen.WorkingMap.GetTimingPointAt(Screen.Track.Time);
                 if (currentPoint != null)
@@ -273,7 +274,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25);
-                ImGui.Text("This will select the timing point at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all timing points up to that range, if one is selected already.");
+                ImGui.Text(LocalizationManager.Get("Screen_Editor_SelectCurrentTimingPointTooltip"));
                 ImGui.PopTextWrapPos();
                 ImGui.EndTooltip();
             }
@@ -294,7 +295,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 format = $"{time}";
             }
 
-            ImGui.TextWrapped("Time");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
             if (ImGui.InputFloat("", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
@@ -308,7 +309,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
-            ImGui.TextWrapped("Move Times By");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
             if (ImGui.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
                 Screen.ActionManager.ChangeTimingPointOffsetBatch(SelectedTimingPoints, time);
@@ -335,7 +336,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 format = $"{bpm:0.00}";
             }
 
-            ImGui.TextWrapped("BPM");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Bpm"));
 
             if (ImGui.InputFloat("##bpm", ref bpm, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
@@ -364,7 +365,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 signature = (int)SelectedTimingPoints.First().Signature;
             }
 
-            ImGui.TextWrapped("Signature");
+            ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Signature"));
 
             if (ImGui.InputInt("##signature", ref signature, 1, 1, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
@@ -382,7 +383,9 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         private void DrawSelectedCountLabel()
         {
             var count = SelectedTimingPoints.Count;
-            var labelText = count > 1 ? $"{count} timing points selected" : "";
+            var labelText = count > 1
+                ? LocalizationManager.Get("Screen_Editor_TimingPointsSelected", count)
+                : "";
             ImGui.Text(labelText);
         }
 
@@ -397,10 +400,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
 
             ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableSetupColumn("Time");
-            ImGui.TableSetupColumn("BPM");
-            ImGui.TableSetupColumn("Signature");
-            ImGui.TableSetupColumn("Hide Lines");
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Time"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Bpm"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Signature"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_HideLines"));
             ImGui.TableHeadersRow();
             if ((NeedsToScrollToFirstSelectedPoint.HasValue || NeedsToScrollToLastSelectedPoint.HasValue) &&
                 SelectedTimingPoints.Count != 0 &&
@@ -538,10 +541,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             }
 
             ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableSetupColumn("Time");
-            ImGui.TableSetupColumn("BPM");
-            ImGui.TableSetupColumn("Signature");
-            ImGui.TableSetupColumn("Hide Lines");
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Time"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Bpm"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_Signature"));
+            ImGui.TableSetupColumn(LocalizationManager.Get("Screen_Editor_HideLines"));
             ImGui.TableHeadersRow();
             if ((NeedsToScrollToFirstSelectedPoint.HasValue || NeedsToScrollToLastSelectedPoint.HasValue) &&
                 SelectedTimingPoints.Count != 0 &&

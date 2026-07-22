@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Force.DeepCloner;
 using IniFileParser;
+using Wobble.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
@@ -316,7 +317,7 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public EditorLayerInfo DefaultLayer { get; } = new EditorLayerInfo
         {
-            Name = "Default Layer",
+            Name = LocalizationManager.Get("Screen_Editor_DefaultLayer"),
             Hidden = false,
             ColorRgb = "255,255,255"
         };
@@ -426,7 +427,7 @@ namespace Quaver.Shared.Screens.Edit
 
                 Logger.Error(e, LogType.Runtime);
                 NotificationManager.Show(NotificationLevel.Error,
-                    "There was an issue while loading this map in the editor.");
+                    LocalizationManager.Get("Screen_Editor_LoadMapError"));
                 return;
             }
 
@@ -903,7 +904,8 @@ namespace Quaver.Shared.Screens.Edit
         {
             var layer = new EditorLayerInfo
             {
-                Name = $"Layer {WorkingMap.EditorLayers.Count + 1}", ColorRgb = "255,255,255"
+                Name = LocalizationManager.Get("Screen_Editor_Layer", WorkingMap.EditorLayers.Count + 1),
+                ColorRgb = "255,255,255"
             };
 
             // FindIndex() returns -1 when the default layer is selected
@@ -916,20 +918,21 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default layer!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_CannotDeleteDefaultLayer"));
                 return;
             }
 
             ActionManager.Perform(new EditorActionRemoveLayer(ActionManager, WorkingMap, SelectedHitObjects,
                 SelectedLayer.Value));
-            NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{SelectedLayer.Value.Name}'");
+            NotificationManager.Show(NotificationLevel.Success,
+                LocalizationManager.Get("Screen_Editor_DeletedLayer", SelectedLayer.Value.Name));
         }
 
         public void RenameLayer()
         {
             if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot rename the default layer!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_CannotRenameDefaultLayer"));
                 return;
             }
             DialogManager.Show(new DialogRenameLayer(SelectedLayer.Value, ActionManager, WorkingMap));
@@ -939,7 +942,7 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SelectedLayer.Value == DefaultLayer || SelectedLayer.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot recolor the default layer!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_CannotRecolorDefaultLayer"));
                 return;
             }     
             DialogManager.Show(new DialogChangeLayerColor(SelectedLayer.Value, ActionManager, WorkingMap));
@@ -978,14 +981,15 @@ namespace Quaver.Shared.Screens.Edit
         {
             if (SelectedScrollGroupId is Qua.DefaultScrollGroupId or Qua.GlobalScrollGroupId)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot delete the default timing groups!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_CannotDeleteDefaultTimingGroups"));
                 return;
             }
 
             var timingGroupId = SelectedScrollGroupId;
 
             ActionManager.RemoveTimingGroup(timingGroupId);
-            NotificationManager.Show(NotificationLevel.Success, $"Deleted layer '{timingGroupId}'");
+            NotificationManager.Show(NotificationLevel.Success,
+                LocalizationManager.Get("Screen_Editor_DeletedTimingGroup", timingGroupId));
         }
 
         public void RecolorTimingGroup() =>
@@ -1037,11 +1041,11 @@ namespace Quaver.Shared.Screens.Edit
                 {EditorBuiltInPlugin.ScrollSpeedFactorEditor, new EditorScrollSpeedFactorPanel(this)},
                 {EditorBuiltInPlugin.TimingGroupEditor, new EditorTimingGroupPanel(this)},
                 {EditorBuiltInPlugin.KeybindEditor, new EditorKeybindPanel(this)},
-                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, "BPM Calculator", "The Quaver Team", "",
+                {EditorBuiltInPlugin.BpmCalculator, new EditorPlugin(this, LocalizationManager.Get("Screen_Editor_BpmCalculator"), "The Quaver Team", "",
                     $"{dir}/BpmCalculator/plugin.lua", true)},
-                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, "BPM Detector", "The Quaver Team", "",
+                {EditorBuiltInPlugin.BpmDetector, new EditorPlugin(this, LocalizationManager.Get("Screen_Editor_BpmDetector"), "The Quaver Team", "",
                     $"{dir}/BpmDetector/plugin.lua", true)},
-                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, "Go To Objects", "The Quaver Team", "",
+                {EditorBuiltInPlugin.GoToObjects, new EditorPlugin(this, LocalizationManager.Get("Screen_Editor_GoToObjects"), "The Quaver Team", "",
                     $"{dir}/GoToObjects/plugin.lua", true)}
             };
 
@@ -1435,7 +1439,7 @@ namespace Quaver.Shared.Screens.Edit
             if (targetRate <= 0 || targetRate > 2.0f)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "You cannot change the audio rate this way any further!");
+                    LocalizationManager.Get("Screen_Editor_CannotChangeAudioRateFurther"));
                 return;
             }
 
@@ -1528,7 +1532,7 @@ namespace Quaver.Shared.Screens.Edit
 
             if (Map.Game != MapGame.Quaver)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot save a map loaded from another game!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_CannotSaveImportedMap"));
                 return;
             }
 
@@ -1541,7 +1545,7 @@ namespace Quaver.Shared.Screens.Edit
                     ThreadScheduler.Run(() =>
                     {
                         SaveWorkingMap();
-                        NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                        NotificationManager.Show(NotificationLevel.Success, LocalizationManager.Get("Screen_Editor_MapSavedSuccessfully"));
                     });
                 }
 
@@ -1558,7 +1562,7 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while saving your map!");
+                NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Editor_SaveMapError"));
             }
         }
 
@@ -1596,7 +1600,7 @@ namespace Quaver.Shared.Screens.Edit
                 MapDatabaseCache.MapsToUpdate.Add(MapManager.Selected.Value);
 
             NotificationManager.Show(NotificationLevel.Info,
-                $"The cached data for this file will be updated when you leave the editor.");
+                LocalizationManager.Get("Screen_Editor_CacheUpdatedOnExit"));
         }
 
         /// <summary>
@@ -1660,20 +1664,20 @@ namespace Quaver.Shared.Screens.Edit
             if (WorkingMap.HitObjects.Count(x => x.StartTime >= Track.Time) == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "There aren't any hitobjects to play past this point!");
+                    LocalizationManager.Get("Screen_Editor_NoHitObjectsPastThisPoint"));
                 return;
             }
 
             if (WorkingMap.TimingPoints.Count == 0)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "A timing point must be added to your map before test playing!");
+                    LocalizationManager.Get("Screen_Editor_TimingPointRequiredForTestPlay"));
                 return;
             }
 
             if (DialogManager.Dialogs.Count != 0)
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Finish what you're doing before test playing!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_FinishBeforeTestPlaying"));
                 return;
             }
 
@@ -1684,7 +1688,7 @@ namespace Quaver.Shared.Screens.Edit
                 if (ActionManager.HasUnsavedChanges)
                 {
                     Save(true);
-                    NotificationManager.Show(NotificationLevel.Success, "Your map has been successfully saved!");
+                    NotificationManager.Show(NotificationLevel.Success, LocalizationManager.Get("Screen_Editor_MapSavedSuccessfully"));
                 }
 
                 var map = WorkingMap.DeepClone();
@@ -1719,7 +1723,8 @@ namespace Quaver.Shared.Screens.Edit
                     Tags = string.Join(" ", tagFile.Tag.Genres) ?? "",
                     Creator = ConfigManager.Username.Value,
                     DifficultyName = "",
-                    Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}",
+                    Description = LocalizationManager.Get("Screen_Editor_CreatedAt",
+                        TimeHelper.GetUnixTimestampMilliseconds()),
                     BackgroundFile = "",
                     Mode = GameMode.Keys4,
                     BPMDoesNotAffectScrollVelocity = true,
@@ -1770,7 +1775,7 @@ namespace Quaver.Shared.Screens.Edit
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while creating a new mapset.");
+                NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Editor_CreateMapsetError"));
             }
         }
 
@@ -1799,7 +1804,7 @@ namespace Quaver.Shared.Screens.Edit
                 catch (Exception e)
                 {
                     Logger.Error(e, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "There was an issue while switching difficulty.");
+                    NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Editor_SwitchDifficultyError"));
                 }
             });
         }
@@ -1814,7 +1819,7 @@ namespace Quaver.Shared.Screens.Edit
             if (Map.Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "You cannot create new difficulties for maps from other games. Create a new set!");
+                    LocalizationManager.Get("Screen_Editor_CannotCreateDifficultyForImportedMap"));
 
                 return;
             }
@@ -1832,7 +1837,8 @@ namespace Quaver.Shared.Screens.Edit
                     var qua = WorkingMap.DeepClone();
                     qua.DifficultyName = "";
                     qua.MapId = -1;
-                    qua.Description = $"Created at {TimeHelper.GetUnixTimestampMilliseconds()}";
+                    qua.Description = LocalizationManager.Get("Screen_Editor_CreatedAt",
+                        TimeHelper.GetUnixTimestampMilliseconds());
 
                     if (!copyCurrent)
                         qua.HitObjects.Clear();
@@ -1862,7 +1868,7 @@ namespace Quaver.Shared.Screens.Edit
                 {
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error,
-                        "There was an issue while creating a new difficulty.");
+                        LocalizationManager.Get("Screen_Editor_CreateDifficultyError"));
                 }
             });
         }
@@ -1872,7 +1878,7 @@ namespace Quaver.Shared.Screens.Edit
         public void UploadMapset()
         {
             if (!OnlineManager.Connected)
-                NotificationManager.Show(NotificationLevel.Warning, "You must be logged in to upload your mapset!");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_MustBeLoggedInToUpload"));
             else
                 DialogManager.Show(new EditorUploadConfirmationDialog(this));
         }
@@ -1884,7 +1890,7 @@ namespace Quaver.Shared.Screens.Edit
             if (!OnlineManager.Connected)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "You must be logged in to submit your mapset for rank!");
+                    LocalizationManager.Get("Screen_Editor_MustBeLoggedInToSubmitForRank"));
                 return;
             }
 
@@ -1894,13 +1900,13 @@ namespace Quaver.Shared.Screens.Edit
             if (ActionManager.HasUnsavedChanges)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "Your map has unsaved changes. Please save & upload before submitting for rank.");
+                    LocalizationManager.Get("Screen_Editor_SaveAndUploadBeforeSubmitForRank"));
                 return;
             }
 
             if (Map.Mapset.Maps.Any(x => x.Mode != GameMode.Keys4 && x.Mode != GameMode.Keys7))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "Only 4K and 7K are allowed for ranking.");
+                NotificationManager.Show(NotificationLevel.Warning, LocalizationManager.Get("Screen_Editor_Only4KAnd7KRanked"));
                 return;
             }
 
@@ -1911,12 +1917,12 @@ namespace Quaver.Shared.Screens.Edit
         /// </summary>
         public void ExportToZip()
         {
-            NotificationManager.Show(NotificationLevel.Info, "Please wait while the mapset is being exported...");
+            NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get("Screen_Editor_ExportingMapset"));
 
             ThreadScheduler.Run(() =>
             {
                 MapManager.Selected.Value.Mapset.ExportToZip();
-                NotificationManager.Show(NotificationLevel.Success, "The mapset has been successfully exported!");
+                NotificationManager.Show(NotificationLevel.Success, LocalizationManager.Get("Screen_Editor_MapsetExportedSuccessfully"));
             });
         }
 
@@ -2020,16 +2026,16 @@ namespace Quaver.Shared.Screens.Edit
                 if (Path.GetFullPath(file).Equals(Path.GetFullPath(EditorInputConfig.ConfigPath),
                         StringComparison.CurrentCultureIgnoreCase))
                 {
-                    NotificationManager.Show(NotificationLevel.Error, "You cannot import the keymap you are already using!");
+                    NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Editor_CannotImportCurrentKeymap"));
                     return;
                 }
-                DialogManager.Show(new YesNoDialog("APPLY KEYMAP", 
-                    "Are you sure you want to overwrite your keymap?\nYou might want to back up your keymap first.",
+                DialogManager.Show(new YesNoDialog(LocalizationManager.Get("Screen_Editor_ApplyKeymap"),
+                    LocalizationManager.Get("Screen_Editor_ApplyKeymapConfirmation"),
                     () =>
                     {
                         File.Copy(file, EditorInputConfig.ConfigPath, true);
                         ResetInputManager();
-                        NotificationManager.Show(NotificationLevel.Success, "The keymap has been applied!");
+                        NotificationManager.Show(NotificationLevel.Success, LocalizationManager.Get("Screen_Editor_KeymapApplied"));
                     }));
                 return;
             }
@@ -2043,7 +2049,7 @@ namespace Quaver.Shared.Screens.Edit
             if (Map.Game != MapGame.Quaver)
             {
                 NotificationManager.Show(NotificationLevel.Warning,
-                    "You cannot set a new background for a map loaded from another game.");
+                    LocalizationManager.Get("Screen_Editor_CannotSetImportedMapBackground"));
                 return;
             }
 
@@ -2257,15 +2263,17 @@ namespace Quaver.Shared.Screens.Edit
         private void ToggleBindableBool(Bindable<bool> boolean, string name)
         {
             boolean.Value = !boolean.Value;
-            NotificationManager.Show(NotificationLevel.Info, (boolean.Value ? "Enabled" : "Disabled") + " " + name);
+            NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get(
+                boolean.Value ? "Screen_Editor_EnabledSetting" : "Screen_Editor_DisabledSetting", name));
         }
 
         private void ToggleObjectColoring(Bindable<HitObjectColoring> coloring, HitObjectColoring mask)
         {
             coloring.Value = coloring.Value == mask ? HitObjectColoring.None : mask;
 
-            NotificationManager.Show(NotificationLevel.Info,
-                (mask == coloring.Value ? "Enabled" : "Disabled") + " " + mask + " coloring");
+            NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get(
+                mask == coloring.Value ? "Screen_Editor_EnabledColoring" : "Screen_Editor_DisabledColoring",
+                LocalizationManager.Get("Screen_Editor_HitObjectColoring_" + mask)));
         }
 
         /// <summary>
