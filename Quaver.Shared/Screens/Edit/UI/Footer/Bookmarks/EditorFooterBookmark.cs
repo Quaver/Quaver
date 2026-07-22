@@ -3,9 +3,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Graphics.UI.Buttons;
-using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
 {
@@ -14,6 +12,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
     /// </summary>
     public class EditorFooterBookmark : ImageButton
     {
+        private const int MaximumNoteWidth = 360;
+
         private EditScreen Screen { get; }
         
         private BookmarkInfo Bookmark { get; }
@@ -25,7 +25,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             Screen = screen;
             Bookmark = bookmark;
             Tint = GetColor();
-            Tooltip = new Tooltip(Bookmark.Note, Tint) { DestroyIfParentIsNull = false };
+            Tooltip = new Tooltip(Bookmark.Note, Tint, maxTextWidth: MaximumNoteWidth)
+            {
+                DestroyIfParentIsNull = false
+            };
 
             Hovered += (sender, args) =>
             {
@@ -36,7 +39,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             };
             
             LeftHover += (sender, args) => screen.DeactivateTooltip();
-            Clicked += (sender, args) => DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, Bookmark)); 
             RightClicked += (sender, args) => screen.ActionManager.RemoveBookmark(Bookmark);
         }
 

@@ -17,6 +17,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
 {
     public class DrawableEditorLineBookmark : DrawableEditorLine
     {
+        private const int MaximumNoteWidth = 360;
+
         private EditorPlayfield Playfield { get; }
         
         public BookmarkInfo Bookmark { get;  }
@@ -31,7 +33,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
             Bookmark = bookmark;
             DrawIfOffScreen = true;
 
-            Tooltip = new Tooltip(Bookmark.Note, GetColor(), false)
+            Tooltip = new Tooltip(Bookmark.Note, GetColor(), maxTextWidth: MaximumNoteWidth)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

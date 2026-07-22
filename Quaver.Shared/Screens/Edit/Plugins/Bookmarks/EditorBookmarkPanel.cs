@@ -49,7 +49,7 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
     public Color TitleColor => PaulToulColorGenerator.ColorScheme[18];
 
     public EditorBookmarkPanel(EditScreen screen)
-        : base(false, EditorImGuiOptions.GetOptions(14), screen.ImGuiScale)
+        : base(false, EditorImGuiOptions.GetOptions(), screen.ImGuiScale)
     {
         Screen = screen;
         Initialize();
@@ -275,7 +275,7 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         ImGui.Text(count > 1 ? $"{count} bookmarks selected" : "");
     }
 
-    private unsafe void DrawTable()
+    private void DrawTable()
     {
         if (!ImGui.BeginTable("##BookmarkTable", 3,
                 ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchSame))
@@ -296,61 +296,48 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
             NeedsToScrollToLastSelectedBookmark = null;
         }
 
-        var clipperRaw = new ImGuiListClipper();
-        var clipper = new ImGuiListClipperPtr(&clipperRaw);
-        clipper.Begin(Screen.WorkingMap.Bookmarks.Count);
-
-        if (NeedsToScrollToLastSelectedBookmark.HasValue)
-            clipper.IncludeItemByIndex(NeedsToScrollToLastSelectedBookmark.Value);
-
-        if (NeedsToScrollToFirstSelectedBookmark.HasValue)
-            clipper.IncludeItemByIndex(NeedsToScrollToFirstSelectedBookmark.Value);
-
-        while (clipper.Step())
+        for (var i = 0; i < Screen.WorkingMap.Bookmarks.Count; i++)
         {
-            for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+            var bookmark = Screen.WorkingMap.Bookmarks[i];
+            var isSelected = SelectedBookmarks.Contains(bookmark);
+
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
+            ImGui.PushID(i);
+
+            ScrollToSelection(bookmark);
+
+            if (!isSelected)
+                ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
+
+            if (ImGui.Button($@"{TimeSpan.FromMilliseconds(bookmark.StartTime):mm\:ss\.fff}"))
+                SelectBookmark(bookmark, KeyboardManager.IsCtrlDown(), KeyboardManager.IsShiftDown());
+
+            if (!isSelected)
+                ImGui.PopStyleColor();
+
+            ImGui.TableNextColumn();
+            ImGui.TextWrapped(bookmark.Note ?? "");
+
+            ImGui.TableNextColumn();
+            var bookmarkColor = ColorHelper.ToXnaColor(bookmark.GetColor());
+            var colorVector = new Vector4(bookmarkColor.R, bookmarkColor.G, bookmarkColor.B, byte.MaxValue) /
+                              byte.MaxValue;
+            const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs |
+                                                     ImGuiColorEditFlags.NoPicker;
+
+            if (ImGui.ColorButton("##rowColor", colorVector, colorOptions))
             {
-                var bookmark = Screen.WorkingMap.Bookmarks[i];
-                var isSelected = SelectedBookmarks.Contains(bookmark);
-
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-                ImGui.PushID(i);
-
-                ScrollToSelection(bookmark);
-
-                if (!isSelected)
-                    ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(100, 100, 100, 0));
-
-                if (ImGui.Button($@"{TimeSpan.FromMilliseconds(bookmark.StartTime):mm\:ss\.fff}"))
-                    SelectBookmark(bookmark, KeyboardManager.IsCtrlDown(), KeyboardManager.IsShiftDown());
-
-                if (!isSelected)
-                    ImGui.PopStyleColor();
-
-                ImGui.TableNextColumn();
-                ImGui.TextUnformatted(bookmark.Note ?? "");
-
-                ImGui.TableNextColumn();
-                var bookmarkColor = ColorHelper.ToXnaColor(bookmark.GetColor());
-                var colorVector = new Vector4(bookmarkColor.R, bookmarkColor.G, bookmarkColor.B, byte.MaxValue) /
-                                  byte.MaxValue;
-                const ImGuiColorEditFlags colorOptions = ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoInputs |
-                                                         ImGuiColorEditFlags.NoPicker;
-
-                if (ImGui.ColorButton("##rowColor", colorVector, colorOptions))
+                if (!SelectedBookmarks.Contains(bookmark))
                 {
-                    if (!SelectedBookmarks.Contains(bookmark))
-                    {
-                        SelectedBookmarks.Clear();
-                        SelectedBookmarks.Add(bookmark);
-                    }
-
-                    ShowColorDialog();
+                    SelectedBookmarks.Clear();
+                    SelectedBookmarks.Add(bookmark);
                 }
 
-                ImGui.PopID();
+                ShowColorDialog();
             }
+
+            ImGui.PopID();
         }
 
         IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
