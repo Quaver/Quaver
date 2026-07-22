@@ -2058,4 +2058,1318 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
   <data name="Screen_MultiplayerLobby_MaximumSongLength" xml:space="preserve">
     <value>Maksimal sanglængde</value>
   </data>
+  <data name="Screen_Editor_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Screen_Editor_NewSong" xml:space="preserve">
+    <value>New Song</value>
+  </data>
+  <data name="Screen_Editor_SwitchDifficulty" xml:space="preserve">
+    <value>Switch Difficulty</value>
+  </data>
+  <data name="Screen_Editor_CreateNewDifficulty" xml:space="preserve">
+    <value>Create New Difficulty</value>
+  </data>
+  <data name="Screen_Editor_NewMap" xml:space="preserve">
+    <value>New Map</value>
+  </data>
+  <data name="Screen_Editor_CopyCurrentMap" xml:space="preserve">
+    <value>Copy Current Map</value>
+  </data>
+  <data name="Screen_Editor_FromQuaFile" xml:space="preserve">
+    <value>From .qua File</value>
+  </data>
+  <data name="Screen_Editor_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
+    <value>Refresh File Cache</value>
+  </data>
+  <data name="Screen_Editor_Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Screen_Editor_SubmitForRank" xml:space="preserve">
+    <value>Submit For Rank</value>
+  </data>
+  <data name="Screen_Editor_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Screen_Editor_OpenSongFolder" xml:space="preserve">
+    <value>Open Song Folder</value>
+  </data>
+  <data name="Screen_Editor_OpenQuaFile" xml:space="preserve">
+    <value>Open .qua File</value>
+  </data>
+  <data name="Screen_Editor_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Screen_Editor_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Screen_Editor_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Screen_Editor_Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="Screen_Editor_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Screen_Editor_Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
+    <value>Paste (snapped)</value>
+  </data>
+  <data name="Screen_Editor_PasteUnsnapped" xml:space="preserve">
+    <value>Paste (unsnapped)</value>
+  </data>
+  <data name="Screen_Editor_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Screen_Editor_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="Screen_Editor_SelectAllInLayer" xml:space="preserve">
+    <value>Select All In Layer</value>
+  </data>
+  <data name="Screen_Editor_FlipObjects" xml:space="preserve">
+    <value>Flip Objects</value>
+  </data>
+  <data name="Screen_Editor_SwapLanesOfObjects" xml:space="preserve">
+    <value>Swap Lanes of Objects</value>
+  </data>
+  <data name="Screen_Editor_Lane" xml:space="preserve">
+    <value>Lane {0}</value>
+  </data>
+  <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
+    <value>Move Objects To Layer</value>
+  </data>
+  <data name="Screen_Editor_DefaultLayer" xml:space="preserve">
+    <value>Default Layer</value>
+  </data>
+  <data name="Screen_Editor_MoveObjectsToTimingGroup" xml:space="preserve">
+    <value>Move Objects To Timing Group</value>
+  </data>
+  <data name="Screen_Editor_DefaultTimingGroup" xml:space="preserve">
+    <value>Default Timing Group</value>
+  </data>
+  <data name="Screen_Editor_EditMetadata" xml:space="preserve">
+    <value>Edit Metadata</value>
+  </data>
+  <data name="Screen_Editor_EditTimingPoints" xml:space="preserve">
+    <value>Edit Timing Points</value>
+  </data>
+  <data name="Screen_Editor_EditScrollVelocities" xml:space="preserve">
+    <value>Edit Scroll Velocities</value>
+  </data>
+  <data name="Screen_Editor_EditScrollSpeedFactors" xml:space="preserve">
+    <value>Edit Scroll Speed Factors</value>
+  </data>
+  <data name="Screen_Editor_AddBackgroundImage" xml:space="preserve">
+    <value>Add Background Image</value>
+  </data>
+  <data name="Screen_Editor_SetSongSelectPreviewTime" xml:space="preserve">
+    <value>Set Song Select Preview Time</value>
+  </data>
+  <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
+    <value>Enable AutoMod</value>
+  </data>
+  <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
+    <value>Apply Offset To Map</value>
+  </data>
+  <data name="Screen_Editor_ResnapAllNotes" xml:space="preserve">
+    <value>Resnap All Notes</value>
+  </data>
+  <data name="Screen_Editor_ResnapToCurrentSnap" xml:space="preserve">
+    <value>Resnap to currently selected snap (1/{0})</value>
+  </data>
+  <data name="Screen_Editor_ResnapToCommonSnaps" xml:space="preserve">
+    <value>Resnap to 1/16 and 1/12 snaps</value>
+  </data>
+  <data name="Screen_Editor_ResnapToCustomDivisions" xml:space="preserve">
+    <value>Resnap to custom divisions</value>
+  </data>
+  <data name="Screen_Editor_Resnap" xml:space="preserve">
+    <value>Resnap</value>
+  </data>
+  <data name="Screen_Editor_ResnapSelectedNotes" xml:space="preserve">
+    <value>Resnap Selected Notes</value>
+  </data>
+  <data name="Screen_Editor_ApplyModifierToMap" xml:space="preserve">
+    <value>Apply Modifier To Map</value>
+  </data>
+  <data name="Screen_Editor_Mirror" xml:space="preserve">
+    <value>Mirror</value>
+  </data>
+  <data name="Screen_Editor_NoLongNotes" xml:space="preserve">
+    <value>No Long Notes</value>
+  </data>
+  <data name="Screen_Editor_FullLongNotes" xml:space="preserve">
+    <value>Full Long Notes</value>
+  </data>
+  <data name="Screen_Editor_Inverse" xml:space="preserve">
+    <value>Inverse</value>
+  </data>
+  <data name="Screen_Editor_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Screen_Editor_Panels" xml:space="preserve">
+    <value>Panels</value>
+  </data>
+  <data name="Screen_Editor_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Screen_Editor_CompositionTools" xml:space="preserve">
+    <value>Composition Tools</value>
+  </data>
+  <data name="Screen_Editor_Layers" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Screen_Editor_Hitsounds" xml:space="preserve">
+    <value>Hitsounds</value>
+  </data>
+  <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
+    <value>Display Gameplay Preview</value>
+  </data>
+  <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
+    <value>Reference Difficulty</value>
+  </data>
+  <data name="Screen_Editor_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Editor_EditorNoteSkin" xml:space="preserve">
+    <value>Editor NoteSkin</value>
+  </data>
+  <data name="Screen_Editor_CurrentSkin" xml:space="preserve">
+    <value>Current skin</value>
+  </data>
+  <data name="Screen_Editor_EditorDefaultSkin" xml:space="preserve">
+    <value>Editor Default Skin</value>
+  </data>
+  <data name="Screen_Editor_CurrentDefaultSkin" xml:space="preserve">
+    <value>Current default skin</value>
+  </data>
+  <data name="Screen_Editor_BackgroundBrightness" xml:space="preserve">
+    <value>Background Brightness</value>
+  </data>
+  <data name="Screen_Editor_PlayfieldOpacity" xml:space="preserve">
+    <value>Playfield Opacity</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapDivisor" xml:space="preserve">
+    <value>Beat Snap Divisor</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapColor" xml:space="preserve">
+    <value>Beat Snap Color</value>
+  </data>
+  <data name="Screen_Editor_ScaleScrollSpeed" xml:space="preserve">
+    <value>Scale Scroll Speed</value>
+  </data>
+  <data name="Screen_Editor_PlaceObjectsOnNearestTick" xml:space="preserve">
+    <value>Place Objects On Nearest Tick</value>
+  </data>
+  <data name="Screen_Editor_PlaceObjectsWithTopRowNumbers" xml:space="preserve">
+    <value>Place Objects With Top Row Numbers</value>
+  </data>
+  <data name="Screen_Editor_SnapNotesWhenLiveMapping" xml:space="preserve">
+    <value>Snap Notes When Live Mapping</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMappingOffset" xml:space="preserve">
+    <value>Set Offset For Notes Placed During Live Mapping</value>
+  </data>
+  <data name="Screen_Editor_PlaceLongNotesWhenLiveMapping" xml:space="preserve">
+    <value>Place Long Notes When Live Mapping</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMappingLongNoteMinimumLength" xml:space="preserve">
+    <value>Set Minimum Length Of Long Notes Placed During Live Mapping</value>
+  </data>
+  <data name="Screen_Editor_Waveform" xml:space="preserve">
+    <value>Waveform</value>
+  </data>
+  <data name="Screen_Editor_Visible" xml:space="preserve">
+    <value>Visible</value>
+  </data>
+  <data name="Screen_Editor_Brightness" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="Screen_Editor_AudioDirection" xml:space="preserve">
+    <value>Audio Direction</value>
+  </data>
+  <data name="Screen_Editor_Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Screen_Editor_Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Screen_Editor_Spectrogram" xml:space="preserve">
+    <value>Spectrogram</value>
+  </data>
+  <data name="Screen_Editor_Precision" xml:space="preserve">
+    <value>Precision</value>
+  </data>
+  <data name="Screen_Editor_FftSize" xml:space="preserve">
+    <value>FFT Size</value>
+  </data>
+  <data name="Screen_Editor_FrequencyScale" xml:space="preserve">
+    <value>Frequency Scale</value>
+  </data>
+  <data name="Screen_Editor_CutoffFactor" xml:space="preserve">
+    <value>Cutoff Factor</value>
+  </data>
+  <data name="Screen_Editor_IntensityFactor" xml:space="preserve">
+    <value>Intensity Factor</value>
+  </data>
+  <data name="Screen_Editor_MinimumFrequency" xml:space="preserve">
+    <value>Minimum Frequency</value>
+  </data>
+  <data name="Screen_Editor_MaximumFrequency" xml:space="preserve">
+    <value>Maximum Frequency</value>
+  </data>
+  <data name="Screen_Editor_LongNoteOpacity" xml:space="preserve">
+    <value>Long Note Opacity</value>
+  </data>
+  <data name="Screen_Editor_CenterObjects" xml:space="preserve">
+    <value>Center Objects</value>
+  </data>
+  <data name="Screen_Editor_ViewLayers" xml:space="preserve">
+    <value>View Layers</value>
+  </data>
+  <data name="Screen_Editor_ViewTimingGroups" xml:space="preserve">
+    <value>View Timing Groups</value>
+  </data>
+  <data name="Screen_Editor_ColorSvLinesByTimingGroup" xml:space="preserve">
+    <value>Color SV Lines By Timing Group</value>
+  </data>
+  <data name="Screen_Editor_TestPlayModifiers" xml:space="preserve">
+    <value>Test Play Modifiers</value>
+  </data>
+  <data name="Screen_Editor_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Screen_Editor_ResetWindowLayout" xml:space="preserve">
+    <value>Reset Window Layout</value>
+  </data>
+  <data name="Screen_Editor_WindowLayoutResetOnNextOpen" xml:space="preserve">
+    <value>The window layout will be reset the next time you open the editor!</value>
+  </data>
+  <data name="Screen_Editor_Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="Screen_Editor_Local" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="Screen_Editor_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Screen_Editor_UploadToWorkshop" xml:space="preserve">
+    <value>Upload To Workshop</value>
+  </data>
+  <data name="Screen_Editor_UploadingPluginToWorkshop" xml:space="preserve">
+    <value>Uploading plugin to the Steam Workshop...</value>
+  </data>
+  <data name="Screen_Editor_PluginUploadedToWorkshop" xml:space="preserve">
+    <value>Successfully uploaded plugin to the workshop!</value>
+  </data>
+  <data name="Screen_Editor_OpenFolder" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="Screen_Editor_NoPluginsInstalled" xml:space="preserve">
+    <value>No Plugins Installed</value>
+  </data>
+  <data name="Screen_Editor_SteamWorkshop" xml:space="preserve">
+    <value>Steam Workshop</value>
+  </data>
+  <data name="Screen_Editor_Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Screen_Editor_Wiki" xml:space="preserve">
+    <value>Wiki</value>
+  </data>
+  <data name="Screen_Editor_GettingStarted" xml:space="preserve">
+    <value>Getting Started</value>
+  </data>
+  <data name="Screen_Editor_EditorFunctions" xml:space="preserve">
+    <value>Editor Functions</value>
+  </data>
+  <data name="Screen_Editor_RankingCriteria" xml:space="preserve">
+    <value>Ranking Criteria</value>
+  </data>
+  <data name="Screen_Editor_RankingProcess" xml:space="preserve">
+    <value>Ranking Process</value>
+  </data>
+  <data name="Screen_Editor_Web" xml:space="preserve">
+    <value>Web</value>
+  </data>
+  <data name="Screen_Editor_ViewOnlineListing" xml:space="preserve">
+    <value>View Online Listing</value>
+  </data>
+  <data name="Screen_Editor_ModdingDiscussion" xml:space="preserve">
+    <value>Modding Discussion</value>
+  </data>
+  <data name="Screen_Editor_Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Screen_Editor_PlaybackSpeed" xml:space="preserve">
+    <value>Playback Speed</value>
+  </data>
+  <data name="Screen_Editor_Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Screen_Editor_Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="Screen_Editor_DefaultPercentage" xml:space="preserve">
+    <value>Default ({0}%)</value>
+  </data>
+  <data name="Screen_Editor_Metronome" xml:space="preserve">
+    <value>Metronome</value>
+  </data>
+  <data name="Screen_Editor_PlayHalfBeats" xml:space="preserve">
+    <value>Play Half Beats</value>
+  </data>
+  <data name="Screen_Editor_Keybinds" xml:space="preserve">
+    <value>Keybinds</value>
+  </data>
+  <data name="Screen_Editor_InvertBeatSnapScroll" xml:space="preserve">
+    <value>Invert Beat Snap Scroll</value>
+  </data>
+  <data name="Screen_Editor_InvertScrolling" xml:space="preserve">
+    <value>Invert Scrolling</value>
+  </data>
+  <data name="Screen_Editor_FillMissingActions" xml:space="preserve">
+    <value>Fill Missing Actions</value>
+  </data>
+  <data name="Screen_Editor_FilledMissingActions" xml:space="preserve">
+    <value>Filled {0} missing actions!</value>
+  </data>
+  <data name="Screen_Editor_ResetAllKeybinds" xml:space="preserve">
+    <value>Reset All Keybinds</value>
+  </data>
+  <data name="Screen_Editor_AllKeybindsReset" xml:space="preserve">
+    <value>All keybinds have been reset!</value>
+  </data>
+  <data name="Screen_Editor_AddBookmark" xml:space="preserve">
+    <value>ADD BOOKMARK</value>
+  </data>
+  <data name="Screen_Editor_EditBookmark" xml:space="preserve">
+    <value>EDIT BOOKMARK</value>
+  </data>
+  <data name="Screen_Editor_BookmarkDialogMessage" xml:space="preserve">
+    <value>Add a custom note for your bookmark...</value>
+  </data>
+  <data name="Screen_Editor_BookmarkNotePlaceholder" xml:space="preserve">
+    <value>Add a bookmark note...</value>
+  </data>
+  <data name="Screen_Editor_CreateNewMapset" xml:space="preserve">
+    <value>CREATE NEW MAPSET</value>
+  </data>
+  <data name="Screen_Editor_CreateNewMapsetMessage" xml:space="preserve">
+    <value>To create a new mapset, drag a .mp3 file into the game window...</value>
+  </data>
+  <data name="Screen_Editor_DetectedManualFileChanges" xml:space="preserve">
+    <value>DETECTED MANUAL FILE CHANGES</value>
+  </data>
+  <data name="Screen_Editor_DetectedManualFileChangesMessage" xml:space="preserve">
+    <value>There were manual changes detected to the .qua file.&#xA;Would you like to reload the editor?</value>
+  </data>
+  <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
+    <value>Enter a value to apply an offset to all of your map's objects, timing points,&#xA; and scroll velocities...</value>
+  </data>
+  <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
+    <value>Enter an offset to apply to your map...</value>
+  </data>
+  <data name="Screen_Editor_SaveChanges" xml:space="preserve">
+    <value>SAVE CHANGES</value>
+  </data>
+  <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
+    <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
+  </data>
+  <data name="Screen_Editor_SaveBeforeSwitchingDifficulty" xml:space="preserve">
+    <value>You have unsaved changes. Would you like to save&#xA;before switching to another difficulty?</value>
+  </data>
+  <data name="Screen_Editor_MapSavedSuccessfully" xml:space="preserve">
+    <value>Your map has been successfully saved!</value>
+  </data>
+  <data name="Screen_Editor_ExitEditor" xml:space="preserve">
+    <value>EXIT EDITOR</value>
+  </data>
+  <data name="Screen_Editor_SaveBeforeExit" xml:space="preserve">
+    <value>You have unsaved changes. Would you like to save?</value>
+  </data>
+  <data name="Screen_Editor_No" xml:space="preserve">
+    <value>NO</value>
+  </data>
+  <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
+    <value>Are you sure you would like to submit your mapset for rank?&#xA;Note: It must follow the ranking criteria in order to be accepted.</value>
+  </data>
+  <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
+    <value>CUSTOM BEAT SNAP</value>
+  </data>
+  <data name="Screen_Editor_CustomBeatSnapMessage" xml:space="preserve">
+    <value>Enter a value or range of values for the custom beat snap divisor (1/?)...</value>
+  </data>
+  <data name="Screen_Editor_CustomBeatSnapPlaceholder" xml:space="preserve">
+    <value>Enter a beat snap value or range (max 48, e.g. "7" or "5-9")</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapOffset" xml:space="preserve">
+    <value>SET LIVEMAP OFFSET</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapOffsetMessage" xml:space="preserve">
+    <value>Enter a value to apply an offset to notes placed during live-mapping...</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapOffsetPlaceholder" xml:space="preserve">
+    <value>Enter an offset for live-mapping...</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapLongNoteThreshold" xml:space="preserve">
+    <value>SET LIVEMAP LN THRESHOLD</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapLongNoteThresholdMessage" xml:space="preserve">
+    <value>Enter the minimum length of a long note during live-mapping...</value>
+  </data>
+  <data name="Screen_Editor_SetLiveMapLongNoteThresholdPlaceholder" xml:space="preserve">
+    <value>Enter a threshold of LNs during livemapping...</value>
+  </data>
+  <data name="Screen_Editor_InvalidValue" xml:space="preserve">
+    <value>Invalid value: '{0}'</value>
+  </data>
+  <data name="Screen_Editor_ChangeTimingGroupColor" xml:space="preserve">
+    <value>CHANGE TIMING GROUP COLOR</value>
+  </data>
+  <data name="Screen_Editor_ChangeTimingGroupColorMessage" xml:space="preserve">
+    <value>Enter a new RGB color for your timing group...</value>
+  </data>
+  <data name="Screen_Editor_ChangeWaveformColor" xml:space="preserve">
+    <value>CHANGE WAVEFORM COLOR</value>
+  </data>
+  <data name="Screen_Editor_ChangeWaveformColorMessage" xml:space="preserve">
+    <value>Enter a new RGB color for your waveform... (default: 0,200,255)</value>
+  </data>
+  <data name="Screen_Editor_AddDifficultyFromFile" xml:space="preserve">
+    <value>ADD DIFFICULTY FROM FILE</value>
+  </data>
+  <data name="Screen_Editor_AddDifficultyFromFileMessage" xml:space="preserve">
+    <value>Drag a .qua file into the window to add it to the mapset.</value>
+  </data>
+  <data name="Screen_Editor_InvalidQuaFile" xml:space="preserve">
+    <value>The .qua file you have dragged in is not valid!</value>
+  </data>
+  <data name="Screen_Editor_CreateDifficultyError" xml:space="preserve">
+    <value>There was an issue while creating a new difficulty.</value>
+  </data>
+  <data name="Screen_Editor_UploadMapset" xml:space="preserve">
+    <value>UPLOAD MAPSET</value>
+  </data>
+  <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
+    <value>Are you sure you would like to upload your mapset to the server?&#xA;Note: You must own the rights to all files you upload.</value>
+  </data>
+  <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
+    <value>You cannot submit a mapset that is already ranked!</value>
+  </data>
+  <data name="Screen_Editor_MapsetDoesNotBelongToYou" xml:space="preserve">
+    <value>This mapset does not belong to you! The creator usernames of every map do not match yours.</value>
+  </data>
+  <data name="Screen_Editor_ApplyModifier" xml:space="preserve">
+    <value>APPLY MODIFIER</value>
+  </data>
+  <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
+    <value>Would like to apply the modifier: "{0}" to your map?&#xA;&#xA;This action is NOT reversible! Choose wisely.</value>
+  </data>
+  <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
+    <value>CHANGE BACKGROUND / BANNER</value>
+  </data>
+  <data name="Screen_Editor_ChangeBackgroundOrBannerMessage" xml:space="preserve">
+    <value>Would you like to change the background or the banner?</value>
+  </data>
+  <data name="Screen_Editor_Background" xml:space="preserve">
+    <value>BACKGROUND</value>
+  </data>
+  <data name="Screen_Editor_Banner" xml:space="preserve">
+    <value>BANNER</value>
+  </data>
+  <data name="Screen_Editor_BackgroundChangedSuccessfully" xml:space="preserve">
+    <value>Your background has been successfully changed!</value>
+  </data>
+  <data name="Screen_Editor_ChangeBackgroundError" xml:space="preserve">
+    <value>There was an issue changing your background!</value>
+  </data>
+  <data name="Screen_Editor_ChangingBanner" xml:space="preserve">
+    <value>CHANGING BANNER</value>
+  </data>
+  <data name="Screen_Editor_ChangingBannerMessage" xml:space="preserve">
+    <value>Please wait while your banner is being changed...</value>
+  </data>
+  <data name="Screen_Editor_BannerChangedSuccessfully" xml:space="preserve">
+    <value>Your banner has successfully changed!</value>
+  </data>
+  <data name="Screen_Editor_ChangeBannerError" xml:space="preserve">
+    <value>There was an issue changing your banner!</value>
+  </data>
+  <data name="Screen_Editor_SelectColor" xml:space="preserve">
+    <value>SELECT COLOR</value>
+  </data>
+  <data name="Screen_Editor_SelectColorMessage" xml:space="preserve">
+    <value>Enter a new RGB color...</value>
+  </data>
+  <data name="Screen_Editor_RgbColorPlaceholder" xml:space="preserve">
+    <value>Enter RGB color (ex: 255,255,255)...</value>
+  </data>
+  <data name="Screen_Editor_SubmittingForRankMessage" xml:space="preserve">
+    <value>Please wait while your map is being submitted for rank...</value>
+  </data>
+  <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
+    <value>Your mapset has issues that prevent it from being ranked. Please review the AutoMod for each difficulty, and then try again.</value>
+  </data>
+  <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
+    <value>An error occurred while submitting your mapset for rank.</value>
+  </data>
+  <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
+    <value>When set to ON, A BPM change will also change the Scroll Velocity.&#xA;For instance, going from 120BPM to 240BPM effectively creates&#xA;an implicit 2x Scroll Velocity multiplier starting from the beginning&#xA;of that BPM change until the next. Scroll Velocity is still applied.</value>
+  </data>
+  <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
+    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll&#xA;Velocity changes, you can safely ignore this option. The current LN renderer places&#xA;the head and tail to the earliest and latest positions reached, respectively. The old LN&#xA;renderer instead places them both wherever the playfield happens to be at the time.</value>
+  </data>
+  <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
+    <value>Copy all of the metadata from this difficulty to all of the difficulties from this mapset</value>
+  </data>
+  <data name="Screen_Editor_EditMetadataMessage" xml:space="preserve">
+    <value>Edit the values to change the metadata...</value>
+  </data>
+  <data name="Screen_Editor_ArtistName" xml:space="preserve">
+    <value>Artist Name</value>
+  </data>
+  <data name="Screen_Editor_ArtistNamePlaceholder" xml:space="preserve">
+    <value>Name of the artist</value>
+  </data>
+  <data name="Screen_Editor_SongTitle" xml:space="preserve">
+    <value>Song Title</value>
+  </data>
+  <data name="Screen_Editor_SongTitlePlaceholder" xml:space="preserve">
+    <value>Title of the song</value>
+  </data>
+  <data name="Screen_Editor_DifficultyName" xml:space="preserve">
+    <value>Difficulty Name</value>
+  </data>
+  <data name="Screen_Editor_DifficultyNamePlaceholder" xml:space="preserve">
+    <value>Name of the difficulty</value>
+  </data>
+  <data name="Screen_Editor_Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Screen_Editor_SourcePlaceholder" xml:space="preserve">
+    <value>Source of the song (album, mixtape, etc)</value>
+  </data>
+  <data name="Screen_Editor_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="Screen_Editor_TagsPlaceholder" xml:space="preserve">
+    <value>Comma-separated tags to help players find your map</value>
+  </data>
+  <data name="Screen_Editor_CreatorUsername" xml:space="preserve">
+    <value>Creator Username</value>
+  </data>
+  <data name="Screen_Editor_CreatorUsernamePlaceholder" xml:space="preserve">
+    <value>Your username</value>
+  </data>
+  <data name="Screen_Editor_KeyCount" xml:space="preserve">
+    <value>Key Count</value>
+  </data>
+  <data name="Screen_Editor_BpmAffectsSv" xml:space="preserve">
+    <value>BPM AFFECTS SV:</value>
+  </data>
+  <data name="Screen_Editor_ScratchKey" xml:space="preserve">
+    <value>SCRATCH KEY:</value>
+  </data>
+  <data name="Screen_Editor_LegacyLnRendering" xml:space="preserve">
+    <value>LEGACY LN RENDERING:</value>
+  </data>
+  <data name="Screen_Editor_SyncMetadata" xml:space="preserve">
+    <value>SYNC METADATA</value>
+  </data>
+  <data name="Screen_Editor_CannotEditImportedMapMetadata" xml:space="preserve">
+    <value>You cannot edit the metadata for a map loaded from another game.</value>
+  </data>
+  <data name="Screen_Editor_MetadataSynced" xml:space="preserve">
+    <value>Metadata synced to {0} map(s)!</value>
+  </data>
+  <data name="Screen_Editor_CannotDeleteDefaultLayer" xml:space="preserve">
+    <value>You cannot delete the default layer!</value>
+  </data>
+  <data name="Screen_Editor_DeletedLayer" xml:space="preserve">
+    <value>Deleted layer '{0}'</value>
+  </data>
+  <data name="Screen_Editor_CannotRenameDefaultLayer" xml:space="preserve">
+    <value>You cannot rename the default layer!</value>
+  </data>
+  <data name="Screen_Editor_CannotRecolorDefaultLayer" xml:space="preserve">
+    <value>You cannot recolor the default layer!</value>
+  </data>
+  <data name="Screen_Editor_CannotDeleteDefaultTimingGroups" xml:space="preserve">
+    <value>You cannot delete the default timing groups!</value>
+  </data>
+  <data name="Screen_Editor_DeletedTimingGroup" xml:space="preserve">
+    <value>Deleted timing group '{0}'</value>
+  </data>
+  <data name="Screen_Editor_CannotSaveImportedMap" xml:space="preserve">
+    <value>You cannot save a map loaded from another game!</value>
+  </data>
+  <data name="Screen_Editor_SaveMapError" xml:space="preserve">
+    <value>There was an issue while saving your map!</value>
+  </data>
+  <data name="Screen_Editor_FinishBeforeTestPlaying" xml:space="preserve">
+    <value>Finish what you're doing before test playing!</value>
+  </data>
+  <data name="Screen_Editor_CreateMapsetError" xml:space="preserve">
+    <value>There was an issue while creating a new mapset.</value>
+  </data>
+  <data name="Screen_Editor_SwitchDifficultyError" xml:space="preserve">
+    <value>There was an issue while switching difficulty.</value>
+  </data>
+  <data name="Screen_Editor_MustBeLoggedInToUpload" xml:space="preserve">
+    <value>You must be logged in to upload your mapset!</value>
+  </data>
+  <data name="Screen_Editor_Only4KAnd7KRanked" xml:space="preserve">
+    <value>Only 4K and 7K are allowed for ranking.</value>
+  </data>
+  <data name="Screen_Editor_ExportingMapset" xml:space="preserve">
+    <value>Please wait while the mapset is being exported...</value>
+  </data>
+  <data name="Screen_Editor_MapsetExportedSuccessfully" xml:space="preserve">
+    <value>The mapset has been successfully exported!</value>
+  </data>
+  <data name="Screen_Editor_CannotImportCurrentKeymap" xml:space="preserve">
+    <value>You cannot import the keymap you are already using!</value>
+  </data>
+  <data name="Screen_Editor_KeymapApplied" xml:space="preserve">
+    <value>The keymap has been applied!</value>
+  </data>
+  <data name="Screen_Editor_EnabledSetting" xml:space="preserve">
+    <value>Enabled {0}</value>
+  </data>
+  <data name="Screen_Editor_DisabledSetting" xml:space="preserve">
+    <value>Disabled {0}</value>
+  </data>
+  <data name="Screen_Editor_AddBackgroundImageInstruction" xml:space="preserve">
+    <value>To add a background image, drag a .jpg or .png file into the window.</value>
+  </data>
+  <data name="Screen_Editor_LoadMapError" xml:space="preserve">
+    <value>There was an issue while loading this map in the editor.</value>
+  </data>
+  <data name="Screen_Editor_CannotChangeAudioRateFurther" xml:space="preserve">
+    <value>You cannot change the audio rate this way any further!</value>
+  </data>
+  <data name="Screen_Editor_CacheUpdatedOnExit" xml:space="preserve">
+    <value>The cached data for this file will be updated when you leave the editor.</value>
+  </data>
+  <data name="Screen_Editor_NoHitObjectsPastThisPoint" xml:space="preserve">
+    <value>There aren't any hitobjects to play past this point!</value>
+  </data>
+  <data name="Screen_Editor_TimingPointRequiredForTestPlay" xml:space="preserve">
+    <value>A timing point must be added to your map before test playing!</value>
+  </data>
+  <data name="Screen_Editor_CannotCreateDifficultyForImportedMap" xml:space="preserve">
+    <value>You cannot create new difficulties for maps from other games. Create a new set!</value>
+  </data>
+  <data name="Screen_Editor_MustBeLoggedInToSubmitForRank" xml:space="preserve">
+    <value>You must be logged in to submit your mapset for rank!</value>
+  </data>
+  <data name="Screen_Editor_SaveAndUploadBeforeSubmitForRank" xml:space="preserve">
+    <value>Your map has unsaved changes. Please save &amp; upload before submitting for rank.</value>
+  </data>
+  <data name="Screen_Editor_CannotSetImportedMapBackground" xml:space="preserve">
+    <value>You cannot set a new background for a map loaded from another game.</value>
+  </data>
+  <data name="Screen_Editor_EnabledColoring" xml:space="preserve">
+    <value>Enabled {0} coloring</value>
+  </data>
+  <data name="Screen_Editor_DisabledColoring" xml:space="preserve">
+    <value>Disabled {0} coloring</value>
+  </data>
+  <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
+    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: CTRL + B</value>
+  </data>
+  <data name="Screen_Editor_BeatSnap" xml:space="preserve">
+    <value>Beat Snap</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
+    <value>Change the current beat snap divisor.&#xA;Hotkeys: CTRL + Up/Down/Scroll Wheel</value>
+  </data>
+  <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
+    <value>Change the audio playback rate.&#xA;Hotkeys: CTRL + -/+</value>
+  </data>
+  <data name="Screen_Editor_TestPlay" xml:space="preserve">
+    <value>Test Play</value>
+  </data>
+  <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
+    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: F4</value>
+  </data>
+  <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
+    <value>Timing Point Editor</value>
+  </data>
+  <data name="Screen_Editor_TimingPointHelp" xml:space="preserve">
+    <value>Timing Points are individual BPM sections within your map. This will allow you to place objects at the correct times in the song.</value>
+  </data>
+  <data name="Screen_Editor_TimingPointInteractionHelp" xml:space="preserve">
+    <value>You can click on an individual Timing Point to edit it or double-click to go to its position in time.</value>
+  </data>
+  <data name="Screen_Editor_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Screen_Editor_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentTimingPoint" xml:space="preserve">
+    <value>Select current timing point</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentTimingPointTooltip" xml:space="preserve">
+    <value>This will select the timing point at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all timing points up to that range, if one is selected already.</value>
+  </data>
+  <data name="Screen_Editor_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Screen_Editor_MoveTimesBy" xml:space="preserve">
+    <value>Move Times By</value>
+  </data>
+  <data name="Screen_Editor_Bpm" xml:space="preserve">
+    <value>BPM</value>
+  </data>
+  <data name="Screen_Editor_Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Screen_Editor_HideLines" xml:space="preserve">
+    <value>Hide Lines</value>
+  </data>
+  <data name="Screen_Editor_ScrollVelocityEditor" xml:space="preserve">
+    <value>Scroll Velocity Editor</value>
+  </data>
+  <data name="Screen_Editor_ScrollVelocityHelp" xml:space="preserve">
+    <value>Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.</value>
+  </data>
+  <data name="Screen_Editor_ScrollVelocityInteractionHelp" xml:space="preserve">
+    <value>You can click on an individual SV point to edit it and double-click to go to its position in time.</value>
+  </data>
+  <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
+    <value>(Difference from SF)</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentSv" xml:space="preserve">
+    <value>Select current SV</value>
+  </data>
+  <data name="Screen_Editor_Multiplier" xml:space="preserve">
+    <value>Multiplier</value>
+  </data>
+  <data name="Screen_Editor_ScrollSpeedFactorEditor" xml:space="preserve">
+    <value>Scroll Speed Factor Editor</value>
+  </data>
+  <data name="Screen_Editor_HelpLink" xml:space="preserve">
+    <value>(Help)</value>
+  </data>
+  <data name="Screen_Editor_DifferenceFromSv" xml:space="preserve">
+    <value>(Difference from SV)</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentSsf" xml:space="preserve">
+    <value>Select current SSF</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupEditor" xml:space="preserve">
+    <value>Timing Group Editor</value>
+  </data>
+  <data name="Screen_Editor_ColorObjectsByTimingGroup" xml:space="preserve">
+    <value>Color Objects By Timing Group</value>
+  </data>
+  <data name="Screen_Editor_MoveSelectedObjectsToGroup" xml:space="preserve">
+    <value>Move Selected Objects To Group</value>
+  </data>
+  <data name="Screen_Editor_SelectTimingGroupOfSelectedNotes" xml:space="preserve">
+    <value>Select Timing Group Of Selected Notes</value>
+  </data>
+  <data name="Screen_Editor_NoNotesSelected" xml:space="preserve">
+    <value>No Notes Selected</value>
+  </data>
+  <data name="Screen_Editor_SelectedTimingGroup" xml:space="preserve">
+    <value>Selected timing group: {0}</value>
+  </data>
+  <data name="Screen_Editor_SelectNotes" xml:space="preserve">
+    <value>Select Notes</value>
+  </data>
+  <data name="Screen_Editor_SelectNotesInTimingGroupsTooltip" xml:space="preserve">
+    <value>Selects all notes in the selected timing group(s).</value>
+  </data>
+  <data name="Screen_Editor_FilterSelection" xml:space="preserve">
+    <value>Filter Selection</value>
+  </data>
+  <data name="Screen_Editor_FilterSelectionTooltip" xml:space="preserve">
+    <value>Deselect any note that is not in any of the selected timing group(s).</value>
+  </data>
+  <data name="Screen_Editor_WhatIsThis" xml:space="preserve">
+    <value>(What is this?)</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupHelp" xml:space="preserve">
+    <value>Timing Groups allow you to change the visuals of a group of notes.</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupInteractionHelp" xml:space="preserve">
+    <value>You can click on an individual timing group to edit it and double-click to go to the first note in the group.</value>
+  </data>
+  <data name="Screen_Editor_EditInSvEditor" xml:space="preserve">
+    <value>Edit in SV Editor</value>
+  </data>
+  <data name="Screen_Editor_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Screen_Editor_InvalidName" xml:space="preserve">
+    <value>Invalid name!</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupNamePlaceholder" xml:space="preserve">
+    <value>Alphanumeric characters or underscore are allowed</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupCannotBeRenamed" xml:space="preserve">
+    <value>This timing group cannot be renamed!</value>
+  </data>
+  <data name="Screen_Editor_TimingGroupsSelected" xml:space="preserve">
+    <value>{0} timing groups selected</value>
+  </data>
+  <data name="Screen_Editor_Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Screen_Editor_KeybindEditor" xml:space="preserve">
+    <value>Keybind Editor</value>
+  </data>
+  <data name="Screen_Editor_KeybindEditorDescription" xml:space="preserve">
+    <value>Change the keymap of the editor</value>
+  </data>
+  <data name="Screen_Editor_ShowKeybindFile" xml:space="preserve">
+    <value>Show Keybind File</value>
+  </data>
+  <data name="Screen_Editor_KeybindEditorHelpSelectAction" xml:space="preserve">
+    <value>To change the keybind of an action, first click on the action.</value>
+  </data>
+  <data name="Screen_Editor_KeybindEditorHelpChangeOrRemove" xml:space="preserve">
+    <value>You can then choose to change or remove any keys from the action.</value>
+  </data>
+  <data name="Screen_Editor_KeybindEditorHelpAdd" xml:space="preserve">
+    <value>You can also add a key by clicking on the '+' button.</value>
+  </data>
+  <data name="Screen_Editor_SelectedKeybind" xml:space="preserve">
+    <value>Selected Keybind: {0}</value>
+  </data>
+  <data name="Screen_Editor_ResetToDefault" xml:space="preserve">
+    <value>Reset to Default</value>
+  </data>
+  <data name="Screen_Editor_Keys" xml:space="preserve">
+    <value>Keys</value>
+  </data>
+  <data name="Screen_Editor_EnterNewKeybind" xml:space="preserve">
+    <value>Please enter a new keybind...</value>
+  </data>
+  <data name="Screen_Editor_Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Screen_Editor_Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
+    <value>Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+  </data>
+  <data name="Screen_Editor_SearchActions" xml:space="preserve">
+    <value>Search Actions</value>
+  </data>
+  <data name="Screen_Editor_Keybind" xml:space="preserve">
+    <value>Keybind</value>
+  </data>
+  <data name="Screen_Editor_InputKeybindToSearch" xml:space="preserve">
+    <value>Input a keybind to search...</value>
+  </data>
+  <data name="Screen_Editor_SearchKeybind" xml:space="preserve">
+    <value>Search Keybind</value>
+  </data>
+  <data name="Screen_Editor_Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Screen_Editor_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Screen_Editor_SvVsSfTooltip" xml:space="preserve">
+    <value>SV will not move the notes but only change its speed, whereas SF will directly change both their position and speed</value>
+  </data>
+  <data name="Screen_Editor_ScrollSpeedFactorHelp" xml:space="preserve">
+    <value>Scroll Speed Factors (SSF) allow you to scale the distance from the notes to the receptor directly</value>
+  </data>
+  <data name="Screen_Editor_ScrollSpeedFactorMultiplierHelp" xml:space="preserve">
+    <value>SSF is a multiplier to your current scroll speed. The entries you add will be linearly transformed from one to another, like keyframes.</value>
+  </data>
+  <data name="Screen_Editor_ScrollSpeedFactorInteractionHelp" xml:space="preserve">
+    <value>You can click on an individual SSF point to edit it and double-click to go to its position in time.</value>
+  </data>
+  <data name="Screen_Editor_SvVsSsfTooltip" xml:space="preserve">
+    <value>SV will not move the notes but only change its speed, whereas SSF will directly change both their position and speed</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorInternalServer" xml:space="preserve">
+    <value>An internal server error has occurred. Please try again!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorUnauthorized" xml:space="preserve">
+    <value>Please re-log and try again!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorBanned" xml:space="preserve">
+    <value>You cannot upload a mapset while banned!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorNoMapsetSent" xml:space="preserve">
+    <value>No mapset was sent with the request!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorRequestTooLarge" xml:space="preserve">
+    <value>Your mapset is too large! The max file size is 50mb</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorInvalidMapsetFileExtension" xml:space="preserve">
+    <value>File extension error. Please report this to a developer!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorMapsetNotZipFile" xml:space="preserve">
+    <value>Your mapset was not a zip file. Please report this to a developer!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorInvalidFileType" xml:space="preserve">
+    <value>Your mapset contains files of an invalid type!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorNoContainingQuaFiles" xml:space="preserve">
+    <value>Your mapset does not contain any .qua files!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorInvalidMapFile" xml:space="preserve">
+    <value>One or more of your map files are invalid! (No objects, timing points?)!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorInvalidMapMetadata" xml:space="preserve">
+    <value>One or more of your map files do not have completed metadata!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorUserNotCreator" xml:space="preserve">
+    <value>You are not the creator of this mapset!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorConflictingMapIds" xml:space="preserve">
+    <value>One or more of your maps have conflicting map ids!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorConflictingMapsetIds" xml:space="preserve">
+    <value>One or more of your maps have conflicting mapset ids!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorConflictingDifficultyNames" xml:space="preserve">
+    <value>One or more of your maps have the same difficulty name!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorNoExistingMapsetFound" xml:space="preserve">
+    <value>You're trying to update a mapset, but this mapset isn't uploaded online!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorAlreadyRanked" xml:space="preserve">
+    <value>You cannot update a mapset that is already ranked!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorContainsNonUploadedNotNewMapId" xml:space="preserve">
+    <value>One or more of your maps contains a non-uploaded map id!</value>
+  </data>
+  <data name="Screen_Editor_UploadSuccessUploaded" xml:space="preserve">
+    <value>Success! Your mapset has been uploaded!</value>
+  </data>
+  <data name="Screen_Editor_UploadSuccessUpdated" xml:space="preserve">
+    <value>Success! Your mapset has been updated!</value>
+  </data>
+  <data name="Screen_Editor_UploadErrorExceededLimit" xml:space="preserve">
+    <value>You have exceeded the amount of maps you can upload at this time!</value>
+  </data>
+  <data name="Screen_Editor_UploadingMapset" xml:space="preserve">
+    <value>UPLOADING MAPSET</value>
+  </data>
+  <data name="Screen_Editor_UploadingMapsetMessage" xml:space="preserve">
+    <value>Please wait while your mapset is being uploaded...</value>
+  </data>
+  <data name="Screen_Editor_MapsetSavedSuccessfully" xml:space="preserve">
+    <value>Your mapset has been successfully saved!</value>
+  </data>
+  <data name="Screen_Editor_MapsetUploadedSuccessfully" xml:space="preserve">
+    <value>Your mapset has been successfully uploaded!</value>
+  </data>
+  <data name="Screen_Editor_UploadMapsetErrorWithReason" xml:space="preserve">
+    <value>Error uploading mapset: {0}</value>
+  </data>
+  <data name="Screen_Editor_UploadMapsetError" xml:space="preserve">
+    <value>There was an issue while uploading your mapset</value>
+  </data>
+  <data name="Screen_Editor_AddBackgroundImageInstructionPngJpg" xml:space="preserve">
+    <value>To add a background image, drag a .png or .jpg into the window.</value>
+  </data>
+  <data name="Screen_Editor_FilterLabel" xml:space="preserve">
+    <value>FILTER:</value>
+  </data>
+  <data name="Screen_Editor_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Screen_Editor_Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="Screen_Editor_HitObjects" xml:space="preserve">
+    <value>HitObjects</value>
+  </data>
+  <data name="Screen_Editor_Mapset" xml:space="preserve">
+    <value>Mapset</value>
+  </data>
+  <data name="Screen_Editor_Metadata" xml:space="preserve">
+    <value>Metadata</value>
+  </data>
+  <data name="Screen_Editor_ScrollVelocities" xml:space="preserve">
+    <value>Scroll Velocities</value>
+  </data>
+  <data name="Screen_Editor_TimingPoints" xml:space="preserve">
+    <value>Timing Points</value>
+  </data>
+  <data name="Screen_Editor_AutoMod" xml:space="preserve">
+    <value>AutoMod</value>
+  </data>
+  <data name="Screen_Editor_ObjectCount" xml:space="preserve">
+    <value>Object Count</value>
+  </data>
+  <data name="Screen_Editor_DifficultyRating" xml:space="preserve">
+    <value>Difficulty Rating</value>
+  </data>
+  <data name="Screen_Editor_SelectObjectsBeforeChangingHitsounds" xml:space="preserve">
+    <value>You need to select objects before changing their hitsounds!</value>
+  </data>
+  <data name="Screen_Editor_SelectTool" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Screen_Editor_NoteTool" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Screen_Editor_LongNoteTool" xml:space="preserve">
+    <value>Long Note</value>
+  </data>
+  <data name="Screen_Editor_MineTool" xml:space="preserve">
+    <value>Mine</value>
+  </data>
+  <data name="Screen_Editor_Layer" xml:space="preserve">
+    <value>Layer {0}</value>
+  </data>
+  <data name="Screen_Editor_RenameLayer" xml:space="preserve">
+    <value>RENAME LAYER</value>
+  </data>
+  <data name="Screen_Editor_RenameLayerMessage" xml:space="preserve">
+    <value>Enter a new name for your layer...</value>
+  </data>
+  <data name="Screen_Editor_EnterNamePlaceholder" xml:space="preserve">
+    <value>Enter name...</value>
+  </data>
+  <data name="Screen_Editor_ChangeLayerColor" xml:space="preserve">
+    <value>CHANGE LAYER COLOR</value>
+  </data>
+  <data name="Screen_Editor_ChangeLayerColorMessage" xml:space="preserve">
+    <value>Enter a new RGB color for your layer...</value>
+  </data>
+  <data name="Screen_Editor_EditName" xml:space="preserve">
+    <value>Edit Name</value>
+  </data>
+  <data name="Screen_Editor_ChangeColor" xml:space="preserve">
+    <value>Change Color</value>
+  </data>
+  <data name="Screen_Editor_MoveLayerUp" xml:space="preserve">
+    <value>Move Layer Up</value>
+  </data>
+  <data name="Screen_Editor_MoveLayerDown" xml:space="preserve">
+    <value>Move Layer Down</value>
+  </data>
+  <data name="Screen_Editor_CannotMoveLayerPastDefault" xml:space="preserve">
+    <value>Cannot move layer past the default layer!</value>
+  </data>
+  <data name="Screen_Editor_LayerAlreadyAtTop" xml:space="preserve">
+    <value>Layer is already at the top!</value>
+  </data>
+  <data name="Screen_Editor_CannotEditDefaultLayer" xml:space="preserve">
+    <value>You cannot edit the default layer!</value>
+  </data>
+  <data name="Screen_Editor_DetectBpmAndOffsetError" xml:space="preserve">
+    <value>Failed to detect BPM and offset!</value>
+  </data>
+  <data name="Screen_Editor_NoNotesResnapped" xml:space="preserve">
+    <value>No notes resnapped</value>
+  </data>
+  <data name="Screen_Editor_PreviewTimeChanged" xml:space="preserve">
+    <value>Preview time changed to: {0}</value>
+  </data>
+  <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
+    <value>Zoom In (Page Up)</value>
+  </data>
+  <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
+    <value>Zoom Out (Page Down)</value>
+  </data>
+  <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
+    <value>Dense lines detected. Lines will be drawn less frequently.</value>
+  </data>
+  <data name="Screen_Editor_LoadingWaveform" xml:space="preserve">
+    <value>Loading Waveform...</value>
+  </data>
+  <data name="Screen_Editor_LoadingSpectrogram" xml:space="preserve">
+    <value>Loading Spectrogram...</value>
+  </data>
+  <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
+    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: CTRL + Right</value>
+  </data>
+  <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
+    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: CTRL + Left</value>
+  </data>
+  <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
+    <value>{0} timing points selected</value>
+  </data>
+  <data name="Screen_Editor_DefaultTimingGroupTooltip" xml:space="preserve">
+    <value>Applied to all notes that are not in a timing group.</value>
+  </data>
+  <data name="Screen_Editor_GlobalTimingGroupTooltip" xml:space="preserve">
+    <value>The SVs in this group are interlaced to every other scroll groups.</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentSsfTooltip" xml:space="preserve">
+    <value>This will select the SSF at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SSFs up to that range, if one is selected already.</value>
+  </data>
+  <data name="Screen_Editor_ScrollSpeedFactorsSelected" xml:space="preserve">
+    <value>{0} scroll speed factors selected</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentSvTooltip" xml:space="preserve">
+    <value>This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.</value>
+  </data>
+  <data name="Screen_Editor_ScrollVelocitiesSelected" xml:space="preserve">
+    <value>{0} scroll velocities selected</value>
+  </data>
+  <data name="Screen_Editor_BpmCalculator" xml:space="preserve">
+    <value>BPM Calculator</value>
+  </data>
+  <data name="Screen_Editor_BpmDetector" xml:space="preserve">
+    <value>BPM Detector</value>
+  </data>
+  <data name="Screen_Editor_GoToObjects" xml:space="preserve">
+    <value>Go To Objects</value>
+  </data>
+  <data name="Screen_Editor_ApplyKeymap" xml:space="preserve">
+    <value>APPLY KEYMAP</value>
+  </data>
+  <data name="Screen_Editor_ApplyKeymapConfirmation" xml:space="preserve">
+    <value>Are you sure you want to overwrite your keymap?&#xA;You might want to back up your keymap first.</value>
+  </data>
+  <data name="Screen_Editor_IssueCountLabel" xml:space="preserve">
+    <value>Issue Count:</value>
+  </data>
+  <data name="Screen_Editor_NotReadyForRank" xml:space="preserve">
+    <value>Not ready for rank!</value>
+  </data>
+  <data name="Screen_Editor_ReadyForRank" xml:space="preserve">
+    <value>Ready for rank!</value>
+  </data>
+  <data name="Screen_Editor_AutoModWarningTooltip" xml:space="preserve">
+    <value>This is a warning of a potential error. You can ignore this if it isn't an issue.</value>
+  </data>
+  <data name="Screen_Editor_AutoModCriticalTooltip" xml:space="preserve">
+    <value>This is a critical error which affects the playability of your map.</value>
+  </data>
+  <data name="Screen_Editor_AutoModRankingTooltip" xml:space="preserve">
+    <value>This is a ranking criteria error. Without fixing this, your map cannot be ranked.</value>
+  </data>
+  <data name="Screen_Editor_NoSnapDivisionsSelected" xml:space="preserve">
+    <value>You have not selected any divisions to snap!</value>
+  </data>
+  <data name="Screen_Editor_ResetAllKeybindsTitle" xml:space="preserve">
+    <value>RESET ALL KEYBINDS</value>
+  </data>
+  <data name="Screen_Editor_ResetAllKeybindsConfirmation" xml:space="preserve">
+    <value>Are you sure you want to reset all keybinds?</value>
+  </data>
+  <data name="Screen_Editor_DifficultyLabel" xml:space="preserve">
+    <value>Difficulty:</value>
+  </data>
+  <data name="Screen_Editor_ModeLabel" xml:space="preserve">
+    <value>Mode:</value>
+  </data>
+  <data name="Screen_Editor_StatusLabel" xml:space="preserve">
+    <value>Status:</value>
+  </data>
+  <data name="Screen_Editor_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Screen_Editor_ResnappedNote" xml:space="preserve">
+    <value>Resnapped {0} note</value>
+  </data>
+  <data name="Screen_Editor_ResnappedNotes" xml:space="preserve">
+    <value>Resnapped {0} notes</value>
+  </data>
+  <data name="Screen_Editor_UnsnappedNote" xml:space="preserve">
+    <value>Unsnapped {0} note</value>
+  </data>
+  <data name="Screen_Editor_UnsnappedNotes" xml:space="preserve">
+    <value>Unsnapped {0} notes</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapColor_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapColor_White" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="Screen_Editor_BeatSnapColor_Legacy" xml:space="preserve">
+    <value>Legacy</value>
+  </data>
+  <data name="Screen_Editor_WaveformAudioDirection_Both" xml:space="preserve">
+    <value>Both</value>
+  </data>
+  <data name="Screen_Editor_WaveformAudioDirection_Left" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="Screen_Editor_WaveformAudioDirection_Right" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="Screen_Editor_WaveformFilter_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Editor_WaveformFilter_LowPass" xml:space="preserve">
+    <value>LowPass</value>
+  </data>
+  <data name="Screen_Editor_WaveformFilter_HighPass" xml:space="preserve">
+    <value>HighPass</value>
+  </data>
+  <data name="Screen_Editor_SpectrogramFrequencyScale_Mel" xml:space="preserve">
+    <value>Mel</value>
+  </data>
+  <data name="Screen_Editor_SpectrogramFrequencyScale_Erb1" xml:space="preserve">
+    <value>Erb1</value>
+  </data>
+  <data name="Screen_Editor_SpectrogramFrequencyScale_Erb2" xml:space="preserve">
+    <value>Erb2</value>
+  </data>
+  <data name="Screen_Editor_SpectrogramFrequencyScale_Linear" xml:space="preserve">
+    <value>Linear</value>
+  </data>
+  <data name="Screen_Editor_DefaultSkin_Arrow" xml:space="preserve">
+    <value>Arrow</value>
+  </data>
+  <data name="Screen_Editor_DefaultSkin_Bar" xml:space="preserve">
+    <value>Bar</value>
+  </data>
+  <data name="Screen_Editor_DefaultSkin_Circle" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="Screen_Editor_Hitsound_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Screen_Editor_Hitsound_Whistle" xml:space="preserve">
+    <value>Whistle</value>
+  </data>
+  <data name="Screen_Editor_Hitsound_Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="Screen_Editor_Hitsound_Clap" xml:space="preserve">
+    <value>Clap</value>
+  </data>
+  <data name="Screen_Editor_HitObjectColoring_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Editor_HitObjectColoring_Layer" xml:space="preserve">
+    <value>Layer</value>
+  </data>
+  <data name="Screen_Editor_HitObjectColoring_TimingGroup" xml:space="preserve">
+    <value>TimingGroup</value>
+  </data>
+  <data name="Screen_Editor_Modifier_Mirror" xml:space="preserve">
+    <value>Mirror</value>
+  </data>
+  <data name="Screen_Editor_Modifier_NoLongNotes" xml:space="preserve">
+    <value>NoLongNotes</value>
+  </data>
+  <data name="Screen_Editor_Modifier_FullLN" xml:space="preserve">
+    <value>FullLN</value>
+  </data>
+  <data name="Screen_Editor_Modifier_Inverse" xml:space="preserve">
+    <value>Inverse</value>
+  </data>
+  <data name="Screen_Editor_CreatedAt" xml:space="preserve">
+    <value>Created at {0}</value>
+  </data>
 </root>
