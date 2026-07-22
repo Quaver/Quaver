@@ -44,6 +44,11 @@ namespace Quaver.Shared.Scripting
         public float Scale => EditorPluginUtils.EditScreen.ImGuiScale;
 
         /// <summary>
+        ///     Gets the font size used by ImGui.
+        /// </summary>
+        public int FontSize => ConfigManager.EditorImGuiFontSize.Value;
+
+        /// <summary>
         ///     Any state that the user wants to store for their plugin
         /// </summary>
         public Dictionary<string, DynValue> Values { get; [MoonSharpHidden] init; } = new(StringComparer.Ordinal);
