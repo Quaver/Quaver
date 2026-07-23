@@ -292,7 +292,7 @@
     <value>Lokal Profil</value>
   </data>
   <data name="Screen_Selection_LongNote" xml:space="preserve">
-    <value>Lange Noter %</value>
+    <value>Lange Notater %</value>
   </data>
   <data name="Screen_Selection_MapFound" xml:space="preserve">
     <value>Map Funnet</value>
@@ -328,7 +328,7 @@
     <value>Ingen</value>
   </data>
   <data name="Screen_Selection_NotesPerSec" xml:space="preserve">
-    <value>Noter Per Sek.</value>
+    <value>Notater Per Sek.</value>
   </data>
   <data name="Screen_Selection_Online" xml:space="preserve">
     <value>Online</value>
@@ -812,7 +812,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Bakgrunns lysstyrke</value>
   </data>
   <data name="Screen_Options_LongNoteShrinkAmount" xml:space="preserve">
-    <value>Lang Noter Krympmengde</value>
+    <value>Lang Notater Krympmengde</value>
   </data>
   <data name="Screen_Options_EnableHitsounds" xml:space="preserve">
     <value>Aktiver Hitsounds</value>
@@ -1531,7 +1531,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Min spilleforsøk</value>
   </data>
   <data name="Screen_Download_LongNote" xml:space="preserve">
-    <value>Lang Noter %</value>
+    <value>Lang Notater %</value>
   </data>
   <data name="Screen_Download_MaxLN" xml:space="preserve">
     <value>Maks LN%</value>
@@ -1750,7 +1750,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Vanskelighetsgrad Spekter</value>
   </data>
   <data name="Screen_Multiplayer_LongNotePercentageRange" xml:space="preserve">
-    <value>Lang Noter % Rekkevide</value>
+    <value>Lang Notater % Rekkevide</value>
   </data>
   <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
     <value>START MATCHEN</value>
@@ -2059,622 +2059,622 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Maksimal sang varighet</value>
   </data>
   <data name="Screen_Editor_File" xml:space="preserve">
-    <value>File</value>
+    <value>Fil</value>
   </data>
   <data name="Screen_Editor_NewSong" xml:space="preserve">
-    <value>New Song</value>
+    <value>Ny sang</value>
   </data>
   <data name="Screen_Editor_SwitchDifficulty" xml:space="preserve">
-    <value>Switch Difficulty</value>
+    <value>Bytt vanskelighetsgrad</value>
   </data>
   <data name="Screen_Editor_CreateNewDifficulty" xml:space="preserve">
-    <value>Create New Difficulty</value>
+    <value>Opprett nytt vanskelighetsgrad</value>
   </data>
   <data name="Screen_Editor_NewMap" xml:space="preserve">
-    <value>New Map</value>
+    <value>Ny map</value>
   </data>
   <data name="Screen_Editor_CopyCurrentMap" xml:space="preserve">
-    <value>Copy Current Map</value>
+    <value>Kopier gjeldende map</value>
   </data>
   <data name="Screen_Editor_FromQuaFile" xml:space="preserve">
-    <value>From .qua File</value>
+    <value>Fra .qua fil</value>
   </data>
   <data name="Screen_Editor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Lagre</value>
   </data>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
-    <value>Refresh File Cache</value>
+    <value>Oppdater filbuffer</value>
   </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
-    <value>Upload</value>
+    <value>Last opp</value>
   </data>
   <data name="Screen_Editor_SubmitForRank" xml:space="preserve">
-    <value>Submit For Rank</value>
+    <value>Send for rangering</value>
   </data>
   <data name="Screen_Editor_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Eksporter</value>
   </data>
   <data name="Screen_Editor_OpenSongFolder" xml:space="preserve">
-    <value>Open Song Folder</value>
+    <value>Åpne sangmappe</value>
   </data>
   <data name="Screen_Editor_OpenQuaFile" xml:space="preserve">
-    <value>Open .qua File</value>
+    <value>Åpne .qua fil</value>
   </data>
   <data name="Screen_Editor_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Avslutt</value>
   </data>
   <data name="Screen_Editor_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Rediger</value>
   </data>
   <data name="Screen_Editor_Undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Angre</value>
   </data>
   <data name="Screen_Editor_Redo" xml:space="preserve">
-    <value>Redo</value>
+    <value>Gjøre om</value>
   </data>
   <data name="Screen_Editor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Kopier</value>
   </data>
   <data name="Screen_Editor_Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Klipp ut</value>
   </data>
   <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
-    <value>Paste (snapped)</value>
+    <value>Lim inn (snappet)</value>
   </data>
   <data name="Screen_Editor_PasteUnsnapped" xml:space="preserve">
-    <value>Paste (unsnapped)</value>
+    <value>Lim inn (usnappet)</value>
   </data>
   <data name="Screen_Editor_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Slett</value>
   </data>
   <data name="Screen_Editor_SelectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Marker alt</value>
   </data>
   <data name="Screen_Editor_SelectAllInLayer" xml:space="preserve">
-    <value>Select All In Layer</value>
+    <value>Marker alt på lag </value>
   </data>
   <data name="Screen_Editor_FlipObjects" xml:space="preserve">
-    <value>Flip Objects</value>
+    <value>Vend objekter</value>
   </data>
   <data name="Screen_Editor_SwapLanesOfObjects" xml:space="preserve">
-    <value>Swap Lanes of Objects</value>
+    <value>Bytt bane av objekter</value>
   </data>
   <data name="Screen_Editor_Lane" xml:space="preserve">
-    <value>Lane {0}</value>
+    <value>Banetråd {0}</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
-    <value>Move Objects To Layer</value>
+    <value>Flytt objekter til lag</value>
   </data>
   <data name="Screen_Editor_DefaultLayer" xml:space="preserve">
-    <value>Default Layer</value>
+    <value>Standard lag</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToTimingGroup" xml:space="preserve">
-    <value>Move Objects To Timing Group</value>
+    <value>Flytt objekter til tidsgruppe</value>
   </data>
   <data name="Screen_Editor_DefaultTimingGroup" xml:space="preserve">
-    <value>Default Timing Group</value>
+    <value>Standard tidsgruppe</value>
   </data>
   <data name="Screen_Editor_EditMetadata" xml:space="preserve">
-    <value>Edit Metadata</value>
+    <value>Redigere metadata</value>
   </data>
   <data name="Screen_Editor_EditTimingPoints" xml:space="preserve">
-    <value>Edit Timing Points</value>
+    <value>Redigere tidspunkter</value>
   </data>
   <data name="Screen_Editor_EditScrollVelocities" xml:space="preserve">
-    <value>Edit Scroll Velocities</value>
+    <value>Rediger rullehastigheter</value>
   </data>
   <data name="Screen_Editor_EditScrollSpeedFactors" xml:space="preserve">
-    <value>Edit Scroll Speed Factors</value>
+    <value>Rediger rullehastighet faktorer</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImage" xml:space="preserve">
-    <value>Add Background Image</value>
+    <value>Legg til bakgrunnsbilde</value>
   </data>
   <data name="Screen_Editor_SetSongSelectPreviewTime" xml:space="preserve">
-    <value>Set Song Select Preview Time</value>
+    <value>Sett starttid for forhåndsvisning av sang</value>
   </data>
   <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
-    <value>Enable AutoMod</value>
+    <value>Aktiver AutoMod</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
-    <value>Apply Offset To Map</value>
+    <value>Sett forskyvning på map</value>
   </data>
   <data name="Screen_Editor_ResnapAllNotes" xml:space="preserve">
-    <value>Resnap All Notes</value>
+    <value>Resnapp alle noter</value>
   </data>
   <data name="Screen_Editor_ResnapToCurrentSnap" xml:space="preserve">
-    <value>Resnap to currently selected snap (1/{0})</value>
+    <value>Resnapp til nåværende valgte snap (1/{0})</value>
   </data>
   <data name="Screen_Editor_ResnapToCommonSnaps" xml:space="preserve">
-    <value>Resnap to 1/16 and 1/12 snaps</value>
+    <value>Resnapp til 1/16 og 1/12 snaps</value>
   </data>
   <data name="Screen_Editor_ResnapToCustomDivisions" xml:space="preserve">
-    <value>Resnap to custom divisions</value>
+    <value>Resnapp til egendefinerte avdelinger</value>
   </data>
   <data name="Screen_Editor_Resnap" xml:space="preserve">
-    <value>Resnap</value>
+    <value>Resnapp</value>
   </data>
   <data name="Screen_Editor_ResnapSelectedNotes" xml:space="preserve">
-    <value>Resnap Selected Notes</value>
+    <value>Resnapp valgte notater</value>
   </data>
   <data name="Screen_Editor_ApplyModifierToMap" xml:space="preserve">
-    <value>Apply Modifier To Map</value>
+    <value>Bruk modifikatorer på map</value>
   </data>
   <data name="Screen_Editor_Mirror" xml:space="preserve">
-    <value>Mirror</value>
+    <value>Speil</value>
   </data>
   <data name="Screen_Editor_NoLongNotes" xml:space="preserve">
-    <value>No Long Notes</value>
+    <value>Ingen lange notater</value>
   </data>
   <data name="Screen_Editor_FullLongNotes" xml:space="preserve">
-    <value>Full Long Notes</value>
+    <value>Full lange notater</value>
   </data>
   <data name="Screen_Editor_Inverse" xml:space="preserve">
-    <value>Inverse</value>
+    <value>Omvendt</value>
   </data>
   <data name="Screen_Editor_View" xml:space="preserve">
-    <value>View</value>
+    <value>Vis</value>
   </data>
   <data name="Screen_Editor_Panels" xml:space="preserve">
-    <value>Panels</value>
+    <value>Paneler</value>
   </data>
   <data name="Screen_Editor_Details" xml:space="preserve">
-    <value>Details</value>
+    <value>Detaljer</value>
   </data>
   <data name="Screen_Editor_CompositionTools" xml:space="preserve">
-    <value>Composition Tools</value>
+    <value>Komposisjonsverktøy</value>
   </data>
   <data name="Screen_Editor_Layers" xml:space="preserve">
-    <value>Layers</value>
+    <value>Lag</value>
   </data>
   <data name="Screen_Editor_Hitsounds" xml:space="preserve">
     <value>Hitsounds</value>
   </data>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
-    <value>Display Gameplay Preview</value>
+    <value>Vis forhåndsvisning av spillopplevelse</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
-    <value>Reference Difficulty</value>
+    <value>Vanskelighetsgrad (Referanse)</value>
   </data>
   <data name="Screen_Editor_None" xml:space="preserve">
-    <value>None</value>
+    <value>Ingen</value>
   </data>
   <data name="Screen_Editor_EditorNoteSkin" xml:space="preserve">
-    <value>Editor NoteSkin</value>
+    <value>Edtior NotatStil</value>
   </data>
   <data name="Screen_Editor_CurrentSkin" xml:space="preserve">
-    <value>Current skin</value>
+    <value>Nåværende stil</value>
   </data>
   <data name="Screen_Editor_EditorDefaultSkin" xml:space="preserve">
-    <value>Editor Default Skin</value>
+    <value>Editor standardstil</value>
   </data>
   <data name="Screen_Editor_CurrentDefaultSkin" xml:space="preserve">
-    <value>Current default skin</value>
+    <value>Nåværende standardstil</value>
   </data>
   <data name="Screen_Editor_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Bakgrunns lysstyrke</value>
   </data>
   <data name="Screen_Editor_PlayfieldOpacity" xml:space="preserve">
-    <value>Playfield Opacity</value>
+    <value>Spillefelt opasitet</value>
   </data>
   <data name="Screen_Editor_BeatSnapDivisor" xml:space="preserve">
-    <value>Beat Snap Divisor</value>
+    <value>Taktslag divisor</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor" xml:space="preserve">
-    <value>Beat Snap Color</value>
+    <value>Taktslag farge</value>
   </data>
   <data name="Screen_Editor_ScaleScrollSpeed" xml:space="preserve">
-    <value>Scale Scroll Speed</value>
+    <value>Skaler rullehastighet</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsOnNearestTick" xml:space="preserve">
-    <value>Place Objects On Nearest Tick</value>
+    <value>Plasser objekter på nærmeste tikk</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsWithTopRowNumbers" xml:space="preserve">
-    <value>Place Objects With Top Row Numbers</value>
+    <value>Plasser objekter med topp rad numre</value>
   </data>
   <data name="Screen_Editor_SnapNotesWhenLiveMapping" xml:space="preserve">
-    <value>Snap Notes When Live Mapping</value>
+    <value>Snapp noter under sanntidsmapping</value>
   </data>
   <data name="Screen_Editor_SetLiveMappingOffset" xml:space="preserve">
-    <value>Set Offset For Notes Placed During Live Mapping</value>
+    <value>Sett forskyvning for notater plassert under sanntidsmapping</value>
   </data>
   <data name="Screen_Editor_PlaceLongNotesWhenLiveMapping" xml:space="preserve">
-    <value>Place Long Notes When Live Mapping</value>
+    <value>Plasser lange notater ved sanntidsmapping</value>
   </data>
   <data name="Screen_Editor_SetLiveMappingLongNoteMinimumLength" xml:space="preserve">
-    <value>Set Minimum Length Of Long Notes Placed During Live Mapping</value>
+    <value>Angi minimumslengde av lange notater plassert under sanntidsmapping</value>
   </data>
   <data name="Screen_Editor_Waveform" xml:space="preserve">
-    <value>Waveform</value>
+    <value>Bølgeform</value>
   </data>
   <data name="Screen_Editor_Visible" xml:space="preserve">
-    <value>Visible</value>
+    <value>Synlig</value>
   </data>
   <data name="Screen_Editor_Brightness" xml:space="preserve">
-    <value>Brightness</value>
+    <value>Lysstyrke</value>
   </data>
   <data name="Screen_Editor_AudioDirection" xml:space="preserve">
-    <value>Audio Direction</value>
+    <value>Lyd retning</value>
   </data>
   <data name="Screen_Editor_Filter" xml:space="preserve">
     <value>Filter</value>
   </data>
   <data name="Screen_Editor_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Farge</value>
   </data>
   <data name="Screen_Editor_Spectrogram" xml:space="preserve">
-    <value>Spectrogram</value>
+    <value>Spektrogram</value>
   </data>
   <data name="Screen_Editor_Precision" xml:space="preserve">
-    <value>Precision</value>
+    <value>Presisjon</value>
   </data>
   <data name="Screen_Editor_FftSize" xml:space="preserve">
-    <value>FFT Size</value>
+    <value>FFT Størrelse</value>
   </data>
   <data name="Screen_Editor_FrequencyScale" xml:space="preserve">
-    <value>Frequency Scale</value>
+    <value>Frekvens skala</value>
   </data>
   <data name="Screen_Editor_CutoffFactor" xml:space="preserve">
-    <value>Cutoff Factor</value>
+    <value>Grenseverdifaktor</value>
   </data>
   <data name="Screen_Editor_IntensityFactor" xml:space="preserve">
-    <value>Intensity Factor</value>
+    <value>Intensitetsfaktor</value>
   </data>
   <data name="Screen_Editor_MinimumFrequency" xml:space="preserve">
-    <value>Minimum Frequency</value>
+    <value>Minimum frekvens</value>
   </data>
   <data name="Screen_Editor_MaximumFrequency" xml:space="preserve">
-    <value>Maximum Frequency</value>
+    <value>Maksimal frekvens</value>
   </data>
   <data name="Screen_Editor_LongNoteOpacity" xml:space="preserve">
-    <value>Long Note Opacity</value>
+    <value>Lang notat opasitet</value>
   </data>
   <data name="Screen_Editor_CenterObjects" xml:space="preserve">
-    <value>Center Objects</value>
+    <value>Sentrer objekter</value>
   </data>
   <data name="Screen_Editor_ViewLayers" xml:space="preserve">
-    <value>View Layers</value>
+    <value>Vis lag</value>
   </data>
   <data name="Screen_Editor_ViewTimingGroups" xml:space="preserve">
-    <value>View Timing Groups</value>
+    <value>Vis tidsgrupper</value>
   </data>
   <data name="Screen_Editor_ColorSvLinesByTimingGroup" xml:space="preserve">
-    <value>Color SV Lines By Timing Group</value>
+    <value>Farg SV linjer etter tidsgruppe</value>
   </data>
   <data name="Screen_Editor_TestPlayModifiers" xml:space="preserve">
-    <value>Test Play Modifiers</value>
+    <value>Test spill modifikatorer</value>
   </data>
   <data name="Screen_Editor_Tools" xml:space="preserve">
-    <value>Tools</value>
+    <value>Verktøy</value>
   </data>
   <data name="Screen_Editor_ResetWindowLayout" xml:space="preserve">
-    <value>Reset Window Layout</value>
+    <value>Tilbakestille vindusoppsett</value>
   </data>
   <data name="Screen_Editor_WindowLayoutResetOnNextOpen" xml:space="preserve">
-    <value>The window layout will be reset the next time you open the editor!</value>
+    <value>Neste gang du åpner editoren vil vindusoppsettet bli nullstilt!</value>
   </data>
   <data name="Screen_Editor_Plugins" xml:space="preserve">
     <value>Plugins</value>
   </data>
   <data name="Screen_Editor_Local" xml:space="preserve">
-    <value>Local</value>
+    <value>Lokal</value>
   </data>
   <data name="Screen_Editor_Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Aktivert</value>
   </data>
   <data name="Screen_Editor_UploadToWorkshop" xml:space="preserve">
-    <value>Upload To Workshop</value>
+    <value>Last opp til Workshop</value>
   </data>
   <data name="Screen_Editor_UploadingPluginToWorkshop" xml:space="preserve">
-    <value>Uploading plugin to the Steam Workshop...</value>
+    <value>Laster opp plugin til Steam Workshop...</value>
   </data>
   <data name="Screen_Editor_PluginUploadedToWorkshop" xml:space="preserve">
-    <value>Successfully uploaded plugin to the workshop!</value>
+    <value>Opplasting av plugin til verksted vellykket!</value>
   </data>
   <data name="Screen_Editor_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>Åpne mappe</value>
   </data>
   <data name="Screen_Editor_NoPluginsInstalled" xml:space="preserve">
-    <value>No Plugins Installed</value>
+    <value>Ingen plugins installert</value>
   </data>
   <data name="Screen_Editor_SteamWorkshop" xml:space="preserve">
     <value>Steam Workshop</value>
   </data>
   <data name="Screen_Editor_Help" xml:space="preserve">
-    <value>Help</value>
+    <value>Hjelp</value>
   </data>
   <data name="Screen_Editor_Wiki" xml:space="preserve">
     <value>Wiki</value>
   </data>
   <data name="Screen_Editor_GettingStarted" xml:space="preserve">
-    <value>Getting Started</value>
+    <value>Komme i gang</value>
   </data>
   <data name="Screen_Editor_EditorFunctions" xml:space="preserve">
-    <value>Editor Functions</value>
+    <value>Editor funksjoner</value>
   </data>
   <data name="Screen_Editor_RankingCriteria" xml:space="preserve">
-    <value>Ranking Criteria</value>
+    <value>Kriterier for rangering</value>
   </data>
   <data name="Screen_Editor_RankingProcess" xml:space="preserve">
-    <value>Ranking Process</value>
+    <value>Rangering prosess</value>
   </data>
   <data name="Screen_Editor_Web" xml:space="preserve">
     <value>Web</value>
   </data>
   <data name="Screen_Editor_ViewOnlineListing" xml:space="preserve">
-    <value>View Online Listing</value>
+    <value>Vis online oppføring</value>
   </data>
   <data name="Screen_Editor_ModdingDiscussion" xml:space="preserve">
-    <value>Modding Discussion</value>
+    <value>Modding diskusjon</value>
   </data>
   <data name="Screen_Editor_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Lyd</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeed" xml:space="preserve">
-    <value>Playback Speed</value>
+    <value>Avspillingshastighet</value>
   </data>
   <data name="Screen_Editor_Enable" xml:space="preserve">
-    <value>Enable</value>
+    <value>Aktiver</value>
   </data>
   <data name="Screen_Editor_Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Volum</value>
   </data>
   <data name="Screen_Editor_DefaultPercentage" xml:space="preserve">
-    <value>Default ({0}%)</value>
+    <value>Standard ({0}%)</value>
   </data>
   <data name="Screen_Editor_Metronome" xml:space="preserve">
-    <value>Metronome</value>
+    <value>Metronom</value>
   </data>
   <data name="Screen_Editor_PlayHalfBeats" xml:space="preserve">
-    <value>Play Half Beats</value>
+    <value>Spill halvslag</value>
   </data>
   <data name="Screen_Editor_Keybinds" xml:space="preserve">
-    <value>Keybinds</value>
+    <value>Hurtigtaster</value>
   </data>
   <data name="Screen_Editor_InvertBeatSnapScroll" xml:space="preserve">
-    <value>Invert Beat Snap Scroll</value>
+    <value>Inverter taktslag-rull</value>
   </data>
   <data name="Screen_Editor_InvertScrolling" xml:space="preserve">
-    <value>Invert Scrolling</value>
+    <value>Inverter rulling</value>
   </data>
   <data name="Screen_Editor_FillMissingActions" xml:space="preserve">
-    <value>Fill Missing Actions</value>
+    <value>Fyll inn manglende handlinger</value>
   </data>
   <data name="Screen_Editor_FilledMissingActions" xml:space="preserve">
-    <value>Filled {0} missing actions!</value>
+    <value>Fylte {0} manglende handlinger!</value>
   </data>
   <data name="Screen_Editor_ResetAllKeybinds" xml:space="preserve">
-    <value>Reset All Keybinds</value>
+    <value>Tilbakestill alle hurtigtastere</value>
   </data>
   <data name="Screen_Editor_AllKeybindsReset" xml:space="preserve">
-    <value>All keybinds have been reset!</value>
+    <value>Alle hurtigtastere har blitt nullstilt!</value>
   </data>
   <data name="Screen_Editor_AddBookmark" xml:space="preserve">
-    <value>ADD BOOKMARK</value>
+    <value>LEGG TIL BOKMERKE</value>
   </data>
   <data name="Screen_Editor_EditBookmark" xml:space="preserve">
-    <value>EDIT BOOKMARK</value>
+    <value>REDIGER BOKMERKE</value>
   </data>
   <data name="Screen_Editor_BookmarkDialogMessage" xml:space="preserve">
-    <value>Add a custom note for your bookmark...</value>
+    <value>Legg til et egendefinert notat for ditt bokmerke...</value>
   </data>
   <data name="Screen_Editor_BookmarkNotePlaceholder" xml:space="preserve">
-    <value>Add a bookmark note...</value>
+    <value>Legg til et bokmerke-notat...</value>
   </data>
   <data name="Screen_Editor_CreateNewMapset" xml:space="preserve">
-    <value>CREATE NEW MAPSET</value>
+    <value>OPPRETT NY MAPSET</value>
   </data>
   <data name="Screen_Editor_CreateNewMapsetMessage" xml:space="preserve">
-    <value>To create a new mapset, drag a .mp3 file into the game window...</value>
+    <value>For å opprette et nytt mapset, dra en .mp3 fil inn i spillvinduet...</value>
   </data>
   <data name="Screen_Editor_DetectedManualFileChanges" xml:space="preserve">
-    <value>DETECTED MANUAL FILE CHANGES</value>
+    <value>MANUELL FILENDRINGER OPPDAGET</value>
   </data>
   <data name="Screen_Editor_DetectedManualFileChangesMessage" xml:space="preserve">
-    <value>There were manual changes detected to the .qua file.&#xA;Would you like to reload the editor?</value>
+    <value>Det var oppdaget manuelle endringer på .qua filen.&#xA;Vil du laste editoren på nytt?</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
-    <value>Enter a value to apply an offset to all of your map's objects, timing points,&#xA; and scroll velocities...</value>
+    <value>Angi en verdi til å bruke en forskyvning på alle mapobjekter, tidspunkter,&#xA; og rullehastigheter...</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
-    <value>Enter an offset to apply to your map...</value>
+    <value>Angi en forskyvning som skal brukes på mappet ditt...</value>
   </data>
   <data name="Screen_Editor_SaveChanges" xml:space="preserve">
-    <value>SAVE CHANGES</value>
+    <value>LAGRE ENDRINGER</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
-    <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
+    <value>Du har ulagrede endringer. Ønsker du å lagre&#xA;før du lager ny vanskelighetsgrad?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeSwitchingDifficulty" xml:space="preserve">
-    <value>You have unsaved changes. Would you like to save&#xA;before switching to another difficulty?</value>
+    <value>Du har ulagrede endringer. Ønsker du å lagre&#xA;før du bytter til en annen vanskelighetsgrad?</value>
   </data>
   <data name="Screen_Editor_MapSavedSuccessfully" xml:space="preserve">
-    <value>Your map has been successfully saved!</value>
+    <value>Mappen din ble lagret!</value>
   </data>
   <data name="Screen_Editor_ExitEditor" xml:space="preserve">
-    <value>EXIT EDITOR</value>
+    <value>AVSLUTT EDITOR</value>
   </data>
   <data name="Screen_Editor_SaveBeforeExit" xml:space="preserve">
-    <value>You have unsaved changes. Would you like to save?</value>
+    <value>Du har ulagrede endringer. Ønsker du å lagre?</value>
   </data>
   <data name="Screen_Editor_No" xml:space="preserve">
-    <value>NO</value>
+    <value>NEI</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Are you sure you would like to submit your mapset for rank?&#xA;Note: It must follow the ranking criteria in order to be accepted.</value>
+    <value>Er du sikker på at du vil sende inn mapsettet ditt for rangering?&#xA;Notat: Husk at den må følge rangeringskriteriene for å bli akseptert.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
-    <value>CUSTOM BEAT SNAP</value>
+    <value>TILPASSET TAKTSLAG</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnapMessage" xml:space="preserve">
-    <value>Enter a value or range of values for the custom beat snap divisor (1/?)...</value>
+    <value>Angi en verdi eller et område av verdier for egendefinerte taktslag divisor (1/?)...</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnapPlaceholder" xml:space="preserve">
-    <value>Enter a beat snap value or range (max 48, e.g. "7" or "5-9")</value>
+    <value>Angi en taktslag verdi eller område (max 48, f.eks "7" eller "5-9")</value>
   </data>
   <data name="Screen_Editor_SetLiveMapOffset" xml:space="preserve">
-    <value>SET LIVEMAP OFFSET</value>
+    <value>SETT SANNTIDSMAP FORSKYVNING</value>
   </data>
   <data name="Screen_Editor_SetLiveMapOffsetMessage" xml:space="preserve">
-    <value>Enter a value to apply an offset to notes placed during live-mapping...</value>
+    <value>Angi en verdi til å forskyvne notater plassert under sanntidsmapping...</value>
   </data>
   <data name="Screen_Editor_SetLiveMapOffsetPlaceholder" xml:space="preserve">
-    <value>Enter an offset for live-mapping...</value>
+    <value>Angi en forskyvning for sanntidsmapping...</value>
   </data>
   <data name="Screen_Editor_SetLiveMapLongNoteThreshold" xml:space="preserve">
-    <value>SET LIVEMAP LN THRESHOLD</value>
+    <value>SETT SANNTIDSMAP LN-TERSKEL</value>
   </data>
   <data name="Screen_Editor_SetLiveMapLongNoteThresholdMessage" xml:space="preserve">
-    <value>Enter the minimum length of a long note during live-mapping...</value>
+    <value>Angi minimum lengde på en lang notat under sanntidsmapping...</value>
   </data>
   <data name="Screen_Editor_SetLiveMapLongNoteThresholdPlaceholder" xml:space="preserve">
-    <value>Enter a threshold of LNs during livemapping...</value>
+    <value>Angi en terskel for LNer under sanntidsmapping...</value>
   </data>
   <data name="Screen_Editor_InvalidValue" xml:space="preserve">
-    <value>Invalid value: '{0}'</value>
+    <value>Ugyldig verdi: '{0}'</value>
   </data>
   <data name="Screen_Editor_ChangeTimingGroupColor" xml:space="preserve">
-    <value>CHANGE TIMING GROUP COLOR</value>
+    <value>ENDRE TIDSGRUPPE FARGE</value>
   </data>
   <data name="Screen_Editor_ChangeTimingGroupColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color for your timing group...</value>
+    <value>Angi en ny RGB-farge for din tidsgruppe...</value>
   </data>
   <data name="Screen_Editor_ChangeWaveformColor" xml:space="preserve">
-    <value>CHANGE WAVEFORM COLOR</value>
+    <value>ENDRE BØLGEFORM FARGE</value>
   </data>
   <data name="Screen_Editor_ChangeWaveformColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color for your waveform... (default: 0,200,255)</value>
+    <value>Angi en ny RGB-farge for din bølgeform... (standard: 0,200,255)</value>
   </data>
   <data name="Screen_Editor_AddDifficultyFromFile" xml:space="preserve">
-    <value>ADD DIFFICULTY FROM FILE</value>
+    <value>LEGG TIL VANSKELIGHETSGRAD FRA FIL</value>
   </data>
   <data name="Screen_Editor_AddDifficultyFromFileMessage" xml:space="preserve">
-    <value>Drag a .qua file into the window to add it to the mapset.</value>
+    <value>Dra en .qua fil inn i vinduet for å legge den til mapsettet.</value>
   </data>
   <data name="Screen_Editor_InvalidQuaFile" xml:space="preserve">
-    <value>The .qua file you have dragged in is not valid!</value>
+    <value>.qua filen du har dratt inn er ikke gyldig!</value>
   </data>
   <data name="Screen_Editor_CreateDifficultyError" xml:space="preserve">
-    <value>There was an issue while creating a new difficulty.</value>
+    <value>Det oppstod et problem under opprettelsen av en ny vanskelighetsgrad.</value>
   </data>
   <data name="Screen_Editor_UploadMapset" xml:space="preserve">
-    <value>UPLOAD MAPSET</value>
+    <value>LAST OPP MAPSETT</value>
   </data>
   <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
-    <value>Are you sure you would like to upload your mapset to the server?&#xA;Note: You must own the rights to all files you upload.</value>
+    <value>Er du sikker på at du vil laste opp mapsettet ditt til serveren?&#xA;Notat: Du må eie rettighetene til alle filene du laster opp.</value>
   </data>
   <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
-    <value>You cannot submit a mapset that is already ranked!</value>
+    <value>Du kan ikke sende inn et mapsett som er allerede rangert!</value>
   </data>
   <data name="Screen_Editor_MapsetDoesNotBelongToYou" xml:space="preserve">
-    <value>This mapset does not belong to you! The creator usernames of every map do not match yours.</value>
+    <value>Denne mapsetten tilhører ikke deg! Brukernavnene til skaperene på hvert map samsvarer ikke med din.</value>
   </data>
   <data name="Screen_Editor_ApplyModifier" xml:space="preserve">
-    <value>APPLY MODIFIER</value>
+    <value>BRUK MODIFIKATOR</value>
   </data>
   <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
-    <value>Would like to apply the modifier: "{0}" to your map?&#xA;&#xA;This action is NOT reversible! Choose wisely.</value>
+    <value>Ønsker du å bruke modifikatoren: "{0}" på din map?&#xA;&#xA;Denne handlingen er IKKE reversibel! Velg smart.</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
-    <value>CHANGE BACKGROUND / BANNER</value>
+    <value>ENDRE BAKGRUNN / BANNER</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBannerMessage" xml:space="preserve">
-    <value>Would you like to change the background or the banner?</value>
+    <value>Ønsker du endre bakgrunnen eller banneret?</value>
   </data>
   <data name="Screen_Editor_Background" xml:space="preserve">
-    <value>BACKGROUND</value>
+    <value>BAKGRUNN</value>
   </data>
   <data name="Screen_Editor_Banner" xml:space="preserve">
     <value>BANNER</value>
   </data>
   <data name="Screen_Editor_BackgroundChangedSuccessfully" xml:space="preserve">
-    <value>Your background has been successfully changed!</value>
+    <value>Din bakgrunn har blitt endret!</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundError" xml:space="preserve">
-    <value>There was an issue changing your background!</value>
+    <value>Det oppstod et problem under endring av bakgrunnen!</value>
   </data>
   <data name="Screen_Editor_ChangingBanner" xml:space="preserve">
-    <value>CHANGING BANNER</value>
+    <value>ENDRER BANNER</value>
   </data>
   <data name="Screen_Editor_ChangingBannerMessage" xml:space="preserve">
-    <value>Please wait while your banner is being changed...</value>
+    <value>Vennligst vent mens banneret ditt endres...</value>
   </data>
   <data name="Screen_Editor_BannerChangedSuccessfully" xml:space="preserve">
-    <value>Your banner has successfully changed!</value>
+    <value>Ditt banner har blitt endret!</value>
   </data>
   <data name="Screen_Editor_ChangeBannerError" xml:space="preserve">
-    <value>There was an issue changing your banner!</value>
+    <value>Det oppstod et problem under endring av banneret!</value>
   </data>
   <data name="Screen_Editor_SelectColor" xml:space="preserve">
-    <value>SELECT COLOR</value>
+    <value>VELG FARGE</value>
   </data>
   <data name="Screen_Editor_SelectColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color...</value>
+    <value>Angi en ny RGB-Farge...</value>
   </data>
   <data name="Screen_Editor_RgbColorPlaceholder" xml:space="preserve">
-    <value>Enter RGB color (ex: 255,255,255)...</value>
+    <value>Angi RGB-Farge (f.eks: 255,255,255)...</value>
   </data>
   <data name="Screen_Editor_SubmittingForRankMessage" xml:space="preserve">
-    <value>Please wait while your map is being submitted for rank...</value>
+    <value>Vennligst vent mens din map sendes inn for rangering...</value>
   </data>
   <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
-    <value>Your mapset has issues that prevent it from being ranked. Please review the AutoMod for each difficulty, and then try again.</value>
+    <value>Ditt mapsett har problemer som hindrer den fra å bli rangert. Sjekk AutoMod for hver vanskelighetsgrad, og deretter prøv på nytt.</value>
   </data>
   <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
-    <value>An error occurred while submitting your mapset for rank.</value>
+    <value>En feil oppstod under sending av din mapsett for rangering.</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
-    <value>When set to ON, A BPM change will also change the Scroll Velocity.&#xA;For instance, going from 120BPM to 240BPM effectively creates&#xA;an implicit 2x Scroll Velocity multiplier starting from the beginning&#xA;of that BPM change until the next. Scroll Velocity is still applied.</value>
+    <value>Når satt til PÅ, vil en BPM endring også endre rullehastigheten.&#xA;For eksempel, å gå fra 120BPM til 240BPM skaper i praksis&#xA;en implisitt 2x rullehastighet multiplikator som starter fra begynnelsen&#xA;helt til BPMen endres til den neste. Rullehastighet er forsatt aktivert.</value>
   </data>
   <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
-    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll&#xA;Velocity changes, you can safely ignore this option. The current LN renderer places&#xA;the head and tail to the earliest and latest positions reached, respectively. The old LN&#xA;renderer instead places them both wherever the playfield happens to be at the time.</value>
+    <value>Når satt til PÅ, tvinger bruk av den gamle LN-rendereren. Hvis din map ikke har noe rullehastighet endring,&#xA;kan du trygt ignorere dette valget. Den nåværende LN-renderen plasserer&#xA;hodet og halen til den tidligste og siste nådde posisjoner. Den gamle LN&#xA;renderen i stedet plasserer dem begge uansett hvor spillefeltet skjer på det tidspunktet.</value>
   </data>
   <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
-    <value>Copy all of the metadata from this difficulty to all of the difficulties from this mapset</value>
+    <value>Kopier alle metadataen fra denne vanskelighetsgraden til alle vanskelighetsgrader fra denne mapsettet.</value>
   </data>
   <data name="Screen_Editor_EditMetadataMessage" xml:space="preserve">
-    <value>Edit the values to change the metadata...</value>
+    <value>Rediger verdiene til å endre metadataen...</value>
   </data>
   <data name="Screen_Editor_ArtistName" xml:space="preserve">
-    <value>Artist Name</value>
+    <value>Artistens navn:</value>
   </data>
   <data name="Screen_Editor_ArtistNamePlaceholder" xml:space="preserve">
-    <value>Name of the artist</value>
+    <value>Navn på artisten</value>
   </data>
   <data name="Screen_Editor_SongTitle" xml:space="preserve">
-    <value>Song Title</value>
+    <value>Sang tittel</value>
   </data>
   <data name="Screen_Editor_SongTitlePlaceholder" xml:space="preserve">
-    <value>Title of the song</value>
+    <value>Tittel på sangen</value>
   </data>
   <data name="Screen_Editor_DifficultyName" xml:space="preserve">
-    <value>Difficulty Name</value>
+    <value>Vansklighetsgradens navn</value>
   </data>
   <data name="Screen_Editor_DifficultyNamePlaceholder" xml:space="preserve">
-    <value>Name of the difficulty</value>
+    <value>Navn på vanskelighetsgrad</value>
   </data>
   <data name="Screen_Editor_Source" xml:space="preserve">
-    <value>Source</value>
+    <value>Kilde</value>
   </data>
   <data name="Screen_Editor_SourcePlaceholder" xml:space="preserve">
-    <value>Source of the song (album, mixtape, etc)</value>
+    <value>Kilde til sangen (album, mixtape, etc)</value>
   </data>
   <data name="Screen_Editor_Tags" xml:space="preserve">
-    <value>Tags</value>
+    <value>Søkeord</value>
   </data>
   <data name="Screen_Editor_TagsPlaceholder" xml:space="preserve">
-    <value>Comma-separated tags to help players find your map</value>
+    <value>Komma-separerte etiketter for å hjelpe spillere med å finne ditt map</value>
   </data>
   <data name="Screen_Editor_CreatorUsername" xml:space="preserve">
-    <value>Creator Username</value>
+    <value>Brukernavn for skaperen</value>
   </data>
   <data name="Screen_Editor_CreatorUsernamePlaceholder" xml:space="preserve">
-    <value>Your username</value>
+    <value>Ditt brukernavn</value>
   </data>
   <data name="Screen_Editor_KeyCount" xml:space="preserve">
-    <value>Key Count</value>
+    <value>Tastantall</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSv" xml:space="preserve">
-    <value>BPM AFFECTS SV:</value>
+    <value>BPM PÅVIRKER SV:</value>
   </data>
   <data name="Screen_Editor_ScratchKey" xml:space="preserve">
     <value>SCRATCH KEY:</value>
@@ -2683,280 +2683,280 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>LEGACY LN RENDERING:</value>
   </data>
   <data name="Screen_Editor_SyncMetadata" xml:space="preserve">
-    <value>SYNC METADATA</value>
+    <value>SYNKRONISER METADATA</value>
   </data>
   <data name="Screen_Editor_CannotEditImportedMapMetadata" xml:space="preserve">
-    <value>You cannot edit the metadata for a map loaded from another game.</value>
+    <value>Du kan ikke endre metadataen for et map som er lastet fra et annet spill.</value>
   </data>
   <data name="Screen_Editor_MetadataSynced" xml:space="preserve">
-    <value>Metadata synced to {0} map(s)!</value>
+    <value>Metadata synkronisert til {0} map(per)!</value>
   </data>
   <data name="Screen_Editor_CannotDeleteDefaultLayer" xml:space="preserve">
-    <value>You cannot delete the default layer!</value>
+    <value>Du kan ikke slette standardlaget!</value>
   </data>
   <data name="Screen_Editor_DeletedLayer" xml:space="preserve">
-    <value>Deleted layer '{0}'</value>
+    <value>Slettet lag '{0}'</value>
   </data>
   <data name="Screen_Editor_CannotRenameDefaultLayer" xml:space="preserve">
-    <value>You cannot rename the default layer!</value>
+    <value>Du kan ikke endre navn på standardlaget!</value>
   </data>
   <data name="Screen_Editor_CannotRecolorDefaultLayer" xml:space="preserve">
-    <value>You cannot recolor the default layer!</value>
+    <value>Du kan ikke endre fargen på standardlaget!</value>
   </data>
   <data name="Screen_Editor_CannotDeleteDefaultTimingGroups" xml:space="preserve">
-    <value>You cannot delete the default timing groups!</value>
+    <value>Du kan ikke slette de standard tidsgruppene!</value>
   </data>
   <data name="Screen_Editor_DeletedTimingGroup" xml:space="preserve">
-    <value>Deleted timing group '{0}'</value>
+    <value>Slettet tidsgruppe '{0}'</value>
   </data>
   <data name="Screen_Editor_CannotSaveImportedMap" xml:space="preserve">
-    <value>You cannot save a map loaded from another game!</value>
+    <value>Du kan ikke lagre et map som er lastet ned fra et annet spill!</value>
   </data>
   <data name="Screen_Editor_SaveMapError" xml:space="preserve">
-    <value>There was an issue while saving your map!</value>
+    <value>Det oppstod et problem under lagring av mappet ditt!</value>
   </data>
   <data name="Screen_Editor_FinishBeforeTestPlaying" xml:space="preserve">
-    <value>Finish what you're doing before test playing!</value>
+    <value>Fullfør det du gjør før du prøvespiller!</value>
   </data>
   <data name="Screen_Editor_CreateMapsetError" xml:space="preserve">
-    <value>There was an issue while creating a new mapset.</value>
+    <value>Det oppstod et problem under opprettelsen av en ny mapset!</value>
   </data>
   <data name="Screen_Editor_SwitchDifficultyError" xml:space="preserve">
-    <value>There was an issue while switching difficulty.</value>
+    <value>Det oppstod et problem under bytte av vanskelighetsgrad.</value>
   </data>
   <data name="Screen_Editor_MustBeLoggedInToUpload" xml:space="preserve">
-    <value>You must be logged in to upload your mapset!</value>
+    <value>Du må være logget inn for å laste opp mapsettet ditt!</value>
   </data>
   <data name="Screen_Editor_Only4KAnd7KRanked" xml:space="preserve">
-    <value>Only 4K and 7K are allowed for ranking.</value>
+    <value>Bare 4T og 7T er tillatt for rangering.</value>
   </data>
   <data name="Screen_Editor_ExportingMapset" xml:space="preserve">
-    <value>Please wait while the mapset is being exported...</value>
+    <value>Vennligst vent mens mapsettet blir eksportert...</value>
   </data>
   <data name="Screen_Editor_MapsetExportedSuccessfully" xml:space="preserve">
-    <value>The mapset has been successfully exported!</value>
+    <value>Mapsettet har blitt eksportert!</value>
   </data>
   <data name="Screen_Editor_CannotImportCurrentKeymap" xml:space="preserve">
-    <value>You cannot import the keymap you are already using!</value>
+    <value>Du kan ikke importere keymap du allerede bruker!</value>
   </data>
   <data name="Screen_Editor_KeymapApplied" xml:space="preserve">
-    <value>The keymap has been applied!</value>
+    <value>Keymappen er lagt til!</value>
   </data>
   <data name="Screen_Editor_EnabledSetting" xml:space="preserve">
-    <value>Enabled {0}</value>
+    <value>Aktivert {0}</value>
   </data>
   <data name="Screen_Editor_DisabledSetting" xml:space="preserve">
-    <value>Disabled {0}</value>
+    <value>Deaktivert {0}</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImageInstruction" xml:space="preserve">
-    <value>To add a background image, drag a .jpg or .png file into the window.</value>
+    <value>For å legge til et bakgrunnsbilde, dra en .jpg eller .png fil inn i vinduet.</value>
   </data>
   <data name="Screen_Editor_LoadMapError" xml:space="preserve">
-    <value>There was an issue while loading this map in the editor.</value>
+    <value>Det oppstod et problem under lasting av dette mappet i editoren.</value>
   </data>
   <data name="Screen_Editor_CannotChangeAudioRateFurther" xml:space="preserve">
-    <value>You cannot change the audio rate this way any further!</value>
+    <value>Du kan ikke endre lydhastigheten på denne måten!</value>
   </data>
   <data name="Screen_Editor_CacheUpdatedOnExit" xml:space="preserve">
-    <value>The cached data for this file will be updated when you leave the editor.</value>
+    <value>Den bufrede dataen for denne filen vil bli oppdatert når du forlater editoren.</value>
   </data>
   <data name="Screen_Editor_NoHitObjectsPastThisPoint" xml:space="preserve">
-    <value>There aren't any hitobjects to play past this point!</value>
+    <value>Det er ingen objekter til å spille forbi dette punktet!</value>
   </data>
   <data name="Screen_Editor_TimingPointRequiredForTestPlay" xml:space="preserve">
-    <value>A timing point must be added to your map before test playing!</value>
+    <value>Et tidspunkt må legges til mappen før du prøvespiller!</value>
   </data>
   <data name="Screen_Editor_CannotCreateDifficultyForImportedMap" xml:space="preserve">
-    <value>You cannot create new difficulties for maps from other games. Create a new set!</value>
+    <value>Du kan ikke opprette nye vanskelighetsgrader for mapper fra andre spill. Lag en ny sett!</value>
   </data>
   <data name="Screen_Editor_MustBeLoggedInToSubmitForRank" xml:space="preserve">
-    <value>You must be logged in to submit your mapset for rank!</value>
+    <value>Du må være logget inn for å sende inn ditt mapsett for rangering!</value>
   </data>
   <data name="Screen_Editor_SaveAndUploadBeforeSubmitForRank" xml:space="preserve">
-    <value>Your map has unsaved changes. Please save &amp; upload before submitting for rank.</value>
+    <value>Ditt map har ulagrede endringer. Vennligst lagre og last opp før du sender den inn for rangering.</value>
   </data>
   <data name="Screen_Editor_CannotSetImportedMapBackground" xml:space="preserve">
-    <value>You cannot set a new background for a map loaded from another game.</value>
+    <value>Du kan ikke sette en ny bakgrunn for et map som er lastet fra et annet spill.</value>
   </data>
   <data name="Screen_Editor_EnabledColoring" xml:space="preserve">
-    <value>Enabled {0} coloring</value>
+    <value>Aktiverte {0} farging</value>
   </data>
   <data name="Screen_Editor_DisabledColoring" xml:space="preserve">
-    <value>Disabled {0} coloring</value>
+    <value>Deaktiverte {0} farging</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: CTRL + B</value>
+    <value>Legger til et bokmerke i gjeldende posisjon i tidslinjen.&#xA;- Hold musepekeren over et bokmerke for å vise notater som er forbundet med den.&#xA;- Venstreklikk et bokmerke til å redigere den.&#xA;- Høyreklikk et bokmerke for å slette den.&#xA;-Hurtigtast: CTRL + B</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
-    <value>Beat Snap</value>
+    <value>Taktslag</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: CTRL + Up/Down/Scroll Wheel</value>
+    <value>Endre nåværende taktslag divisor&#xA;Hurtigtast: CTRL + Opp/Ned/Scroll Hjul</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: CTRL + -/+</value>
+    <value>Endre avspillingshastighet.&#xA;Hurtigtast: CTRL + -/+</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
-    <value>Test Play</value>
+    <value>Prøvespill</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: F4</value>
+    <value>Lagre og prøvespill din map.&#xA;Høyreklikk lar deg velge modifikatorer til å bruke mens du prøvespiller.&#xA;Hurtigtast: F4</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
-    <value>Timing Point Editor</value>
+    <value>Tidspunkt editor</value>
   </data>
   <data name="Screen_Editor_TimingPointHelp" xml:space="preserve">
-    <value>Timing Points are individual BPM sections within your map. This will allow you to place objects at the correct times in the song.</value>
+    <value>Tidspunktene er individuelle BPM seksjoner innenfor mappet ditt. Dette vil la deg plassere objekter til riktig tidspunkt i sangen.</value>
   </data>
   <data name="Screen_Editor_TimingPointInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual Timing Point to edit it or double-click to go to its position in time.</value>
+    <value>Du kan klikke på individuelle tidspunkter til å redigere den, eller dobbeltklikk for å gå til posisjonen i tid.</value>
   </data>
   <data name="Screen_Editor_Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Legg til</value>
   </data>
   <data name="Screen_Editor_Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Fjern</value>
   </data>
   <data name="Screen_Editor_SelectCurrentTimingPoint" xml:space="preserve">
-    <value>Select current timing point</value>
+    <value>Velg gjeldende tidspunkt</value>
   </data>
   <data name="Screen_Editor_SelectCurrentTimingPointTooltip" xml:space="preserve">
-    <value>This will select the timing point at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all timing points up to that range, if one is selected already.</value>
+    <value>Dette vil velge tidspunktet i gjeldende editor tidsstempel. Hvis CTRL blir holdt, så vil det legge til utvalget istedet. Hvis SHIFT blir holdt, vil den velge alle tidspunkter opp til det området, hvis en er valgt allerede.</value>
   </data>
   <data name="Screen_Editor_Time" xml:space="preserve">
-    <value>Time</value>
+    <value>Tid</value>
   </data>
   <data name="Screen_Editor_MoveTimesBy" xml:space="preserve">
-    <value>Move Times By</value>
+    <value>Flytt tider etter</value>
   </data>
   <data name="Screen_Editor_Bpm" xml:space="preserve">
     <value>BPM</value>
   </data>
   <data name="Screen_Editor_Signature" xml:space="preserve">
-    <value>Signature</value>
+    <value>Signatur</value>
   </data>
   <data name="Screen_Editor_HideLines" xml:space="preserve">
-    <value>Hide Lines</value>
+    <value>Skjul linjer</value>
   </data>
   <data name="Screen_Editor_ScrollVelocityEditor" xml:space="preserve">
-    <value>Scroll Velocity Editor</value>
+    <value>Rullehastighet editor</value>
   </data>
   <data name="Screen_Editor_ScrollVelocityHelp" xml:space="preserve">
-    <value>Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.</value>
+    <value>Rullehastigheter (SV) lar deg til å dynamisk endre hastighet og retningen fra hvor objekten faller. </value>
   </data>
   <data name="Screen_Editor_ScrollVelocityInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual SV point to edit it and double-click to go to its position in time.</value>
+    <value>Du kan klikke på individuelle SV-punkter til å endre dem og dobbeltklikke til å gå til posisjonen i tid.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
-    <value>(Difference from SF)</value>
+    <value>(Forskjell fra SF)</value>
   </data>
   <data name="Screen_Editor_SelectCurrentSv" xml:space="preserve">
-    <value>Select current SV</value>
+    <value>Velg gjeldende SV</value>
   </data>
   <data name="Screen_Editor_Multiplier" xml:space="preserve">
-    <value>Multiplier</value>
+    <value>Multiplikator</value>
   </data>
   <data name="Screen_Editor_ScrollSpeedFactorEditor" xml:space="preserve">
-    <value>Scroll Speed Factor Editor</value>
+    <value>Rullehastighet faktor editor</value>
   </data>
   <data name="Screen_Editor_HelpLink" xml:space="preserve">
-    <value>(Help)</value>
+    <value>(Hjelp)</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSv" xml:space="preserve">
-    <value>(Difference from SV)</value>
+    <value>(Forskjell fra SV)</value>
   </data>
   <data name="Screen_Editor_SelectCurrentSsf" xml:space="preserve">
-    <value>Select current SSF</value>
+    <value>Velg gjeldende SSF</value>
   </data>
   <data name="Screen_Editor_TimingGroupEditor" xml:space="preserve">
-    <value>Timing Group Editor</value>
+    <value>Tidsgruppe editor</value>
   </data>
   <data name="Screen_Editor_ColorObjectsByTimingGroup" xml:space="preserve">
-    <value>Color Objects By Timing Group</value>
+    <value>Farge objekter etter tidsgruppe</value>
   </data>
   <data name="Screen_Editor_MoveSelectedObjectsToGroup" xml:space="preserve">
-    <value>Move Selected Objects To Group</value>
+    <value>Flytt valgte objekter til gruppe</value>
   </data>
   <data name="Screen_Editor_SelectTimingGroupOfSelectedNotes" xml:space="preserve">
-    <value>Select Timing Group Of Selected Notes</value>
+    <value>Velg tidsgruppe av valgte notater</value>
   </data>
   <data name="Screen_Editor_NoNotesSelected" xml:space="preserve">
-    <value>No Notes Selected</value>
+    <value>Ingen notater valgt</value>
   </data>
   <data name="Screen_Editor_SelectedTimingGroup" xml:space="preserve">
-    <value>Selected timing group: {0}</value>
+    <value>Valgt tidsgruppe: {0}</value>
   </data>
   <data name="Screen_Editor_SelectNotes" xml:space="preserve">
-    <value>Select Notes</value>
+    <value>Velg notater</value>
   </data>
   <data name="Screen_Editor_SelectNotesInTimingGroupsTooltip" xml:space="preserve">
-    <value>Selects all notes in the selected timing group(s).</value>
+    <value>Velger alle notene i de valgte tidsgruppen(e).</value>
   </data>
   <data name="Screen_Editor_FilterSelection" xml:space="preserve">
-    <value>Filter Selection</value>
+    <value>Filtrer utvalg</value>
   </data>
   <data name="Screen_Editor_FilterSelectionTooltip" xml:space="preserve">
-    <value>Deselect any note that is not in any of the selected timing group(s).</value>
+    <value>Velg bort alle notene som ikke er i noen av de valgte tidsgruppen(e).</value>
   </data>
   <data name="Screen_Editor_WhatIsThis" xml:space="preserve">
-    <value>(What is this?)</value>
+    <value>(Hva er dette?)</value>
   </data>
   <data name="Screen_Editor_TimingGroupHelp" xml:space="preserve">
-    <value>Timing Groups allow you to change the visuals of a group of notes.</value>
+    <value>Tidsgrupper lar deg til å endre visuelle elementer i en gruppe av notater.</value>
   </data>
   <data name="Screen_Editor_TimingGroupInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual timing group to edit it and double-click to go to the first note in the group.</value>
+    <value>Du kan klikke på en individuell tidsgruppe for å endre den og dobbeltklikke for å gå til den første noten i gruppen.</value>
   </data>
   <data name="Screen_Editor_EditInSvEditor" xml:space="preserve">
-    <value>Edit in SV Editor</value>
+    <value>Rediger i SV Editor</value>
   </data>
   <data name="Screen_Editor_Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Navn</value>
   </data>
   <data name="Screen_Editor_InvalidName" xml:space="preserve">
-    <value>Invalid name!</value>
+    <value>Ugyldig navn!</value>
   </data>
   <data name="Screen_Editor_TimingGroupNamePlaceholder" xml:space="preserve">
-    <value>Alphanumeric characters or underscore are allowed</value>
+    <value>Alfanumeriske tegn eller understrekingstegn er tillatt</value>
   </data>
   <data name="Screen_Editor_TimingGroupCannotBeRenamed" xml:space="preserve">
-    <value>This timing group cannot be renamed!</value>
+    <value>Denne tidsgruppen kan ikke omdøpes!</value>
   </data>
   <data name="Screen_Editor_TimingGroupsSelected" xml:space="preserve">
-    <value>{0} timing groups selected</value>
+    <value>{0} tidsgrupper valgt</value>
   </data>
   <data name="Screen_Editor_Id" xml:space="preserve">
     <value>ID</value>
   </data>
   <data name="Screen_Editor_KeybindEditor" xml:space="preserve">
-    <value>Keybind Editor</value>
+    <value>Hurtigtast editor</value>
   </data>
   <data name="Screen_Editor_KeybindEditorDescription" xml:space="preserve">
-    <value>Change the keymap of the editor</value>
+    <value>Endre keymapen av editoren</value>
   </data>
   <data name="Screen_Editor_ShowKeybindFile" xml:space="preserve">
-    <value>Show Keybind File</value>
+    <value>Vis hurtigtast fil</value>
   </data>
   <data name="Screen_Editor_KeybindEditorHelpSelectAction" xml:space="preserve">
-    <value>To change the keybind of an action, first click on the action.</value>
+    <value>For å endre hurtigtasten for en handling, klikk først på handlingen.</value>
   </data>
   <data name="Screen_Editor_KeybindEditorHelpChangeOrRemove" xml:space="preserve">
-    <value>You can then choose to change or remove any keys from the action.</value>
+    <value>Du kan deretter velge å endre eller fjerne keys fra handlingen.</value>
   </data>
   <data name="Screen_Editor_KeybindEditorHelpAdd" xml:space="preserve">
-    <value>You can also add a key by clicking on the '+' button.</value>
+    <value>Du kan også legge til en key ved å klikke på '+'-knappen.</value>
   </data>
   <data name="Screen_Editor_SelectedKeybind" xml:space="preserve">
-    <value>Selected Keybind: {0}</value>
+    <value>Valgt hurtigtast: {0}</value>
   </data>
   <data name="Screen_Editor_ResetToDefault" xml:space="preserve">
-    <value>Reset to Default</value>
+    <value>Tilbakestill til standard</value>
   </data>
   <data name="Screen_Editor_Keys" xml:space="preserve">
-    <value>Keys</value>
+    <value>Taster</value>
   </data>
   <data name="Screen_Editor_EnterNewKeybind" xml:space="preserve">
-    <value>Please enter a new keybind...</value>
+    <value>Vennligst angi en ny hurtigtaster...</value>
   </data>
   <data name="Screen_Editor_Change" xml:space="preserve">
     <value>Change</value>
