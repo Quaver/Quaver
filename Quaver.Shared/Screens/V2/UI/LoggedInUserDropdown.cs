@@ -62,6 +62,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private Container OfflinePanel { get; }
 
+        private RoundedProfileBackground ProfileBackground { get; set; }
+
         private FlexContainer ConnectedLayout { get; }
 
         private FlexContainer UpperLayout { get; }
@@ -145,6 +147,10 @@ namespace Quaver.Shared.Screens.V2.UI
         private bool StateDirty { get; set; } = true;
 
         private float ActiveContentHeight { get; set; }
+
+        private float CloseAnimationRemaining { get; set; }
+
+        private int? RequestedProfileCoverUserId { get; set; }
 
         public LoggedInUserDropdown()
             : base(new ScalableVector2(ContainerSize.X.Value, 0), ContainerSize)
@@ -371,6 +377,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsOpen && CloseAnimationRemaining > 0)
+            {
+                CloseAnimationRemaining -= (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (CloseAnimationRemaining <= 0)
+                    Visible = false;
+            }
+
             if (Math.Abs(ScreenDarkness.Width - WindowManager.Width) > 0.001f ||
                 Math.Abs(ScreenDarkness.Height - WindowManager.Height) > 0.001f)
                 ScreenDarkness.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
@@ -415,6 +428,8 @@ namespace Quaver.Shared.Screens.V2.UI
         public override void Open()
         {
             IsOpen = true;
+            CloseAnimationRemaining = 0;
+            Visible = true;
             RefreshState();
             ClearAnimations();
             ChangeHeightTo((int) ActiveContentHeight, Easing.OutQuint, 450);
@@ -426,6 +441,7 @@ namespace Quaver.Shared.Screens.V2.UI
         public override void Close()
         {
             IsOpen = false;
+            CloseAnimationRemaining = 550;
             ClearAnimations();
             ChangeHeightTo(0, Easing.OutQuint, 550);
 
@@ -447,15 +463,12 @@ namespace Quaver.Shared.Screens.V2.UI
                 FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch);
             backgroundLayout.SetItemOptions(upperBackgroundLayout, FixedBasis(Config.UpperHeight));
 
-            var profileBackground = CreateRoundedSprite(Config.ProfileWidth, Config.UpperHeight,
-                Config.CornerRadius, SkinV2Color.Parse(Config.UpperPanelColor));
-            profileBackground.Parent = upperBackgroundLayout;
-            upperBackgroundLayout.SetItemOptions(profileBackground, FixedBasis(Config.ProfileWidth));
-
-            var actionsBackground = CreateRoundedSprite(Config.ActionsWidth, Config.UpperHeight,
-                Config.CornerRadius, SkinV2Color.Parse(Config.ActionPanelColor));
-            actionsBackground.Parent = upperBackgroundLayout;
-            upperBackgroundLayout.SetItemOptions(actionsBackground, FixedBasis(Config.ActionsWidth));
+            ProfileBackground = new RoundedProfileBackground(Config.Width, Config.UpperHeight,
+                Config.CornerRadius, SkinV2Color.Parse(Config.UpperPanelColor), Config.ProfileCoverBrightness)
+            {
+                Parent = upperBackgroundLayout
+            };
+            upperBackgroundLayout.SetItemOptions(ProfileBackground, FixedBasis(Config.Width));
 
             var statsBackground = CreateRoundedSprite(Config.Width, Config.StatsHeight,
                 Config.CornerRadius, SkinV2Color.Parse(Config.StatsPanelColor));
@@ -535,8 +548,7 @@ namespace Quaver.Shared.Screens.V2.UI
         private RoundedAvatar CreateAvatar(Drawable parent, float size, Texture2D image) =>
             new RoundedAvatar(size, Config.CornerRadius, image)
         {
-            Parent = parent,
-            UsePreviousSpriteBatchOptions = true
+            Parent = parent
         };
 
         private static FlexContainer CreateFlex(Drawable parent, ScalableVector2 size, FlexDirection direction,
@@ -636,6 +648,7 @@ namespace Quaver.Shared.Screens.V2.UI
             LoginButton.IsClickable = false;
             LoginWheel.Visible = false;
             Avatar.SetSource(GetAvatar());
+            RefreshProfileCover();
             Flag.Image = Flags.Get(User.OnlineUser.CountryFlag ?? "XX");
             Clan.UpdateFromUser(User.OnlineUser, SkinV2Color.Parse(Config.TextColor));
             ClanUsernameSpacer.Width = Clan.Visible ? Config.IdentitySpacing + 1 : 0;
@@ -675,6 +688,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void RefreshOfflineState()
         {
+            RequestedProfileCoverUserId = null;
+            ProfileBackground.ClearSource();
             OfflineAvatar.SetSource(OfflineAvatarTexture);
             OfflineStatus.Text = GetConnectionStatusText();
             OfflineStatus.TruncateWithEllipsis(385);
@@ -707,6 +722,41 @@ namespace Quaver.Shared.Screens.V2.UI
         }
 
         private static void Logout() => ThreadScheduler.Run(() => OnlineManager.Client?.Disconnect());
+
+        private void RefreshProfileCover()
+        {
+            var onlineUser = User?.OnlineUser;
+            if (onlineUser == null || !onlineUser.UserGroups.HasFlag(UserGroups.Donator))
+            {
+                RequestedProfileCoverUserId = null;
+                ProfileBackground.ClearSource();
+                return;
+            }
+
+            var userId = onlineUser.Id;
+            if (RequestedProfileCoverUserId == userId)
+                return;
+
+            RequestedProfileCoverUserId = userId;
+            ProfileBackground.ClearSource();
+
+            ImageDownloader.DownloadProfileCover(userId).ContinueWith(task =>
+            {
+                var cover = task.Status == System.Threading.Tasks.TaskStatus.RanToCompletion
+                    ? task.Result
+                    : null;
+
+                AddScheduledUpdate(() =>
+                {
+                    if (IsDisposed || RequestedProfileCoverUserId != userId ||
+                        User?.OnlineUser?.Id != userId)
+                        return;
+
+                    if (cover != null)
+                        ProfileBackground.SetSource(cover);
+                });
+            });
+        }
 
         private Texture2D GetAvatar()
         {
@@ -825,73 +875,130 @@ namespace Quaver.Shared.Screens.V2.UI
         private void OnUserStatusReceived(object sender, UserStatusEventArgs args) => StateDirty = true;
 
         /// <summary>
-        ///     Uses a pre-masked texture instead of SpriteMaskContainer so the avatar cannot replace the
-        ///     ScrollContainer's scissor batch or leak out while the dropdown height is animated to zero.
+        ///     Draws a texture through the shared rounded-rectangle shader without breaking an ancestor
+        ///     ScrollContainer's scissor state.
         /// </summary>
-        private sealed class RoundedAvatar : Sprite
+        private abstract class ShaderRoundedSprite : Sprite
         {
-            private float CornerRadius { get; }
+            private SpriteBatchOptions PlainScissorOptions { get; } =
+                RoundedRectShader.CreateScissorSafeOptions();
 
-            private Texture2D Source { get; set; }
-
-            private Texture2D RoundedTexture { get; set; }
-
-            public RoundedAvatar(float size, float cornerRadius, Texture2D image)
+            protected ShaderRoundedSprite(float width, float height, float cornerRadius)
             {
-                Size = new ScalableVector2(size, size);
-                CornerRadius = cornerRadius;
-                SetSource(image);
+                Size = new ScalableVector2(width, height);
+                var shader = RoundedRectShader.Create(cornerRadius);
+                RoundedRectShader.UpdateSize(shader, new Vector2(width, height));
+                SpriteBatchOptions = new SpriteBatchOptions
+                {
+                    RasterizerState = RoundedRectShader.ScissorSafeRasterizerState,
+                    Shader = shader
+                };
+            }
+
+            public override void Draw(GameTime gameTime)
+            {
+                base.Draw(gameTime);
+
+                // The following labels and icons share their parent's batch, so restore a plain,
+                // scissor-safe batch instead of allowing the rounded shader to leak into them.
+                PlainScissorOptions.Begin();
+            }
+        }
+
+        /// <summary>
+        ///     Applies the shared rounded-rectangle shader directly to the avatar texture.
+        /// </summary>
+        private sealed class RoundedAvatar : ShaderRoundedSprite
+        {
+            public RoundedAvatar(float size, float cornerRadius, Texture2D image)
+                : base(size, size, cornerRadius) => SetSource(image);
+
+            public void SetSource(Texture2D source)
+            {
+                if (source != null && !source.IsDisposed)
+                    Image = source;
+            }
+        }
+
+        /// <summary>
+        ///     Applies the shared rounded-rectangle shader to the full-width profile cover.
+        /// </summary>
+        private sealed class RoundedProfileBackground : ShaderRoundedSprite
+        {
+            private Color FallbackColor { get; }
+
+            private Color CoverTint { get; }
+
+            private Texture2D CroppedTexture { get; set; }
+
+            public RoundedProfileBackground(float width, float height, float cornerRadius, Color fallbackColor,
+                float coverBrightness)
+                : base(width, height, cornerRadius)
+            {
+                FallbackColor = fallbackColor;
+                CoverTint = new Color(coverBrightness, coverBrightness, coverBrightness, 1);
+                ClearSource();
             }
 
             public void SetSource(Texture2D source)
             {
-                if (source == null || source.IsDisposed || ReferenceEquals(Source, source))
+                if (source == null || source.IsDisposed)
                     return;
 
-                Source = source;
-                RoundedTexture?.Dispose();
-                RoundedTexture = CreateRoundedTexture(source, Math.Max(1, (int) Math.Ceiling(Width)),
-                    CornerRadius);
-                Image = RoundedTexture ?? source;
+                CroppedTexture?.Dispose();
+                CroppedTexture = CreateCoverTexture(source, Math.Max(1, (int) Math.Ceiling(Width)),
+                    Math.Max(1, (int) Math.Ceiling(Height)));
+                Image = CroppedTexture ?? source;
+                Tint = CoverTint;
+            }
+
+            public void ClearSource()
+            {
+                CroppedTexture?.Dispose();
+                CroppedTexture = null;
+                Image = UserInterface.BlankBox;
+                Tint = FallbackColor;
             }
 
             public override void Destroy()
             {
-                RoundedTexture?.Dispose();
-                RoundedTexture = null;
-                Source = null;
+                CroppedTexture?.Dispose();
+                CroppedTexture = null;
                 base.Destroy();
             }
 
-            private static Texture2D CreateRoundedTexture(Texture2D source, int size, float radius)
+            private static Texture2D CreateCoverTexture(Texture2D source, int width, int height)
             {
                 try
                 {
                     var sourcePixels = new Color[source.Width * source.Height];
                     source.GetData(sourcePixels);
-                    var pixels = new Color[size * size];
-                    var halfSize = size / 2f;
+                    var pixels = new Color[width * height];
+                    var targetAspect = width / (float) height;
+                    var sourceAspect = source.Width / (float) source.Height;
+                    var cropWidth = sourceAspect > targetAspect
+                        ? source.Height * targetAspect
+                        : source.Width;
+                    var cropHeight = sourceAspect > targetAspect
+                        ? source.Height
+                        : source.Width / targetAspect;
+                    var cropX = (source.Width - cropWidth) / 2f;
+                    var cropY = (source.Height - cropHeight) / 2f;
 
-                    for (var y = 0; y < size; y++)
+                    for (var y = 0; y < height; y++)
                     {
-                        var sourceY = Math.Min(source.Height - 1, y * source.Height / size);
+                        var sourceY = Math.Min(source.Height - 1,
+                            (int) (cropY + y * cropHeight / height));
 
-                        for (var x = 0; x < size; x++)
+                        for (var x = 0; x < width; x++)
                         {
-                            var sourceX = Math.Min(source.Width - 1, x * source.Width / size);
-                            var color = sourcePixels[sourceY * source.Width + sourceX];
-                            var qx = Math.Abs(x + 0.5f - halfSize) - (halfSize - radius);
-                            var qy = Math.Abs(y + 0.5f - halfSize) - (halfSize - radius);
-                            var outsideDistance = Math.Sqrt(Math.Max(qx, 0) * Math.Max(qx, 0) +
-                                                            Math.Max(qy, 0) * Math.Max(qy, 0));
-                            var distance = outsideDistance + Math.Min(Math.Max(qx, qy), 0) - radius;
-                            var coverage = 1 - MathHelper.SmoothStep(-1, 0, (float) distance);
-                            pixels[y * size + x] = new Color(color.R, color.G, color.B,
-                                (byte) (color.A * coverage));
+                            var sourceX = Math.Min(source.Width - 1,
+                                (int) (cropX + x * cropWidth / width));
+                            pixels[y * width + x] = sourcePixels[sourceY * source.Width + sourceX];
                         }
                     }
 
-                    var texture = new Texture2D(GameBase.Game.GraphicsDevice, size, size);
+                    var texture = new Texture2D(GameBase.Game.GraphicsDevice, width, height);
                     texture.SetData(pixels);
                     return texture;
                 }

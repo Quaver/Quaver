@@ -246,6 +246,9 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(0d, 1d)]
         public float DarknessOpacity { get; set; } = 0.75f;
 
+        [Range(0d, 1d)]
+        public float ProfileCoverBrightness { get; set; } = 0.55f;
+
         [SkinColor]
         public string UpperPanelColor { get; set; } = "#555555FF";
 
