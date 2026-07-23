@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.V2.Main.UI;
+using Quaver.Shared.Screens.V2.UI;
+using Quaver.Shared.Skinning;
+using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Navigation;
 using Wobble.Managers;
 using Wobble.Screens;
 using Wobble.Window;
@@ -20,15 +25,17 @@ namespace Quaver.Shared.Screens.V2.Main
     /// </summary>
     public sealed class MainMenuScreenView : ScreenView
     {
-        private const float HorizontalPadding = 160;
-        private const float NavigationHeight = 90;
-        private const float ActionGap = 34;
+        private SkinStoreV2Lease Skin { get; }
 
-        private static readonly Color ActionColor = new Color(43, 53, 63, 235);
-        private static readonly Color ActionHoverColor = new Color(56, 72, 84, 245);
-        private static readonly Color AccentColor = ColorHelper.HexToColor("#45D6F5");
+        private SkinV2MainConfig Config { get; }
 
-        private BackgroundImage Background { get; }
+        private SkinV2NavigationConfig NavigationConfig { get; }
+
+        private Color BackgroundClearColor { get; }
+
+        private NavigationBar Background { get; }
+
+        private Sprite BackgroundEffect { get; }
 
         private FlexContainer Content { get; }
 
@@ -46,26 +53,39 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private float LastWindowHeight { get; set; } = -1;
 
+        private float NavigationBarHeight => NavigationConfig.Button.Size + NavigationConfig.EdgePadding * 2;
+
         public MainMenuScreenView(MainMenuScreen screen) : base(screen)
         {
-            Background = new BackgroundImage(UserInterface.MainMenuScreenBackground, 0, false)
+            Skin = SkinManager.AcquireV2();
+            Config = Skin.Config.Screens.Main;
+            NavigationConfig = Skin.Config.Shared.Navigation;
+            BackgroundClearColor = SkinV2Color.Parse(Config.Background.SolidColor);
+
+            Background = new NavigationBar(WindowManager.Width, WindowManager.Height)
             {
-                Parent = Container
+                Parent = Container,
+                Background = SkinV2Background.Create(Skin, Config.Background,
+                    TextureManager.Load("Quaver.Resources/Textures/UI/Screens/Main/background.png"))
             };
+
+            BackgroundEffect = CreateBackgroundEffect(Config.BackgroundEffects.Effect);
+            if (BackgroundEffect != null)
+                BackgroundEffect.Parent = Container;
 
             Content = new FlexContainer
             {
                 Parent = Container,
-                Position = new ScalableVector2(HorizontalPadding, NavigationHeight),
-                Size = new ScalableVector2(WindowManager.Width - HorizontalPadding * 2,
-                    WindowManager.Height - NavigationHeight * 2),
+                Position = new ScalableVector2(Config.Layout.HorizontalPadding, NavigationBarHeight),
+                Size = new ScalableVector2(WindowManager.Width - Config.Layout.HorizontalPadding * 2,
+                    WindowManager.Height - NavigationBarHeight * 2),
                 Direction = FlexDirection.Column,
                 JustifyContent = FlexJustifyContent.Center,
                 AlignItems = FlexAlignItems.Center,
-                RowGap = 55
+                RowGap = Config.Layout.RowGap
             };
 
-            var logoTexture = UserInterface.MainMenuLogo;
+            var logoTexture = Skin.LoadTexture(Config.Logo.Image, TextureManager.Load("Quaver.Resources/Textures/UI/Screens/Main/logo-colored.png"));
 
             Logo = new Sprite
             {
@@ -79,29 +99,34 @@ namespace Quaver.Shared.Screens.V2.Main
             ActionRow = new FlexContainer
             {
                 Parent = Content,
-                Size = new ScalableVector2(Content.Width, 76),
+                Size = new ScalableVector2(Content.Width, Config.Actions.SingleRowHeight),
                 Direction = FlexDirection.Row,
                 Wrap = FlexWrap.Wrap,
                 JustifyContent = FlexJustifyContent.Center,
                 AlignItems = FlexAlignItems.Center,
-                RowGap = 20,
-                ColumnGap = ActionGap
+                RowGap = Config.Actions.RowGap,
+                ColumnGap = Config.Actions.Gap
             };
-            Content.SetItemOptions(ActionRow, new FlexItemOptions { Basis = 76, Shrink = 0 });
+            Content.SetItemOptions(ActionRow,
+                new FlexItemOptions { Basis = Config.Actions.SingleRowHeight, Shrink = 0 });
 
-            CreateAction(FontAwesomeIcon.fa_gamepad_console, "Screen_Main_SinglePlayer",
+            CreateAction(FontAwesome.Get(FontAwesomeIcon.fa_gamepad_console), Config.Actions.SinglePlayerIcon,
+                "Screen_Main_SinglePlayer",
                 screen.ExitToSinglePlayer);
-            CreateAction(FontAwesomeIcon.fa_group_profile_users, "Screen_Main_Multiplayer",
+            CreateAction(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users), Config.Actions.MultiplayerIcon,
+                "Screen_Main_Multiplayer",
                 screen.ExitToMultiplayer);
-            CreateAction(FontAwesomeIcon.fa_pencil, "Screen_Main_Editor", screen.ExitToEditor);
-            CreateAction(FontAwesomeIcon.fa_download_to_storage_drive, "Screen_Main_DownloadSongs",
+            CreateAction(FontAwesome.Get(FontAwesomeIcon.fa_pencil), Config.Actions.EditorIcon,
+                "Screen_Main_Editor", screen.ExitToEditor);
+            CreateAction(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), Config.Actions.DownloadIcon,
+                "Screen_Main_DownloadSongs",
                 screen.ExitToDownload);
 
-            News = new MainMenuNewsCard(570)
+            News = new MainMenuNewsCard(Config.News.MaximumWidth, Skin, Config.News)
             {
                 Parent = Container,
                 Alignment = Alignment.BotCenter,
-                Y = -20
+                Y = Config.News.BottomOffset
             };
 
             UpdateResponsiveLayout(true);
@@ -115,30 +140,35 @@ namespace Quaver.Shared.Screens.V2.Main
 
         public override void Draw(GameTime gameTime)
         {
-            GameBase.Game.GraphicsDevice.Clear(ColorHelper.HexToColor("#080D13"));
+            GameBase.Game.GraphicsDevice.Clear(BackgroundClearColor);
             Container.Draw(gameTime);
         }
 
-        public override void Destroy() => Container.Destroy();
-
-        private void CreateAction(FontAwesomeIcon icon, string localizationKey, Action action)
+        public override void Destroy()
         {
-            var button = new MainActionButton(action)
+            Container.Destroy();
+            Skin.Dispose();
+        }
+
+        private void CreateAction(Texture2D fallbackIcon, string iconPath, string localizationKey, Action action)
+        {
+            var button = new MainActionButton(action, Config.Actions)
             {
                 Parent = ActionRow,
-                Size = new ScalableVector2(340, 64),
-                Tint = ActionColor,
-                CornerRadius = 6,
+                Size = new ScalableVector2(Config.Actions.ButtonWidth, Config.Actions.ButtonHeight),
+                Tint = SkinV2Color.Parse(Config.Actions.Color),
+                CornerRadius = Config.Actions.CornerRadius,
                 PerformHoverFade = false,
-                NormalColor = ActionColor,
-                HoverColor = ActionHoverColor,
-                AccentColor = AccentColor
+                NormalColor = SkinV2Color.Parse(Config.Actions.Color),
+                HoverColor = SkinV2Color.Parse(Config.Actions.HoverColor),
+                AccentColor = SkinV2Color.Parse(Config.Actions.AccentColor)
             };
-            button.SetIcon(FontAwesome.Get(icon), new Vector2(24, 24));
-            button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), LocalizationManager.Get(localizationKey),
-                22, Color.White);
+            button.SetIcon(Skin.LoadTexture(iconPath, fallbackIcon),
+                new Vector2(Config.Actions.IconSize, Config.Actions.IconSize));
+            button.SetLabel(FontManager.GetWobbleFont(Config.Actions.Font), LocalizationManager.Get(localizationKey),
+                Config.Actions.FontSize, SkinV2Color.Parse(Config.Actions.TextColor));
 
-            var options = new FlexItemOptions { Basis = 340, Grow = 1, Shrink = 1 };
+            var options = new FlexItemOptions { Basis = Config.Actions.ButtonWidth, Grow = 1, Shrink = 1 };
             ActionOptions.Add(options);
             ActionRow.SetItemOptions(button, options);
         }
@@ -159,39 +189,94 @@ namespace Quaver.Shared.Screens.V2.Main
             // synchronized after resizes. Bottom-aligned children (such as the news card) are
             // recalculated when this changes.
             Container.Size = new ScalableVector2(width, height);
+            Background.Size = new ScalableVector2(width, height);
+            if (BackgroundEffect != null)
+                BackgroundEffect.Size = new ScalableVector2(width, height);
 
-            var contentWidth = Math.Max(640, width - HorizontalPadding * 2);
-            var contentHeight = Math.Max(620, height - NavigationHeight * 2);
-            Content.Position = new ScalableVector2((width - contentWidth) / 2f, NavigationHeight);
+            var contentWidth = Math.Max(Config.Layout.MinimumContentWidth,
+                width - Config.Layout.HorizontalPadding * 2);
+            var contentHeight = Math.Max(Config.Layout.MinimumContentHeight,
+                height - NavigationBarHeight * 2);
+            Content.Position = new ScalableVector2((width - contentWidth) / 2f, NavigationBarHeight);
             Content.Size = new ScalableVector2(contentWidth, contentHeight);
 
-            var fourColumns = contentWidth >= 1400;
+            var fourColumns = contentWidth >= Config.Actions.FourColumnBreakpoint;
             var columns = fourColumns ? 4 : 2;
-            var actionWidth = Math.Min(contentWidth, fourColumns ? contentWidth : Math.Max(640, contentWidth - 80));
-            var basis = (actionWidth - ActionGap * (columns - 1)) / columns;
+            var actionWidth = Math.Min(contentWidth, fourColumns ? contentWidth :
+                Math.Max(Config.Layout.MinimumContentWidth, contentWidth - Config.Actions.TwoColumnMargin));
+            var basis = (actionWidth - Config.Actions.Gap * (columns - 1)) / columns;
 
-            ActionRow.Size = new ScalableVector2(actionWidth, fourColumns ? 76 : 160);
+            ActionRow.Size = new ScalableVector2(actionWidth, fourColumns ? Config.Actions.SingleRowHeight :
+                Config.Actions.WrappedRowHeight);
             foreach (var options in ActionOptions)
                 options.Basis = basis;
 
             Content.SetItemOptions(ActionRow,
-                new FlexItemOptions { Basis = fourColumns ? 76 : 160, Shrink = 0 });
+                new FlexItemOptions
+                {
+                    Basis = fourColumns ? Config.Actions.SingleRowHeight : Config.Actions.WrappedRowHeight,
+                    Shrink = 0
+                });
 
             var logoTexture = Logo.Image;
             var logoWidth = Math.Min(logoTexture.Width,
-                Math.Max(320, Math.Min(contentWidth - 40, width * (800f / 1920f))));
+                Math.Max(Config.Logo.MinimumWidth,
+                    Math.Min(contentWidth - Config.Logo.HorizontalMargin, width * Config.Logo.ViewportWidthRatio)));
             var logoHeight = logoWidth * logoTexture.Height / logoTexture.Width;
             Logo.Size = new ScalableVector2(logoWidth, logoHeight);
             LogoOptions.Basis = logoHeight;
 
-            News.ApplyWidth(Math.Min(570, contentWidth - 40));
+            News.ApplyWidth(Math.Min(Config.News.MaximumWidth, contentWidth - Config.News.HorizontalMargin));
             Content.RefreshLayout();
             ActionRow.RefreshLayout();
+        }
+
+        private Sprite CreateBackgroundEffect(SkinV2MainBackgroundEffect effect)
+        {
+            var primaryColor = SkinV2Color.Parse(Config.BackgroundEffects.PrimaryColor);
+            var secondaryColor = SkinV2Color.Parse(Config.BackgroundEffects.SecondaryColor);
+
+            switch (effect)
+            {
+                case SkinV2MainBackgroundEffect.Particles:
+                    return new BackgroundParticleSystem(primaryColor, secondaryColor);
+                case SkinV2MainBackgroundEffect.SoftPop:
+                    return new BackgroundSoftPopParticleSystem(primaryColor, secondaryColor);
+                case SkinV2MainBackgroundEffect.Matrix:
+                    return new BackgroundMatrixIconSystem(LoadBackgroundEffectIcons(), primaryColor, secondaryColor);
+                case SkinV2MainBackgroundEffect.RibbonTrail:
+                    return new BackgroundRibbonTrailSystem(primaryColor, secondaryColor);
+                case SkinV2MainBackgroundEffect.Snowfall:
+                    return new BackgroundSnowfallIconSystem(LoadBackgroundEffectIcons(), primaryColor, secondaryColor);
+                case SkinV2MainBackgroundEffect.StreakRain:
+                    return new BackgroundStreakRainSystem(primaryColor, secondaryColor);
+                default:
+                    return null;
+            }
+        }
+
+        private Texture2D[] LoadBackgroundEffectIcons()
+        {
+            var icons = Config.BackgroundEffects.Icons;
+            return new[]
+            {
+                Skin.LoadTexture(icons.Primary,
+                    TextureManager.Load(
+                        "Quaver.Resources/Textures/UI/Screens/Main/background-shapes/shape-primary.png")),
+                Skin.LoadTexture(icons.Secondary,
+                    TextureManager.Load(
+                        "Quaver.Resources/Textures/UI/Screens/Main/background-shapes/shape-secondary.png")),
+                Skin.LoadTexture(icons.Tertiary,
+                    TextureManager.Load(
+                        "Quaver.Resources/Textures/UI/Screens/Main/background-shapes/shape-tertiary.png"))
+            };
         }
 
         private sealed class MainActionButton : RoundedButton
         {
             private RoundedButton Indicator { get; }
+
+            private bool HoverVisualActive { get; set; }
 
             public Color NormalColor { get; set; }
 
@@ -202,16 +287,20 @@ namespace Quaver.Shared.Screens.V2.Main
                 set => Indicator.Tint = value;
             }
 
-            public MainActionButton(Action action) : base((sender, args) => action())
+            private SkinV2MainActionsConfig Config { get; }
+
+            public MainActionButton(Action action, SkinV2MainActionsConfig config)
+                : base((sender, args) => action())
             {
+                Config = config;
                 Indicator = new RoundedButton
                 {
                     Parent = this,
                     Alignment = Alignment.BotCenter,
-                    Position = new ScalableVector2(0, 12),
-                    Size = new ScalableVector2(60, 9),
+                    Position = new ScalableVector2(0, Config.IndicatorHeight + Config.IndicatorSpacing),
+                    Size = new ScalableVector2(Config.IndicatorWidth, Config.IndicatorHeight),
                     Tint = Color.White,
-                    Alpha = 0.45f,
+                    Alpha = Config.IndicatorIdleOpacity,
                     PerformHoverFade = false,
                     IsClickable = false,
                     IsInteractionEnabled = false
@@ -222,8 +311,12 @@ namespace Quaver.Shared.Screens.V2.Main
             {
                 base.Update(gameTime);
 
-                Tint = IsHovered ? HoverColor : NormalColor;
-                Indicator.Alpha = IsHovered ? 1 : 0.45f;
+                if (HoverVisualActive == IsHovered)
+                    return;
+
+                HoverVisualActive = IsHovered;
+                Tint = HoverVisualActive ? HoverColor : NormalColor;
+                Indicator.Alpha = HoverVisualActive ? 1 : Config.IndicatorIdleOpacity;
             }
         }
     }

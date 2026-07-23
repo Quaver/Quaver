@@ -127,6 +127,7 @@ csharp_using_directive_placement = outside_namespace:silent
 #### C# Formatting Rules ####
 
 # New line preferences
+csharp_place_accessorholder_attribute_on_same_line = false
 csharp_new_line_before_catch = true
 csharp_new_line_before_else = true
 csharp_new_line_before_finally = true

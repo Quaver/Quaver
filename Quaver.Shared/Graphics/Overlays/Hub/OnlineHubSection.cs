@@ -154,11 +154,25 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
-        public void MarkAsUnread() => IsUnread = true;
+        public void MarkAsUnread()
+        {
+            if (IsUnread)
+                return;
+
+            IsUnread = true;
+            Hub.OnSectionUnreadStateChanged();
+        }
 
         /// <summary>
         /// </summary>
-        public void MarkAsRead() => IsUnread = false;
+        public void MarkAsRead()
+        {
+            if (!IsUnread)
+                return;
+
+            IsUnread = false;
+            Hub.OnSectionUnreadStateChanged();
+        }
 
         /// <summary>
         ///     The icon of the section

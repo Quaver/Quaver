@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +14,8 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Options;
+using Quaver.Shared.Skinning;
+using Quaver.Shared.Skinning.V2;
 using Steamworks;
 using Wobble;
 using Wobble.Bindables;
@@ -56,13 +57,14 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         public const string ElementKey = "quaver-screen-navigation";
 
-        private const float BarHeight = 90;
-        private const float ButtonSize = 50;
         private const int IconPitch = 39;
         private const int IconWidth = 32;
         private const int IconHeight = 25;
 
-        private static readonly Color ButtonColor = new Color(35, 42, 51, 225);
+        private SkinStoreV2Lease Skin { get; }
+
+        private SkinV2NavigationConfig Config { get; }
+
         private NavigationBar TopBar { get; }
 
         private NavigationBar BottomBar { get; }
@@ -75,14 +77,18 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private Texture2D HubMenuIcon { get; }
 
+        private OnlineHub SubscribedOnlineHub { get; set; }
+
         private List<Texture2D> OwnedIcons { get; } = new List<Texture2D>();
 
         private ScreenNavigation()
         {
+            Skin = SkinManager.AcquireV2();
+            Config = Skin.Config.Shared.Navigation;
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
 
-            TopBar = CreateBar(Alignment.TopLeft);
-            BottomBar = CreateBar(Alignment.BotLeft);
+            TopBar = CreateBar(Alignment.TopLeft, Config.Bar);
+            BottomBar = CreateBar(Alignment.BotLeft, Config.Footer);
 
             AddIconButton(TopBar, NavigationBarRegion.Left, NavigationIcon.Music,
                 LocalizationManager.Get("Screen_Main_Menu_Jukebox"), OpenMusicPlayer,
@@ -94,10 +100,13 @@ namespace Quaver.Shared.Screens.V2.UI
                 LocalizationManager.Get("Screen_Main_Menu_Donate"), ShowDonateMessage,
                 TooltipAnchor.BottomCenter);
 
-            ProfileButton = new ProfileControl(ButtonColor);
+            ProfileButton = new ProfileControl(Config.Profile,
+                SkinV2Color.Parse(Config.Button.BackgroundColor),
+                UserInterface.OfflineAvatar,
+                Config.Button.Size);
             TopBar.Add(NavigationBarRegion.Right, ProfileButton);
-            HubListIcon = CropIcon(NavigationIcon.List);
-            HubMenuIcon = CropIcon(NavigationIcon.Menu);
+            HubListIcon = LoadIcon(NavigationIcon.List);
+            HubMenuIcon = LoadIcon(NavigationIcon.Menu);
             HubButton = AddIconButton(TopBar, NavigationBarRegion.Right, HubMenuIcon,
                 "Online Hub", ToggleOnlineHub, TooltipAnchor.BottomCenter);
 
@@ -126,9 +135,14 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
             {
-                navigation.ResetTransientState();
-                navigation.ResizeToWindow();
-                return navigation;
+                if (navigation.Skin.Generation == SkinManager.SkinV2?.Generation)
+                {
+                    navigation.ResetTransientState();
+                    navigation.ResizeToWindow();
+                    return navigation;
+                }
+
+                ScreenManager.RemoveElement(ElementKey);
             }
 
             navigation = new ScreenNavigation { Parent = parent };
@@ -139,45 +153,50 @@ namespace Quaver.Shared.Screens.V2.UI
         public override void Update(GameTime gameTime)
         {
             ResizeToWindow();
-            UpdateHubIcon();
+            EnsureOnlineHubSubscription();
             base.Update(gameTime);
         }
 
         public override void Destroy()
         {
+            if (SubscribedOnlineHub != null)
+                SubscribedOnlineHub.UnreadStateChanged -= OnHubUnreadStateChanged;
+
             base.Destroy();
 
             foreach (var icon in OwnedIcons)
                 icon?.Dispose();
 
             OwnedIcons.Clear();
+            Skin.Dispose();
         }
 
-        private NavigationBar CreateBar(Alignment alignment) => new NavigationBar(
-            WindowManager.Width, BarHeight, Color.Transparent)
+        private NavigationBar CreateBar(Alignment alignment, SkinV2NavigationBarConfig config) => new NavigationBar(
+            WindowManager.Width, Config.Button.Size + Config.EdgePadding * 2, Color.Transparent)
         {
             Parent = this,
             Alignment = alignment,
-            EdgePadding = 20,
-            ItemSpacing = 14
+            EdgePadding = Config.EdgePadding,
+            ItemSpacing = Config.ItemSpacing,
+            Background = SkinV2Background.Create(Skin, config.Background)
         };
 
         private RoundedButton AddIconButton(NavigationBar bar, NavigationBarRegion region,
             NavigationIcon icon, string tooltip, Action action, TooltipAnchor tooltipAnchor)
-            => AddIconButton(bar, region, CropIcon(icon), tooltip, action, tooltipAnchor);
+            => AddIconButton(bar, region, LoadIcon(icon), tooltip, action, tooltipAnchor);
 
-        private static RoundedButton AddIconButton(NavigationBar bar, NavigationBarRegion region,
+        private RoundedButton AddIconButton(NavigationBar bar, NavigationBarRegion region,
             Texture2D icon, string tooltip, Action action, TooltipAnchor tooltipAnchor)
         {
             var button = bar.AddRoundedButton(region, new NavigationBarButtonOptions
             {
                 Icon = icon,
-                IconSize = new Vector2(30, 25),
-                Width = ButtonSize,
-                Height = ButtonSize,
-                CornerRadius = 5,
-                BackgroundColor = ButtonColor,
-                ForegroundColor = Color.White,
+                IconSize = new Vector2(Config.Button.IconWidth, Config.Button.IconHeight),
+                Width = Config.Button.Size,
+                Height = Config.Button.Size,
+                CornerRadius = Config.Button.CornerRadius,
+                BackgroundColor = SkinV2Color.Parse(Config.Button.BackgroundColor),
+                ForegroundColor = SkinV2Color.Parse(Config.Button.ForegroundColor),
                 ClickAction = (sender, args) => action()
             });
 
@@ -190,19 +209,34 @@ namespace Quaver.Shared.Screens.V2.UI
             return button;
         }
 
+        private void EnsureOnlineHubSubscription()
+        {
+            var onlineHub = (GameBase.Game as QuaverGame)?.OnlineHub;
+            if (ReferenceEquals(SubscribedOnlineHub, onlineHub))
+                return;
+
+            if (SubscribedOnlineHub != null)
+                SubscribedOnlineHub.UnreadStateChanged -= OnHubUnreadStateChanged;
+
+            SubscribedOnlineHub = onlineHub;
+            if (SubscribedOnlineHub != null)
+                SubscribedOnlineHub.UnreadStateChanged += OnHubUnreadStateChanged;
+
+            UpdateHubIcon();
+        }
+
+        private void OnHubUnreadStateChanged(object sender, EventArgs args) => UpdateHubIcon();
+
         private void UpdateHubIcon()
         {
-            var hasUnreadSections = GameBase.Game is QuaverGame game &&
-                                    game.OnlineHub?.Sections?.Values.Any(section => section.IsUnread) == true;
-            var icon = hasUnreadSections ? HubListIcon : HubMenuIcon;
-
+            var icon = SubscribedOnlineHub?.HasUnreadSections == true ? HubListIcon : HubMenuIcon;
             if (HubButton.Icon.Image != icon)
                 HubButton.Icon.Image = icon;
         }
 
-        private Texture2D CropIcon(NavigationIcon icon)
+        private Texture2D LoadIcon(NavigationIcon icon)
         {
-            var source = UserInterface.MainMenuScreenIcons;
+            var source = TextureManager.Load("Quaver.Resources/Textures/UI/Screens/Main/icons.png");
             var sourceRectangle = new Rectangle(0, (int) icon * IconPitch, IconWidth, IconHeight);
             var pixels = new Color[IconWidth * IconHeight];
             source.GetData(0, sourceRectangle, pixels, 0, pixels.Length);
@@ -277,8 +311,9 @@ namespace Quaver.Shared.Screens.V2.UI
         /// </summary>
         private sealed class ProfileControl : RoundedButton
         {
-            private const float ProfileWidth = 280;
-            private const float AvatarSize = ButtonSize;
+            private SkinV2ProfileConfig Config { get; }
+
+            private Texture2D OfflineAvatar { get; }
 
             private RoundedAvatar Avatar { get; }
 
@@ -300,14 +335,17 @@ namespace Quaver.Shared.Screens.V2.UI
 
             private string LastUsername { get; set; }
 
-            public ProfileControl(Color backgroundColor)
+            public ProfileControl(SkinV2ProfileConfig config, Color backgroundColor, Texture2D offlineAvatar,
+                float buttonSize)
             {
-                Size = new ScalableVector2(ProfileWidth, ButtonSize);
+                Config = config;
+                OfflineAvatar = offlineAvatar;
+                Size = new ScalableVector2(Config.Width, buttonSize);
                 Tint = backgroundColor;
-                CornerRadius = 5;
+                CornerRadius = Config.CornerRadius;
                 PerformHoverFade = true;
 
-                Avatar = new RoundedAvatar(AvatarSize, 5, GetAvatar())
+                Avatar = new RoundedAvatar(buttonSize, Config.CornerRadius, GetAvatar())
                 {
                     Parent = this,
                     Alignment = Alignment.MidLeft,
@@ -319,7 +357,7 @@ namespace Quaver.Shared.Screens.V2.UI
                     Parent = Avatar,
                     Alignment = Alignment.BotRight,
                     Position = new ScalableVector2(0, 0),
-                    Size = new ScalableVector2(20, 20),
+                    Size = new ScalableVector2(Config.StatusBorderSize, Config.StatusBorderSize),
                     Tint = backgroundColor,
                     IsClickable = false,
                     PerformHoverFade = false
@@ -329,7 +367,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 {
                     Parent = StatusBorder,
                     Alignment = Alignment.MidCenter,
-                    Size = new ScalableVector2(14, 14),
+                    Size = new ScalableVector2(Config.StatusDotSize, Config.StatusDotSize),
                     IsClickable = false,
                     PerformHoverFade = false
                 };
@@ -338,24 +376,25 @@ namespace Quaver.Shared.Screens.V2.UI
                 {
                     Parent = this,
                     Alignment = Alignment.MidLeft,
-                    X = 58,
-                    Size = new ScalableVector2(24, 24),
+                    X = Config.FlagX,
+                    Size = new ScalableVector2(Config.FlagSize, Config.FlagSize),
                     Image = Flags.Get("XX"),
                     Visible = false
                 };
 
-                Clan = new ClanTag(18)
+                Clan = new ClanTag(Config.UsernameFontSize)
                 {
                     Parent = this,
                     Alignment = Alignment.MidLeft,
-                    X = Flag.X + Flag.Width + 8
+                    X = Flag.X + Flag.Width + Config.TextSpacing
                 };
 
-                Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), string.Empty, 18)
+                Username = new SpriteTextPlus(FontManager.GetWobbleFont(Config.UsernameFont), string.Empty,
+                    Config.UsernameFontSize)
                 {
                     Parent = this,
                     Alignment = Alignment.MidLeft,
-                    Tint = Color.White
+                    Tint = SkinV2Color.Parse(Config.TextColor)
                 };
 
                 Clicked += (sender, args) => ToggleAccountDropdown();
@@ -413,7 +452,7 @@ namespace Quaver.Shared.Screens.V2.UI
                     game.CurrentScreen.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
                         new ScalableVector2(
                             AbsolutePosition.X + AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
-                            AbsolutePosition.Y + AbsoluteSize.Y + 13));
+                            AbsolutePosition.Y + AbsoluteSize.Y + Config.DropdownGap));
                     return;
                 }
 
@@ -429,13 +468,13 @@ namespace Quaver.Shared.Screens.V2.UI
                 Avatar.AvatarSprite.Image = GetAvatar();
                 StatusDot.Tint = connected
                     ? Color.White
-                    : new Color(130, 142, 153);
+                    : SkinV2Color.Parse(Config.OfflineStatusColor);
 
                 if (connected)
                 {
                     Flag.Image = Flags.Get(user?.OnlineUser?.CountryFlag ?? "XX");
                     Flag.Visible = true;
-                    Clan.UpdateFromUser(user?.OnlineUser, Color.White);
+                    Clan.UpdateFromUser(user?.OnlineUser, SkinV2Color.Parse(Config.TextColor));
                 }
                 else
                 {
@@ -443,11 +482,12 @@ namespace Quaver.Shared.Screens.V2.UI
                     Clan.Clear();
                 }
 
-                Clan.X = Flag.Visible ? Flag.X + Flag.Width + 8 : 57;
-                var usernameX = Clan.Visible ? Clan.X + Clan.Width + 7 : Clan.X;
+                Clan.X = Flag.Visible ? Flag.X + Flag.Width + Config.TextSpacing : Config.FlagX - 1;
+                var usernameX = Clan.Visible ? Clan.X + Clan.Width + Config.TextSpacing - 1 : Clan.X;
                 Username.X = usernameX;
                 Username.Text = username;
-                Username.TruncateWithEllipsis((int) Math.Max(40, ProfileWidth - usernameX - 14));
+                Username.TruncateWithEllipsis((int) Math.Max(40,
+                    Config.Width - usernameX - Config.UsernameRightPadding));
 
                 LastConnected = connected;
                 LastUser = user;
@@ -458,9 +498,9 @@ namespace Quaver.Shared.Screens.V2.UI
                 ? OnlineManager.Self?.OnlineUser?.Username ?? ConfigManager.Username.Value ?? "Player"
                 : "Login";
 
-            private static Texture2D GetAvatar()
+            private Texture2D GetAvatar()
             {
-                var image = UserInterface.OfflineAvatar;
+                var image = OfflineAvatar;
 
                 if (OnlineManager.Status.Value == ConnectionStatus.Connected && SteamManager.UserAvatars != null)
                 {

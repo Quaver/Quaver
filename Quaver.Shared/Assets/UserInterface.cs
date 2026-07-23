@@ -17,14 +17,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D UnknownAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/unknown-avatar.png");
         public static Texture2D YouAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/you-avatar.png");
         public static Texture2D MenuBackground => TextureManager.Load($"Quaver.Resources/Textures/UI/Menu/menu-background.jpg");
-        public static Texture2D MainMenuScreenBackground =>
-            TextureManager.Load("Quaver.Resources/Textures/UI/screens/main/background.png");
-        public static Texture2D MainMenuScreenIcons =>
-            TextureManager.Load("Quaver.Resources/Textures/UI/screens/main/icons.png");
-        public static Texture2D MainMenuScreenIcons2 =>
-            TextureManager.Load("Quaver.Resources/Textures/UI/screens/main/Icons2.png");
-        public static Texture2D MainMenuLogo =>
-            TextureManager.Load("Quaver.Resources/Textures/UI/screens/main/logo.png");
         public static Texture2D NotificationError => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-error.png");
         public static Texture2D NotificationWarning => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-warning.png");
         public static Texture2D NotificationInfo => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-info.png");

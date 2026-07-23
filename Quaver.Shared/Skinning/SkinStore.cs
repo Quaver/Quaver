@@ -1003,6 +1003,11 @@ namespace Quaver.Shared.Skinning
                         workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
                     }
                 }
+                else if (File.Exists($"{directory}/skin.yml"))
+                {
+                    var directoryName = new DirectoryInfo(directory).Name;
+                    workshopList.Add($"{directoryName} <{directoryName}>");
+                }
             }
 
             workshopList.Sort();

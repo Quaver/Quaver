@@ -26,6 +26,7 @@ using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Main
 {
@@ -84,7 +85,8 @@ namespace Quaver.Shared.Screens.V2.Main
                     catch (Exception ex)
                     {
                         Logger.Error(ex, LogType.Runtime);
-                        NotificationManager.Show(NotificationLevel.Error, "Failed to automatically login!");
+                        NotificationManager.Show(NotificationLevel.Error,
+                            LocalizationManager.Get("Screen_Main_AutoLoginFailed"));
                     }
                 }
 
@@ -131,7 +133,8 @@ namespace Quaver.Shared.Screens.V2.Main
                     return;
                 }
 
-                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Main_NoMapsLoaded"));
                 return;
             }
 
@@ -139,13 +142,15 @@ namespace Quaver.Shared.Screens.V2.Main
         }
 
         public void ExitToCompetitive() =>
-            NotificationManager.Show(NotificationLevel.Warning, "Not implemented yet!");
+            NotificationManager.Show(NotificationLevel.Warning,
+                LocalizationManager.Get("Screen_Main_NotImplemented"));
 
         public void ExitToMultiplayer()
         {
             if (!OnlineManager.Connected)
             {
-                NotificationManager.Show(NotificationLevel.Error, "You must be logged in to play multiplayer.");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Main_MultiplayerLoginRequired"));
                 return;
             }
 
@@ -157,7 +162,8 @@ namespace Quaver.Shared.Screens.V2.Main
                     return;
                 }
 
-                NotificationManager.Show(NotificationLevel.Error, "You have no maps loaded. Try importing some!");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Main_NoMapsLoaded"));
                 return;
             }
 
@@ -168,7 +174,8 @@ namespace Quaver.Shared.Screens.V2.Main
         {
             if (MapManager.Selected?.Value == null)
             {
-                NotificationManager.Show(NotificationLevel.Error, "You cannot edit without a map selected.");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Main_EditorMapRequired"));
                 return;
             }
 
@@ -185,7 +192,8 @@ namespace Quaver.Shared.Screens.V2.Main
                 catch (Exception ex)
                 {
                     Logger.Error(ex, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, "Unable to read map file!");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        LocalizationManager.Get("Screen_Main_MapReadFailed"));
                     return QuaverScreenFactory.CreateMainMenu();
                 }
             });

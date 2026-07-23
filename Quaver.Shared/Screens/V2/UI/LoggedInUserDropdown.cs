@@ -14,6 +14,8 @@ using Quaver.Shared.Graphics.Menu.Border.Components.Users;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Skinning;
+using Quaver.Shared.Skinning.V2;
 using Steamworks;
 using Wobble;
 using Wobble.Bindables;
@@ -34,19 +36,23 @@ namespace Quaver.Shared.Screens.V2.UI
     /// </summary>
     internal sealed class LoggedInUserDropdown : LoggedInUserDropdownBase
     {
-        public static ScalableVector2 ContainerSize { get; } = new ScalableVector2(526, 145);
+        public static ScalableVector2 ContainerSize
+        {
+            get
+            {
+                var config = SkinManager.SkinV2?.Config.Shared.Navigation.AccountDropdown ??
+                             new SkinV2AccountDropdownConfig();
+                return new ScalableVector2(config.Width, config.ConnectedHeight);
+            }
+        }
 
-        private const float ConnectedHeight = 145;
-        private const float OfflineHeight = 68;
-        private const int IconCellSize = 40;
+        private SkinStoreV2Lease Skin { get; }
 
-        private static readonly Color UpperPanelColor = ColorHelper.HexToColor("#555555");
-        private static readonly Color ActionPanelColor = ColorHelper.HexToColor("#444444");
-        private static readonly Color ActionButtonColor = ColorHelper.HexToColor("#999999");
-        private static readonly Color StatsPanelColor = ColorHelper.HexToColor("#8D8D8D");
-        private static readonly Color StatPillColor = ColorHelper.HexToColor("#CDCDCD");
-        private static readonly Color RolePillColor = ColorHelper.HexToColor("#929292");
-        private static readonly Color ModeBackgroundColor = ColorHelper.HexToColor("#555555");
+        private SkinV2AccountDropdownConfig Config { get; }
+
+        private Texture2D OfflineAvatarTexture { get; }
+
+        private Texture2D UnknownAvatarTexture { get; }
 
         public override ImageButton Button { get; }
 
@@ -138,11 +144,16 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private bool StateDirty { get; set; } = true;
 
-        private float ActiveContentHeight { get; set; } = OfflineHeight;
+        private float ActiveContentHeight { get; set; }
 
         public LoggedInUserDropdown()
             : base(new ScalableVector2(ContainerSize.X.Value, 0), ContainerSize)
         {
+            Skin = SkinManager.AcquireV2();
+            Config = Skin.Config.Shared.Navigation.AccountDropdown;
+            OfflineAvatarTexture = UserInterface.OfflineAvatar;
+            UnknownAvatarTexture = UserInterface.UnknownAvatar;
+            ActiveContentHeight = Config.OfflineHeight;
             Tint = Color.Black;
             Alpha = 0;
             Scrollbar.Visible = false;
@@ -170,46 +181,46 @@ namespace Quaver.Shared.Screens.V2.UI
             OfflinePanel = CreateOfflinePanel();
 
             ConnectedLayout = CreateFlex(ConnectedPanel, ContainerSize, FlexDirection.Column,
-                FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, 5);
-            UpperLayout = CreateFlex(ConnectedLayout, new ScalableVector2(526, 100), FlexDirection.Row,
+                FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.PanelGap);
+            UpperLayout = CreateFlex(ConnectedLayout, new ScalableVector2(Config.Width, Config.UpperHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Stretch);
-            ConnectedLayout.SetItemOptions(UpperLayout, FixedBasis(100));
-            ProfileLayout = CreateFlex(UpperLayout, new ScalableVector2(394, 100), FlexDirection.Row,
+            ConnectedLayout.SetItemOptions(UpperLayout, FixedBasis(Config.UpperHeight));
+            ProfileLayout = CreateFlex(UpperLayout, new ScalableVector2(Config.ProfileWidth, Config.UpperHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            UpperLayout.SetItemOptions(ProfileLayout, FixedBasis(394));
-            ActionsLayout = CreateFlex(UpperLayout, new ScalableVector2(132, 100), FlexDirection.Column,
+            UpperLayout.SetItemOptions(ProfileLayout, FixedBasis(Config.ProfileWidth));
+            ActionsLayout = CreateFlex(UpperLayout, new ScalableVector2(Config.ActionsWidth, Config.UpperHeight), FlexDirection.Column,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Stretch);
-            UpperLayout.SetItemOptions(ActionsLayout, FixedBasis(132));
+            UpperLayout.SetItemOptions(ActionsLayout, FixedBasis(Config.ActionsWidth));
 
-            CreateSpacer(ProfileLayout, 10, 100);
-            Avatar = CreateAvatar(ProfileLayout, 80, GetAvatar());
-            CreateSpacer(ProfileLayout, 10, 100);
-            InfoLayout = CreateFlex(ProfileLayout, new ScalableVector2(284, 80), FlexDirection.Column,
-                FlexJustifyContent.Center, FlexAlignItems.FlexStart, 2);
-            ProfileLayout.SetItemOptions(InfoLayout, FixedBasis(284));
-            CreateSpacer(ProfileLayout, 10, 100);
+            CreateSpacer(ProfileLayout, Config.ContentPadding, Config.UpperHeight);
+            Avatar = CreateAvatar(ProfileLayout, Config.AvatarSize, GetAvatar());
+            CreateSpacer(ProfileLayout, Config.ContentPadding, Config.UpperHeight);
+            InfoLayout = CreateFlex(ProfileLayout, new ScalableVector2(Config.InfoWidth, Config.AvatarSize), FlexDirection.Column,
+                FlexJustifyContent.Center, FlexAlignItems.FlexStart, Config.InfoGap);
+            ProfileLayout.SetItemOptions(InfoLayout, FixedBasis(Config.InfoWidth));
+            CreateSpacer(ProfileLayout, Config.ContentPadding, Config.UpperHeight);
 
-            IdentityLayout = CreateFlex(InfoLayout, new ScalableVector2(284, 22), FlexDirection.Row,
+            IdentityLayout = CreateFlex(InfoLayout, new ScalableVector2(Config.InfoWidth, Config.IdentityHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            InfoLayout.SetItemOptions(IdentityLayout, FixedBasis(22));
+            InfoLayout.SetItemOptions(IdentityLayout, FixedBasis(Config.IdentityHeight));
             Flag = new Sprite
             {
                 Parent = IdentityLayout,
-                Size = new ScalableVector2(22, 22),
+                Size = new ScalableVector2(Config.FlagSize, Config.FlagSize),
                 Image = Flags.Get("XX"),
                 UsePreviousSpriteBatchOptions = true
             };
-            CreateSpacer(IdentityLayout, 6, 22);
-            Clan = new ClanTag(18)
+            CreateSpacer(IdentityLayout, Config.IdentitySpacing, Config.IdentityHeight);
+            Clan = new ClanTag(Config.UsernameFontSize)
             {
                 Parent = IdentityLayout,
                 UsePreviousSpriteBatchOptions = true
             };
-            ClanUsernameSpacer = CreateSpacer(IdentityLayout, 0, 22);
+            ClanUsernameSpacer = CreateSpacer(IdentityLayout, 0, Config.IdentityHeight);
             UsernameHost = new Container
             {
                 Parent = IdentityLayout,
-                Size = new ScalableVector2(40, 22)
+                Size = new ScalableVector2(40, Config.IdentityHeight)
             };
             IdentityLayout.SetItemOptions(UsernameHost, new FlexItemOptions
             {
@@ -217,120 +228,132 @@ namespace Quaver.Shared.Screens.V2.UI
                 Grow = 1,
                 Shrink = 1
             });
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), string.Empty, 18)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), string.Empty,
+                Config.UsernameFontSize)
             {
                 Parent = UsernameHost,
-                Tint = Color.White,
+                Tint = SkinV2Color.Parse(Config.TextColor),
                 UsePreviousSpriteBatchOptions = true
             };
 
             StatusHost = new Container
             {
                 Parent = InfoLayout,
-                Size = new ScalableVector2(284, 20)
+                Size = new ScalableVector2(Config.InfoWidth, Config.StatusHeight)
             };
-            InfoLayout.SetItemOptions(StatusHost, FixedBasis(20));
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), string.Empty, 16)
+            InfoLayout.SetItemOptions(StatusHost, FixedBasis(Config.StatusHeight));
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), string.Empty,
+                Config.StatusFontSize)
             {
                 Parent = StatusHost,
-                Tint = Color.White,
+                Tint = SkinV2Color.Parse(Config.TextColor),
                 UsePreviousSpriteBatchOptions = true
             };
 
             RolePill = CreateRolePill(InfoLayout);
-            InfoLayout.SetItemOptions(RolePill, FixedBasis(25));
+            InfoLayout.SetItemOptions(RolePill, FixedBasis(Config.RoleHeight));
 
-            CreateSpacer(ActionsLayout, 132, 60);
-            ActionButtonsLayout = CreateFlex(ActionsLayout, new ScalableVector2(132, 30), FlexDirection.Row,
+            CreateSpacer(ActionsLayout, Config.ActionsWidth, Config.ActionTopSpacer);
+            ActionButtonsLayout = CreateFlex(ActionsLayout,
+                new ScalableVector2(Config.ActionsWidth, Config.ActionButtonSize), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            ActionsLayout.SetItemOptions(ActionButtonsLayout, FixedBasis(30));
-            CreateSpacer(ActionButtonsLayout, 52, 30);
-            ProfileButton = CreateActionButton(ActionButtonsLayout, CropIcon(0, 280), OpenProfile);
-            CreateSpacer(ActionButtonsLayout, 10, 30);
-            LogoutButton = CreateActionButton(ActionButtonsLayout, CropIcon(40, 280), Logout);
-            CreateSpacer(ActionButtonsLayout, 10, 30);
-            CreateSpacer(ActionsLayout, 132, 10);
+            ActionsLayout.SetItemOptions(ActionButtonsLayout, FixedBasis(Config.ActionButtonSize));
+            CreateSpacer(ActionButtonsLayout, Config.ActionLeftSpacer, Config.ActionButtonSize);
+            ProfileButton = CreateActionButton(ActionButtonsLayout,
+                LoadIcon(0, 280), OpenProfile);
+            CreateSpacer(ActionButtonsLayout, Config.ActionSpacing, Config.ActionButtonSize);
+            LogoutButton = CreateActionButton(ActionButtonsLayout,
+                LoadIcon(40, 280), Logout);
+            CreateSpacer(ActionButtonsLayout, Config.ActionSpacing, Config.ActionButtonSize);
+            CreateSpacer(ActionsLayout, Config.ActionsWidth, Config.ContentPadding);
 
-            StatsLayout = CreateFlex(ConnectedLayout, new ScalableVector2(526, 40), FlexDirection.Row,
+            StatsLayout = CreateFlex(ConnectedLayout, new ScalableVector2(Config.Width, Config.StatsHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            ConnectedLayout.SetItemOptions(StatsLayout, FixedBasis(40));
-            CreateSpacer(StatsLayout, 10, 40);
-            RankPill = CreateStatPill(StatsLayout, 121, CropIcon(0, 0));
-            CreateSpacer(StatsLayout, 10, 40);
-            RatingPill = CreateStatPill(StatsLayout, 95, CropIcon(0, 120));
-            CreateSpacer(StatsLayout, 10, 40);
-            AccuracyPill = CreateStatPill(StatsLayout, 102, CropIcon(40, 240));
-            var statsSpacer = CreateSpacer(StatsLayout, 1, 40);
+            ConnectedLayout.SetItemOptions(StatsLayout, FixedBasis(Config.StatsHeight));
+            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
+            RankPill = CreateStatPill(StatsLayout, Config.RankWidth, LoadIcon(0, 0));
+            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
+            RatingPill = CreateStatPill(StatsLayout, Config.RatingWidth, LoadIcon(0, 120));
+            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
+            AccuracyPill = CreateStatPill(StatsLayout, Config.AccuracyWidth,
+                LoadIcon(40, 240));
+            var statsSpacer = CreateSpacer(StatsLayout, 1, Config.StatsHeight);
             StatsLayout.SetItemOptions(statsSpacer, new FlexItemOptions { Basis = 1, Grow = 1, Shrink = 1 });
 
             ModeButton = new RoundedButton((sender, args) => ToggleMode())
             {
                 Parent = StatsLayout,
-                Size = new ScalableVector2(70, 20),
-                CornerRadius = 10,
-                Tint = ModeBackgroundColor,
+                Size = new ScalableVector2(Config.ModeWidth, Config.ModeHeight),
+                CornerRadius = Config.ModeHeight / 2,
+                Tint = SkinV2Color.Parse(Config.ModeBackgroundColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            StatsLayout.SetItemOptions(ModeButton, FixedBasis(70));
-            ModeSelection = CreateRoundedSprite(40, 16, 8, Color.White);
+            StatsLayout.SetItemOptions(ModeButton, FixedBasis(Config.ModeWidth));
+            ModeSelection = CreateRoundedSprite(Config.ModeSelectionWidth, Config.ModeSelectionHeight,
+                Config.ModeSelectionHeight / 2, SkinV2Color.Parse(Config.TextColor));
             ModeSelection.Parent = ModeButton;
             ModeSelection.Alignment = Alignment.MidLeft;
-            ModeSelection.X = 2;
-            ModeLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "4K", 13)
+            ModeSelection.X = Config.ModeSelectionInset;
+            ModeLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), "4K",
+                Config.ModeFontSize)
             {
                 Parent = ModeSelection,
                 Alignment = Alignment.MidCenter,
-                Tint = ActionPanelColor,
+                Tint = SkinV2Color.Parse(Config.ActionPanelColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            CreateSpacer(StatsLayout, 10, 40);
+            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
 
-            OfflineLayout = CreateFlex(OfflinePanel, new ScalableVector2(526, OfflineHeight), FlexDirection.Row,
+            OfflineLayout = CreateFlex(OfflinePanel, new ScalableVector2(Config.Width, Config.OfflineHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            CreateSpacer(OfflineLayout, 10, OfflineHeight);
-            OfflineAvatar = CreateAvatar(OfflineLayout, 48, UserInterface.OfflineAvatar);
-            CreateSpacer(OfflineLayout, 12, OfflineHeight);
-            OfflineInfoLayout = CreateFlex(OfflineLayout, new ScalableVector2(100, 48), FlexDirection.Column,
-                FlexJustifyContent.Center, FlexAlignItems.FlexStart, 2);
+            CreateSpacer(OfflineLayout, Config.ContentPadding, Config.OfflineHeight);
+            OfflineAvatar = CreateAvatar(OfflineLayout, Config.OfflineAvatarSize, OfflineAvatarTexture);
+            CreateSpacer(OfflineLayout, Config.OfflineAvatarSpacing, Config.OfflineHeight);
+            OfflineInfoLayout = CreateFlex(OfflineLayout, new ScalableVector2(100, Config.OfflineInfoHeight), FlexDirection.Column,
+                FlexJustifyContent.Center, FlexAlignItems.FlexStart, Config.InfoGap);
             OfflineLayout.SetItemOptions(OfflineInfoLayout,
                 new FlexItemOptions { Basis = 100, Grow = 1, Shrink = 1 });
-            OfflineTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Login", 18)
+            OfflineTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), "Login",
+                Config.OfflineTitleFontSize)
             {
                 Parent = OfflineInfoLayout,
-                Tint = Color.White,
+                Tint = SkinV2Color.Parse(Config.TextColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            OfflineStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), string.Empty, 14)
+            OfflineStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Config.SecondaryFont), string.Empty,
+                Config.OfflineStatusFontSize)
             {
                 Parent = OfflineInfoLayout,
-                Tint = Color.White,
+                Tint = SkinV2Color.Parse(Config.TextColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            CreateSpacer(OfflineLayout, 10, OfflineHeight);
-            OfflineActionLayout = CreateFlex(OfflineLayout, new ScalableVector2(40, 40), FlexDirection.Row,
+            CreateSpacer(OfflineLayout, Config.ContentPadding, Config.OfflineHeight);
+            OfflineActionLayout = CreateFlex(OfflineLayout,
+                new ScalableVector2(Config.LoginButtonSize, Config.LoginButtonSize), FlexDirection.Row,
                 FlexJustifyContent.Center, FlexAlignItems.Center);
-            OfflineLayout.SetItemOptions(OfflineActionLayout, FixedBasis(40));
+            OfflineLayout.SetItemOptions(OfflineActionLayout, FixedBasis(Config.LoginButtonSize));
             LoginButton = new RoundedButton((sender, args) => OnlineManager.Login())
             {
                 Parent = OfflineActionLayout,
-                Size = new ScalableVector2(40, 40),
-                CornerRadius = 5,
-                Tint = ActionButtonColor,
+                Size = new ScalableVector2(Config.LoginButtonSize, Config.LoginButtonSize),
+                CornerRadius = Config.CornerRadius,
+                Tint = SkinV2Color.Parse(Config.ActionButtonColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            LoginButton.SetIcon(CropIcon(0, 320), new Vector2(24, 24));
-            LoginButtonOptions = FixedBasis(40);
+            LoginButton.SetIcon(LoadIcon(0, 320),
+                new Vector2(Config.LoginIconSize, Config.LoginIconSize));
+            LoginButtonOptions = FixedBasis(Config.LoginButtonSize);
             OfflineActionLayout.SetItemOptions(LoginButton, LoginButtonOptions);
             LoginWheel = new LoadingWheel
             {
                 Parent = OfflineActionLayout,
-                Size = new ScalableVector2(24, 24),
+                Size = new ScalableVector2(Config.LoginIconSize, Config.LoginIconSize),
                 Visible = false,
                 UsePreviousSpriteBatchOptions = true
             };
             LoginWheelOptions = FixedBasis(0);
             OfflineActionLayout.SetItemOptions(LoginWheel, LoginWheelOptions);
-            CreateSpacer(OfflineLayout, 10, OfflineHeight);
+            CreateSpacer(OfflineLayout, Config.ContentPadding, Config.OfflineHeight);
 
             AddContainedDrawable(ConnectedPanel);
             AddContainedDrawable(OfflinePanel);
@@ -348,7 +371,10 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public override void Update(GameTime gameTime)
         {
-            ScreenDarkness.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
+            if (Math.Abs(ScreenDarkness.Width - WindowManager.Width) > 0.001f ||
+                Math.Abs(ScreenDarkness.Height - WindowManager.Height) > 0.001f)
+                ScreenDarkness.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
+
             SubscribeToCurrentClient();
 
             if (StateDirty || !ReferenceEquals(User, OnlineManager.Self))
@@ -357,8 +383,13 @@ namespace Quaver.Shared.Screens.V2.UI
             var childHovered = ConnectedPanel.Visible &&
                                (ProfileButton.IsHovered || LogoutButton.IsHovered || ModeButton.IsHovered) ||
                                OfflinePanel.Visible && LoginButton.Visible && LoginButton.IsHovered;
-            Button.Depth = childHovered ? 1 : 0;
-            Button.Size = new ScalableVector2(ContainerSize.X.Value, ActiveContentHeight);
+            var targetDepth = childHovered ? 1 : 0;
+            if (Button.Depth != targetDepth)
+                Button.Depth = targetDepth;
+
+            if (Math.Abs(Button.Width - ContainerSize.X.Value) > 0.001f ||
+                Math.Abs(Button.Height - ActiveContentHeight) > 0.001f)
+                Button.Size = new ScalableVector2(ContainerSize.X.Value, ActiveContentHeight);
 
             base.Update(gameTime);
         }
@@ -378,6 +409,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 icon?.Dispose();
 
             OwnedIcons.Clear();
+            Skin.Dispose();
         }
 
         public override void Open()
@@ -388,7 +420,7 @@ namespace Quaver.Shared.Screens.V2.UI
             ChangeHeightTo((int) ActiveContentHeight, Easing.OutQuint, 450);
 
             ScreenDarkness.ClearAnimations();
-            ScreenDarkness.FadeTo(0.75f, Easing.Linear, 200);
+            ScreenDarkness.FadeTo(Config.DarknessOpacity, Easing.Linear, 200);
         }
 
         public override void Close()
@@ -409,22 +441,26 @@ namespace Quaver.Shared.Screens.V2.UI
             };
 
             var backgroundLayout = CreateFlex(panel, ContainerSize, FlexDirection.Column,
-                FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, 5);
-            var upperBackgroundLayout = CreateFlex(backgroundLayout, new ScalableVector2(526, 100),
+                FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.PanelGap);
+            var upperBackgroundLayout = CreateFlex(backgroundLayout,
+                new ScalableVector2(Config.Width, Config.UpperHeight),
                 FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch);
-            backgroundLayout.SetItemOptions(upperBackgroundLayout, FixedBasis(100));
+            backgroundLayout.SetItemOptions(upperBackgroundLayout, FixedBasis(Config.UpperHeight));
 
-            var profileBackground = CreateRoundedSprite(394, 100, 6, UpperPanelColor);
+            var profileBackground = CreateRoundedSprite(Config.ProfileWidth, Config.UpperHeight,
+                Config.CornerRadius, SkinV2Color.Parse(Config.UpperPanelColor));
             profileBackground.Parent = upperBackgroundLayout;
-            upperBackgroundLayout.SetItemOptions(profileBackground, FixedBasis(394));
+            upperBackgroundLayout.SetItemOptions(profileBackground, FixedBasis(Config.ProfileWidth));
 
-            var actionsBackground = CreateRoundedSprite(132, 100, 6, ActionPanelColor);
+            var actionsBackground = CreateRoundedSprite(Config.ActionsWidth, Config.UpperHeight,
+                Config.CornerRadius, SkinV2Color.Parse(Config.ActionPanelColor));
             actionsBackground.Parent = upperBackgroundLayout;
-            upperBackgroundLayout.SetItemOptions(actionsBackground, FixedBasis(132));
+            upperBackgroundLayout.SetItemOptions(actionsBackground, FixedBasis(Config.ActionsWidth));
 
-            var statsBackground = CreateRoundedSprite(526, 40, 6, StatsPanelColor);
+            var statsBackground = CreateRoundedSprite(Config.Width, Config.StatsHeight,
+                Config.CornerRadius, SkinV2Color.Parse(Config.StatsPanelColor));
             statsBackground.Parent = backgroundLayout;
-            backgroundLayout.SetItemOptions(statsBackground, FixedBasis(40));
+            backgroundLayout.SetItemOptions(statsBackground, FixedBasis(Config.StatsHeight));
             return panel;
         }
 
@@ -432,14 +468,15 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             var panel = new Container
             {
-                Size = new ScalableVector2(526, OfflineHeight)
+                Size = new ScalableVector2(Config.Width, Config.OfflineHeight)
             };
 
-            var backgroundLayout = CreateFlex(panel, new ScalableVector2(526, OfflineHeight), FlexDirection.Row,
+            var backgroundLayout = CreateFlex(panel, new ScalableVector2(Config.Width, Config.OfflineHeight), FlexDirection.Row,
                 FlexJustifyContent.FlexStart, FlexAlignItems.Stretch);
-            var background = CreateRoundedSprite(526, OfflineHeight, 6, UpperPanelColor);
+            var background = CreateRoundedSprite(Config.Width, Config.OfflineHeight, Config.CornerRadius,
+                SkinV2Color.Parse(Config.UpperPanelColor));
             background.Parent = backgroundLayout;
-            backgroundLayout.SetItemOptions(background, FixedBasis(526));
+            backgroundLayout.SetItemOptions(background, FixedBasis(Config.Width));
             return panel;
         }
 
@@ -448,16 +485,18 @@ namespace Quaver.Shared.Screens.V2.UI
             var pill = new RoundedButton
             {
                 Parent = parent,
-                Size = new ScalableVector2(150, 25),
+                Size = new ScalableVector2(Config.RoleDefaultWidth, Config.RoleHeight),
                 WidthMode = ButtonSizeMode.Auto,
-                AutoSizePadding = new Vector2(22, 0),
-                CornerRadius = 12.5f,
-                Tint = RolePillColor,
+                AutoSizePadding = new Vector2(Config.RolePadding, 0),
+                CornerRadius = Config.RoleHeight / 2,
+                Tint = SkinV2Color.Parse(Config.RolePillColor),
                 IsInteractionEnabled = false,
                 UsePreviousSpriteBatchOptions = true
             };
-            pill.SetIcon(CropIcon(40, 360), new Vector2(16, 16));
-            pill.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), string.Empty, 14, Color.White);
+            pill.SetIcon(LoadIcon(40, 360),
+                new Vector2(Config.RoleIconSize, Config.RoleIconSize));
+            pill.SetLabel(FontManager.GetWobbleFont(Config.PrimaryFont), string.Empty, Config.RoleFontSize,
+                SkinV2Color.Parse(Config.TextColor));
             return pill;
         }
 
@@ -466,12 +505,12 @@ namespace Quaver.Shared.Screens.V2.UI
             var button = new RoundedButton((sender, args) => action())
             {
                 Parent = parent,
-                Size = new ScalableVector2(30, 30),
-                CornerRadius = 5,
-                Tint = ActionButtonColor,
+                Size = new ScalableVector2(Config.ActionButtonSize, Config.ActionButtonSize),
+                CornerRadius = Config.CornerRadius,
+                Tint = SkinV2Color.Parse(Config.ActionButtonColor),
                 UsePreviousSpriteBatchOptions = true
             };
-            button.SetIcon(icon, new Vector2(20, 20));
+            button.SetIcon(icon, new Vector2(Config.ActionIconSize, Config.ActionIconSize));
             return button;
         }
 
@@ -480,20 +519,21 @@ namespace Quaver.Shared.Screens.V2.UI
             var pill = new RoundedButton
             {
                 Parent = parent,
-                Size = new ScalableVector2(width, 30),
-                CornerRadius = 15,
-                Tint = StatPillColor,
+                Size = new ScalableVector2(width, Config.StatHeight),
+                CornerRadius = Config.StatHeight / 2,
+                Tint = SkinV2Color.Parse(Config.StatPillColor),
                 IsInteractionEnabled = false,
                 UsePreviousSpriteBatchOptions = true
             };
-            pill.SetIcon(icon, new Vector2(22, 22));
-            pill.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "--", 15, Color.White);
+            pill.SetIcon(icon, new Vector2(Config.StatIconSize, Config.StatIconSize));
+            pill.SetLabel(FontManager.GetWobbleFont(Config.PrimaryFont), "--", Config.StatFontSize,
+                SkinV2Color.Parse(Config.TextColor));
             parent.SetItemOptions(pill, FixedBasis(width));
             return pill;
         }
 
-        private static RoundedAvatar CreateAvatar(Drawable parent, float size, Texture2D image) =>
-            new RoundedAvatar(size, 6, image)
+        private RoundedAvatar CreateAvatar(Drawable parent, float size, Texture2D image) =>
+            new RoundedAvatar(size, Config.CornerRadius, image)
         {
             Parent = parent,
             UsePreviousSpriteBatchOptions = true
@@ -548,14 +588,14 @@ namespace Quaver.Shared.Screens.V2.UI
             OfflineActionLayout.RefreshLayout();
         }
 
-        private Texture2D CropIcon(int x, int y)
+        private Texture2D LoadIcon(int x, int y)
         {
-            var source = UserInterface.MainMenuScreenIcons2;
-            var sourceRectangle = new Rectangle(x, y, IconCellSize, IconCellSize);
-            var pixels = new Color[IconCellSize * IconCellSize];
+            var source = TextureManager.Load("Quaver.Resources/Textures/UI/Screens/Main/Icons2.png");
+            var sourceRectangle = new Rectangle(x, y, Config.IconCellSize, Config.IconCellSize);
+            var pixels = new Color[Config.IconCellSize * Config.IconCellSize];
             source.GetData(0, sourceRectangle, pixels, 0, pixels.Length);
 
-            var texture = new Texture2D(GameBase.Game.GraphicsDevice, IconCellSize, IconCellSize);
+            var texture = new Texture2D(GameBase.Game.GraphicsDevice, Config.IconCellSize, Config.IconCellSize);
             texture.SetData(pixels);
             OwnedIcons.Add(texture);
             return texture;
@@ -576,7 +616,7 @@ namespace Quaver.Shared.Screens.V2.UI
             ModeButton.Visible = connected;
             ModeButton.IsClickable = connected;
             var previousHeight = ActiveContentHeight;
-            ActiveContentHeight = connected ? ConnectedHeight : OfflineHeight;
+            ActiveContentHeight = connected ? Config.ConnectedHeight : Config.OfflineHeight;
 
             if (IsOpen && Math.Abs(previousHeight - ActiveContentHeight) > 0.001f)
             {
@@ -597,8 +637,8 @@ namespace Quaver.Shared.Screens.V2.UI
             LoginWheel.Visible = false;
             Avatar.SetSource(GetAvatar());
             Flag.Image = Flags.Get(User.OnlineUser.CountryFlag ?? "XX");
-            Clan.UpdateFromUser(User.OnlineUser, Color.White);
-            ClanUsernameSpacer.Width = Clan.Visible ? 7 : 0;
+            Clan.UpdateFromUser(User.OnlineUser, SkinV2Color.Parse(Config.TextColor));
+            ClanUsernameSpacer.Width = Clan.Visible ? Config.IdentitySpacing + 1 : 0;
 
             Username.Text = User.OnlineUser.Username ?? ConfigManager.Username.Value ?? "Player";
 
@@ -625,7 +665,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
             var is4K = ActiveMode == GameMode.Keys4;
             ModeSelection.Alignment = is4K ? Alignment.MidLeft : Alignment.MidRight;
-            ModeSelection.X = is4K ? 2 : -2;
+            ModeSelection.X = is4K ? Config.ModeSelectionInset : -Config.ModeSelectionInset;
             ModeLabel.Text = is4K ? "4K" : "7K";
 
             RefreshLayouts();
@@ -635,7 +675,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void RefreshOfflineState()
         {
-            OfflineAvatar.SetSource(UserInterface.OfflineAvatar);
+            OfflineAvatar.SetSource(OfflineAvatarTexture);
             OfflineStatus.Text = GetConnectionStatusText();
             OfflineStatus.TruncateWithEllipsis(385);
 
@@ -643,8 +683,8 @@ namespace Quaver.Shared.Screens.V2.UI
             LoginButton.Visible = canLogin;
             LoginButton.IsClickable = canLogin;
             LoginWheel.Visible = !canLogin;
-            LoginButtonOptions.Basis = canLogin ? 40 : 0;
-            LoginWheelOptions.Basis = canLogin ? 0 : 24;
+            LoginButtonOptions.Basis = canLogin ? Config.LoginButtonSize : 0;
+            LoginWheelOptions.Basis = canLogin ? 0 : Config.LoginIconSize;
 
             RefreshLayouts();
             OfflineStatus.TruncateWithEllipsis((int) OfflineInfoLayout.Width);
@@ -670,7 +710,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private Texture2D GetAvatar()
         {
-            var image = UserInterface.UnknownAvatar;
+            var image = UnknownAvatarTexture;
             if (User?.OnlineUser != null && SteamManager.UserAvatars != null &&
                 SteamManager.UserAvatars.TryGetValue((ulong) User.OnlineUser.SteamId, out var avatar))
                 image = avatar;

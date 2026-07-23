@@ -5,11 +5,13 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.News;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.V2.Main;
+using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
-using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Main.UI
@@ -19,80 +21,97 @@ namespace Quaver.Shared.Screens.V2.Main.UI
     /// </summary>
     internal sealed class MainMenuNewsCard : Container
     {
-        private const float CardHeight = 190;
-        private const float BannerHeight = 128;
-        private const float PanelGap = 4;
-        private const float CornerRadius = 7;
-
         private static APIResponseNewsFeed CachedNews { get; set; }
+
+        private SkinV2MainNewsConfig Config { get; }
+
+        private Microsoft.Xna.Framework.Graphics.Texture2D FallbackImage { get; }
 
         private RoundedButton Card { get; }
 
         private RoundedImage Banner { get; }
 
-        private RoundedButton TitleBackground { get; }
+        private Sprite BannerHoverOverlay { get; }
 
-        private SpriteTextPlus Title { get; }
+        private TooltipOptions TitleTooltip { get; }
+
+        private IDisposable TitleTooltipRegistration { get; }
 
         private string PostUrl { get; set; }
 
-        private string FullTitle { get; set; } = "Loading news…";
+        private string FullTitle { get; set; }
 
-        public MainMenuNewsCard(float width)
+        public MainMenuNewsCard(float width, SkinStoreV2Lease skin, SkinV2MainNewsConfig config)
         {
-            Size = new ScalableVector2(width, CardHeight);
+            Config = config;
+            FallbackImage = skin.LoadTexture(Config.FallbackImage, UserInterface.NoPreviewImage);
+            FullTitle = LocalizationManager.Get("Screen_Main_NewsLoading");
+            TitleTooltip = new TooltipOptions(FullTitle)
+            {
+                Anchor = TooltipAnchor.TopCenter,
+                MaximumWidth = Config.MaximumWidth
+            };
+            Size = new ScalableVector2(width, Config.BannerHeight);
 
             Card = new RoundedButton((sender, args) => OpenPost())
             {
                 Parent = this,
-                Size = new ScalableVector2(width, CardHeight),
+                Size = Size,
                 Tint = Color.Transparent,
-                CornerRadius = CornerRadius,
-                PerformHoverFade = true,
+                CornerRadius = Config.CornerRadius,
+                PerformHoverFade = false,
                 IsClickable = false
             };
 
-            Banner = new RoundedImage(width, BannerHeight, CornerRadius, UserInterface.NoPreviewImage)
+            Banner = new RoundedImage(width, Config.BannerHeight, Config.CornerRadius, FallbackImage)
             {
                 Parent = Card,
                 Alignment = Alignment.TopCenter
             };
 
-            TitleBackground = new RoundedButton
+            BannerHoverOverlay = new Sprite
             {
-                Parent = Card,
-                Position = new ScalableVector2(0, BannerHeight + PanelGap),
-                Size = new ScalableVector2(width, CardHeight - BannerHeight - PanelGap),
-                Tint = new Color(47, 58, 68, 245),
-                CornerRadius = CornerRadius,
-                PerformHoverFade = false,
-                IsClickable = false,
-                IsInteractionEnabled = false
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Size = Banner.Size,
+                Image = RoundedRectTextureCache.Get(width, Config.BannerHeight, Config.CornerRadius),
+                Tint = SkinV2Color.Parse(Config.HoverOverlayColor),
+                Alpha = 0
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), FullTitle, 19)
-            {
-                Parent = TitleBackground,
-                Alignment = Alignment.MidLeft,
-                X = 16,
-                Tint = Color.White
-            };
+            TitleTooltipRegistration = Card.AddTooltip(TitleTooltip);
 
             ApplyWidth(width);
             Load();
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            var progress = (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds /
+                                            Config.HoverTransitionMilliseconds, 1);
+            var targetAlpha = Card.IsHovered ? Config.HoverOverlayOpacity : 0;
+            BannerHoverOverlay.Alpha = MathHelper.Lerp(BannerHoverOverlay.Alpha, targetAlpha, progress);
+        }
+
+        public override void Destroy()
+        {
+            TitleTooltipRegistration.Dispose();
+            base.Destroy();
+        }
+
         public void ApplyWidth(float width)
         {
-            width = Math.Max(320, width);
+            width = Math.Max(Config.MinimumWidth, width);
+            var bannerHeight = Banner.ApplyWidth(width);
 
-            if (Math.Abs(Width - width) < 0.001f)
-                return;
-
-            Width = width;
-            Card.Width = width;
-            Banner.ApplyWidth(width);
-            TitleBackground.Width = width;
+            Size = new ScalableVector2(width, bannerHeight);
+            Card.Size = Size;
+            BannerHoverOverlay.Size = Size;
+            BannerHoverOverlay.Image =
+                RoundedRectTextureCache.Get(width, bannerHeight, Config.CornerRadius);
+            TitleTooltip.MaximumWidth = width;
             ApplyTitle();
         }
 
@@ -123,25 +142,26 @@ namespace Quaver.Shared.Screens.V2.Main.UI
 
             if (post == null)
             {
-                FullTitle = "News is currently unavailable";
-                Banner.Content.Image = UserInterface.NoPreviewImage;
+                FullTitle = LocalizationManager.Get("Screen_Main_NewsUnavailable");
+                Banner.Content.Image = FallbackImage;
                 PostUrl = null;
                 Card.IsClickable = false;
+                ApplyWidth(Width);
                 ApplyTitle();
                 return;
             }
 
             FullTitle = post.Title;
-            Banner.Content.Image = response.RecentPostBanner ?? UserInterface.NoPreviewImage;
+            Banner.Content.Image = response.RecentPostBanner ?? FallbackImage;
             PostUrl = post.Url;
             Card.IsClickable = !string.IsNullOrWhiteSpace(PostUrl);
+            ApplyWidth(Width);
             ApplyTitle();
         }
 
         private void ApplyTitle()
         {
-            Title.Text = FullTitle ?? string.Empty;
-            Title.TruncateWithEllipsis((int) Math.Max(40, TitleBackground.Width - 32));
+            TitleTooltip.Text = FullTitle ?? string.Empty;
         }
 
         private void OpenPost()
@@ -175,11 +195,16 @@ namespace Quaver.Shared.Screens.V2.Main.UI
                 AddContainedSprite(Content);
             }
 
-            public void ApplyWidth(float width)
+            public float ApplyWidth(float width)
             {
-                Width = width;
-                Image = RoundedRectTextureCache.Get(width, HeightValue, CornerRadiusValue);
-                Content.Width = width;
+                var height = Content.Image?.Width > 0 && Content.Image.Height > 0
+                    ? width * Content.Image.Height / Content.Image.Width
+                    : HeightValue;
+
+                Size = new ScalableVector2(width, height);
+                Image = RoundedRectTextureCache.Get(width, height, CornerRadiusValue);
+                Content.Size = Size;
+                return height;
             }
         }
     }
