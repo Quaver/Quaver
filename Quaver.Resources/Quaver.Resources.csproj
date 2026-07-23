@@ -11,8 +11,4 @@
   <ItemGroup>
     <EmbeddedResource Include="Quaver.Resources/**/*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Quaver.Resources\Textures\UI\screens\" />
-  </ItemGroup>
 </Project>
