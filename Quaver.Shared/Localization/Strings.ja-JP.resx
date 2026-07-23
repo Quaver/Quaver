@@ -13,142 +13,142 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Language_English" xml:space="preserve">
-    <value>English</value>
+    <value>英語</value>
   </data>
   <data name="Language_Bulgarian" xml:space="preserve">
-    <value>Bulgarian</value>
+    <value>ブルガリア語</value>
   </data>
   <data name="Language_Danish" xml:space="preserve">
-    <value>Danish</value>
+    <value>デンマーク語</value>
   </data>
   <data name="Language_German" xml:space="preserve">
-    <value>German</value>
+    <value>ドイツ語</value>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
-    <value>Spanish</value>
+    <value>スペイン語</value>
   </data>
   <data name="Language_French" xml:space="preserve">
-    <value>French</value>
+    <value>フランス語</value>
   </data>
   <data name="Language_Indonesian" xml:space="preserve">
-    <value>Indonesian</value>
+    <value>インドネシア語</value>
   </data>
   <data name="Language_Italian" xml:space="preserve">
-    <value>Italian</value>
+    <value>イタリア語</value>
   </data>
   <data name="Language_Japanese" xml:space="preserve">
-    <value>Japanese</value>
+    <value>日本語</value>
   </data>
   <data name="Language_Korean" xml:space="preserve">
-    <value>Korean</value>
+    <value>韓国語</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>オランダ語</value>
   </data>
   <data name="Language_Norwegian" xml:space="preserve">
-    <value>Norwegian</value>
+    <value>ノルウェー語</value>
   </data>
   <data name="Language_Polish" xml:space="preserve">
-    <value>Polish</value>
+    <value>ポーランド語</value>
   </data>
   <data name="Language_PortugueseBrazil" xml:space="preserve">
-    <value>Portuguese (Brazil)</value>
+    <value>ポルトガル語（ブラジル）</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
-    <value>Russian</value>
+    <value>ロシア語</value>
   </data>
   <data name="Language_Swedish" xml:space="preserve">
-    <value>Swedish</value>
+    <value>スウェーデン語</value>
   </data>
   <data name="Language_Thai" xml:space="preserve">
-    <value>Thai</value>
+    <value>タイ語</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
-    <value>Ukrainian</value>
+    <value>ウクライナ語</value>
   </data>
   <data name="Language_ChineseSimplified" xml:space="preserve">
-    <value>Chinese (Simplified)</value>
+    <value>中国語（簡体字）</value>
   </data>
   <data name="Language_ChineseTraditional" xml:space="preserve">
-    <value>Chinese (Traditional)</value>
+    <value>中国語（繁体字）</value>
   </data>
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Change screens to update the language.</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>Send a message...</value>
+    <value>メッセージを送信...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
-    <value>Home</value>
+    <value>ホーム</value>
   </data>
   <data name="Screen_Main_Menu_Maps" xml:space="preserve">
-    <value>Maps</value>
+    <value>マップ</value>
   </data>
   <data name="Screen_Main_Menu_Clans" xml:space="preserve">
-    <value>Clans</value>
+    <value>クラン</value>
   </data>
   <data name="Screen_Main_Menu_Jukebox" xml:space="preserve">
-    <value>Jukebox</value>
+    <value>ジュークボックス</value>
   </data>
   <data name="Screen_Main_Menu_Skins" xml:space="preserve">
-    <value>Skins</value>
+    <value>スキン</value>
   </data>
   <data name="Screen_Main_Menu_Donate" xml:space="preserve">
-    <value>Donate</value>
+    <value>寄付する</value>
   </data>
   <data name="Screen_Main_Menu_GitHub" xml:space="preserve">
     <value>GitHub</value>
   </data>
   <data name="Screen_Main_Menu_Wiki" xml:space="preserve">
-    <value>Wiki</value>
+    <value>公式ウィキ</value>
   </data>
   <data name="Screen_Main_Menu_ReportBugs" xml:space="preserve">
-    <value>Report Bugs</value>
+    <value>バグを報告</value>
   </data>
   <data name="Screen_Main_Menu_Twitter" xml:space="preserve">
-    <value>Twitter</value>
+    <value>ツイッター</value>
   </data>
   <data name="Screen_Main_Menu_Discord" xml:space="preserve">
-    <value>Discord</value>
+    <value>ディスコード</value>
   </data>
   <data name="Screen_Main_Menu_Website" xml:space="preserve">
-    <value>Website</value>
+    <value>ウェブサイト</value>
   </data>
   <data name="Screen_Main_SinglePlayer" xml:space="preserve">
-    <value>Single Player</value>
+    <value>シングルプレイヤー</value>
   </data>
   <data name="Screen_Main_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>マルチプレイヤー</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>エディター</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
     <value>Competitive</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Editor</value>
+    <value>マップエディター</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
-    <value>Download Maps</value>
+    <value>マップをダウンロード</value>
   </data>
   <data name="Screen_Main_DownloadSongs" xml:space="preserve">
-    <value>Download Songs</value>
+    <value>曲をダウンロードする</value>
   </data>
   <data name="Screen_Main_SteamWorkshop" xml:space="preserve">
-    <value>Steam Workshop</value>
+    <value>Steam ワークショップ</value>
   </data>
   <data name="Screen_Main_Options" xml:space="preserve">
-    <value>Options</value>
+    <value>設定</value>
   </data>
   <data name="Screen_Main_QuitGame" xml:space="preserve">
-    <value>Quit Game</value>
+    <value>終了する</value>
   </data>
   <data name="Screen_Main_QuitDialogTitle" xml:space="preserve">
-    <value>EXIT QUAVER</value>
+    <value>Quaver を終了</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Are you sure you would like to quit the game?</value>
+    <value>ゲームを終了しますか？</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>Compete for leaderboard ranks</value>
@@ -181,7 +181,7 @@
     <value>Pausing in gameplay prevents score submission.</value>
   </data>
   <data name="Screen_Main_TipReportBug" xml:space="preserve">
-    <value>You can report a bug by opening a GitHub issue.</value>
+    <value>バグは GitHub のチケットを開くことで報告できます。</value>
   </data>
   <data name="Screen_Main_TipRequestFeatures" xml:space="preserve">
     <value>Request new features by opening GitHub issues!</value>
@@ -208,10 +208,10 @@
     <value>CTRL+ +/- changes the playback rate of the song.</value>
   </data>
   <data name="Screen_Main_NowPlaying" xml:space="preserve">
-    <value>Now Playing:</value>
+    <value>再生中</value>
   </data>
   <data name="Screen_Main_Published" xml:space="preserve">
-    <value>Published {0}</value>
+    <value>{0} が公開済み</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>All</value>
@@ -220,7 +220,7 @@
     <value>Artist</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>戻る</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
     <value>By:</value>
@@ -229,46 +229,46 @@
     <value>BPM</value>
   </data>
   <data name="Screen_Selection_Clan" xml:space="preserve">
-    <value>Clan</value>
+    <value>クラン</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Country</value>
+    <value>国</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Country Rank</value>
+    <value>国内ランキング</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Create New</value>
   </data>
   <data name="Screen_Selection_CreatePlaylist" xml:space="preserve">
-    <value>Create Playlist</value>
+    <value>プレイリストを作成する</value>
   </data>
   <data name="Screen_Selection_Creator" xml:space="preserve">
     <value>Creator</value>
   </data>
   <data name="Screen_Selection_DateAdded" xml:space="preserve">
-    <value>Date Added</value>
+    <value>追加日</value>
   </data>
   <data name="Screen_Selection_Difficulty" xml:space="preserve">
-    <value>Difficulty</value>
+    <value>難易度</value>
   </data>
   <data name="Screen_Selection_Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="Screen_Selection_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>エクスポート</value>
   </data>
   <data name="Screen_Selection_Friends" xml:space="preserve">
-    <value>Friends</value>
+    <value>フレンド</value>
   </data>
   <data name="Screen_Selection_Game" xml:space="preserve">
-    <value>Game</value>
+    <value>ゲーム</value>
   </data>
   <data name="Screen_Selection_Global" xml:space="preserve">
-    <value>Global</value>
+    <value>グローバル</value>
   </data>
   <data name="Screen_Selection_GlobalRank" xml:space="preserve">
-    <value>Global Rank</value>
+    <value>世界ランキング</value>
   </data>
   <data name="Screen_Selection_GroupBy" xml:space="preserve">
     <value>GROUP BY:</value>
@@ -307,7 +307,7 @@
     <value>Max Combo</value>
   </data>
   <data name="Screen_Selection_Mode" xml:space="preserve">
-    <value>MODE:</value>
+    <value>モード：</value>
   </data>
   <data name="Screen_Selection_Modifiers" xml:space="preserve">
     <value>Modifiers</value>
@@ -358,25 +358,25 @@
     <value>PERSONAL BEST</value>
   </data>
   <data name="Screen_Selection_Play" xml:space="preserve">
-    <value>Play</value>
+    <value>プレイ</value>
   </data>
   <data name="Screen_Selection_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>プレイ回数</value>
   </data>
   <data name="Screen_Selection_Player" xml:space="preserve">
-    <value>Player</value>
+    <value>プレイヤー</value>
   </data>
   <data name="Screen_Selection_Playlists" xml:space="preserve">
-    <value>Playlists</value>
+    <value>プレイリスト</value>
   </data>
   <data name="Screen_Selection_Previewisdisabledinthisgame" xml:space="preserve">
     <value>Preview is disabled in this game!</value>
   </data>
   <data name="Screen_Selection_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>プロファイル</value>
   </data>
   <data name="Screen_Selection_Random" xml:space="preserve">
-    <value>Random</value>
+    <value>ランダム</value>
   </data>
   <data name="Screen_Selection_RankedStatus" xml:space="preserve">
     <value>Ranked Status</value>
@@ -421,7 +421,7 @@
     <value>Times Played</value>
   </data>
   <data name="Screen_Selection_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>タイトル</value>
   </data>
   <data name="Screen_Selection_TotalHits" xml:space="preserve">
     <value>Total Hits</value>
@@ -451,19 +451,19 @@
     <value>Video</value>
   </data>
   <data name="Screen_Options_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>オーディオ</value>
   </data>
   <data name="Screen_Options_Language" xml:space="preserve">
-    <value>Language</value>
+    <value>言語</value>
   </data>
   <data name="Screen_Options_Gameplay" xml:space="preserve">
-    <value>Gameplay</value>
+    <value>ゲーム</value>
   </data>
   <data name="Screen_Options_Skin" xml:space="preserve">
-    <value>Skin</value>
+    <value>スキン</value>
   </data>
   <data name="Screen_Options_Input" xml:space="preserve">
-    <value>Input</value>
+    <value>入力</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
     <value>Game mode specific</value>
@@ -484,10 +484,10 @@
     <value>Output</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>音量</value>
   </data>
   <data name="Screen_Options_Offset" xml:space="preserve">
-    <value>Offset</value>
+    <value>オフセット</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
     <value>Effects</value>
@@ -502,7 +502,7 @@
     <value>Visuals</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Sound</value>
+    <value>音</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
     <value>User Interface</value>
@@ -538,7 +538,7 @@
     <value>Song Selection</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>エディター</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
     <value>Misc</value>
@@ -574,28 +574,28 @@
     <value>Display FPS Counter</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>オーディオ出力デバイス</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
-    <value>Master Volume</value>
+    <value>マスター音量</value>
   </data>
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
-    <value>Music Volume</value>
+    <value>音楽の音量</value>
   </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
-    <value>Effect Volume</value>
+    <value>効果音の音量</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
-    <value>Master</value>
+    <value>マスター</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Music" xml:space="preserve">
-    <value>Music</value>
+    <value>音楽</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>効果音</value>
   </data>
   <data name="Screen_Results_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>戻る</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
     <value>Retry Map</value>
@@ -619,7 +619,7 @@
     <value>Overview</value>
   </data>
   <data name="Screen_Results_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>マルチプレイヤー</value>
   </data>
   <data name="Screen_Results_Mappedby" xml:space="preserve">
     <value>Mapped by:</value>
@@ -649,10 +649,10 @@
     <value>Rating</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>Mean:</value>
+    <value>平均：</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>Std. Dev:</value>
+    <value>標準偏差：</value>
   </data>
   <data name="Screen_Results_RATIO" xml:space="preserve">
     <value>RATIO</value>
@@ -705,19 +705,19 @@ Marvelous instead.</value>
     <value>Free For All</value>
   </data>
   <data name="Screen_Results_BattleRoyale" xml:space="preserve">
-    <value>Battle Royale</value>
+    <value>バトルロイヤル</value>
   </data>
   <data name="Screen_Results_Team" xml:space="preserve">
-    <value>Team</value>
+    <value>チーム</value>
   </data>
   <data name="Screen_Results_BlueTeam" xml:space="preserve">
-    <value>Blue Team</value>
+    <value>青チーム</value>
   </data>
   <data name="Screen_Results_RedTeam" xml:space="preserve">
-    <value>Red Team</value>
+    <value>赤チーム</value>
   </data>
   <data name="Screen_Results_haswonthematch" xml:space="preserve">
-    <value>has won the match!</value>
+    <value>勝った！</value>
   </data>
   <data name="Screen_Results_Grade" xml:space="preserve">
     <value>Grade</value>
@@ -747,7 +747,7 @@ Marvelous instead.</value>
     <value>Okay</value>
   </data>
   <data name="Screen_Results_Miss" xml:space="preserve">
-    <value>Miss</value>
+    <value>ミス</value>
   </data>
   <data name="Screen_Results_Mods" xml:space="preserve">
     <value>Mods</value>
@@ -876,22 +876,22 @@ Marvelous instead.</value>
     <value>Display Receptors Over Lane Covers</value>
   </data>
   <data name="Screen_Options_CustomSkin" xml:space="preserve">
-    <value>Custom Skin</value>
+    <value>カスタム スキン</value>
   </data>
   <data name="Screen_Options_CoopPlayer2Skin" xml:space="preserve">
     <value>Co-op Player 2 Skin</value>
   </data>
   <data name="Screen_Options_DefaultSkin" xml:space="preserve">
-    <value>Default Skin</value>
+    <value>デフォルトスキン</value>
   </data>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
-    <value>Open Skin Folder</value>
+    <value>スキンフォルダーを開く</value>
   </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
-    <value>Export Skin</value>
+    <value>スキンのエクスポート</value>
   </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
-    <value>Upload Skin To Steam Workshop</value>
+    <value>Steamワークショップにスキンをアップロード</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
     <value>Note &amp; Receptor Size Scale</value>
@@ -912,13 +912,13 @@ Marvelous instead.</value>
     <value>Quick Exit</value>
   </data>
   <data name="Screen_Options_SkipSongIntro" xml:space="preserve">
-    <value>Skip Song Intro</value>
+    <value>曲のイントロをスキップする</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>スクロール速度を下げる</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>スクロール速度を上げる</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
     <value>Decrease Map Offset</value>
@@ -960,10 +960,10 @@ Marvelous instead.</value>
     <value>Increase Playback Rate</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Take Screenshot</value>
+    <value>スクリーンショットを撮る</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
-    <value>Open Game Folder</value>
+    <value>ゲームフォルダを開く</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
     <value>Update Map Ranked Statuses</value>
@@ -1071,7 +1071,7 @@ Marvelous instead.</value>
     <value>Delete Original File After Import</value>
   </data>
   <data name="Screen_Options_DiscordRichPresence" xml:space="preserve">
-    <value>Discord Rich Presence</value>
+    <value>Discord リッチプレゼンス</value>
   </data>
   <data name="Screen_Options_DisplayRankedAccuracyForLocalLeaderboards" xml:space="preserve">
     <value>Display Ranked Accuracy For Local Leaderboards</value>
@@ -1083,7 +1083,7 @@ Marvelous instead.</value>
     <value>Enable High Process Priority</value>
   </data>
   <data name="Screen_Options_PreferWayland" xml:space="preserve">
-    <value>Prefer Wayland</value>
+    <value>Wayland を優先</value>
   </data>
   <data name="Screen_Options_PrefermacOSInputHandling" xml:space="preserve">
     <value>Prefer macOS Input Handling</value>
@@ -1119,7 +1119,7 @@ Marvelous instead.</value>
     <value>Prioritized 1K Difficulty</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 キー</value>
   </data>
   <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
     <value>2K Gameplay Layout</value>
@@ -1143,7 +1143,7 @@ Marvelous instead.</value>
     <value>Prioritized 2K Difficulty</value>
   </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 キー</value>
   </data>
   <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
     <value>3K Gameplay Layout</value>
@@ -1167,7 +1167,7 @@ Marvelous instead.</value>
     <value>Prioritized 3K Difficulty</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 キー</value>
   </data>
   <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
     <value>4K Gameplay Layout</value>
@@ -1191,7 +1191,7 @@ Marvelous instead.</value>
     <value>Prioritized 4K Difficulty</value>
   </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 キー</value>
   </data>
   <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
     <value>5K Gameplay Layout</value>
@@ -1215,7 +1215,7 @@ Marvelous instead.</value>
     <value>Prioritized 5K Difficulty</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 キー</value>
   </data>
   <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
     <value>6K Gameplay Layout</value>
@@ -1239,7 +1239,7 @@ Marvelous instead.</value>
     <value>Prioritized 6K Difficulty</value>
   </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 キー</value>
   </data>
   <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
     <value>7K Gameplay Layout</value>
@@ -1263,7 +1263,7 @@ Marvelous instead.</value>
     <value>Prioritized 7K Difficulty</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 キー</value>
   </data>
   <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
     <value>8K Gameplay Layout</value>
@@ -1287,7 +1287,7 @@ Marvelous instead.</value>
     <value>Prioritized 8K Difficulty</value>
   </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 キー</value>
   </data>
   <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
     <value>9K Gameplay Layout</value>
@@ -1311,7 +1311,7 @@ Marvelous instead.</value>
     <value>Prioritized 9K Difficulty</value>
   </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 キー</value>
   </data>
   <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
     <value>10K Gameplay Layout</value>
@@ -1335,40 +1335,40 @@ Marvelous instead.</value>
     <value>Prioritized 10K Difficulty</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 キー</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
     <value>Video Settings</value>
   </data>
   <data name="Screen_Options_AudioSettings" xml:space="preserve">
-    <value>Audio Settings</value>
+    <value>オーディオ設定</value>
   </data>
   <data name="Screen_Options_LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>言語設定</value>
   </data>
   <data name="Screen_Options_GameplaySettings" xml:space="preserve">
-    <value>Gameplay Settings</value>
+    <value>ゲーム設定</value>
   </data>
   <data name="Screen_Options_SkinSettings" xml:space="preserve">
-    <value>Skin Settings</value>
+    <value>スキン設定</value>
   </data>
   <data name="Screen_Options_InputSettings" xml:space="preserve">
-    <value>Input Settings</value>
+    <value>入力設定</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>ゲームモード設定</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
-    <value>Miscellaneous Settings</value>
+    <value>その他の設定</value>
   </data>
   <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>詳細設定</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Search Result</value>
+    <value>{0} の検索結果</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
-    <value>{0} Search Results</value>
+    <value>{0} の検索結果</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
     <value>Music is currently paused!</value>
@@ -1462,7 +1462,7 @@ for the selected game mode?</value>
     <value>LN %</value>
   </data>
   <data name="Screen_Download_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
+    <value>プレイ回数</value>
   </data>
   <data name="Screen_Download_Ascending" xml:space="preserve">
     <value>Ascending</value>
@@ -1572,46 +1572,46 @@ You can use the filters below to narrow down your search.</value>
     <value>Recommended difficulty</value>
   </data>
   <data name="Screen_Download_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>戻る</value>
   </data>
   <data name="Screen_Download_Select" xml:space="preserve">
     <value>Select</value>
   </data>
   <data name="Screen_Download_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>ダウンロード</value>
   </data>
   <data name="Screen_Download_OnlineListing" xml:space="preserve">
     <value>Online Listing</value>
   </data>
   <data name="Screen_Download_1Keys" xml:space="preserve">
-    <value>1 Keys</value>
+    <value>1 キー</value>
   </data>
   <data name="Screen_Download_2Keys" xml:space="preserve">
-    <value>2 Keys</value>
+    <value>2 キー</value>
   </data>
   <data name="Screen_Download_3Keys" xml:space="preserve">
-    <value>3 Keys</value>
+    <value>3 キー</value>
   </data>
   <data name="Screen_Download_4Keys" xml:space="preserve">
-    <value>4 Keys</value>
+    <value>4 キー</value>
   </data>
   <data name="Screen_Download_5Keys" xml:space="preserve">
-    <value>5 Keys</value>
+    <value>5 キー</value>
   </data>
   <data name="Screen_Download_6Keys" xml:space="preserve">
-    <value>6 Keys</value>
+    <value>6 キー</value>
   </data>
   <data name="Screen_Download_7Keys" xml:space="preserve">
-    <value>7 Keys</value>
+    <value>7 キー</value>
   </data>
   <data name="Screen_Download_8Keys" xml:space="preserve">
-    <value>8 Keys</value>
+    <value>8 キー</value>
   </data>
   <data name="Screen_Download_9Keys" xml:space="preserve">
-    <value>9 Keys</value>
+    <value>9 キー</value>
   </data>
   <data name="Screen_Download_10Keys" xml:space="preserve">
-    <value>10 Keys</value>
+    <value>10 キー</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
     <value>CONFIRM READY</value>
@@ -1621,13 +1621,13 @@ You can use the filters below to narrow down your search.</value>
 sure you would like to start without all players ready?</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyTitle" xml:space="preserve">
-    <value>EXIT TO LOBBY</value>
+    <value>ルームに戻る</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
     <value>Are you sure you would like to exit to the lobby?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
-    <value>Leave</value>
+    <value>離れる</value>
   </data>
   <data name="Screen_Multi_Commands" xml:space="preserve">
     <value>Commands</value>
@@ -1639,40 +1639,40 @@ sure you would like to start without all players ready?</value>
     <value>Modifiers</value>
   </data>
   <data name="Screen_Multi_Leaderboard" xml:space="preserve">
-    <value>Leaderboard</value>
+    <value>ランキング</value>
   </data>
   <data name="Screen_Multi_History" xml:space="preserve">
-    <value>History</value>
+    <value>履歴</value>
   </data>
   <data name="Screen_Multi_SwitchTeams" xml:space="preserve">
-    <value>Switch Teams</value>
+    <value>チームの切り替え</value>
   </data>
   <data name="Screen_Multi_NotReady" xml:space="preserve">
-    <value>Not Ready</value>
+    <value>準備不足</value>
   </data>
   <data name="Screen_Multi_ReadyUp" xml:space="preserve">
-    <value>Ready Up</value>
+    <value>準備完了</value>
   </data>
   <data name="Screen_Multi_WaitingForHostToStart" xml:space="preserve">
-    <value>Waiting for the host to start</value>
+    <value>ホストが開始するのを待っています...</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameTitle" xml:space="preserve">
-    <value>CHANGE GAME NAME</value>
+    <value>ルーム名の変更</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Enter a new name for the multiplayer game...</value>
+    <value>新しいルーム名を入力...</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
-    <value>Enter a name...</value>
+    <value>ルーム名を入力...</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordTitle" xml:space="preserve">
-    <value>CHANGE GAME PASSWORD</value>
+    <value>ルームのパスワードの変更</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
-    <value>Enter a new password for the multiplayer game...</value>
+    <value>ルームの新しいパスワードを入力...</value>
   </data>
   <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
-    <value>Enter a password...</value>
+    <value>ルームのパスワードを入力...</value>
   </data>
   <data name="Screen_Multi_UploadUnsubmittedMapsetTitle" xml:space="preserve">
     <value>UPLOAD UNSUBMITTED MAPSET</value>
@@ -2300,7 +2300,7 @@ for other players to download?</value>
     <value>Brightness</value>
   </data>
   <data name="Screen_Editor_AudioDirection" xml:space="preserve">
-    <value>Audio Direction</value>
+    <value>音声の方向</value>
   </data>
   <data name="Screen_Editor_Filter" xml:space="preserve">
     <value>Filter</value>
@@ -2414,7 +2414,7 @@ for other players to download?</value>
     <value>Modding Discussion</value>
   </data>
   <data name="Screen_Editor_Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>オーディオ</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeed" xml:space="preserve">
     <value>Playback Speed</value>
