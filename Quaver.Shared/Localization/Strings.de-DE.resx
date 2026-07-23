@@ -2061,130 +2061,130 @@ hochladen, damit andere Spieler es herunterladen können?</value>
     <value>Maximale Songlänge</value>
   </data>
   <data name="Screen_Editor_File" xml:space="preserve">
-    <value>File</value>
+    <value>Datei</value>
   </data>
   <data name="Screen_Editor_NewSong" xml:space="preserve">
-    <value>New Song</value>
+    <value>Neuer Song</value>
   </data>
   <data name="Screen_Editor_SwitchDifficulty" xml:space="preserve">
-    <value>Switch Difficulty</value>
+    <value>Schwierigkeit wechseln</value>
   </data>
   <data name="Screen_Editor_CreateNewDifficulty" xml:space="preserve">
-    <value>Create New Difficulty</value>
+    <value>Neuen Schwierigkeit anlegen</value>
   </data>
   <data name="Screen_Editor_NewMap" xml:space="preserve">
-    <value>New Map</value>
+    <value>Neue Map</value>
   </data>
   <data name="Screen_Editor_CopyCurrentMap" xml:space="preserve">
-    <value>Copy Current Map</value>
+    <value>Aktuelle Map kopieren</value>
   </data>
   <data name="Screen_Editor_FromQuaFile" xml:space="preserve">
-    <value>From .qua File</value>
+    <value>Von .qua Datei</value>
   </data>
   <data name="Screen_Editor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Speichern</value>
   </data>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
-    <value>Refresh File Cache</value>
+    <value>Dateicache aktualisieren</value>
   </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
-    <value>Upload</value>
+    <value>Hochladen</value>
   </data>
   <data name="Screen_Editor_SubmitForRank" xml:space="preserve">
-    <value>Submit For Rank</value>
+    <value>Für Rang einreichen</value>
   </data>
   <data name="Screen_Editor_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportieren</value>
   </data>
   <data name="Screen_Editor_OpenSongFolder" xml:space="preserve">
-    <value>Open Song Folder</value>
+    <value>Song Ordner öffnen</value>
   </data>
   <data name="Screen_Editor_OpenQuaFile" xml:space="preserve">
-    <value>Open .qua File</value>
+    <value>Öffne .qua Datei</value>
   </data>
   <data name="Screen_Editor_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Beenden</value>
   </data>
   <data name="Screen_Editor_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Bearbeiten</value>
   </data>
   <data name="Screen_Editor_Undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Rückgängig</value>
   </data>
   <data name="Screen_Editor_Redo" xml:space="preserve">
-    <value>Redo</value>
+    <value>Wiederherstellen</value>
   </data>
   <data name="Screen_Editor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Kopieren</value>
   </data>
   <data name="Screen_Editor_Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Ausschneiden</value>
   </data>
   <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
-    <value>Paste (snapped)</value>
+    <value>Einfügen (eingerastet)</value>
   </data>
   <data name="Screen_Editor_PasteUnsnapped" xml:space="preserve">
-    <value>Paste (unsnapped)</value>
+    <value>Einfügen (nicht eingerastet)</value>
   </data>
   <data name="Screen_Editor_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Löschen</value>
   </data>
   <data name="Screen_Editor_SelectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Alles auswählen</value>
   </data>
   <data name="Screen_Editor_SelectAllInLayer" xml:space="preserve">
-    <value>Select All In Layer</value>
+    <value>Alles in Ebene auswählen</value>
   </data>
   <data name="Screen_Editor_FlipObjects" xml:space="preserve">
-    <value>Flip Objects</value>
+    <value>Objekte spiegeln</value>
   </data>
   <data name="Screen_Editor_SwapLanesOfObjects" xml:space="preserve">
-    <value>Swap Lanes of Objects</value>
+    <value>Lanes von Objekten tauschen</value>
   </data>
   <data name="Screen_Editor_Lane" xml:space="preserve">
     <value>Lane {0}</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
-    <value>Move Objects To Layer</value>
+    <value>Objekte zur Ebene verschieben</value>
   </data>
   <data name="Screen_Editor_DefaultLayer" xml:space="preserve">
-    <value>Default Layer</value>
+    <value>Standard Ebene</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToTimingGroup" xml:space="preserve">
-    <value>Move Objects To Timing Group</value>
+    <value>Objekte zur Timinggruppe verschieben</value>
   </data>
   <data name="Screen_Editor_DefaultTimingGroup" xml:space="preserve">
-    <value>Default Timing Group</value>
+    <value>Standard Timinggruppe</value>
   </data>
   <data name="Screen_Editor_EditMetadata" xml:space="preserve">
-    <value>Edit Metadata</value>
+    <value>Metadaten bearbeiten</value>
   </data>
   <data name="Screen_Editor_EditTimingPoints" xml:space="preserve">
-    <value>Edit Timing Points</value>
+    <value>Timing Punkte bearbeiten</value>
   </data>
   <data name="Screen_Editor_EditScrollVelocities" xml:space="preserve">
-    <value>Edit Scroll Velocities</value>
+    <value>Scrollgeschwindigkeiten bearbeiten</value>
   </data>
   <data name="Screen_Editor_EditScrollSpeedFactors" xml:space="preserve">
-    <value>Edit Scroll Speed Factors</value>
+    <value>Scrollgeschwindigkeit Faktoren bearbeiten</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImage" xml:space="preserve">
-    <value>Add Background Image</value>
+    <value>Hintergrundbild hinzufügen</value>
   </data>
   <data name="Screen_Editor_SetSongSelectPreviewTime" xml:space="preserve">
-    <value>Set Song Select Preview Time</value>
+    <value>Setze Songauswahl Vorschau Zeit fest  </value>
   </data>
   <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
-    <value>Enable AutoMod</value>
+    <value>Auto-Mod aktivieren</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
-    <value>Apply Offset To Map</value>
+    <value>Offset auf Map anwenden</value>
   </data>
   <data name="Screen_Editor_ResnapAllNotes" xml:space="preserve">
-    <value>Resnap All Notes</value>
+    <value>Alle Notes einrasten</value>
   </data>
   <data name="Screen_Editor_ResnapToCurrentSnap" xml:space="preserve">
-    <value>Resnap to currently selected snap (1/{0})</value>
+    <value>Zum aktuellen ausgewählten Snap neu einrasten (1/{0})</value>
   </data>
   <data name="Screen_Editor_ResnapToCommonSnaps" xml:space="preserve">
     <value>Resnap to 1/16 and 1/12 snaps</value>
@@ -2226,55 +2226,55 @@ hochladen, damit andere Spieler es herunterladen können?</value>
     <value>Composition Tools</value>
   </data>
   <data name="Screen_Editor_Layers" xml:space="preserve">
-    <value>Layers</value>
+    <value>Ebenen</value>
   </data>
   <data name="Screen_Editor_Hitsounds" xml:space="preserve">
     <value>Hitsounds</value>
   </data>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
-    <value>Display Gameplay Preview</value>
+    <value>Gameplay Vorschau anzeigen</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
-    <value>Reference Difficulty</value>
+    <value>Referenz Schwierigkeit</value>
   </data>
   <data name="Screen_Editor_None" xml:space="preserve">
-    <value>None</value>
+    <value>Keine</value>
   </data>
   <data name="Screen_Editor_EditorNoteSkin" xml:space="preserve">
-    <value>Editor NoteSkin</value>
+    <value>Editor Note Skin</value>
   </data>
   <data name="Screen_Editor_CurrentSkin" xml:space="preserve">
-    <value>Current skin</value>
+    <value>Aktueller Skin</value>
   </data>
   <data name="Screen_Editor_EditorDefaultSkin" xml:space="preserve">
-    <value>Editor Default Skin</value>
+    <value>Standard Skin für Editor</value>
   </data>
   <data name="Screen_Editor_CurrentDefaultSkin" xml:space="preserve">
-    <value>Current default skin</value>
+    <value>Aktueller Standard Skin</value>
   </data>
   <data name="Screen_Editor_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Hintergrundhelligkeit</value>
   </data>
   <data name="Screen_Editor_PlayfieldOpacity" xml:space="preserve">
-    <value>Playfield Opacity</value>
+    <value>Spielfeld Opazität</value>
   </data>
   <data name="Screen_Editor_BeatSnapDivisor" xml:space="preserve">
-    <value>Beat Snap Divisor</value>
+    <value>Beat Snap Unterteilung</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor" xml:space="preserve">
-    <value>Beat Snap Color</value>
+    <value>Beat Snap Farbe</value>
   </data>
   <data name="Screen_Editor_ScaleScrollSpeed" xml:space="preserve">
-    <value>Scale Scroll Speed</value>
+    <value>Scrollgeschwindigkeit skalieren</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsOnNearestTick" xml:space="preserve">
-    <value>Place Objects On Nearest Tick</value>
+    <value>Objekte auf den nächstgelegenen Teilstrich platzieren</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsWithTopRowNumbers" xml:space="preserve">
-    <value>Place Objects With Top Row Numbers</value>
+    <value>Objekte mit oberer Ziffernreihe platzieren</value>
   </data>
   <data name="Screen_Editor_SnapNotesWhenLiveMapping" xml:space="preserve">
-    <value>Snap Notes When Live Mapping</value>
+    <value>Snap Notes während Live Mapping</value>
   </data>
   <data name="Screen_Editor_SetLiveMappingOffset" xml:space="preserve">
     <value>Set Offset For Notes Placed During Live Mapping</value>
@@ -2286,46 +2286,46 @@ hochladen, damit andere Spieler es herunterladen können?</value>
     <value>Set Minimum Length Of Long Notes Placed During Live Mapping</value>
   </data>
   <data name="Screen_Editor_Waveform" xml:space="preserve">
-    <value>Waveform</value>
+    <value>Wellenform</value>
   </data>
   <data name="Screen_Editor_Visible" xml:space="preserve">
-    <value>Visible</value>
+    <value>Sichtbar</value>
   </data>
   <data name="Screen_Editor_Brightness" xml:space="preserve">
-    <value>Brightness</value>
+    <value>Helligkeit</value>
   </data>
   <data name="Screen_Editor_AudioDirection" xml:space="preserve">
-    <value>Audio Direction</value>
+    <value>Audiorichtung</value>
   </data>
   <data name="Screen_Editor_Filter" xml:space="preserve">
     <value>Filter</value>
   </data>
   <data name="Screen_Editor_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Farbe</value>
   </data>
   <data name="Screen_Editor_Spectrogram" xml:space="preserve">
-    <value>Spectrogram</value>
+    <value>Spektrogramm</value>
   </data>
   <data name="Screen_Editor_Precision" xml:space="preserve">
-    <value>Precision</value>
+    <value>Präzision</value>
   </data>
   <data name="Screen_Editor_FftSize" xml:space="preserve">
-    <value>FFT Size</value>
+    <value>FFT Größe</value>
   </data>
   <data name="Screen_Editor_FrequencyScale" xml:space="preserve">
-    <value>Frequency Scale</value>
+    <value>Frequenz Skala</value>
   </data>
   <data name="Screen_Editor_CutoffFactor" xml:space="preserve">
-    <value>Cutoff Factor</value>
+    <value>Schnittfaktor</value>
   </data>
   <data name="Screen_Editor_IntensityFactor" xml:space="preserve">
-    <value>Intensity Factor</value>
+    <value>Intensitätsfaktor</value>
   </data>
   <data name="Screen_Editor_MinimumFrequency" xml:space="preserve">
-    <value>Minimum Frequency</value>
+    <value>Mindestfrequenz</value>
   </data>
   <data name="Screen_Editor_MaximumFrequency" xml:space="preserve">
-    <value>Maximum Frequency</value>
+    <value>Höchstfrequenz</value>
   </data>
   <data name="Screen_Editor_LongNoteOpacity" xml:space="preserve">
     <value>Long Note Opacity</value>
@@ -3180,7 +3180,7 @@ hochladen, damit andere Spieler es herunterladen können?</value>
     <value>No notes resnapped</value>
   </data>
   <data name="Screen_Editor_PreviewTimeChanged" xml:space="preserve">
-    <value>Preview time changed to: {0}</value>
+    <value>Vorschauzeit geändert zu: {0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
     <value>Zoom In (Page Up)</value>
