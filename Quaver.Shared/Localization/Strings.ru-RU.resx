@@ -2058,346 +2058,346 @@
     <value>Мак. Длительность Песни</value>
   </data>
   <data name="Screen_Editor_File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="Screen_Editor_NewSong" xml:space="preserve">
-    <value>New Song</value>
+    <value>Новая Песня</value>
   </data>
   <data name="Screen_Editor_SwitchDifficulty" xml:space="preserve">
-    <value>Switch Difficulty</value>
+    <value>Изменить Сложность</value>
   </data>
   <data name="Screen_Editor_CreateNewDifficulty" xml:space="preserve">
-    <value>Create New Difficulty</value>
+    <value>Создать Новую Сложность</value>
   </data>
   <data name="Screen_Editor_NewMap" xml:space="preserve">
-    <value>New Map</value>
+    <value>Новая Карта</value>
   </data>
   <data name="Screen_Editor_CopyCurrentMap" xml:space="preserve">
-    <value>Copy Current Map</value>
+    <value>Скопировать Текущую Карту</value>
   </data>
   <data name="Screen_Editor_FromQuaFile" xml:space="preserve">
-    <value>From .qua File</value>
+    <value>Из .qua Файла</value>
   </data>
   <data name="Screen_Editor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Сохранить</value>
   </data>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
-    <value>Refresh File Cache</value>
+    <value>Обновить Кеш Файлов</value>
   </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
-    <value>Upload</value>
+    <value>Опубликовать</value>
   </data>
   <data name="Screen_Editor_SubmitForRank" xml:space="preserve">
-    <value>Submit For Rank</value>
+    <value>Отправить На Рейтинг</value>
   </data>
   <data name="Screen_Editor_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Экспортировать</value>
   </data>
   <data name="Screen_Editor_OpenSongFolder" xml:space="preserve">
-    <value>Open Song Folder</value>
+    <value>Открыть Папку с Песнями</value>
   </data>
   <data name="Screen_Editor_OpenQuaFile" xml:space="preserve">
-    <value>Open .qua File</value>
+    <value>Открыть .qua Файл</value>
   </data>
   <data name="Screen_Editor_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Выйти</value>
   </data>
   <data name="Screen_Editor_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="Screen_Editor_Undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Отменить</value>
   </data>
   <data name="Screen_Editor_Redo" xml:space="preserve">
-    <value>Redo</value>
+    <value>Восстановить</value>
   </data>
   <data name="Screen_Editor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Копировать</value>
   </data>
   <data name="Screen_Editor_Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Вырезать</value>
   </data>
   <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
-    <value>Paste (snapped)</value>
+    <value>Вставить (с привязкой)</value>
   </data>
   <data name="Screen_Editor_PasteUnsnapped" xml:space="preserve">
-    <value>Paste (unsnapped)</value>
+    <value>Вставить (без привязки)</value>
   </data>
   <data name="Screen_Editor_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="Screen_Editor_SelectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Выделить Всё</value>
   </data>
   <data name="Screen_Editor_SelectAllInLayer" xml:space="preserve">
-    <value>Select All In Layer</value>
+    <value>Выделить Всё в Слое</value>
   </data>
   <data name="Screen_Editor_FlipObjects" xml:space="preserve">
-    <value>Flip Objects</value>
+    <value>Отразить Объекты</value>
   </data>
   <data name="Screen_Editor_SwapLanesOfObjects" xml:space="preserve">
-    <value>Swap Lanes of Objects</value>
+    <value>Поменять Дорожки с Объектами</value>
   </data>
   <data name="Screen_Editor_Lane" xml:space="preserve">
-    <value>Lane {0}</value>
+    <value>Дорожка {0}</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
-    <value>Move Objects To Layer</value>
+    <value>Переместить Объекты в Слой</value>
   </data>
   <data name="Screen_Editor_DefaultLayer" xml:space="preserve">
-    <value>Default Layer</value>
+    <value>Стандартный Слой</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToTimingGroup" xml:space="preserve">
-    <value>Move Objects To Timing Group</value>
+    <value>Переместить Объекты в Группу Тайминга</value>
   </data>
   <data name="Screen_Editor_DefaultTimingGroup" xml:space="preserve">
-    <value>Default Timing Group</value>
+    <value>Стандартная Группа Тайминга</value>
   </data>
   <data name="Screen_Editor_EditMetadata" xml:space="preserve">
-    <value>Edit Metadata</value>
+    <value>Редактировать Метаданные</value>
   </data>
   <data name="Screen_Editor_EditTimingPoints" xml:space="preserve">
-    <value>Edit Timing Points</value>
+    <value>Редактировать Точки Тайминга</value>
   </data>
   <data name="Screen_Editor_EditScrollVelocities" xml:space="preserve">
-    <value>Edit Scroll Velocities</value>
+    <value>Редактировать Скорости Прокрутки</value>
   </data>
   <data name="Screen_Editor_EditScrollSpeedFactors" xml:space="preserve">
-    <value>Edit Scroll Speed Factors</value>
+    <value>Редактировать Коэффициенты Скорости Прокрутки</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImage" xml:space="preserve">
-    <value>Add Background Image</value>
+    <value>Добавить Фоновое Изображение</value>
   </data>
   <data name="Screen_Editor_SetSongSelectPreviewTime" xml:space="preserve">
-    <value>Set Song Select Preview Time</value>
+    <value>Установить Время Предпросмотра Песни</value>
   </data>
   <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
-    <value>Enable AutoMod</value>
+    <value>Включить Автомодерацию</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
-    <value>Apply Offset To Map</value>
+    <value>Применить Смещение для Карты</value>
   </data>
   <data name="Screen_Editor_ResnapAllNotes" xml:space="preserve">
-    <value>Resnap All Notes</value>
+    <value>Изменить Привязку Всех Нот</value>
   </data>
   <data name="Screen_Editor_ResnapToCurrentSnap" xml:space="preserve">
-    <value>Resnap to currently selected snap (1/{0})</value>
+    <value>Изменить Привязку на Выбранную (1/{0})</value>
   </data>
   <data name="Screen_Editor_ResnapToCommonSnaps" xml:space="preserve">
-    <value>Resnap to 1/16 and 1/12 snaps</value>
+    <value>Изменить Привязку на 1/16 и 1/12 </value>
   </data>
   <data name="Screen_Editor_ResnapToCustomDivisions" xml:space="preserve">
-    <value>Resnap to custom divisions</value>
+    <value>Изменить Привязку на Пользовательскую</value>
   </data>
   <data name="Screen_Editor_Resnap" xml:space="preserve">
-    <value>Resnap</value>
+    <value>Изменить Привязку</value>
   </data>
   <data name="Screen_Editor_ResnapSelectedNotes" xml:space="preserve">
-    <value>Resnap Selected Notes</value>
+    <value>Изменить Привязку Выбранных Нот</value>
   </data>
   <data name="Screen_Editor_ApplyModifierToMap" xml:space="preserve">
-    <value>Apply Modifier To Map</value>
+    <value>Применить Модификатор к Карте</value>
   </data>
   <data name="Screen_Editor_Mirror" xml:space="preserve">
-    <value>Mirror</value>
+    <value>Зеркало</value>
   </data>
   <data name="Screen_Editor_NoLongNotes" xml:space="preserve">
-    <value>No Long Notes</value>
+    <value>Без Длинных Нот</value>
   </data>
   <data name="Screen_Editor_FullLongNotes" xml:space="preserve">
-    <value>Full Long Notes</value>
+    <value>Все Ноты - Длинные</value>
   </data>
   <data name="Screen_Editor_Inverse" xml:space="preserve">
-    <value>Inverse</value>
+    <value>Инверсия</value>
   </data>
   <data name="Screen_Editor_View" xml:space="preserve">
-    <value>View</value>
+    <value>Вид</value>
   </data>
   <data name="Screen_Editor_Panels" xml:space="preserve">
-    <value>Panels</value>
+    <value>Панели</value>
   </data>
   <data name="Screen_Editor_Details" xml:space="preserve">
-    <value>Details</value>
+    <value>Детали</value>
   </data>
   <data name="Screen_Editor_CompositionTools" xml:space="preserve">
-    <value>Composition Tools</value>
+    <value>Инструменты Композиции</value>
   </data>
   <data name="Screen_Editor_Layers" xml:space="preserve">
-    <value>Layers</value>
+    <value>Слои</value>
   </data>
   <data name="Screen_Editor_Hitsounds" xml:space="preserve">
-    <value>Hitsounds</value>
+    <value>Звуки Попаданий</value>
   </data>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
-    <value>Display Gameplay Preview</value>
+    <value>Отображать Геймплей Игры</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
-    <value>Reference Difficulty</value>
+    <value>Сравнить Сложность</value>
   </data>
   <data name="Screen_Editor_None" xml:space="preserve">
-    <value>None</value>
+    <value>Нет</value>
   </data>
   <data name="Screen_Editor_EditorNoteSkin" xml:space="preserve">
-    <value>Editor NoteSkin</value>
+    <value>Скин Редактора</value>
   </data>
   <data name="Screen_Editor_CurrentSkin" xml:space="preserve">
-    <value>Current skin</value>
+    <value>Текущий Скин</value>
   </data>
   <data name="Screen_Editor_EditorDefaultSkin" xml:space="preserve">
-    <value>Editor Default Skin</value>
+    <value>Стандартный Скин Редактора</value>
   </data>
   <data name="Screen_Editor_CurrentDefaultSkin" xml:space="preserve">
-    <value>Current default skin</value>
+    <value>Текущий Стандартный Скин</value>
   </data>
   <data name="Screen_Editor_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Яркость Фона</value>
   </data>
   <data name="Screen_Editor_PlayfieldOpacity" xml:space="preserve">
-    <value>Playfield Opacity</value>
+    <value>Прозрачность Игрового Поля</value>
   </data>
   <data name="Screen_Editor_BeatSnapDivisor" xml:space="preserve">
-    <value>Beat Snap Divisor</value>
+    <value>Делитель Привязки Бита</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor" xml:space="preserve">
-    <value>Beat Snap Color</value>
+    <value>Цвет Привязки Бита</value>
   </data>
   <data name="Screen_Editor_ScaleScrollSpeed" xml:space="preserve">
-    <value>Scale Scroll Speed</value>
+    <value>Масштабирование Скорости Прокрутки</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsOnNearestTick" xml:space="preserve">
-    <value>Place Objects On Nearest Tick</value>
+    <value>Размещать Объекты на Ближайшем Тике</value>
   </data>
   <data name="Screen_Editor_PlaceObjectsWithTopRowNumbers" xml:space="preserve">
-    <value>Place Objects With Top Row Numbers</value>
+    <value>Размещать Объекты с помощью Клавиш Верхнего Числового Ряда</value>
   </data>
   <data name="Screen_Editor_SnapNotesWhenLiveMapping" xml:space="preserve">
-    <value>Snap Notes When Live Mapping</value>
+    <value>Привязка Нот во время Живого Маппинга</value>
   </data>
   <data name="Screen_Editor_SetLiveMappingOffset" xml:space="preserve">
-    <value>Set Offset For Notes Placed During Live Mapping</value>
+    <value>Установить Смещение для Нот, размещённых во время Живого Маппинга</value>
   </data>
   <data name="Screen_Editor_PlaceLongNotesWhenLiveMapping" xml:space="preserve">
-    <value>Place Long Notes When Live Mapping</value>
+    <value>Размещать Длинные Ноты во время Живого Маппинга</value>
   </data>
   <data name="Screen_Editor_SetLiveMappingLongNoteMinimumLength" xml:space="preserve">
-    <value>Set Minimum Length Of Long Notes Placed During Live Mapping</value>
+    <value>Установить Минимальную Длину Длинных Нот, размещённых во время Живого Маппинга</value>
   </data>
   <data name="Screen_Editor_Waveform" xml:space="preserve">
-    <value>Waveform</value>
+    <value>Звуковая Волна</value>
   </data>
   <data name="Screen_Editor_Visible" xml:space="preserve">
-    <value>Visible</value>
+    <value>Видимая</value>
   </data>
   <data name="Screen_Editor_Brightness" xml:space="preserve">
-    <value>Brightness</value>
+    <value>Яркость</value>
   </data>
   <data name="Screen_Editor_AudioDirection" xml:space="preserve">
-    <value>Audio Direction</value>
+    <value>Направление Звука</value>
   </data>
   <data name="Screen_Editor_Filter" xml:space="preserve">
-    <value>Filter</value>
+    <value>Фильтр</value>
   </data>
   <data name="Screen_Editor_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Цвет</value>
   </data>
   <data name="Screen_Editor_Spectrogram" xml:space="preserve">
-    <value>Spectrogram</value>
+    <value>Спектрограмма</value>
   </data>
   <data name="Screen_Editor_Precision" xml:space="preserve">
-    <value>Precision</value>
+    <value>Точность</value>
   </data>
   <data name="Screen_Editor_FftSize" xml:space="preserve">
-    <value>FFT Size</value>
+    <value>Размер FFT</value>
   </data>
   <data name="Screen_Editor_FrequencyScale" xml:space="preserve">
-    <value>Frequency Scale</value>
+    <value>Шкала Частот</value>
   </data>
   <data name="Screen_Editor_CutoffFactor" xml:space="preserve">
-    <value>Cutoff Factor</value>
+    <value>Коэффициент Отсечения</value>
   </data>
   <data name="Screen_Editor_IntensityFactor" xml:space="preserve">
-    <value>Intensity Factor</value>
+    <value>Коэффициент Интенсивности</value>
   </data>
   <data name="Screen_Editor_MinimumFrequency" xml:space="preserve">
-    <value>Minimum Frequency</value>
+    <value>Минимальная Частота</value>
   </data>
   <data name="Screen_Editor_MaximumFrequency" xml:space="preserve">
-    <value>Maximum Frequency</value>
+    <value>Максимальная Частота</value>
   </data>
   <data name="Screen_Editor_LongNoteOpacity" xml:space="preserve">
-    <value>Long Note Opacity</value>
+    <value>Прозрачность Длинных Нот</value>
   </data>
   <data name="Screen_Editor_CenterObjects" xml:space="preserve">
-    <value>Center Objects</value>
+    <value>Центрировать Объекты</value>
   </data>
   <data name="Screen_Editor_ViewLayers" xml:space="preserve">
-    <value>View Layers</value>
+    <value>Просмотреть Слои</value>
   </data>
   <data name="Screen_Editor_ViewTimingGroups" xml:space="preserve">
-    <value>View Timing Groups</value>
+    <value>Просмотреть Группы Тайминга</value>
   </data>
   <data name="Screen_Editor_ColorSvLinesByTimingGroup" xml:space="preserve">
-    <value>Color SV Lines By Timing Group</value>
+    <value>Красить Линии Скорости Прокрутки по Группам Тайминга</value>
   </data>
   <data name="Screen_Editor_TestPlayModifiers" xml:space="preserve">
-    <value>Test Play Modifiers</value>
+    <value>Тестовые Модификаторы Игры</value>
   </data>
   <data name="Screen_Editor_Tools" xml:space="preserve">
-    <value>Tools</value>
+    <value>Инструменты</value>
   </data>
   <data name="Screen_Editor_ResetWindowLayout" xml:space="preserve">
-    <value>Reset Window Layout</value>
+    <value>Сбросить Расположение Окон</value>
   </data>
   <data name="Screen_Editor_WindowLayoutResetOnNextOpen" xml:space="preserve">
-    <value>The window layout will be reset the next time you open the editor!</value>
+    <value>Расположение окон будет сброшено при следующем открытии редактора!</value>
   </data>
   <data name="Screen_Editor_Plugins" xml:space="preserve">
-    <value>Plugins</value>
+    <value>Плагины</value>
   </data>
   <data name="Screen_Editor_Local" xml:space="preserve">
-    <value>Local</value>
+    <value>Локальные</value>
   </data>
   <data name="Screen_Editor_Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Включено</value>
   </data>
   <data name="Screen_Editor_UploadToWorkshop" xml:space="preserve">
-    <value>Upload To Workshop</value>
+    <value>Загрузить в Мастерскую</value>
   </data>
   <data name="Screen_Editor_UploadingPluginToWorkshop" xml:space="preserve">
-    <value>Uploading plugin to the Steam Workshop...</value>
+    <value>Загрузка плагина в Steam Workshop...</value>
   </data>
   <data name="Screen_Editor_PluginUploadedToWorkshop" xml:space="preserve">
-    <value>Successfully uploaded plugin to the workshop!</value>
+    <value>Плагин успешно загружен в мастерскую!</value>
   </data>
   <data name="Screen_Editor_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>Открыть Папку</value>
   </data>
   <data name="Screen_Editor_NoPluginsInstalled" xml:space="preserve">
-    <value>No Plugins Installed</value>
+    <value>Нет Установленных Плагинов</value>
   </data>
   <data name="Screen_Editor_SteamWorkshop" xml:space="preserve">
-    <value>Steam Workshop</value>
+    <value>Мастерская Steam</value>
   </data>
   <data name="Screen_Editor_Help" xml:space="preserve">
-    <value>Help</value>
+    <value>Помощь</value>
   </data>
   <data name="Screen_Editor_Wiki" xml:space="preserve">
-    <value>Wiki</value>
+    <value>Вики</value>
   </data>
   <data name="Screen_Editor_GettingStarted" xml:space="preserve">
-    <value>Getting Started</value>
+    <value>Начало Работы</value>
   </data>
   <data name="Screen_Editor_EditorFunctions" xml:space="preserve">
-    <value>Editor Functions</value>
+    <value>Функции Редактора</value>
   </data>
   <data name="Screen_Editor_RankingCriteria" xml:space="preserve">
-    <value>Ranking Criteria</value>
+    <value>Критерии Рейтинга</value>
   </data>
   <data name="Screen_Editor_RankingProcess" xml:space="preserve">
-    <value>Ranking Process</value>
+    <value>Процесс Рейтинга</value>
   </data>
   <data name="Screen_Editor_Web" xml:space="preserve">
-    <value>Web</value>
+    <value>Веб</value>
   </data>
   <data name="Screen_Editor_ViewOnlineListing" xml:space="preserve">
     <value>View Online Listing</value>
