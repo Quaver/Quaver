@@ -2059,169 +2059,169 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Maksimal sanglængde</value>
   </data>
   <data name="Screen_Editor_File" xml:space="preserve">
-    <value>File</value>
+    <value>Fil</value>
   </data>
   <data name="Screen_Editor_NewSong" xml:space="preserve">
-    <value>New Song</value>
+    <value>Ny sang</value>
   </data>
   <data name="Screen_Editor_SwitchDifficulty" xml:space="preserve">
-    <value>Switch Difficulty</value>
+    <value>Skift sværhedsgrad</value>
   </data>
   <data name="Screen_Editor_CreateNewDifficulty" xml:space="preserve">
-    <value>Create New Difficulty</value>
+    <value>Ny sværhedsgrad</value>
   </data>
   <data name="Screen_Editor_NewMap" xml:space="preserve">
-    <value>New Map</value>
+    <value>Nyt map</value>
   </data>
   <data name="Screen_Editor_CopyCurrentMap" xml:space="preserve">
-    <value>Copy Current Map</value>
+    <value>Kopier nuværende map</value>
   </data>
   <data name="Screen_Editor_FromQuaFile" xml:space="preserve">
-    <value>From .qua File</value>
+    <value>Fra .qua-fil</value>
   </data>
   <data name="Screen_Editor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Gem</value>
   </data>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
-    <value>Refresh File Cache</value>
+    <value>Opdater fil-cache</value>
   </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
     <value>Upload</value>
   </data>
   <data name="Screen_Editor_SubmitForRank" xml:space="preserve">
-    <value>Submit For Rank</value>
+    <value>Indsend til rangering</value>
   </data>
   <data name="Screen_Editor_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Eksporter</value>
   </data>
   <data name="Screen_Editor_OpenSongFolder" xml:space="preserve">
-    <value>Open Song Folder</value>
+    <value>Åbn sangmappe</value>
   </data>
   <data name="Screen_Editor_OpenQuaFile" xml:space="preserve">
-    <value>Open .qua File</value>
+    <value>Åbn .qua-fil</value>
   </data>
   <data name="Screen_Editor_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Afslut</value>
   </data>
   <data name="Screen_Editor_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Rediger</value>
   </data>
   <data name="Screen_Editor_Undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Fortryd</value>
   </data>
   <data name="Screen_Editor_Redo" xml:space="preserve">
-    <value>Redo</value>
+    <value>Gendan</value>
   </data>
   <data name="Screen_Editor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Kopier</value>
   </data>
   <data name="Screen_Editor_Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Klip</value>
   </data>
   <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
-    <value>Paste (snapped)</value>
+    <value>Indsæt (snapped)</value>
   </data>
   <data name="Screen_Editor_PasteUnsnapped" xml:space="preserve">
-    <value>Paste (unsnapped)</value>
+    <value>Indsæt (unsnapped)</value>
   </data>
   <data name="Screen_Editor_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Slet</value>
   </data>
   <data name="Screen_Editor_SelectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Vælg alle</value>
   </data>
   <data name="Screen_Editor_SelectAllInLayer" xml:space="preserve">
-    <value>Select All In Layer</value>
+    <value>Vælg alle i layer</value>
   </data>
   <data name="Screen_Editor_FlipObjects" xml:space="preserve">
-    <value>Flip Objects</value>
+    <value>Spejlvend objekter</value>
   </data>
   <data name="Screen_Editor_SwapLanesOfObjects" xml:space="preserve">
-    <value>Swap Lanes of Objects</value>
+    <value>Byt objekters lanes</value>
   </data>
   <data name="Screen_Editor_Lane" xml:space="preserve">
     <value>Lane {0}</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
-    <value>Move Objects To Layer</value>
+    <value>Flyt objekter til layer</value>
   </data>
   <data name="Screen_Editor_DefaultLayer" xml:space="preserve">
-    <value>Default Layer</value>
+    <value>Standardlayer</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToTimingGroup" xml:space="preserve">
     <value>Move Objects To Timing Group</value>
   </data>
   <data name="Screen_Editor_DefaultTimingGroup" xml:space="preserve">
-    <value>Default Timing Group</value>
+    <value>Standard-timinggruppe</value>
   </data>
   <data name="Screen_Editor_EditMetadata" xml:space="preserve">
-    <value>Edit Metadata</value>
+    <value>Rediger metadata</value>
   </data>
   <data name="Screen_Editor_EditTimingPoints" xml:space="preserve">
-    <value>Edit Timing Points</value>
+    <value>Rediger timing points</value>
   </data>
   <data name="Screen_Editor_EditScrollVelocities" xml:space="preserve">
-    <value>Edit Scroll Velocities</value>
+    <value>Rediger scroll velocities</value>
   </data>
   <data name="Screen_Editor_EditScrollSpeedFactors" xml:space="preserve">
     <value>Edit Scroll Speed Factors</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImage" xml:space="preserve">
-    <value>Add Background Image</value>
+    <value>Tilføj baggrundsbillede</value>
   </data>
   <data name="Screen_Editor_SetSongSelectPreviewTime" xml:space="preserve">
-    <value>Set Song Select Preview Time</value>
+    <value>Indstil tidspunkt for forhåndsvisning</value>
   </data>
   <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
-    <value>Enable AutoMod</value>
+    <value>Aktiver automod</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
-    <value>Apply Offset To Map</value>
+    <value>Tilføj offset til map</value>
   </data>
   <data name="Screen_Editor_ResnapAllNotes" xml:space="preserve">
-    <value>Resnap All Notes</value>
+    <value>Resnap alle noder</value>
   </data>
   <data name="Screen_Editor_ResnapToCurrentSnap" xml:space="preserve">
-    <value>Resnap to currently selected snap (1/{0})</value>
+    <value>Resnap til det valgte snap (1/{0}</value>
   </data>
   <data name="Screen_Editor_ResnapToCommonSnaps" xml:space="preserve">
-    <value>Resnap to 1/16 and 1/12 snaps</value>
+    <value>Resnap til 1/16 og 1/12 snaps</value>
   </data>
   <data name="Screen_Editor_ResnapToCustomDivisions" xml:space="preserve">
-    <value>Resnap to custom divisions</value>
+    <value>Resnap til brugerdefinerede snaps</value>
   </data>
   <data name="Screen_Editor_Resnap" xml:space="preserve">
     <value>Resnap</value>
   </data>
   <data name="Screen_Editor_ResnapSelectedNotes" xml:space="preserve">
-    <value>Resnap Selected Notes</value>
+    <value>Resnap valgte noder</value>
   </data>
   <data name="Screen_Editor_ApplyModifierToMap" xml:space="preserve">
-    <value>Apply Modifier To Map</value>
+    <value>Anvend modifikation på map</value>
   </data>
   <data name="Screen_Editor_Mirror" xml:space="preserve">
     <value>Mirror</value>
   </data>
   <data name="Screen_Editor_NoLongNotes" xml:space="preserve">
-    <value>No Long Notes</value>
+    <value>Ingen lange noder</value>
   </data>
   <data name="Screen_Editor_FullLongNotes" xml:space="preserve">
-    <value>Full Long Notes</value>
+    <value>Fuld lange noder</value>
   </data>
   <data name="Screen_Editor_Inverse" xml:space="preserve">
     <value>Inverse</value>
   </data>
   <data name="Screen_Editor_View" xml:space="preserve">
-    <value>View</value>
+    <value>Vis</value>
   </data>
   <data name="Screen_Editor_Panels" xml:space="preserve">
-    <value>Panels</value>
+    <value>Paneler</value>
   </data>
   <data name="Screen_Editor_Details" xml:space="preserve">
-    <value>Details</value>
+    <value>Detaljer</value>
   </data>
   <data name="Screen_Editor_CompositionTools" xml:space="preserve">
-    <value>Composition Tools</value>
+    <value>Kompositionsværktøjer</value>
   </data>
   <data name="Screen_Editor_Layers" xml:space="preserve">
     <value>Layers</value>
@@ -2230,31 +2230,31 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Hitsounds</value>
   </data>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
-    <value>Display Gameplay Preview</value>
+    <value>Vis forhåndsvisning af gameplay</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
-    <value>Reference Difficulty</value>
+    <value>Referencesværhedsgrad</value>
   </data>
   <data name="Screen_Editor_None" xml:space="preserve">
     <value>None</value>
   </data>
   <data name="Screen_Editor_EditorNoteSkin" xml:space="preserve">
-    <value>Editor NoteSkin</value>
+    <value>Editor nodeskin</value>
   </data>
   <data name="Screen_Editor_CurrentSkin" xml:space="preserve">
-    <value>Current skin</value>
+    <value>Nuværende skin</value>
   </data>
   <data name="Screen_Editor_EditorDefaultSkin" xml:space="preserve">
-    <value>Editor Default Skin</value>
+    <value>Editor standardskin</value>
   </data>
   <data name="Screen_Editor_CurrentDefaultSkin" xml:space="preserve">
-    <value>Current default skin</value>
+    <value>Nuværende standardskin</value>
   </data>
   <data name="Screen_Editor_BackgroundBrightness" xml:space="preserve">
-    <value>Background Brightness</value>
+    <value>Baggrundslysstyrke</value>
   </data>
   <data name="Screen_Editor_PlayfieldOpacity" xml:space="preserve">
-    <value>Playfield Opacity</value>
+    <value>Gennemsigtighed af spillefeltet</value>
   </data>
   <data name="Screen_Editor_BeatSnapDivisor" xml:space="preserve">
     <value>Beat Snap Divisor</value>
@@ -2284,13 +2284,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Set Minimum Length Of Long Notes Placed During Live Mapping</value>
   </data>
   <data name="Screen_Editor_Waveform" xml:space="preserve">
-    <value>Waveform</value>
+    <value>Bølgeform</value>
   </data>
   <data name="Screen_Editor_Visible" xml:space="preserve">
     <value>Visible</value>
   </data>
   <data name="Screen_Editor_Brightness" xml:space="preserve">
-    <value>Brightness</value>
+    <value>Lysstyrke</value>
   </data>
   <data name="Screen_Editor_AudioDirection" xml:space="preserve">
     <value>Audio Direction</value>
@@ -2302,7 +2302,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Color</value>
   </data>
   <data name="Screen_Editor_Spectrogram" xml:space="preserve">
-    <value>Spectrogram</value>
+    <value>Spektrogram</value>
   </data>
   <data name="Screen_Editor_Precision" xml:space="preserve">
     <value>Precision</value>
@@ -2473,7 +2473,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>There were manual changes detected to the .qua file.&#xA;Would you like to reload the editor?</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
-    <value>Enter a value to apply an offset to all of your map's objects, timing points,&#xA; and scroll velocities...</value>
+    <value>Indtast en værdi for at anvende et offset på alle mappets objekter, timing points og scroll velocities</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
     <value>Enter an offset to apply to your map...</value>
@@ -2623,10 +2623,10 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>An error occurred while submitting your mapset for rank.</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
-    <value>When set to ON, A BPM change will also change the Scroll Velocity.&#xA;For instance, going from 120BPM to 240BPM effectively creates&#xA;an implicit 2x Scroll Velocity multiplier starting from the beginning&#xA;of that BPM change until the next. Scroll Velocity is still applied.</value>
+    <value>Når denne indstilling er slået til, vil en ændring i tempoet også ændre hastigheden på scroll velocity. For eksempel vil en ændring i tempo fra 120 til 240 BPM medføre en implicit fordobling af scroll velocity, fra begyndelsen af ændringen, indtil den næste endring i tempo. Scroll velocity anvendes stadig hvis du slår denne indstilling fra.</value>
   </data>
   <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
-    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll&#xA;Velocity changes, you can safely ignore this option. The current LN renderer places&#xA;the head and tail to the earliest and latest positions reached, respectively. The old LN&#xA;renderer instead places them both wherever the playfield happens to be at the time.</value>
+    <value>Når denne indstilling er slået til, anvendes den gamle LN-renderer. Hvis dit map ikke har nogle scroll velocity ændringer, kan du ignorere denne indstilling. Den nuværende LN-renderer placerer den lange nodes hoved ved ved den tidligste position, og dens hale ved den seneste position. Den gamle LN-renderer placerer både hovedet og halen, hvorend spillefeltet er på det givne tidspunkt.</value>
   </data>
   <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
     <value>Copy all of the metadata from this difficulty to all of the difficulties from this mapset</value>
@@ -2839,13 +2839,13 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Hide Lines</value>
   </data>
   <data name="Screen_Editor_ScrollVelocityEditor" xml:space="preserve">
-    <value>Scroll Velocity Editor</value>
+    <value>Scroll velocity editor</value>
   </data>
   <data name="Screen_Editor_ScrollVelocityHelp" xml:space="preserve">
-    <value>Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.</value>
+    <value>Scroll velocities (SV) giver dig mulighed for at ændre hastigheden og retningen som objekterne bevæger sig, dynamisk.</value>
   </data>
   <data name="Screen_Editor_ScrollVelocityInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual SV point to edit it and double-click to go to its position in time.</value>
+    <value>Du kan klikke på et individuelt SV-point for at redigere det, og dobbeltklikke for at gå til dets position.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>(Difference from SF)</value>
@@ -3103,7 +3103,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>Metadata</value>
   </data>
   <data name="Screen_Editor_ScrollVelocities" xml:space="preserve">
-    <value>Scroll Velocities</value>
+    <value>Scroll velocities</value>
   </data>
   <data name="Screen_Editor_TimingPoints" xml:space="preserve">
     <value>Timing Points</value>
@@ -3220,7 +3220,7 @@ Du kan bruge filtrerne nedenfor til at indsnævre din søgning.</value>
     <value>This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.</value>
   </data>
   <data name="Screen_Editor_ScrollVelocitiesSelected" xml:space="preserve">
-    <value>{0} scroll velocities selected</value>
+    <value>{0} scroll velocities valgt</value>
   </data>
   <data name="Screen_Editor_BpmCalculator" xml:space="preserve">
     <value>BPM Calculator</value>
