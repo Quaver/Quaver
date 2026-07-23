@@ -125,7 +125,7 @@ namespace Quaver.Shared.Online
                     // Exit out to the main menu
                     game.IsMouseVisible = false;
                     game.GlobalUserInterface.Cursor.Show(1);
-                    game.CurrentScreen.Exit(() => new MainMenuScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     AudioTrack.AllowPlayback = true;
                 }
 

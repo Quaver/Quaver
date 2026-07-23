@@ -61,7 +61,7 @@ namespace Quaver.Shared.Screens.Multi
         {
             if (OnlineManager.CurrentGame == null)
             {
-                Exit(() => new MultiplayerLobbyScreen());
+                Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                 return;
             }
 

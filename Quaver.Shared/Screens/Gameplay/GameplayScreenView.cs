@@ -827,7 +827,7 @@ namespace Quaver.Shared.Screens.Gameplay
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
                             ModManager.RemoveMod(ModIdentifier.Paused);
 
-                        return new SelectionScreen();
+                        return QuaverScreenFactory.CreateSelection();
                     }
 
                     if (Screen.InReplayMode && Screen.LoadedReplay != null)

@@ -26,7 +26,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
                 return;
             }
 
-            game.CurrentScreen.Exit(() => new DownloadingScreen(game.CurrentScreen.Type));
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateDownloading(game.CurrentScreen.Type));
         }
     }
 }

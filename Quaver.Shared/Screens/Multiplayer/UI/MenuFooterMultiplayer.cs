@@ -145,7 +145,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
-                screen?.Exit(() => new SelectionScreen(), 0);
+                screen?.Exit(() => QuaverScreenFactory.CreateSelection(), 0);
             })
             {
                 DestroyIfParentIsNull = false

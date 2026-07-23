@@ -25,7 +25,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             var game = (QuaverGame) GameBase.Game;
             if (OnlineManager.CurrentGame != null)
                 OnlineManager.LeaveGame();
-            game.CurrentScreen.Exit(() => new MainMenuScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
         }
     }
 }

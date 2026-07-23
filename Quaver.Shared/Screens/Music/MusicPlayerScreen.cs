@@ -106,7 +106,7 @@ namespace Quaver.Shared.Screens.Music
             DiscordHelper.Presence.PartyMax = 0;
             DiscordHelper.UpdatePresence();
 
-            Exit(() => new MainMenuScreen());
+            Exit(() => QuaverScreenFactory.CreateMainMenu());
         }
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace Quaver.Shared.Screens.Main.Cheats
         protected override void OnActivated()
         {
             var game = (QuaverGame)GameBase.Game;
-            game.CurrentScreen.Exit(() => new TheaterScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateTheater());
         }
     }
 }

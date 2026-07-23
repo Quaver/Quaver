@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Tournament
             if (TournamentScreen.GameplayScreens.Count == 0)
             {
                 OnlineManager.LeaveGame();
-                TournamentScreen.Exit(() => new MultiplayerLobbyScreen());
+                TournamentScreen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
             }
 
             foreach (var gameplayScreen in TournamentScreen.GameplayScreens)

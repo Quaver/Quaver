@@ -259,7 +259,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
                     {
-                        new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder")
+                        new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder"),
+                        new OptionsItemGenerateSkinV2Config(containerRect, "Generate Editable skin.yml")
                     }),
                     new OptionsSubcategory("Sharing", new List<OptionsItem>()
                     {

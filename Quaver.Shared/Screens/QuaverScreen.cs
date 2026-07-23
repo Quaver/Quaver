@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens
 
         /// <summary>
         /// </summary>
-        public LoggedInUserDropdown ActiveLoggedInUserDropdown { get; private set; }
+        public LoggedInUserDropdownBase ActiveLoggedInUserDropdown { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -223,7 +223,7 @@ namespace Quaver.Shared.Screens
 
         /// <summary>
         /// </summary>
-        public void ActivateLoggedInUserDropdown(LoggedInUserDropdown dropdown, ScalableVector2 position)
+        public void ActivateLoggedInUserDropdown(LoggedInUserDropdownBase dropdown, ScalableVector2 position)
         {
             if (ActiveLoggedInUserDropdown != null)
             {

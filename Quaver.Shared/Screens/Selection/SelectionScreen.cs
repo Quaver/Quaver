@@ -42,7 +42,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection
 {
-    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel
+    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel, ISelectionScreenState
     {
         /// <inheritdoc />
         /// <summary>
@@ -73,6 +73,10 @@ namespace Quaver.Shared.Screens.Selection
         ///     The currently active scroll container on the right-side of the screen
         /// </summary>
         public Bindable<SelectScrollContainerType> ActiveScrollContainer { get; private set; }
+
+        SelectScrollContainerType ISelectionScreenState.ActiveScrollContainer => ActiveScrollContainer.Value;
+
+        SelectContainerPanel ISelectionScreenState.ActiveLeftPanel => ActiveLeftPanel.Value;
 
         /// <summary>
         /// </summary>
@@ -708,7 +712,7 @@ namespace Quaver.Shared.Screens.Selection
                     return new MultiplayerGameScreen();
                 }
 
-                return new MainMenuScreen();
+                return QuaverScreenFactory.CreateMainMenu();
             });
         }
 

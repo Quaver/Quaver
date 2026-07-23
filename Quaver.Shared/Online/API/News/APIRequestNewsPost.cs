@@ -14,9 +14,20 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Online.API.News
 {
+    public enum NewsThumbnailType
+    {
+        Ingame,
+        Website
+    }
+
     public class APIRequestNewsFeed : APIRequest<APIResponseNewsFeed>
     {
         private const string URL = "https://blog.quavergame.com/feed.json";
+
+        private NewsThumbnailType ThumbnailType { get; }
+
+        public APIRequestNewsFeed(NewsThumbnailType thumbnailType = NewsThumbnailType.Ingame) =>
+            ThumbnailType = thumbnailType;
 
         public override APIResponseNewsFeed ExecuteRequest()
         {
@@ -54,14 +65,18 @@ namespace Quaver.Shared.Online.API.News
 
             var latestPost = feed.Items.First();
 
-            if (string.IsNullOrEmpty(latestPost.IngameThumbnail))
+            var thumbnail = ThumbnailType == NewsThumbnailType.Website
+                ? latestPost.WebsiteThumbnail
+                : latestPost.IngameThumbnail;
+
+            if (string.IsNullOrEmpty(thumbnail))
                 return;
 
             try
             {
                 using (var webClient = new WebClient())
                 {
-                    using (var mem = new MemoryStream(webClient.DownloadData(latestPost.IngameThumbnail)))
+                    using (var mem = new MemoryStream(webClient.DownloadData(thumbnail)))
                         feed.RecentPostBanner = AssetLoader.LoadTexture2D(mem);
                 }
             }

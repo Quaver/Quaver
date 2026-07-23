@@ -132,7 +132,7 @@ namespace Quaver.Shared.Screens.Importing
                 Exit(() =>
                 {
                     if (ComingFromSelect)
-                        return new SelectionScreen();
+                        return QuaverScreenFactory.CreateSelection();
 
                     return new MultiplayerGameScreen();
                 });
@@ -146,7 +146,7 @@ namespace Quaver.Shared.Screens.Importing
 
                     OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
 
-                    return new MusicPlayerScreen();
+                    return QuaverScreenFactory.CreateMusicPlayer();
                 });
             }
             else if (OnlineManager.IsSpectatingSomeone)
@@ -156,14 +156,14 @@ namespace Quaver.Shared.Screens.Importing
                 spectatee.Value.WatchUserImmediately();
 
                 if (!Exiting)
-                    Exit(() => new SelectionScreen());
+                    Exit(() => QuaverScreenFactory.CreateSelection());
             }
             else
             {
                 if (MapManager.Mapsets.Count == 0)
-                    Exit(() => new MainMenuScreen());
+                    Exit(() => QuaverScreenFactory.CreateMainMenu());
                 else
-                    Exit(() => new SelectionScreen());
+                    Exit(() => QuaverScreenFactory.CreateSelection());
             }
         }
 

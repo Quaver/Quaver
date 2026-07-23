@@ -217,7 +217,7 @@ namespace Quaver.Shared.Screens.Main.UI.Jukebox
             GoToJukeboxScreenButton = new IconButton(UserInterface.JukeboxHamburgerIcon, (sender, args) =>
             {
                 var game = (QuaverGame) GameBase.Game;
-                game.CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                game.CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
             })
             {
                 Parent = this,

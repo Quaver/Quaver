@@ -639,6 +639,12 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> UseSteamWorkshopSkin { get; private set; }
 
         /// <summary>
+        ///     Whether newly-created menu screens should use registered replacement implementations.
+        ///     This value is snapshotted when the screen manager initializes and requires a restart to change.
+        /// </summary>
+        internal static Bindable<bool> UseNewScreens { get; private set; }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
@@ -1217,6 +1223,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
+            UseNewScreens = ReadValue(@"UseNewScreens", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
             MuteAudioOnWindowInactive = ReadValue(@"MuteAudioOnWindowInactive", false, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);

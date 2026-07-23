@@ -213,6 +213,30 @@
   <data name="Screen_Main_Published" xml:space="preserve">
     <value>Published {0}</value>
   </data>
+  <data name="Screen_Main_NewsLoading" xml:space="preserve">
+    <value>Loading news…</value>
+  </data>
+  <data name="Screen_Main_NewsUnavailable" xml:space="preserve">
+    <value>News is currently unavailable</value>
+  </data>
+  <data name="Screen_Main_AutoLoginFailed" xml:space="preserve">
+    <value>Failed to automatically login!</value>
+  </data>
+  <data name="Screen_Main_NoMapsLoaded" xml:space="preserve">
+    <value>You have no maps loaded. Try importing some!</value>
+  </data>
+  <data name="Screen_Main_NotImplemented" xml:space="preserve">
+    <value>Not implemented yet!</value>
+  </data>
+  <data name="Screen_Main_MultiplayerLoginRequired" xml:space="preserve">
+    <value>You must be logged in to play multiplayer.</value>
+  </data>
+  <data name="Screen_Main_EditorMapRequired" xml:space="preserve">
+    <value>You cannot edit without a map selected.</value>
+  </data>
+  <data name="Screen_Main_MapReadFailed" xml:space="preserve">
+    <value>Unable to read map file!</value>
+  </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>All</value>
   </data>

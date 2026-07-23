@@ -33,7 +33,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Selection
                 if (quaver?.CurrentScreen is MultiplayerGameScreen multi)
                 {
                     multi.DontLeaveGameUponScreenSwitch = true;
-                    multi.Exit(() => new SelectionScreen());
+                    multi.Exit(() => QuaverScreenFactory.CreateSelection());
                 }
             };
         }

@@ -116,6 +116,7 @@ using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Platform;
 using Wobble.Window;
+using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
 
 namespace Quaver.Shared
@@ -638,14 +639,21 @@ namespace Quaver.Shared
                 Visible = false
             };
 
-            ShowFpsCounter(Fps);
-            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(Fps);
+            RefreshFpsCounterVisibility();
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => RefreshFpsCounterVisibility();
         }
 
         /// <summary>
-        ///     Shows the FPS counter based on the current config variable.
+        ///     Shows the FPS counter based on the current config variable and screen.
         /// </summary>
-        private static void ShowFpsCounter(FpsCounter counter) => counter.Visible = ConfigManager.FpsCounter.Value;
+        internal void RefreshFpsCounterVisibility()
+        {
+            if (Fps == null)
+                return;
+
+            Fps.Visible = ConfigManager.FpsCounter.Value &&
+                          !(CurrentScreen is NewMainMenuScreen);
+        }
 
         /// <summary>
         ///     Uses a custom fps config
@@ -1185,16 +1193,16 @@ namespace Quaver.Shared
             switch (CurrentScreen?.Type)
             {
                 case QuaverScreenType.Menu:
-                    CurrentScreen?.Exit(() => new MainMenuScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
                 case QuaverScreenType.Select:
-                    CurrentScreen?.Exit(() => new SelectionScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateSelection());
                     break;
                 case QuaverScreenType.Download:
-                    CurrentScreen?.Exit(() => new DownloadingScreen(CurrentScreen.Type));
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateDownloading(CurrentScreen.Type));
                     break;
                 case QuaverScreenType.Lobby:
-                    CurrentScreen?.Exit(() => new MultiplayerLobbyScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                     break;
                 case QuaverScreenType.Multiplayer:
                     var screen = (MultiplayerGameScreen)CurrentScreen;
@@ -1202,10 +1210,10 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => new MultiplayerGameScreen());
                     break;
                 case QuaverScreenType.Music:
-                    CurrentScreen?.Exit(() => new MusicPlayerScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
                     break;
                 case QuaverScreenType.Theatre:
-                    CurrentScreen?.Exit(() => new TheaterScreen());
+                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateTheater());
                     break;
             }
 

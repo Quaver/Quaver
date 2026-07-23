@@ -168,7 +168,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
                 FontManager.GetWobbleFont(Fonts.InterBold), "Download Songs", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new DownloadingScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateDownloading());
                 })
             {
                 Parent = ExploreContainer,
@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
                 FontManager.GetWobbleFont(Fonts.InterBold), "Song Select", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new SelectionScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                 })
             {
                 Parent = ExploreContainer,

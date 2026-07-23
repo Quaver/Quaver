@@ -18,6 +18,7 @@ using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Tournament.Gameplay;
+using Quaver.Shared.Skinning.V2;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Writers.Zip;
@@ -55,6 +56,11 @@ namespace Quaver.Shared.Skinning
         public static SkinStore Skin { get; set; }
 
         /// <summary>
+        ///     The V2 configuration and assets for the primary selected skin.
+        /// </summary>
+        public static SkinStoreV2 SkinV2 { get; private set; }
+
+        /// <summary>
         ///     The currently selected Editor skin
         /// </summary>
         public static SkinStore EditorSkin { get; set; }
@@ -74,7 +80,10 @@ namespace Quaver.Shared.Skinning
         /// </summary>
         public static void Load(UniversalSkinElementsLoadFlags loadFlags = UniversalSkinElementsLoadFlags.All)
         {
+            var previousV2 = SkinV2;
             Skin = new SkinStore(loadFlags: loadFlags);
+            SkinV2 = new SkinStoreV2(Skin.Dir);
+            previousV2?.Retire();
 
             if (ConfigManager.TournamentPlayer2Skin.Value == null ||
                 ConfigManager.TournamentPlayer2Skin.Value == ConfigManager.Skin.Value)
@@ -87,6 +96,14 @@ namespace Quaver.Shared.Skinning
             }
             
             LoadEditorSkin();
+        }
+
+        public static SkinStoreV2Lease AcquireV2()
+        {
+            if (SkinV2 == null)
+                SkinV2 = new SkinStoreV2(Skin?.Dir ?? ConfigManager.SkinDirectory.Value);
+
+            return SkinV2.Acquire();
         }
 
         public static void LoadEditorSkin()
@@ -109,7 +126,7 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
-        ///     Start watching for changes in skin.ini
+        ///     Start watching for changes in skin.ini and skin.yml.
         /// </summary>
         public static void StartWatching()
         {
@@ -118,21 +135,26 @@ namespace Quaver.Shared.Skinning
 
             if (Watcher != null)
             {
-                Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
+                Logger.Important("Skin manager resumed watching skin configuration files", LogType.Runtime);
                 Watcher.EnableRaisingEvents = true;
                 return;
             }
-            var path = Path.Combine(Skin.Dir, "skin.ini");
-            if (!File.Exists(path)) return;
-            Logger.Important($"Skin manager started watching skin.ini", LogType.Runtime);
-            Watcher = new FileSystemWatcher(Path.GetDirectoryName(path))
+
+            if (!Directory.Exists(Skin.Dir))
+                return;
+
+            Logger.Important("Skin manager started watching skin.ini and skin.yml", LogType.Runtime);
+            Watcher = new FileSystemWatcher(Skin.Dir)
             {
-                NotifyFilter = NotifyFilters.LastWrite,
-                EnableRaisingEvents = true,
-                Filter = Path.GetFileName(path)
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime,
+                EnableRaisingEvents = true
             };
-            Watcher.Changed += (sender, args) =>
+
+            void QueueReload(string name)
             {
+                if (!string.Equals(name, "skin.ini", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(name, "skin.yml", StringComparison.OrdinalIgnoreCase))
+                    return;
                 if (TimeSkinReloadRequested != 0) return;
                 Logger.Important($"Skin change detected. Reloading", LogType.Runtime);
                 TimeSkinReloadRequested = GameBase.Game.TimeRunning;
@@ -142,16 +164,25 @@ namespace Quaver.Shared.Skinning
                         $"You are making changes to a workshop skin! Changes to workshop skins might be lost when the skin updates!",
                         forceShow: true);
                 }
+            }
+
+            Watcher.Changed += (sender, args) => QueueReload(args.Name);
+            Watcher.Created += (sender, args) => QueueReload(args.Name);
+            Watcher.Deleted += (sender, args) => QueueReload(args.Name);
+            Watcher.Renamed += (sender, args) =>
+            {
+                QueueReload(args.Name);
+                QueueReload(args.OldName);
             };
         }
 
         /// <summary>
-        ///     Stops watching skin.ini
+        ///     Stops watching skin configuration files.
         /// </summary>
         public static void StopWatching()
         {
             if (Watcher == null) return;
-            Logger.Important($"Skin manager stopped watching skin.ini", LogType.Runtime);
+            Logger.Important("Skin manager stopped watching skin configuration files", LogType.Runtime);
             // Dispose of the watcher
             Watcher.Dispose();
             Watcher = null;
@@ -200,18 +231,18 @@ namespace Quaver.Shared.Skinning
                 switch (game.CurrentScreen.Type)
                 {
                     case QuaverScreenType.Menu:
-                        game.CurrentScreen.Exit(() => new MainMenuScreen());
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
                         break;
                     case QuaverScreenType.Select:
-                        if (game.CurrentScreen is SelectionScreen selectionScreen)
+                        if (game.CurrentScreen is ISelectionScreenState selectionScreen)
                         {
-                            var activeScrollContainer = selectionScreen.ActiveScrollContainer.Value;
-                            var activeLeftPanel = selectionScreen.ActiveLeftPanel.Value;
-                            game.CurrentScreen.Exit(() => new SelectionScreen(activeScrollContainer, activeLeftPanel));
+                            var activeScrollContainer = selectionScreen.ActiveScrollContainer;
+                            var activeLeftPanel = selectionScreen.ActiveLeftPanel;
+                            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection(activeScrollContainer, activeLeftPanel));
                         }
                         else
                         {
-                            game.CurrentScreen.Exit(() => new SelectionScreen());
+                            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                         }
                         break;
                     case QuaverScreenType.Gameplay when
@@ -234,8 +265,19 @@ namespace Quaver.Shared.Skinning
                 {
                     Transitioner.FadeOut();
                     if (showLoadedNotification)
-                        NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!",
-                            forceShow: true);
+                    {
+                        if (SkinV2.Warnings.Count > 0)
+                        {
+                            NotificationManager.Show(NotificationLevel.Warning,
+                                $"Skin loaded with {SkinV2.Warnings.Count} V2 warning(s). Defaults were used where needed; check Runtime.log.",
+                                forceShow: true);
+                        }
+                        else
+                        {
+                            NotificationManager.Show(NotificationLevel.Success, "Skin has been successfully loaded!",
+                                forceShow: true);
+                        }
+                    }
                 }, 200);
             }
         }
