@@ -8,6 +8,7 @@ public enum GlobalInputScope
     Options,
     Gameplay,
     Multiplayer,
+    Results,
     Menu,
     Jukebox,
     Download,

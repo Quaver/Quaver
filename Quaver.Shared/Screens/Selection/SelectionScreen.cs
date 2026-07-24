@@ -16,6 +16,7 @@ using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
@@ -108,11 +109,22 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private class Token(SelectionScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Selection;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         /// </summary>
         public SelectionScreen(SelectScrollContainerType? activeScrollContainer = null,
             SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard)
         {
+            GlobalInputToken = new Token(this);
             InitialActiveScrollContainer = activeScrollContainer;
             InitialActiveLeftPanel = activeLeftPanel;
             IsMultiplayer = OnlineManager.CurrentGame != null;
@@ -194,6 +206,7 @@ namespace Quaver.Shared.Screens.Selection
             ActiveLeftPanel?.Dispose();
             ActiveScrollContainer?.Dispose();
             IsPlayTestingInPreview?.Dispose();
+            GlobalInputToken.Dispose();
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
             MapManager.MapDeleted -= OnMapDeleted;
@@ -289,7 +302,6 @@ namespace Quaver.Shared.Screens.Selection
             HandleKeyPressF4();
             HandleKeyPressF5();
             HandleKeyPressEnter();
-            HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
 
             if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
@@ -442,43 +454,41 @@ namespace Quaver.Shared.Screens.Selection
             ConfigManager.LeaderboardSection.Value = (LeaderboardType)newIndex;
         }
 
-        /// <summary>
-        ///     Handles when the user holds control down and performs input actions
-        /// </summary>
-        private void HandleKeyPressControlInput()
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
         {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
+            if (Exiting || DialogManager.Dialogs.Count != 0 || !isKeyPress || isRelease)
+                return GlobalInputHandleResult.Pass;
 
             var shiftHeld = KeyboardManager.IsShiftDown();
 
-            // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
-
-            // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
-
-            // Change from pitched to non-pitched
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePitch.Value))
-                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-            
-            // Remove all mods
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
-                ModManager.RemoveAllMods();
-
-            // Toggle Mirror
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
+            switch (action)
             {
-                if (ModManager.IsActivated(ModIdentifier.Mirror))
-                    ModManager.RemoveMod(ModIdentifier.Mirror);
-                else
-                    ModManager.AddMod(ModIdentifier.Mirror);
+                case GlobalKeybindActions.IncreaseRate:
+                    ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.DecreaseRate:
+                    ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.TogglePitch:
+                    ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.RemoveMods:
+                    ModManager.RemoveAllMods();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.ToggleMirror:
+                    if (ModManager.IsActivated(ModIdentifier.Mirror))
+                        ModManager.RemoveMod(ModIdentifier.Mirror);
+                    else
+                        ModManager.AddMod(ModIdentifier.Mirror);
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.IncreaseLocalScrollSpeed:
+                case GlobalKeybindActions.DecreaseLocalScrollSpeed:
+                    ChangeScrollSpeed(action);
+                    return GlobalInputHandleResult.Consumed;
+                default:
+                    return GlobalInputHandleResult.Pass;
             }
-
-
-            ChangeScrollSpeed();
         }
 
         /// <summary>
@@ -588,7 +598,7 @@ namespace Quaver.Shared.Screens.Selection
         ///     CTRL+F3/CTRL+F4
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ChangeScrollSpeed()
+        private void ChangeScrollSpeed(GlobalKeybindActions action)
         {
             if (MapManager.Selected.Value == null)
                 return;
@@ -600,12 +610,12 @@ namespace Quaver.Shared.Screens.Selection
             var speedIncrease = KeyboardManager.IsShiftDown() ? 1 : 10;
 
             // Change scroll speed down
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
+            if (action == GlobalKeybindActions.DecreaseLocalScrollSpeed)
             {
                 scrollSpeed.Value -= speedIncrease;
                 changed = true;
             }
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
+            else if (action == GlobalKeybindActions.IncreaseLocalScrollSpeed)
             {
                 scrollSpeed.Value += speedIncrease;
                 changed = true;

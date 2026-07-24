@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
@@ -55,6 +56,16 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public bool DontLeaveGameUponScreenSwitch { get; set; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; set; }
+
+        private class Token(MultiplayerGameScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Multiplayer;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         /// </summary>
         public MultiplayerGameScreen()
@@ -68,6 +79,7 @@ namespace Quaver.Shared.Screens.Multi
             CreateGameBindable();
             InitializeActiveLeftPanelBindable();
             InitializeTestPlayingBindable();
+            GlobalInputToken = new Token(this);
 
             ScreenExiting += (sender, args) =>
             {
@@ -137,6 +149,7 @@ namespace Quaver.Shared.Screens.Multi
             Game?.Dispose();
             ActiveLeftPanel?.Dispose();
             IsPlayTestingInPreview?.Dispose();
+            GlobalInputToken?.Dispose();
 
             if (OnlineManager.Client != null)
             {
@@ -259,65 +272,54 @@ namespace Quaver.Shared.Screens.Multi
             if (KeyboardManager.IsUniqueKeyPress(Keys.Tab) && ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
                 SelectionScreen.HandleKeyPressTab();
 
-            HandleKeyPressControlInput();
-            HandleKeyPressAltInput();
         }
 
-        /// <summary>
-        ///     Handles when the user holds control down and performs input actions
-        /// </summary>
-        private void HandleKeyPressControlInput()
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
         {
-            if (!KeyboardManager.IsCtrlDown() || KeyboardManager.IsAltDown())
-                return;
+            if (Exiting || DialogManager.Dialogs.Count != 0 || !isKeyPress || isRelease)
+                return GlobalInputHandleResult.Pass;
 
-            // Increase rate.
-            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+            if (action is GlobalKeybindActions.IncreaseRate or GlobalKeybindActions.DecreaseRate &&
+                !KeyboardManager.IsAltDown() &&
+                (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate)))
             {
-                // Increase rate.
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
+                if (action == GlobalKeybindActions.IncreaseRate)
                     ModManager.AddSpeedMods(SelectionScreen.GetNextRate(true, KeyboardManager.IsShiftDown()));
-
-                // Decrease Rate
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
+                else
                     ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false, KeyboardManager.IsShiftDown()));
+
+                return GlobalInputHandleResult.Consumed;
             }
 
-            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular))
+            if (action == GlobalKeybindActions.ToggleMirror &&
+                !KeyboardManager.IsAltDown() &&
+                (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular)))
             {
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
-                {
-                    if (ModManager.IsActivated(ModIdentifier.Mirror))
-                        ModManager.RemoveMod(ModIdentifier.Mirror, true);
-                    else
-                        ModManager.AddMod(ModIdentifier.Mirror, true);
-                }
+                if (ModManager.IsActivated(ModIdentifier.Mirror))
+                    ModManager.RemoveMod(ModIdentifier.Mirror, true);
+                else
+                    ModManager.AddMod(ModIdentifier.Mirror, true);
+
+                return GlobalInputHandleResult.Consumed;
             }
-        }
 
-        /// <summary>
-        ///     Handles when the user holds ALT down and performs input actions
-        /// </summary>
-        private void HandleKeyPressAltInput()
-        {
-            if (!KeyboardManager.IsAltDown())
-                return;
-
-            if (MapManager.Selected.Value != null)
+            if (action is GlobalKeybindActions.IncreaseOffset or GlobalKeybindActions.DecreaseOffset &&
+                KeyboardManager.IsAltDown() &&
+                MapManager.Selected.Value != null)
             {
                 var offsetChange = KeyboardManager.IsCtrlDown() ? 1 : 5;
 
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
-                {
+                if (action == GlobalKeybindActions.IncreaseOffset)
                     MapManager.Selected.Value.LocalOffset += offsetChange;
-                    HandleOffsetChange();
-                }
-                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
-                {
+                else
                     MapManager.Selected.Value.LocalOffset -= offsetChange;
-                    HandleOffsetChange();
-                }
+
+                HandleOffsetChange();
+                return GlobalInputHandleResult.Consumed;
             }
+
+            return GlobalInputHandleResult.Pass;
         }
 
         /// <summary>

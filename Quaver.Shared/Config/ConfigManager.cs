@@ -262,12 +262,14 @@ namespace Quaver.Shared.Config
         ///     Key to toggle the pitch of the audio
         /// </summary>
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyTogglePitch { get; private set; }
         
         /// <summary>
         ///     Key to remove all mods
         /// </summary>
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyRemoveAllMods { get; private set; }
 
         /// <summary>
@@ -816,31 +818,37 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
 
         /// <summary>
         ///     Keybinding for rightward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateRight { get; private set; }
 
         /// <summary>
         ///     Keybinding for upward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateUp { get; private set; }
 
         /// <summary>
         ///     Keybinding for downward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateDown { get; private set; }
 
         /// <summary>
         ///     Keybinding for backward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateBack { get; private set; }
 
         /// <summary>
         ///     Keybinding for selection in navigation interface.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
 
         [IgnoreWrite]
@@ -871,80 +879,98 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<GenericKey> KeyPause { get; private set; }
 
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<GenericKey> KeySkipIntro { get; private set; }
 
         /// <summary>
         ///     The key to toggle the overlay
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
         ///     The key to toggle the mirror mod while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyToggleMirror { get; private set; }
 
         /// <summary>
         ///     The key to decrease the gameplay rate while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key to increase the gameplay rate while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key pressed to restart the map.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyRestartMap { get; private set; }
 
         /// <summary>
         ///     The keys to increase/decrease scroll speed.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseScrollSpeed { get; private set; }
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseScrollSpeed { get; private set; }
 
         /// <summary>
         ///     The keys to increase/decrease map offset.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyResetMapOffset { get; private set; }
 
         /// <summary>
         ///     The keys to toggle autoplay during playtesting
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyTogglePlaytestAutoplay { get; private set; }
 
         /// <summary>
         ///     The key to hide the scoreboard in-game.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyScoreboardVisible { get; private set; }
 
         /// <summary>
         ///     The key to quickly exit the map.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
 
         /// <summary>
         ///     The key to pause/play the track in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorPausePlay { get; private set; }
 
         /// <summary>
         ///     The key to lower the audio rate in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorDecreaseAudioRate { get; private set; }
 
         /// <summary>
         ///     The key to increase the audio rate in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
@@ -959,6 +985,7 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyScreenshot { get; private set; }
 
         /// <summary>

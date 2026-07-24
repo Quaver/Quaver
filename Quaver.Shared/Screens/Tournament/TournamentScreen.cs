@@ -13,6 +13,7 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Gameplay;
@@ -54,6 +55,18 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         private double TimeSinceScreenStarted { get; set; }
 
+        private bool IsPauseKeyHeld { get; set; }
+
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private class Token(TournamentScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Gameplay;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         ///     Reference to the user's selected skin (player 1)
         /// </summary>
@@ -70,6 +83,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="replays"></param>
         public TournamentScreen(List<Replay> replays)
         {
+            GlobalInputToken = new Token(this);
             TournamentType = TournamentScreenType.Replay;
             UserSkin = SkinManager.Skin;
             LoadPlayer2Skin(replays.Count);
@@ -116,6 +130,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// <param name="spectatees"></param>
         public TournamentScreen(MultiplayerGame game, IReadOnlyList<SpectatorClient> spectatees)
         {
+            GlobalInputToken = new Token(this);
             TournamentType = TournamentScreenType.Spectator;
             UserSkin = SkinManager.Skin;
             LoadPlayer2Skin(spectatees.Count);
@@ -165,6 +180,7 @@ namespace Quaver.Shared.Screens.Tournament
         /// </summary>
         public TournamentScreen(int players)
         {
+            GlobalInputToken = new Token(this);
             TournamentType = TournamentScreenType.Coop;
             UserSkin = SkinManager.Skin;
             LoadPlayer2Skin(players);
@@ -224,37 +240,9 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 UpdateScreens(gameTime);
 
-                if (TournamentType == TournamentScreenType.Spectator)
-                {
-                    if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
-                    {
-                        OnlineManager.LeaveGame();
-                        OnlineManager.Client?.StopSpectating();
-                    }
-                }
-                else if (GenericKeyManager.IsDown(ConfigManager.KeyPause.Value))
+                if (TournamentType != TournamentScreenType.Spectator && IsPauseKeyHeld)
                 {
                     MainGameplayScreen.Pause(gameTime);
-                }
-
-                // Add skipping
-                if (MainGameplayScreen.EligibleToSkip && GenericKeyManager.IsUniquePress(ConfigManager.KeySkipIntro.Value))
-                {
-                    GameplayScreens.ForEach(x =>
-                    {
-                        x.SkipToNextObject();
-                        x.IsPaused = true;
-
-                        var view = (TournamentScreenView)View;
-
-                        var player = view.TournamentPlayers.Find(y => y.User == x.SpectatorClient?.Player);
-
-                        if (player != null)
-                            player.Scoring = x.Ruleset.ScoreProcessor;
-                    });
-
-                    if (AudioEngine.Track.IsPlaying)
-                        AudioEngine.Track.Pause();
                 }
 
                 switch (MainGameplayScreen.Type)
@@ -272,6 +260,59 @@ namespace Quaver.Shared.Screens.Tournament
             base.Update(gameTime);
         }
 
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
+        {
+            if (Exiting)
+                return GlobalInputHandleResult.Pass;
+
+            if (action == GlobalKeybindActions.GameplayPause)
+            {
+                if (isRelease)
+                {
+                    IsPauseKeyHeld = false;
+                    return GlobalInputHandleResult.Consumed;
+                }
+
+                if (!isKeyPress)
+                    return GlobalInputHandleResult.Consumed;
+
+                if (TournamentType == TournamentScreenType.Spectator)
+                {
+                    OnlineManager.LeaveGame();
+                    OnlineManager.Client?.StopSpectating();
+                }
+                else
+                    IsPauseKeyHeld = true;
+
+                return GlobalInputHandleResult.Consumed;
+            }
+
+            if (action == GlobalKeybindActions.GameplaySkipIntro && isKeyPress && !isRelease &&
+                MainGameplayScreen.EligibleToSkip)
+            {
+                GameplayScreens.ForEach(x =>
+                {
+                    x.SkipToNextObject();
+                    x.IsPaused = true;
+
+                    var view = (TournamentScreenView)View;
+
+                    var player = view.TournamentPlayers.Find(y => y.User == x.SpectatorClient?.Player);
+
+                    if (player != null)
+                        player.Scoring = x.Ruleset.ScoreProcessor;
+                });
+
+                if (AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Pause();
+
+                return GlobalInputHandleResult.Consumed;
+            }
+
+            return GlobalInputHandleResult.Pass;
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -280,6 +321,7 @@ namespace Quaver.Shared.Screens.Tournament
             SkinManager.Skin = UserSkin;
 
             GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
+            GlobalInputToken.Dispose();
 
             GameplayScreens.ForEach(x =>
             {

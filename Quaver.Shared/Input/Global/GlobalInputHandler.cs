@@ -12,7 +12,11 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
 
     private static readonly HashSet<GlobalKeybindActions> HoldRepeatActions = [];
 
-    private static readonly HashSet<GlobalKeybindActions> HoldAndReleaseActionsSet = [];
+    private static readonly HashSet<GlobalKeybindActions> HoldAndReleaseActionsSet =
+    [
+        GlobalKeybindActions.GameplayPause,
+        GlobalKeybindActions.GameplayRetry
+    ];
 
     /// <inheritdoc />
     public bool? InvertedScrolling(GlobalKeybindActions action)

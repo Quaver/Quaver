@@ -31,6 +31,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -208,6 +209,14 @@ namespace Quaver.Shared.Screens.Gameplay
         ///     Flag that dictates if the user is currently restarting the play.
         /// </summary>
         public bool IsRestartingPlay { get; private set; }
+
+        private bool IsRestartKeyHeld { get; set; }
+
+        private bool IsPauseKeyHeld { get; set; }
+
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private double LastElapsedMilliseconds { get; set; }
 
         /// <summary>
         ///     The amount of time the restart key has been held down for.
@@ -389,6 +398,14 @@ namespace Quaver.Shared.Screens.Gameplay
         /// </summary>
         public int FailFadeTime => HasQuit ? QUIT_FADE_TIME : FAILURE_FADE_TIME;
 
+        private class Token(GameplayScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Gameplay;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -409,6 +426,8 @@ namespace Quaver.Shared.Screens.Gameplay
             bool isCalibratingOffset = false, SpectatorClient spectatorClient = null, TournamentPlayerOptions options = null, bool isSongSelectPreview = false,
             bool isTestPlayingInNewEditor = false, bool useExistingAudioTime = false, bool shouldShowEpilepsyWarning = true)
         {
+            GlobalInputToken = new Token(this);
+
             if (isPlayTesting && !isSongSelectPreview)
             {
                 var testingQua = map.DeepClone();
@@ -602,9 +621,199 @@ namespace Quaver.Shared.Screens.Gameplay
             }
 
             Metronome?.Dispose();
+            GlobalInputToken.Dispose();
             IsDisposed = true;
             base.Destroy();
         }
+
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
+        {
+            if (Exiting)
+                return GlobalInputHandleResult.Pass;
+
+            if (isRelease)
+            {
+                if (action == GlobalKeybindActions.GameplayPause)
+                {
+                    IsPauseKeyHeld = false;
+                    TimePauseKeyHeld = 0;
+                    return GlobalInputHandleResult.Consumed;
+                }
+
+                if (action == GlobalKeybindActions.GameplayRetry)
+                {
+                    IsRestartKeyHeld = false;
+                    return GlobalInputHandleResult.Consumed;
+                }
+
+                return GlobalInputHandleResult.Pass;
+            }
+
+            if (!isKeyPress)
+                return action is GlobalKeybindActions.GameplayPause or GlobalKeybindActions.GameplayRetry
+                    ? GlobalInputHandleResult.Consumed
+                    : GlobalInputHandleResult.Pass;
+
+            if (HandlePauseMenuGlobalInput(action))
+                return GlobalInputHandleResult.Consumed;
+
+            switch (action)
+            {
+                case GlobalKeybindActions.GameplayPause:
+                    HandleGameplayPausePress();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.GameplayRetry:
+                    if (CanHandleGameplayRetry())
+                    {
+                        IsRestartingPlay = true;
+                        IsRestartKeyHeld = true;
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.GameplayToggleScoreboard:
+                    if (!IsSongSelectPreview)
+                    {
+                        ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.TogglePause:
+                    if (HandlePlaytestMusicPause())
+                        return GlobalInputHandleResult.Consumed;
+                    break;
+                case GlobalKeybindActions.GameplayQuickExit:
+                    if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame || IsSongSelectPreview)
+                    {
+                        HandleQuickExit();
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.GameplaySkipIntro:
+                    if (!IsPlayComplete && !IsCalibratingOffset)
+                    {
+                        SkipToNextObject();
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.GameplayTogglePlaytestAutoplay:
+                    if (!IsPlayComplete && !IsCalibratingOffset)
+                    {
+                        HandleTogglePlaytestAutoplay();
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.GameplayIncreaseOffset:
+                case GlobalKeybindActions.GameplayDecreaseOffset:
+                case GlobalKeybindActions.GameplayResetOffset:
+                    if (!IsSongSelectPreview && !IsPlayComplete && !IsCalibratingOffset)
+                    {
+                        HandleGameplayOffsetAction(action);
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+                case GlobalKeybindActions.IncreaseLocalScrollSpeed:
+                case GlobalKeybindActions.DecreaseLocalScrollSpeed:
+                    if (Ruleset?.InputManager is KeysInputManager inputManager)
+                    {
+                        inputManager.ChangeScrollSpeed(action);
+                        return GlobalInputHandleResult.Consumed;
+                    }
+                    break;
+            }
+
+            return GlobalInputHandleResult.Pass;
+        }
+
+        private bool HandlePauseMenuGlobalInput(GlobalKeybindActions action)
+        {
+            if (!IsPaused || DialogManager.Dialogs.Count != 0 || SpectatorClient != null || IsSongSelectPreview)
+                return false;
+
+            var pauseScreen = ((GameplayScreenView)View).PauseScreen;
+            if (pauseScreen == null)
+                return false;
+
+            switch (action)
+            {
+                case GlobalKeybindActions.NavigateUp:
+                    pauseScreen.HandleKeyPressUp();
+                    return true;
+                case GlobalKeybindActions.NavigateDown:
+                    pauseScreen.HandleKeyPressDown();
+                    return true;
+                case GlobalKeybindActions.NavigateSelect:
+                    pauseScreen.HandleKeyPressSelect();
+                    return true;
+                case GlobalKeybindActions.GameplayRetry:
+                    pauseScreen.HandleKeyPressRestart();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private void HandleGameplayPausePress()
+        {
+            if (OnlineManager.CurrentGame != null || Failed || IsPlayComplete || IsSongSelectPreview)
+                return;
+
+            if (IsPlayTesting)
+            {
+                if (AudioEngine.Track.IsPlaying)
+                {
+                    AudioEngine.Track.Pause();
+                    AudioEngine.Track.Seek(PlayTestAudioTime);
+                }
+
+                CustomAudioSampleCache.StopAll();
+
+                ExitToNewEditor();
+                return;
+            }
+
+            if (IsCalibratingOffset)
+            {
+                OffsetConfirmDialog.Exit(this);
+                return;
+            }
+
+            TimePauseKeyHeld = 0;
+
+            if (IsPaused)
+            {
+                Pause();
+                return;
+            }
+
+            IsPauseKeyHeld = true;
+        }
+
+        private bool HandlePlaytestMusicPause()
+        {
+            if (IsSongSelectPreview || !IsPlayTesting || AudioEngine.Track.IsDisposed)
+                return false;
+
+            if (AudioEngine.Track.IsPlaying)
+            {
+                AudioEngine.Track.Pause();
+                IsPaused = true;
+            }
+            else
+            {
+                AudioEngine.Track.Play();
+                IsPaused = false;
+            }
+
+            return true;
+        }
+
+        private bool CanHandleGameplayRetry() =>
+            !(!IsPlayTesting && (IsPaused || Failed)) &&
+            !IsCalibratingOffset &&
+            SpectatorClient == null &&
+            !IsSongSelectPreview &&
+            OnlineManager.CurrentGame == null;
 
         /// <summary>
         ///     Handles the input of the game + individual game modes.
@@ -616,35 +825,11 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            LastElapsedMilliseconds = dt;
 
             // Handle pausing
             if (!Failed && !IsPlayComplete && !IsSongSelectPreview)
                 HandlePauseInput(gameTime);
-
-            // Show/hide scoreboard.
-            if (!IsSongSelectPreview && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
-                ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
-
-            // CTRL+ input while play testing
-            if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsCtrlDown())
-            {
-                if (KeyboardManager.IsUniqueKeyPress(Keys.P))
-                {
-                    if (!AudioEngine.Track.IsDisposed)
-                    {
-                        if (AudioEngine.Track.IsPlaying)
-                        {
-                            AudioEngine.Track.Pause();
-                            IsPaused = true;
-                        }
-                        else
-                        {
-                            AudioEngine.Track.Play();
-                            IsPaused = false;
-                        }
-                    }
-                }
-            }
 
             // Handle the restarting of the map.
             HandlePlayRestart(dt);
@@ -654,20 +839,8 @@ namespace Quaver.Shared.Screens.Gameplay
             if ((IsPaused && !InReplayMode) || Failed)
                 return;
 
-            if (!IsPlayComplete && !IsCalibratingOffset || IsMultiplayerGame || IsSongSelectPreview)
-            {
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
-                    HandleQuickExit();
-            }
-
             if (!IsPlayComplete && !IsCalibratingOffset)
             {
-                if (GenericKeyManager.IsUniquePress(ConfigManager.KeySkipIntro.Value))
-                {
-                    SkipToNextObject();
-                }
-
-
                 // Go back to editor at the same time
                 if (!IsSongSelectPreview && IsPlayTesting && KeyboardManager.IsUniqueKeyPress(Keys.F2))
                 {
@@ -679,7 +852,6 @@ namespace Quaver.Shared.Screens.Gameplay
 
                 if (!IsSongSelectPreview)
                 {
-                    HandleAutoplayTabInput(gameTime);
                     HandleOverlayToggleInput(gameTime);
                 }
             }
@@ -709,7 +881,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
 
             // If the pause key is not pressed...
-            if (GenericKeyManager.IsUp(ConfigManager.KeyPause.Value))
+            if (!IsPauseKeyHeld)
             {
                 if (Failed || IsPlayComplete || IsPaused)
                     return;
@@ -725,41 +897,7 @@ namespace Quaver.Shared.Screens.Gameplay
                 return;
             }
 
-            // Go back to editor if we're currently play testing.
-            if (IsPlayTesting)
-            {
-                if (AudioEngine.Track.IsPlaying)
-                {
-                    AudioEngine.Track.Pause();
-                    AudioEngine.Track.Seek(PlayTestAudioTime);
-                }
-
-                CustomAudioSampleCache.StopAll();
-
-                ExitToNewEditor();
-
-                return;
-            }
-
-            // If the pause key was just pressed...
-            if (GenericKeyManager.IsUniquePress(ConfigManager.KeyPause.Value))
-            {
-                // Exit the offset calibration.
-                if (IsCalibratingOffset)
-                {
-                    OffsetConfirmDialog.Exit(this);
-                }
-                // Resume the play if paused, or pause.
-                else
-                {
-                    TimePauseKeyHeld = 0;
-                    Pause(gameTime);
-                }
-
-                return;
-            }
-
-            // Otherwise (the pause key is held but wasn't just pressed), call Pause() to advance the hold to pause timer.
+            // While the pause key is held, call Pause() to advance the hold to pause timer.
             if (!IsPaused || SpectatorClient != null)
                 Pause(gameTime);
         }
@@ -1065,13 +1203,10 @@ namespace Quaver.Shared.Screens.Gameplay
             if (OnlineManager.CurrentGame != null)
                 return;
 
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
-                IsRestartingPlay = true;
-
             // Grab a reference to the ScreenView.
             var screenView = (GameplayScreenView)View;
 
-            if (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyRestartMap.Value) && IsRestartingPlay)
+            if (IsRestartKeyHeld && IsRestartingPlay)
             {
                 RestartKeyHoldTime += dt;
 
@@ -1609,61 +1744,64 @@ namespace Quaver.Shared.Screens.Gameplay
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
-        public void HandleAutoplayTabInput(GameTime gameTime)
+        private void HandleTogglePlaytestAutoplay()
         {
-            // Handle play test autoplay input.
-            if (IsPlayTesting && !ModManager.IsActivated(ModIdentifier.Autoplay) && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePlaytestAutoplay.Value) && !KeyboardManager.IsShiftDown() && !OnlineChat.Instance.IsOpen && DialogManager.Dialogs.Count == 0)
+            if (!IsPlayTesting || ModManager.IsActivated(ModIdentifier.Autoplay) || KeyboardManager.IsShiftDown() ||
+                OnlineChat.Instance.IsOpen || DialogManager.Dialogs.Count != 0)
+                return;
+
+            var inputManager = (KeysInputManager)Ruleset.InputManager;
+
+            if (inputManager.ReplayInputManager != null)
+                CachedReplayInputManager = inputManager.ReplayInputManager;
+
+            if (LoadedReplay == null || inputManager.ReplayInputManager == null)
             {
-                var inputManager = (KeysInputManager)Ruleset.InputManager;
-
-                if (inputManager.ReplayInputManager != null)
-                    CachedReplayInputManager = inputManager.ReplayInputManager;
-
-                if (LoadedReplay == null || inputManager.ReplayInputManager == null)
+                if (LoadedReplay == null)
                 {
-                    if (LoadedReplay == null)
-                    {
-                        LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
-                        CachedReplayInputManager = new ReplayInputManagerKeys(this);
-                        inputManager.ReplayInputManager = CachedReplayInputManager;
-                    }
-
-                    if (inputManager.ReplayInputManager == null)
-                        inputManager.ReplayInputManager = CachedReplayInputManager;
-
-                    inputManager.ReplayInputManager.HandleSkip();
-                    inputManager.ReplayInputManager.CurrentFrame++;
+                    LoadedReplay = ReplayHelper.GeneratePerfectReplay(Map, MapHash);
+                    CachedReplayInputManager = new ReplayInputManagerKeys(this);
+                    inputManager.ReplayInputManager = CachedReplayInputManager;
                 }
 
-                InReplayMode = !InReplayMode;
+                if (inputManager.ReplayInputManager == null)
+                    inputManager.ReplayInputManager = CachedReplayInputManager;
 
-                if (inputManager.ReplayInputManager != null)
-                {
-                    inputManager.ReplayInputManager.HandleSkip();
-                    inputManager.ReplayInputManager.CurrentFrame++;
-                }
-
-                if (!InReplayMode)
-                {
-                    inputManager.ReplayInputManager = null;
-                    Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
-
-                    for (var i = 0; i < Map.GetKeyCount(); i++)
-                    {
-                        inputManager.BindingStore[i].Pressed = false;
-                        inputManager.HandleInput(0);
-
-                        var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
-                        playfield.Stage.HitLightingObjects[i].StopHolding();
-                        playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
-                    }
-
-                    inputManager.HandleInput(gameTime.ElapsedGameTime.TotalMilliseconds);
-                }
-
-                NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
+                inputManager.ReplayInputManager.HandleSkip();
+                inputManager.ReplayInputManager.CurrentFrame++;
             }
 
+            InReplayMode = !InReplayMode;
+
+            if (inputManager.ReplayInputManager != null)
+            {
+                inputManager.ReplayInputManager.HandleSkip();
+                inputManager.ReplayInputManager.CurrentFrame++;
+            }
+
+            if (!InReplayMode)
+            {
+                inputManager.ReplayInputManager = null;
+                Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
+
+                for (var i = 0; i < Map.GetKeyCount(); i++)
+                {
+                    inputManager.BindingStore[i].Pressed = false;
+                    inputManager.HandleInput(0);
+
+                    var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+                    playfield.Stage.HitLightingObjects[i].StopHolding();
+                    playfield.Stage.SetReceptorAndLightingActivity(i, inputManager.BindingStore[i].Pressed);
+                }
+
+                inputManager.HandleInput(LastElapsedMilliseconds);
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, $"Autoplay has been turned {(InReplayMode ? "on" : "off")}.", null, true);
+        }
+
+        private void HandleGameplayOffsetAction(GlobalKeybindActions action)
+        {
             // Only allow offset changes if the map hasn't started or if we're on a break
             if (!IsSongSelectPreview && Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.EligibleToSkip)
             {
@@ -1673,8 +1811,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     change = 1;
                 }
 
-                // Handle offset +
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
+                if (action == GlobalKeybindActions.GameplayIncreaseOffset)
                 {
                     if (KeyboardManager.IsAltDown())
                     {
@@ -1692,8 +1829,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
                 }
 
-                // Handle offset -
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
+                if (action == GlobalKeybindActions.GameplayDecreaseOffset)
                 {
                     if (KeyboardManager.IsAltDown())
                     {
@@ -1711,8 +1847,7 @@ namespace Quaver.Shared.Screens.Gameplay
                     }
                 }
                 
-                // Handle reset offset to 0
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyResetMapOffset.Value))
+                if (action == GlobalKeybindActions.GameplayResetOffset)
                 {
                     if (KeyboardManager.IsAltDown())
                     {

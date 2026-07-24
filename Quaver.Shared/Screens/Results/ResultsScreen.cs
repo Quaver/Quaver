@@ -26,6 +26,7 @@ using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
@@ -124,11 +125,22 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public AudioSampleChannel ApplauseChannel { get; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private class Token(ResultsScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Results;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public ResultsScreen(GameplayScreen screen)
         {
+            GlobalInputToken = new Token(this);
             ScreenType = ResultsScreenType.Gameplay;
             Gameplay = screen;
             Map = MapManager.FindMapFromMd5(screen.MapHash) ?? MapManager.Selected.Value;
@@ -155,6 +167,7 @@ namespace Quaver.Shared.Screens.Results
         public ResultsScreen(GameplayScreen screen, MultiplayerGame game, List<ScoreProcessor> team1,
             List<ScoreProcessor> team2)
         {
+            GlobalInputToken = new Token(this);
             ScreenType = ResultsScreenType.Gameplay;
             Gameplay = screen;
             Map = MapManager.FindMapFromMd5(screen.MapHash) ?? MapManager.Selected.Value;
@@ -183,6 +196,7 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="team2"></param>
         public ResultsScreen(Map map, MultiplayerGame game, Score score, List<ScoreProcessor> team1, List<ScoreProcessor> team2)
         {
+            GlobalInputToken = new Token(this);
             ScreenType = ResultsScreenType.Score;
             Score = score;
             Map = map;
@@ -200,6 +214,7 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         public ResultsScreen(Map map, Score score)
         {
+            GlobalInputToken = new Token(this);
             ScreenType = ResultsScreenType.Score;
             Score = score;
             Map = map;
@@ -216,6 +231,7 @@ namespace Quaver.Shared.Screens.Results
         /// <param name="replay"></param>
         public ResultsScreen(Map map, Replay replay)
         {
+            GlobalInputToken = new Token(this);
             Replay = replay;
             Map = map;
             ScreenType = ResultsScreenType.Replay;
@@ -259,6 +275,7 @@ namespace Quaver.Shared.Screens.Results
             ActiveTab.Dispose();
             IsSubmittingScore.Dispose();
             ScoreSubmissionStats.Dispose();
+            GlobalInputToken.Dispose();
 
             if (OnlineManager.Client != null)
                 OnlineManager.Client.OnScoreSubmitted -= OnScoreSubmitted;
@@ -459,8 +476,25 @@ namespace Quaver.Shared.Screens.Results
                 return;
 
             HandleKeyPressEscape();
-            HandleKeyPressTab();
-            HandleKeyPressRetry();
+        }
+
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
+        {
+            if (Exiting || DialogManager.Dialogs.Count > 0 || !isKeyPress || isRelease)
+                return GlobalInputHandleResult.Pass;
+
+            switch (action)
+            {
+                case GlobalKeybindActions.ResultsTab:
+                    HandleKeyPressTab();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.ResultsRetry:
+                    HandleKeyPressRetry();
+                    return GlobalInputHandleResult.Consumed;
+                default:
+                    return GlobalInputHandleResult.Pass;
+            }
         }
 
         /// <summary>
@@ -477,9 +511,6 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void HandleKeyPressTab()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Tab))
-                return;
-
             var index = (int)ActiveTab.Value;
             var length = Enum.GetNames(typeof(ResultsScreenTabType)).Length;
 
@@ -511,9 +542,6 @@ namespace Quaver.Shared.Screens.Results
         /// </summary>
         private void HandleKeyPressRetry()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap?.Value ?? Keys.OemTilde))
-                return;
-
             if (OnlineManager.IsSpectatingSomeone)
                 return;
 
