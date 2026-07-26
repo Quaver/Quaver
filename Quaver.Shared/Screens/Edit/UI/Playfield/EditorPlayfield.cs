@@ -403,6 +403,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectsReversed += OnHitObjectsReversed;
             ActionManager.HitObjectsMoved += OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped += OnHitObjectsResnapped;
+            ActionManager.LongNoteResized += OnLongNoteResized;
             ActionManager.TimingPointAdded += OnTimingPointAdded;
             ActionManager.TimingPointRemoved += OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded += OnTimingPointBatchAdded;
@@ -582,6 +583,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             ActionManager.HitObjectsReversed -= OnHitObjectsReversed;
             ActionManager.HitObjectsMoved -= OnHitObjectsMoved;
             ActionManager.HitObjectsResnapped -= OnHitObjectsResnapped;
+            ActionManager.LongNoteResized -= OnLongNoteResized;
             ActionManager.TimingPointAdded -= OnTimingPointAdded;
             ActionManager.TimingPointRemoved -= OnTimingPointRemoved;
             ActionManager.TimingPointBatchAdded -= OnTimingPointBatchAdded;
@@ -892,6 +894,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             if (LastPooledHitObjectIndex == -1)
                 LastPooledHitObjectIndex = HitObjects.FindLastIndex(x => x.Info.StartTime < Track.Time);
+        }
+
+        /// <summary>
+        ///     Restores the ordering assumed by the forward-only hit object pool after note timings change.
+        /// </summary>
+        private void SortAndInitializeHitObjectPool()
+        {
+            HitObjects = HitObjects.OrderBy(x => x.Info.StartTime).ToList();
+            InitializeHitObjectPool();
         }
 
         /// <summary>
@@ -1213,6 +1224,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             RefreshHitObjectBatch(e.HitObjects);
+            SortAndInitializeHitObjectPool();
         }
 
         /// <summary>
@@ -1225,6 +1237,21 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
                 return;
 
             ResetObjectPositions();
+            SortAndInitializeHitObjectPool();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnLongNoteResized(object sender, EditorLongNoteResizedEventArgs e)
+        {
+            if (IsUneditable)
+                return;
+
+            if (HitObjectMap.TryGetValue(e.HitObject, out var hitObject))
+                hitObject.Refresh();
+
             InitializeHitObjectPool();
         }
 
