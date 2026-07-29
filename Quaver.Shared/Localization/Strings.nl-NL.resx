@@ -1876,15 +1876,6 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
     <value>Wachten op de start</value>
   </data>
-  <data name="Screen_Multiplayer_WaitingToStartOneDot" xml:space="preserve">
-    <value>Wachten op de start.</value>
-  </data>
-  <data name="Screen_Multiplayer_WaitingToStartTwoDots" xml:space="preserve">
-    <value>Wachten op de start..</value>
-  </data>
-  <data name="Screen_Multiplayer_WaitingToStartThreeDots" xml:space="preserve">
-    <value>Wachten om te starten...</value>
-  </data>
   <data name="Screen_Multiplayer_WaitingForServer" xml:space="preserve">
     <value>Wachten op de server</value>
   </data>
@@ -2575,14 +2566,8 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Editor_ChangeTimingGroupColor" xml:space="preserve">
     <value>CHANGE TIMING GROUP COLOR</value>
   </data>
-  <data name="Screen_Editor_ChangeTimingGroupColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color for your timing group...</value>
-  </data>
   <data name="Screen_Editor_ChangeWaveformColor" xml:space="preserve">
     <value>CHANGE WAVEFORM COLOR</value>
-  </data>
-  <data name="Screen_Editor_ChangeWaveformColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color for your waveform... (default: 0,200,255)</value>
   </data>
   <data name="Screen_Editor_AddDifficultyFromFile" xml:space="preserve">
     <value>ADD DIFFICULTY FROM FILE</value>
@@ -2646,12 +2631,6 @@ om andere spelers het te laten downloaden?</value>
   </data>
   <data name="Screen_Editor_SelectColor" xml:space="preserve">
     <value>SELECT COLOR</value>
-  </data>
-  <data name="Screen_Editor_SelectColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color...</value>
-  </data>
-  <data name="Screen_Editor_RgbColorPlaceholder" xml:space="preserve">
-    <value>Enter RGB color (ex: 255,255,255)...</value>
   </data>
   <data name="Screen_Editor_SubmittingForRankMessage" xml:space="preserve">
     <value>Please wait while your map is being submitted for rank...</value>
@@ -2884,14 +2863,17 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Editor_ScrollVelocityHelp" xml:space="preserve">
     <value>Scroll Velocities (SV) allow you to dynamically change the speed and direction at which the objects fall.</value>
   </data>
-  <data name="Screen_Editor_ScrollVelocityInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual SV point to edit it and double-click to go to its position in time.</value>
+  <data name="Screen_Editor_ScrollPointInteractionHelp" xml:space="preserve">
+    <value>You can click on an individual {0} point to edit it and double-click to go to its position in time.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>(Difference from SF)</value>
   </data>
-  <data name="Screen_Editor_SelectCurrentSv" xml:space="preserve">
-    <value>Select current SV</value>
+  <data name="Screen_Editor_Sv" xml:space="preserve">
+    <value>SV</value>
+  </data>
+  <data name="Screen_Editor_SelectCurrentScrollPoint" xml:space="preserve">
+    <value>Select current {0}</value>
   </data>
   <data name="Screen_Editor_Multiplier" xml:space="preserve">
     <value>Multiplier</value>
@@ -2905,8 +2887,8 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Editor_DifferenceFromSv" xml:space="preserve">
     <value>(Difference from SV)</value>
   </data>
-  <data name="Screen_Editor_SelectCurrentSsf" xml:space="preserve">
-    <value>Select current SSF</value>
+  <data name="Screen_Editor_Ssf" xml:space="preserve">
+    <value>SSF</value>
   </data>
   <data name="Screen_Editor_TimingGroupEditor" xml:space="preserve">
     <value>Timing Group Editor</value>
@@ -3033,9 +3015,6 @@ om andere spelers het te laten downloaden?</value>
   </data>
   <data name="Screen_Editor_ScrollSpeedFactorMultiplierHelp" xml:space="preserve">
     <value>SSF is a multiplier to your current scroll speed. The entries you add will be linearly transformed from one to another, like keyframes.</value>
-  </data>
-  <data name="Screen_Editor_ScrollSpeedFactorInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual SSF point to edit it and double-click to go to its position in time.</value>
   </data>
   <data name="Screen_Editor_SvVsSsfTooltip" xml:space="preserve">
     <value>SV will not move the notes but only change its speed, whereas SSF will directly change both their position and speed</value>
@@ -3187,9 +3166,6 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Editor_ChangeLayerColor" xml:space="preserve">
     <value>CHANGE LAYER COLOR</value>
   </data>
-  <data name="Screen_Editor_ChangeLayerColorMessage" xml:space="preserve">
-    <value>Enter a new RGB color for your layer...</value>
-  </data>
   <data name="Screen_Editor_EditName" xml:space="preserve">
     <value>Edit Name</value>
   </data>
@@ -3250,14 +3226,11 @@ om andere spelers het te laten downloaden?</value>
   <data name="Screen_Editor_GlobalTimingGroupTooltip" xml:space="preserve">
     <value>The SVs in this group are interlaced to every other scroll groups.</value>
   </data>
-  <data name="Screen_Editor_SelectCurrentSsfTooltip" xml:space="preserve">
-    <value>This will select the SSF at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SSFs up to that range, if one is selected already.</value>
+  <data name="Screen_Editor_SelectCurrentScrollPointTooltip" xml:space="preserve">
+    <value>This will select the {0} at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all {0}s up to that range, if one is selected already.</value>
   </data>
   <data name="Screen_Editor_ScrollSpeedFactorsSelected" xml:space="preserve">
     <value>{0} scroll speed factors selected</value>
-  </data>
-  <data name="Screen_Editor_SelectCurrentSvTooltip" xml:space="preserve">
-    <value>This will select the SV at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all SVs up to that range, if one is selected already.</value>
   </data>
   <data name="Screen_Editor_ScrollVelocitiesSelected" xml:space="preserve">
     <value>{0} scroll velocities selected</value>
