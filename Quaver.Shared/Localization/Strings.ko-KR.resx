@@ -238,13 +238,13 @@
     <value>Unable to read map file!</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
-    <value>All</value>
+    <value>전체</value>
   </data>
   <data name="Screen_Selection_Artist" xml:space="preserve">
     <value>아티스트</value>
   </data>
   <data name="Screen_Selection_Back" xml:space="preserve">
-    <value>Back</value>
+    <value>뒤로가기</value>
   </data>
   <data name="Screen_Selection_By" xml:space="preserve">
     <value>제작자:</value>
@@ -502,10 +502,10 @@
     <value>창 모드</value>
   </data>
   <data name="Screen_Options_FrameTime" xml:space="preserve">
-    <value>Frame Time</value>
+    <value>FPS</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
-    <value>Output</value>
+    <value>출력</value>
   </data>
   <data name="Screen_Options_Volume" xml:space="preserve">
     <value>볼륨</value>
@@ -514,46 +514,49 @@
     <value>오프셋</value>
   </data>
   <data name="Screen_Options_Effects" xml:space="preserve">
-    <value>Effects</value>
+    <value>효과음</value>
   </data>
   <data name="Screen_Options_Localization" xml:space="preserve">
-    <value>Localization</value>
+    <value>현지화</value>
   </data>
   <data name="Screen_Options_Background" xml:space="preserve">
     <value>배경</value>
   </data>
   <data name="Screen_Options_Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>비주얼</value>
   </data>
   <data name="Screen_Options_Sound" xml:space="preserve">
-    <value>Sound</value>
+    <value>소리</value>
   </data>
   <data name="Screen_Options_UserInterface" xml:space="preserve">
-    <value>User Interface</value>
+    <value>UI</value>
   </data>
   <data name="Screen_Options_Scoreboard" xml:space="preserve">
     <value>스코어보드</value>
   </data>
   <data name="Screen_Options_ProgressBar" xml:space="preserve">
-    <value>Progress Bar</value>
+    <value>진행 바</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Lane Cover</value>
+    <value>가림막</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
-    <value>Selection</value>
+    <value>선택</value>
   </data>
   <data name="Screen_Options_Navigation" xml:space="preserve">
-    <value>Navigation</value>
+    <value>찾기</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
     <value>공유 중</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>설정</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
-    <value>Gameplay Controls</value>
+    <value>게임플레이 조작</value>
+  </data>
+  <data name="Screen_Options_ModKeybindTooltip" xml:space="preserve">
+    <value>모드는 수정 키(Ctrl, Alt, Shift)를 누른 상태에서 키바인드가 실행됩니다</value>
   </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
     <value>게임플레이 유저 정보</value>
@@ -565,10 +568,10 @@
     <value>편집</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
-    <value>Misc</value>
+    <value>기타</value>
   </data>
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
-    <value>Navigation &amp; Maintenance</value>
+    <value>탐색 및 관리</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
     <value>설치된 게임</value>
@@ -658,38 +661,36 @@
     <value>현재 판정:</value>
   </data>
   <data name="Screen_Results_Graph" xml:space="preserve">
-    <value>그래프:</value>
+    <value>GRAPH:</value>
   </data>
   <data name="Screen_Results_Deviance" xml:space="preserve">
-    <value>편차</value>
+    <value>Deviance</value>
   </data>
   <data name="Screen_Results_ACCURACY" xml:space="preserve">
     <value>ACCURACY</value>
   </data>
   <data name="Screen_Results_Health" xml:space="preserve">
-    <value>체력</value>
+    <value>Health</value>
   </data>
   <data name="Screen_Results_Rating" xml:space="preserve">
     <value>Rating</value>
   </data>
   <data name="Screen_Results_Mean" xml:space="preserve">
-    <value>평균:</value>
+    <value>Mean:</value>
   </data>
   <data name="Screen_Results_StdDev" xml:space="preserve">
-    <value>표준편차:</value>
+    <value>Std. Dev:</value>
   </data>
   <data name="Screen_Results_RATIO" xml:space="preserve">
     <value>RATIO</value>
   </data>
   <data name="Screen_Results_StatisticsNotAvailable" xml:space="preserve">
-    <value>Statistics Not Available</value>
+    <value>통계 정보 없음</value>
   </data>
   <data name="Screen_Results_Accuracygraphtooltip" xml:space="preserve">
-    <value>This displays the course of accuracy throughout the score.
+    <value>플레이 중 정확도의 변화를 표시합니다.
 
-If the map was not completed, then it will additionally
-show the accuracy if all subsequent hits had been
-Marvelous instead.</value>
+맵을 끝까지 완료하지 않은 경우, 이후의 모든 노트를 Marvelous로 처리했다고 가정했을 때의 정확도도 함께 표시합니다.</value>
   </data>
   <data name="Screen_Results_Latehitwindow" xml:space="preserve">
     <value>느림 (+{0} ms)</value>
@@ -698,20 +699,18 @@ Marvelous instead.</value>
     <value>빠름 (+{0} ms)</value>
   </data>
   <data name="Screen_Results_Ratinggraphtooltip" xml:space="preserve">
-    <value>This displays the course of performance throughout the score.
+    <value>플레이 중 레이팅의 변화를 표시합니다.
 
-If the map was not completed, then it will additionally
-show the performance if all subsequent hits had been
-Marvelous instead.</value>
+맵을 끝까지 완료하지 않은 경우, 이후의 모든 노트를 Marvelous로 처리했다고 가정했을 때의 정확도도 함께 표시합니다.</value>
   </data>
   <data name="Screen_Results_SubmittingScore" xml:space="preserve">
     <value>점수 제출중...</value>
   </data>
   <data name="Screen_Results_GlobalRank" xml:space="preserve">
-    <value>세계 순위</value>
+    <value>GLOBAL RANK</value>
   </data>
   <data name="Screen_Results_CountryRank" xml:space="preserve">
-    <value>국가 순위</value>
+    <value>COUNTRY RANK</value>
   </data>
   <data name="Screen_Results_OverallRating" xml:space="preserve">
     <value>OVERALL RATING</value>
@@ -780,34 +779,34 @@ Marvelous instead.</value>
     <value>결과 로딩 중</value>
   </data>
   <data name="Screen_Results_Failedtoretrieveplayersscores" xml:space="preserve">
-    <value>Failed to retrieve players' scores!</value>
+    <value>플레이어 점수를 가져오는 데 실패했습니다!</value>
   </data>
   <data name="Screen_Results_Therewasanissuewhileretrievingthereplayforthisscore" xml:space="preserve">
-    <value>There was an issue while retrieving the replay for this score!</value>
+    <value>이 점수의 리플레이를 가져오는 중 문제가 발생했습니다!</value>
   </data>
   <data name="Screen_Results_Thereplayforthisscorecouldnotbedownloaded" xml:space="preserve">
-    <value>The replay for this score could not be downloaded.</value>
+    <value>이 점수의 리플레이를 다운로드할 수 없습니다.</value>
   </data>
   <data name="Screen_Results_FetchingReplay" xml:space="preserve">
-    <value>FETCHING REPLAY</value>
+    <value>리플레이 가져오기</value>
   </data>
   <data name="Screen_Results_DownloadingreplayPleasewait" xml:space="preserve">
-    <value>Downloading replay! Please wait...</value>
+    <value>리플레이 다운로드중! 잠시만 기다려 주세요...</value>
   </data>
   <data name="Screen_Results_Pleasewaitwhileyourreplayisbeingexported" xml:space="preserve">
-    <value>Please wait while your replay is being exported...</value>
+    <value>리플레이를 추출하는동안 잠시 기다려 주세요...</value>
   </data>
   <data name="Screen_Results_Anerroroccuredwhileexportingthereplay" xml:space="preserve">
     <value>리플레이 내보내기 중 오류가 발생했습니다!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>You have already fixed your local offset for this map! There's no need to do it again.</value>
+    <value>로컬 오프셋을 이미 수정하셨습니다! 다시 할 필요 없어요.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
-    <value>There is no data to be able to fix your local offset!</value>
+    <value>로컬 오프셋을 수정할 수 있는 데이터가 없습니다!</value>
   </data>
   <data name="Screen_Results_FixLocalOffset" xml:space="preserve">
-    <value>FIX LOCAL OFFSET</value>
+    <value>로컬 오프셋 수정</value>
   </data>
   <data name="Screen_Results_Localoffsetchangeconfirmation" xml:space="preserve">
     <value>이 맵의 로컬 오프셋이 {0} ms에서 {1}ms로 바뀔 것입니다.</value>
@@ -822,10 +821,10 @@ Marvelous instead.</value>
     <value>리플레이를 저장하는데 문제가 생겼습니다. Runtime.log에서 문제를 확인해보세요.</value>
   </data>
   <data name="Screen_Results_Thereisnoreplaydataavailabletoconvertthisscore" xml:space="preserve">
-    <value>There is no replay data available to convert this score!</value>
+    <value>이 점수를 변환할 리플레이 데이터가 없습니다!</value>
   </data>
   <data name="Screen_Options_GlobalAudioOffset" xml:space="preserve">
-    <value>Global Audio Offset</value>
+    <value>전체 오디오 오프셋</value>
   </data>
   <data name="Screen_Options_VisualOffset" xml:space="preserve">
     <value>출력 오프셋</value>
@@ -849,7 +848,7 @@ Marvelous instead.</value>
     <value>롱노트 땔때 효과음 켜기</value>
   </data>
   <data name="Screen_Options_EnableKeysounds" xml:space="preserve">
-    <value>Enable Keysounds</value>
+    <value>키사운드 활성화</value>
   </data>
   <data name="Screen_Options_EnableTapToPause" xml:space="preserve">
     <value>빠른 정지 켜기</value>
@@ -864,7 +863,7 @@ Marvelous instead.</value>
     <value>플레이 도중 윈도우키 잠금</value>
   </data>
   <data name="Screen_Options_DisplayTimingLines" xml:space="preserve">
-    <value>Display Timing Lines</value>
+    <value>판정선 표시</value>
   </data>
   <data name="Screen_Options_DisplayHitBubbles" xml:space="preserve">
     <value>히트버블 켜기</value>
@@ -873,7 +872,7 @@ Marvelous instead.</value>
     <value>판정 카운터 켜기</value>
   </data>
   <data name="Screen_Options_DisplayScoreboard" xml:space="preserve">
-    <value>Display Scoreboard</value>
+    <value>스코어보드 표시</value>
   </data>
   <data name="Screen_Options_DisplaySongTimeProgressBar" xml:space="preserve">
     <value>Display Song Time Progress Bar</value>
@@ -882,16 +881,16 @@ Marvelous instead.</value>
     <value>Display Song Time Progress Bar Time Numbers</value>
   </data>
   <data name="Screen_Options_EnableTopLaneCover" xml:space="preserve">
-    <value>Enable Top Lane Cover</value>
+    <value>위쪽 가림막 활성화</value>
   </data>
   <data name="Screen_Options_TopLaneCoverHeight" xml:space="preserve">
-    <value>Top Lane Cover Height</value>
+    <value>위쪽 가림막 높이</value>
   </data>
   <data name="Screen_Options_EnableBottomLaneCover" xml:space="preserve">
-    <value>Enable Bottom Lane Cover</value>
+    <value>아래쪽 가림막 활성화</value>
   </data>
   <data name="Screen_Options_BottomLaneCoverHeight" xml:space="preserve">
-    <value>Bottom Lane Cover Height</value>
+    <value>아래쪽 가림막 높이</value>
   </data>
   <data name="Screen_Options_DisplayUIElementsOverLaneCovers" xml:space="preserve">
     <value>Display UI Elements Over Lane Covers</value>
@@ -918,13 +917,13 @@ Marvelous instead.</value>
     <value>Steam Workshop에 스킨 업로드하기</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
-    <value>Note &amp; Receptor Size Scale</value>
+    <value>노트 크기</value>
   </data>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
-    <value>Playfield Scale</value>
+    <value>화면 크기</value>
   </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
-    <value>Tint Hitlighting Based On Judgement Color</value>
+    <value>정확도 색상에 맞춰 히트라이트 색상 설정</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
     <value>정지</value>
@@ -939,61 +938,61 @@ Marvelous instead.</value>
     <value>도입부 건너뛰기</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>Decrease Scroll Speed</value>
+    <value>스크롤 속도 감소</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>Increase Scroll Speed</value>
+    <value>스크롤 속도 증가</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
-    <value>Decrease Map Offset</value>
+    <value>맵 오프셋 감소</value>
   </data>
   <data name="Screen_Options_IncreaseMapOffset" xml:space="preserve">
-    <value>Increase Map Offset</value>
+    <value>맵 오프셋 증가</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
-    <value>Reset Map Offset</value>
+    <value>맵 오프셋 초기화</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
-    <value>Toggle Scoreboard Visibility</value>
+    <value>스코어보드 보기</value>
   </data>
   <data name="Screen_Options_ToggleChatOverlay" xml:space="preserve">
-    <value>Toggle Chat Overlay</value>
+    <value>채팅 오버레이</value>
   </data>
   <data name="Screen_Options_DecreaseGameplayRate" xml:space="preserve">
-    <value>Decrease Gameplay Rate</value>
+    <value>게임플레이 배속 감소</value>
   </data>
   <data name="Screen_Options_IncreaseGameplayRate" xml:space="preserve">
-    <value>Increase Gameplay Rate</value>
+    <value>게임플레이 배속 증가</value>
   </data>
   <data name="Screen_Options_ToggleMirrorMod" xml:space="preserve">
-    <value>Toggle Mirror Mod</value>
+    <value>미러 모드</value>
   </data>
   <data name="Screen_Options_TogglePitch" xml:space="preserve">
-    <value>Toggle Pitch</value>
+    <value>피치</value>
   </data>
   <data name="Screen_Options_RemoveAllMods" xml:space="preserve">
-    <value>Remove All Mods</value>
+    <value>모든 모드 제거</value>
   </data>
   <data name="Screen_Options_PausePlayTrack" xml:space="preserve">
     <value>Pause/Play Track</value>
   </data>
   <data name="Screen_Options_DecreasePlaybackRate" xml:space="preserve">
-    <value>Decrease Playback Rate</value>
+    <value>재생 속도 감소</value>
   </data>
   <data name="Screen_Options_IncreasePlaybackRate" xml:space="preserve">
-    <value>Increase Playback Rate</value>
+    <value>재생 속도 증가</value>
   </data>
   <data name="Screen_Options_TakeScreenshot" xml:space="preserve">
-    <value>Take Screenshot</value>
+    <value>스크린샷</value>
   </data>
   <data name="Screen_Options_OpenGameFolder" xml:space="preserve">
     <value>게임 폴더 열기</value>
   </data>
   <data name="Screen_Options_UpdateMapRankedStatuses" xml:space="preserve">
-    <value>Update Map Ranked Statuses</value>
+    <value>맵 랭크 상태 업데이트</value>
   </data>
   <data name="Screen_Options_UpdateMapOnlineOffsets" xml:space="preserve">
-    <value>Update Map Online Offsets</value>
+    <value>맵 온라인 오프셋 업데이트</value>
   </data>
   <data name="Screen_Options_LoadSongsFromOtherInstalledGames" xml:space="preserve">
     <value>외부 게임에서 곡 가져오기</value>
@@ -1002,13 +1001,13 @@ Marvelous instead.</value>
     <value>외부 게임에서 곡 불러오기</value>
   </data>
   <data name="Screen_Options_DisplayNotificationsFromBottomToTop" xml:space="preserve">
-    <value>Display Notifications From Bottom-To-Top</value>
+    <value>알림을 아래에서 위로 표시</value>
   </data>
   <data name="Screen_Options_DisplayOnlineFriendNotifications" xml:space="preserve">
-    <value>Display Online Friend Notifications</value>
+    <value>친구 온라인 알림 표시</value>
   </data>
   <data name="Screen_Options_PrioritizedGameMode" xml:space="preserve">
-    <value>Prioritized Game Mode</value>
+    <value>게임모드 우선순위</value>
   </data>
   <data name="Screen_Options_SuggestDifficultyfromOverallRating" xml:space="preserve">
     <value>Suggest Difficulty from Overall Rating</value>
@@ -1077,19 +1076,19 @@ Marvelous instead.</value>
     <value>Display Song Request Notifications</value>
   </data>
   <data name="Screen_Options_DisplayWarningForPausing" xml:space="preserve">
-    <value>Display Warning For Pausing</value>
+    <value>정지시 경고 표시</value>
   </data>
   <data name="Screen_Options_DisplayWarningForFailing" xml:space="preserve">
-    <value>Display Warning For Failing</value>
+    <value>실패시 경고 표시</value>
   </data>
   <data name="Screen_Options_DisplayEpilepsyWarning" xml:space="preserve">
-    <value>Display Epilepsy Warning</value>
+    <value>광과민성 경고 표시</value>
   </data>
   <data name="Screen_Options_DisplayMenuAudioVisualizer" xml:space="preserve">
-    <value>Display Menu Audio Visualizer</value>
+    <value>메뉴 비디오 비주얼라이저 표시</value>
   </data>
   <data name="Screen_Options_DisplayFailedLocalScores" xml:space="preserve">
-    <value>Display Failed Local Scores</value>
+    <value>실패한 로컬 기록 표시</value>
   </data>
   <data name="Screen_Options_DeleteOriginalFileAfterImport" xml:space="preserve">
     <value>Delete Original File After Import</value>
@@ -1362,37 +1361,37 @@ Marvelous instead.</value>
     <value>10K</value>
   </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
-    <value>Video Settings</value>
+    <value>화면 설정</value>
   </data>
   <data name="Screen_Options_AudioSettings" xml:space="preserve">
-    <value>Audio Settings</value>
+    <value>오디오 설정</value>
   </data>
   <data name="Screen_Options_LanguageSettings" xml:space="preserve">
-    <value>Language Settings</value>
+    <value>언어 설정</value>
   </data>
   <data name="Screen_Options_GameplaySettings" xml:space="preserve">
-    <value>Gameplay Settings</value>
+    <value>게임플레이 설정</value>
   </data>
   <data name="Screen_Options_SkinSettings" xml:space="preserve">
-    <value>Skin Settings</value>
+    <value>스킨 설정</value>
   </data>
   <data name="Screen_Options_InputSettings" xml:space="preserve">
-    <value>Input Settings</value>
+    <value>입력 설정</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>게임 모드별 설정</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
-    <value>Miscellaneous Settings</value>
+    <value>기타 설정</value>
   </data>
   <data name="Screen_Options_AdvancedSettings" xml:space="preserve">
-    <value>Advanced Settings</value>
+    <value>고급 설정</value>
   </data>
   <data name="Screen_Options_SearchResult" xml:space="preserve">
-    <value>{0} Search Result</value>
+    <value>검색결과 {0}개</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
-    <value>{0} Search Results</value>
+    <value>검색결과 {0}개</value>
   </data>
   <data name="Screen_Download_Musiciscurrentlypaused" xml:space="preserve">
     <value>Music is currently paused!</value>
@@ -1459,7 +1458,7 @@ for the selected game mode?</value>
     <value>Expert</value>
   </data>
   <data name="Screen_Download_MODE" xml:space="preserve">
-    <value>MODE: </value>
+    <value>모드:</value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
     <value>SORT BY: </value>
@@ -1599,7 +1598,7 @@ You can use the filters below to narrow down your search.</value>
     <value>Back</value>
   </data>
   <data name="Screen_Download_Select" xml:space="preserve">
-    <value>Select</value>
+    <value>선택</value>
   </data>
   <data name="Screen_Download_Download" xml:space="preserve">
     <value>다운로드</value>
@@ -2116,6 +2115,9 @@ for other players to download?</value>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
     <value>Refresh File Cache</value>
   </data>
+  <data name="Screen_Editor_RefreshEditorFromQuaFile" xml:space="preserve">
+    <value>Refresh Editor from .qua File</value>
+  </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
     <value>Upload</value>
   </data>
@@ -2132,10 +2134,10 @@ for other players to download?</value>
     <value>Open .qua File</value>
   </data>
   <data name="Screen_Editor_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>나가기</value>
   </data>
   <data name="Screen_Editor_Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>편집</value>
   </data>
   <data name="Screen_Editor_Undo" xml:space="preserve">
     <value>Undo</value>
@@ -2144,10 +2146,10 @@ for other players to download?</value>
     <value>Redo</value>
   </data>
   <data name="Screen_Editor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>복사</value>
   </data>
   <data name="Screen_Editor_Cut" xml:space="preserve">
-    <value>Cut</value>
+    <value>자르기</value>
   </data>
   <data name="Screen_Editor_PasteSnapped" xml:space="preserve">
     <value>Paste (snapped)</value>
@@ -2156,7 +2158,7 @@ for other players to download?</value>
     <value>Paste (unsnapped)</value>
   </data>
   <data name="Screen_Editor_Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>지우기</value>
   </data>
   <data name="Screen_Editor_SelectAll" xml:space="preserve">
     <value>Select All</value>
@@ -2505,6 +2507,12 @@ for other players to download?</value>
   </data>
   <data name="Screen_Editor_SaveChanges" xml:space="preserve">
     <value>SAVE CHANGES</value>
+  </data>
+  <data name="Screen_Editor_UnsavedChanges" xml:space="preserve">
+    <value>UNSAVED CHANGES</value>
+  </data>
+  <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
+    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
@@ -2987,10 +2995,10 @@ for other players to download?</value>
     <value>Change</value>
   </data>
   <data name="Screen_Editor_Free" xml:space="preserve">
-    <value>Free</value>
+    <value>Mod</value>
   </data>
   <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
-    <value>Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+    <value>Turning on Mod means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
   </data>
   <data name="Screen_Editor_SearchActions" xml:space="preserve">
     <value>Search Actions</value>
