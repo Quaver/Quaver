@@ -555,6 +555,9 @@
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
     <value>Contrôles du Gameplay</value>
   </data>
+  <data name="Screen_Options_ModKeybindTooltip" xml:space="preserve">
+    <value>Mod allows a keybind to trigger while additional modifier keys (Ctrl, Alt, or Shift) are held.</value>
+  </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
     <value>Interface Utilisateur du Gameplay</value>
   </data>
@@ -2110,6 +2113,9 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
     <value>Rafraichir le Cache du Fichier</value>
   </data>
+  <data name="Screen_Editor_RefreshEditorFromQuaFile" xml:space="preserve">
+    <value>Refresh Editor from .qua File</value>
+  </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
     <value>Publier</value>
   </data>
@@ -2499,6 +2505,12 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
   </data>
   <data name="Screen_Editor_SaveChanges" xml:space="preserve">
     <value>ENREGISTRER LES MODIFICATIONS</value>
+  </data>
+  <data name="Screen_Editor_UnsavedChanges" xml:space="preserve">
+    <value>UNSAVED CHANGES</value>
+  </data>
+  <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
+    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>Vous avez des Modifications non Enregistrées. Voulez-vous Sauvegarder&#xA;avant de Créer une Nouvelle Difficulté ?</value>
@@ -2981,10 +2993,10 @@ Vous pouvez utiliser les filtres ci-dessous pour cibler votre recherche.</value>
     <value>Change</value>
   </data>
   <data name="Screen_Editor_Free" xml:space="preserve">
-    <value>Free</value>
+    <value>Mod</value>
   </data>
   <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
-    <value>Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+    <value>Turning on Mod means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
   </data>
   <data name="Screen_Editor_SearchActions" xml:space="preserve">
     <value>Search Actions</value>
