@@ -555,6 +555,9 @@
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
     <value>Gameplay Hotkeys</value>
   </data>
+  <data name="Screen_Options_ModKeybindTooltip" xml:space="preserve">
+    <value>Mod allows a keybind to trigger while additional modifier keys (Ctrl, Alt, or Shift) are held.</value>
+  </data>
   <data name="Screen_Options_GameplayUserInterface" xml:space="preserve">
     <value>Gameplay Benutzeroberfläche</value>
   </data>
@@ -2111,6 +2114,9 @@ hochladen, damit andere Spieler es herunterladen können?</value>
   <data name="Screen_Editor_RefreshFileCache" xml:space="preserve">
     <value>Dateicache aktualisieren</value>
   </data>
+  <data name="Screen_Editor_RefreshEditorFromQuaFile" xml:space="preserve">
+    <value>Refresh Editor from .qua File</value>
+  </data>
   <data name="Screen_Editor_Upload" xml:space="preserve">
     <value>Hochladen</value>
   </data>
@@ -2500,6 +2506,12 @@ hochladen, damit andere Spieler es herunterladen können?</value>
   </data>
   <data name="Screen_Editor_SaveChanges" xml:space="preserve">
     <value>ÄNDERUNGEN SPEICHERN</value>
+  </data>
+  <data name="Screen_Editor_UnsavedChanges" xml:space="preserve">
+    <value>UNSAVED CHANGES</value>
+  </data>
+  <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
+    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>Du hast ungespeicherte Änderungen. Möchtest du&#xA; speichern, bevor du eine neue Schwierigkeit erstellt?</value>
@@ -2982,10 +2994,10 @@ hochladen, damit andere Spieler es herunterladen können?</value>
     <value>Change</value>
   </data>
   <data name="Screen_Editor_Free" xml:space="preserve">
-    <value>Free</value>
+    <value>Mod</value>
   </data>
   <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
-    <value>Turning on Free means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+    <value>Turning on Mod means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
   </data>
   <data name="Screen_Editor_SearchActions" xml:space="preserve">
     <value>Search Actions</value>
