@@ -169,13 +169,13 @@
     <value>TIPP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Drücke {0} um die Optionen zu öffnen.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Ziehe Map Dateien (.qp) in das Spiel um sie zu importieren.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Drücke {0} in der Songauswahl um die Map Vorschau anzuzeigen.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pausieren im Gameplay verhindert die Einreichung vom Score.</value>
@@ -190,10 +190,10 @@
     <value>Ziehe eine .mp3 Datei in das Spiel, um eine neue Map zu erstellen!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Drücke {0} in der Songauswahl um einen zufälligen Song auszuwählen.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Drücke {0}/{1} im Gameplay um die Scrollgeschwindigkeit zu ändern.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Dein Offset kann in den Optionen kalibriert werden.</value>
