@@ -169,13 +169,13 @@
     <value>PORADA:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Naciśnięcie kombinacji klawiszy {0} spowoduje otwarcie menu opcji.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Przeciągnij pliki map (.qp) do gry, aby je zaimportować.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Naciśnięcie klawisza {0} podczas wyboru utworu wyświetla podgląd mapy.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Wstrzymanie rozgrywki uniemożliwia przesłanie wyniku.</value>
@@ -190,10 +190,10 @@
     <value>Przeciągnij plik .mp3 w grze, aby utworzyć nową mapę!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Naciśnięcie klawisza {0} powoduje wybranie losowej mapy.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Naciśnięcie klawisza {0}/{1} podczas rozgrywki zmienia prędkość opadania notek.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Twój offset można skalibrować w menu opcji.</value>
