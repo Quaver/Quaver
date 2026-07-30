@@ -148,7 +148,7 @@
     <value>ออกจาก Quaver</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Quit the game?</value>
+    <value>ต้องการออกจากเกมหรือไม่?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>แข่งขันชิงอันดับในกระดานจัดอันดับ</value>
@@ -169,13 +169,13 @@
     <value>เคล็ดลับ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>การกดปุ่ม {0} จะเปิดเมนูการตั้งค่า</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>ลากไฟล์แมพ (.qp) เข้าไปในเกมเพื่อนำเข้า</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>การกดปุ่ม {0} ในหน้าเลือกเพลงจะแสดงตัวอย่างแมพ</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>การหยุดระหว่างเล่นจะทำให้คะแนนไม่นับ</value>
@@ -190,7 +190,7 @@
     <value>ลากไฟล์ .mp3 เข้ามาในเกมเพื่อสร้างแมพใหม่!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>การกดปุ่ม {0} ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
     <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
@@ -935,10 +935,10 @@
     <value>Skip Song Intro</value>
   </data>
   <data name="Screen_Options_DecreaseScrollSpeed" xml:space="preserve">
-    <value>ลดอัตราเร็วในการเลื่อน</value>
+    <value>ลดความเร็วโน้ต</value>
   </data>
   <data name="Screen_Options_IncreaseScrollSpeed" xml:space="preserve">
-    <value>เพิ่มอัตราเร็วในการเลื่อน</value>
+    <value>เพิ่มความเร็วโน้ต</value>
   </data>
   <data name="Screen_Options_DecreaseMapOffset" xml:space="preserve">
     <value>ลดค่า Offset ของแมพ</value>
@@ -2391,16 +2391,16 @@ sure you would like to start without all players ready?</value>
     <value>Would like to apply the modifier: "{0}" to your map?&#xA;&#xA;This action is NOT reversible! Choose wisely.</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
-    <value>CHANGE BACKGROUND / BANNER</value>
+    <value>เปลี่ยนพื้นหลัง/แบนเนอร์</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBannerMessage" xml:space="preserve">
-    <value>Would you like to change the background or the banner?</value>
+    <value>ต้องการเปลี่ยนพื้นหลังหรือแบนเนอร์หรือไม่?</value>
   </data>
   <data name="Screen_Editor_Background" xml:space="preserve">
     <value>BACKGROUND</value>
   </data>
   <data name="Screen_Editor_Banner" xml:space="preserve">
-    <value>BANNER</value>
+    <value>แบนเนอร์</value>
   </data>
   <data name="Screen_Editor_BackgroundChangedSuccessfully" xml:space="preserve">
     <value>Your background has been successfully changed!</value>
@@ -2412,10 +2412,10 @@ sure you would like to start without all players ready?</value>
     <value>CHANGING BANNER</value>
   </data>
   <data name="Screen_Editor_ChangingBannerMessage" xml:space="preserve">
-    <value>Please wait while your banner is being changed...</value>
+    <value>โปรดรอสักครู่ขณะกำลังเปลี่ยนแบนเนอร์...</value>
   </data>
   <data name="Screen_Editor_BannerChangedSuccessfully" xml:space="preserve">
-    <value>Your banner has successfully changed!</value>
+    <value>เปลี่ยนแบนเนอร์สำเร็จ!</value>
   </data>
   <data name="Screen_Editor_ChangeBannerError" xml:space="preserve">
     <value>There was an issue changing your banner!</value>
@@ -2817,7 +2817,7 @@ sure you would like to start without all players ready?</value>
     <value>Please re-log and try again!</value>
   </data>
   <data name="Screen_Editor_UploadErrorBanned" xml:space="preserve">
-    <value>You cannot upload a mapset while banned!</value>
+    <value>ไม่สามารถอัปโหลดแมพเซตได้ขณะโดนแบน!</value>
   </data>
   <data name="Screen_Editor_UploadErrorNoMapsetSent" xml:space="preserve">
     <value>No mapset was sent with the request!</value>
