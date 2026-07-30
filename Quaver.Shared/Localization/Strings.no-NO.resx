@@ -169,13 +169,13 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Ved å trykke på {0} vil åpne innstillinger-menyen.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Dra map-filer (.qp) inn i spillet for å importere dem.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Ved å trykke på {0} i sang-velgeren vises det forhåndsvisning av map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pauser mens du spiller hindrer score-submisjon.</value>
@@ -190,10 +190,10 @@
     <value>Dra en .mp3 fil inni spillet for å lage et nytt map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Ved å trykke på {0} i sang-velgeren velger du en tilfeldig sang.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Ved å trykke på {0}/{1} midt i spill endrer det rullehastighet.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Ditt offset kan kalibreres i instillngene.</value>
@@ -2593,22 +2593,22 @@ Use the filters to narrow your search.</value>
     <value>Deaktiverte {0} farging</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
+    <value>Legger til et bokmerke i gjeldende posisjon i tidslinjen.&#xA;- Hold musepekeren over et bokmerke for å vise notater som er forbundet med den.&#xA;- Venstreklikk et bokmerke til å redigere den.&#xA;- Høyreklikk et bokmerke for å slette den.&#xA;-Hurtigtast: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Taktslag</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
+    <value>Endre nåværende taktslag divisor&#xA;Hurtigtast: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
+    <value>Endre avspillingshastighet.&#xA;Hurtigtast: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Prøvespill</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
+    <value>Lagre og prøvespill din map.&#xA;Høyreklikk lar deg velge modifikatorer til å bruke mens du prøvespiller.&#xA;Hurtigtast: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Tidspunkt editor</value>
@@ -2653,7 +2653,7 @@ Use the filters to narrow your search.</value>
     <value>Rullehastigheter (SV) lar deg til å dynamisk endre hastighet og retningen fra hvor objekten faller. </value>
   </data>
   <data name="Screen_Editor_ScrollPointInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual {0} point to edit it and double-click to go to its position in time.</value>
+    <value>Du kan klikke på individuelle {0}-punkter til å endre dem og dobbeltklikke til å gå til posisjonen i tid.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>(Forskjell fra SF)</value>
@@ -2662,7 +2662,7 @@ Use the filters to narrow your search.</value>
     <value>SV</value>
   </data>
   <data name="Screen_Editor_SelectCurrentScrollPoint" xml:space="preserve">
-    <value>Select current {0}</value>
+    <value>Velg gjeldende {0}</value>
   </data>
   <data name="Screen_Editor_Multiplier" xml:space="preserve">
     <value>Multiplikator</value>
@@ -2776,7 +2776,7 @@ Use the filters to narrow your search.</value>
     <value>Mod</value>
   </data>
   <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
-    <value>Turning on Mod means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+    <value>Ved å slå på Free betyr det at å trykke på tasten med ytterligere modifikatorer (ctrl, alt, ...) vil også utløse handlingen.</value>
   </data>
   <data name="Screen_Editor_SearchActions" xml:space="preserve">
     <value>Søkehandlinger</value>
@@ -2986,10 +2986,10 @@ Use the filters to narrow your search.</value>
     <value>Forhåndsvisningstid endret til: {0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
-    <value>Zoom In ({0})</value>
+    <value>Zoom inn ({0})</value>
   </data>
   <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
-    <value>Zoom Out ({0})</value>
+    <value>Zoom inn ({0})</value>
   </data>
   <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
     <value>Tett linjer oppdaget. Linjer vil bli tegnet sjeldnere.</value>
@@ -3001,10 +3001,10 @@ Use the filters to narrow your search.</value>
     <value>Laster spektrogram...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>Søk til neste bokmerke i tidslinjen.&#xA;Hurtigtast: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>Søk til forrige bokmerke i tidslinjen.&#xA;Hurtigtast: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} tidspunkter valgt</value>
@@ -3016,7 +3016,7 @@ Use the filters to narrow your search.</value>
     <value>SVene i denne gruppen er sammenflettet til alle andre scroll-grupper.</value>
   </data>
   <data name="Screen_Editor_SelectCurrentScrollPointTooltip" xml:space="preserve">
-    <value>This will select the {0} at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all {0}s up to that range, if one is selected already.</value>
+    <value>Dette vil velge {0}en i gjeldende editor tidsstempel. Hvis CTRL blir holdt, så vil det legge til utvalget istedet. Hvis SHIFT blir holdt, vil den velge alle {0}er opp til det området, hvis en er valgt allerede.</value>
   </data>
   <data name="Screen_Editor_ScrollSpeedFactorsSelected" xml:space="preserve">
     <value>{0} rullehastighetsfaktorer valgt</value>
