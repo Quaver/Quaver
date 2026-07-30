@@ -169,13 +169,13 @@
     <value>СОВЕТ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Нажатие {0} открывает меню настроек.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Перетащите файлы карты (.qp) в игру, чтобы импортировать их.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Нажатие {0} при выборе песни показывает предпросмотр карты.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Пауза во время игры отменяет отправку счёта.</value>
@@ -190,10 +190,10 @@
     <value>Перетащите .mp3 файл в игру для создания карты!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Нажатие {0} при выборе песни выбирает случайную песню.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Нажатие {0}/{1} в игре меняет скорость прокрутки.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Ваша задержка может быть откалибрована в меню настроек.</value>
