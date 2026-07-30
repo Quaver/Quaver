@@ -148,7 +148,7 @@
     <value>ВЫЙТИ ИЗ QUAVER</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Вы уверены, что хотите выйти из игры?</value>
+    <value>Quit the game?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>Соревнуйтесь за места в таблице лидеров</value>
@@ -169,13 +169,13 @@
     <value>СОВЕТ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Нажатие CTRL+O открывает меню настроек.</value>
+    <value>Pressing {0} will open the options menu.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Перетащите файлы карты (.qp) в игру, чтобы импортировать их.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Нажатие F3 при выборе песни показывает предпросмотр карты.</value>
+    <value>Pressing {0} in song select displays a map preview.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Пауза во время игры отменяет отправку счёта.</value>
@@ -190,13 +190,10 @@
     <value>Перетащите .mp3 файл в игру для создания карты!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Нажатие F2 при выборе песни выбирает случайную песню.</value>
-  </data>
-  <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>Нажатие F10 в меню открывает профиль игрока.</value>
+    <value>Pressing {0} in song select chooses a random song.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Нажатие F3/F4 в игре меняет скорость прокрутки.</value>
+    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Ваша задержка может быть откалибрована в меню настроек.</value>
@@ -800,7 +797,7 @@
     <value>Произошло ошибка при экспорте реплея!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>Вы уже настроили локальную задержку для этой карты! Нет необходимости делать это снова.</value>
+    <value>This map's local offset is already fixed.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
     <value>Недостаточно данных для настройки локальной задержки!</value>
@@ -1019,9 +1016,6 @@
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
     <value>Использовать Плавное Начало Аудио во время Игры</value>
   </data>
-  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Отображать Оверлей во время Игры (Shift + F6)</value>
-  </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
     <value>Отображать Уведомления во время Игры</value>
   </data>
@@ -1121,242 +1115,53 @@
   <data name="Screen_Options_Searchforoptions" xml:space="preserve">
     <value>Поиск Настроек...</value>
   </data>
-  <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 1К</value>
+  <data name="Screen_Options_KeyCountGameplayLayout" xml:space="preserve">
+    <value>{0}K Gameplay Layout</value>
   </data>
-  <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 1К</value>
+  <data name="Screen_Options_KeyCountScrollSpeed" xml:space="preserve">
+    <value>{0}K Scroll Speed</value>
   </data>
-  <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 1К</value>
+  <data name="Screen_Options_KeyCountScrollDirection" xml:space="preserve">
+    <value>{0}K Scroll Direction</value>
   </data>
-  <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 1К</value>
+  <data name="Screen_Options_KeyCountScratchLayout" xml:space="preserve">
+    <value>{0}K Scratch Layout</value>
   </data>
-  <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 1К слева</value>
+  <data name="Screen_Options_KeyCountPlaceScratchLaneOnLeft" xml:space="preserve">
+    <value>Place {0}K Scratch Lane On Left</value>
   </data>
-  <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 1К</value>
+  <data name="Screen_Options_KeyCountCoopLayout" xml:space="preserve">
+    <value>{0}K Co-op Layout</value>
   </data>
-  <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 1К</value>
+  <data name="Screen_Options_KeyCountPrioritizedDifficulty" xml:space="preserve">
+    <value>Prioritized {0}K Difficulty</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
     <value>1 Клавиша</value>
   </data>
-  <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 2К</value>
-  </data>
-  <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 2К</value>
-  </data>
-  <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 2К</value>
-  </data>
-  <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 2К</value>
-  </data>
-  <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 2К слева</value>
-  </data>
-  <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 2К</value>
-  </data>
-  <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 2К</value>
-  </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
     <value>2 Клавиши</value>
-  </data>
-  <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 3К</value>
-  </data>
-  <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 3К</value>
-  </data>
-  <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 3К</value>
-  </data>
-  <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 3К</value>
-  </data>
-  <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 3К слева</value>
-  </data>
-  <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 3К</value>
-  </data>
-  <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 3К</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
     <value>3 Клавиши</value>
   </data>
-  <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 4К</value>
-  </data>
-  <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 4К</value>
-  </data>
-  <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 4К</value>
-  </data>
-  <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 4К</value>
-  </data>
-  <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 4К слева</value>
-  </data>
-  <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 4К</value>
-  </data>
-  <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 4К</value>
-  </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
     <value>4 Клавиши</value>
-  </data>
-  <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 5К</value>
-  </data>
-  <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 5К</value>
-  </data>
-  <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 5К</value>
-  </data>
-  <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 5К</value>
-  </data>
-  <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 5К слева</value>
-  </data>
-  <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 5К</value>
-  </data>
-  <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 5К</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
     <value>5 Клавиши</value>
   </data>
-  <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 6К</value>
-  </data>
-  <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 6К</value>
-  </data>
-  <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 6К</value>
-  </data>
-  <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 6К</value>
-  </data>
-  <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 6К слева</value>
-  </data>
-  <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 6К</value>
-  </data>
-  <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 6К</value>
-  </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
     <value>6 Клавиш</value>
-  </data>
-  <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 7К</value>
-  </data>
-  <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 7К</value>
-  </data>
-  <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 7К</value>
-  </data>
-  <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 7К</value>
-  </data>
-  <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 7К слева</value>
-  </data>
-  <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 7К</value>
-  </data>
-  <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 7К</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
     <value>7 Клавиш</value>
   </data>
-  <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 8К</value>
-  </data>
-  <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 8К</value>
-  </data>
-  <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 8К</value>
-  </data>
-  <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 8К</value>
-  </data>
-  <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 8К слева</value>
-  </data>
-  <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 8К</value>
-  </data>
-  <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 8К</value>
-  </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
     <value>8 Клавиш</value>
   </data>
-  <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 9К</value>
-  </data>
-  <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 9К</value>
-  </data>
-  <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 9К</value>
-  </data>
-  <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 9К</value>
-  </data>
-  <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 9К слева</value>
-  </data>
-  <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 9К</value>
-  </data>
-  <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 9К</value>
-  </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
     <value>9 Клавиш</value>
-  </data>
-  <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>Раскладка для 10К</value>
-  </data>
-  <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>Скорость Прокрутки для 10К</value>
-  </data>
-  <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>Направление Прокрутки для 10К</value>
-  </data>
-  <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>Раскладка Scratch для 10К</value>
-  </data>
-  <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Размещать Scratch-дорожку для 10К слева</value>
-  </data>
-  <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>Кооперативная Раскладка для 10К</value>
-  </data>
-  <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Приоритетная Сложность для 10К</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Клавиш</value>
@@ -1511,12 +1316,6 @@
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
     <value>ПАРАМЕТРЫ ФИЛЬТРОВ</value>
   </data>
-  <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Дата Загрузки</value>
-  </data>
-  <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Дата Последнего Обновления</value>
-  </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
     <value>Показывать Свои Наборы Карт</value>
   </data>
@@ -1530,7 +1329,9 @@
     <value>Песня Не Выбрана:</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>Чтобы начать загрузку, дважды кликните по песне. Одиночный клик позволяет прослушать отрывок песни. Используйте фильтры ниже, чтобы уточнить поиск.</value>
+    <value>Double-click a song to download it.
+Click once to preview it.
+Use the filters to narrow your search.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>Дата Окончания</value>
@@ -1644,7 +1445,7 @@
     <value>ВЫЙТИ В ЛОББИ</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Вы уверены, что хотите выйти в лобби?</value>
+    <value>Exit to the lobby?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
     <value>Покинуть</value>
@@ -2499,7 +2300,7 @@
     <value>UNSAVED CHANGES</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
+    <value>This map hasn't been saved.&#xA;Refreshing from .qua will discard unsaved changes. Continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
@@ -2520,7 +2321,7 @@
     <value>NO</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Are you sure you would like to submit your mapset for rank?&#xA;Note: It must follow the ranking criteria in order to be accepted.</value>
+    <value>Submit this mapset for rank?&#xA;It must meet the ranking criteria.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>CUSTOM BEAT SNAP</value>
@@ -2625,7 +2426,7 @@
     <value>Please wait while your map is being submitted for rank...</value>
   </data>
   <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
-    <value>Your mapset has issues that prevent it from being ranked. Please review the AutoMod for each difficulty, and then try again.</value>
+    <value>AutoMod found ranking blockers. Review each difficulty and try again.</value>
   </data>
   <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
     <value>An error occurred while submitting your mapset for rank.</value>
@@ -2793,22 +2594,22 @@
     <value>Disabled {0} coloring</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: CTRL + B</value>
+    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Beat Snap</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: CTRL + Up/Down/Scroll Wheel</value>
+    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: CTRL + -/+</value>
+    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Test Play</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: F4</value>
+    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Timing Point Editor</value>
@@ -3186,10 +2987,10 @@
     <value>Preview time changed to: {0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
-    <value>Zoom In (Page Up)</value>
+    <value>Zoom In ({0})</value>
   </data>
   <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
-    <value>Zoom Out (Page Down)</value>
+    <value>Zoom Out ({0})</value>
   </data>
   <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
     <value>Dense lines detected. Lines will be drawn less frequently.</value>
@@ -3201,10 +3002,10 @@
     <value>Loading Spectrogram...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: CTRL + Right</value>
+    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: CTRL + Left</value>
+    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} timing points selected</value>
@@ -3249,7 +3050,7 @@
     <value>Ready for rank!</value>
   </data>
   <data name="Screen_Editor_AutoModWarningTooltip" xml:space="preserve">
-    <value>This is a warning of a potential error. You can ignore this if it isn't an issue.</value>
+    <value>Potential error; ignore it if harmless.</value>
   </data>
   <data name="Screen_Editor_AutoModCriticalTooltip" xml:space="preserve">
     <value>This is a critical error which affects the playability of your map.</value>
