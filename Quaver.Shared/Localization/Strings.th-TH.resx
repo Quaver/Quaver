@@ -214,28 +214,28 @@
     <value>เผยแพร่เมื่อ {0}</value>
   </data>
   <data name="Screen_Main_NewsLoading" xml:space="preserve">
-    <value>Loading news…</value>
+    <value>กำลังโหลดข่าวสาร...</value>
   </data>
   <data name="Screen_Main_NewsUnavailable" xml:space="preserve">
-    <value>News is currently unavailable</value>
+    <value>ข่าวสารไม่พร้อมใช้งานในขณะนี้</value>
   </data>
   <data name="Screen_Main_AutoLoginFailed" xml:space="preserve">
-    <value>Failed to automatically login!</value>
+    <value>ล็อกอินอัตโนมัติไม่สำเร็จ!</value>
   </data>
   <data name="Screen_Main_NoMapsLoaded" xml:space="preserve">
-    <value>You have no maps loaded. Try importing some!</value>
+    <value>ไม่มีแมพที่โหลดไว้ ลองนำเข้าแมพสิ!</value>
   </data>
   <data name="Screen_Main_NotImplemented" xml:space="preserve">
     <value>Not implemented yet!</value>
   </data>
   <data name="Screen_Main_MultiplayerLoginRequired" xml:space="preserve">
-    <value>You must be logged in to play multiplayer.</value>
+    <value>ต้องล็อกอินเพื่อเล่นโหมดผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_Main_EditorMapRequired" xml:space="preserve">
-    <value>You cannot edit without a map selected.</value>
+    <value>ไม่สามารถแก้ไขแมพได้ถ้ายังไม่ได้เลือกแมพ</value>
   </data>
   <data name="Screen_Main_MapReadFailed" xml:space="preserve">
-    <value>Unable to read map file!</value>
+    <value>ไม่สามารถอ่านไฟล์แมพได้!</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>ทั้งหมด</value>
@@ -490,7 +490,7 @@
     <value>อินพุต</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>เฉพาะเกมโหมด</value>
+    <value>เฉพาะโหมดเกม</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
     <value>อื่น ๆ</value>
@@ -538,19 +538,19 @@
     <value>แถบความคืบหน้า</value>
   </data>
   <data name="Screen_Options_LaneCover" xml:space="preserve">
-    <value>Lane Cover</value>
+    <value>ตัวปิดแถว</value>
   </data>
   <data name="Screen_Options_Selection" xml:space="preserve">
     <value>Selection</value>
   </data>
   <data name="Screen_Options_Navigation" xml:space="preserve">
-    <value>Navigation</value>
+    <value>การนำทาง</value>
   </data>
   <data name="Screen_Options_Sharing" xml:space="preserve">
-    <value>Sharing</value>
+    <value>การแชร์</value>
   </data>
   <data name="Screen_Options_Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Screen_Options_GameplayControls" xml:space="preserve">
     <value>Gameplay Controls</value>
@@ -601,7 +601,7 @@
     <value>แสดงค่า FPS</value>
   </data>
   <data name="Screen_Options_AudioOutputDevice" xml:space="preserve">
-    <value>Audio Output Device</value>
+    <value>อุปกรณ์เอาต์พุตเสียง</value>
   </data>
   <data name="Screen_Options_MasterVolume" xml:space="preserve">
     <value>ระดับเสียงหลัก</value>
@@ -625,7 +625,7 @@
     <value>กลับ</value>
   </data>
   <data name="Screen_Results_RetryMap" xml:space="preserve">
-    <value>Retry Map</value>
+    <value>เล่นแมพนี้ใหม่</value>
   </data>
   <data name="Screen_Results_WatchReplay" xml:space="preserve">
     <value>ดูรีเพลย์</value>
@@ -637,10 +637,10 @@
     <value>แก้ค่า Offset</value>
   </data>
   <data name="Screen_Results_ConvertScore" xml:space="preserve">
-    <value>Convert Score</value>
+    <value>แปลงคะแนน</value>
   </data>
   <data name="Screen_Results_PleasewaitYourscoreisalreadybeingconverted" xml:space="preserve">
-    <value>Please wait! Your score is already being converted!</value>
+    <value>กำลังแปลงคะแนนอยู่ โปรดรอสักครู่!</value>
   </data>
   <data name="Screen_Results_Overview" xml:space="preserve">
     <value>ภาพรวม</value>
@@ -719,7 +719,7 @@
     <value>ความแม่นยำโดยรวม</value>
   </data>
   <data name="Screen_Results_UnrankedGamemode" xml:space="preserve">
-    <value>เกมโหมดไม่จัดอันดับ</value>
+    <value>โหมดเกมไม่จัดอันดับ</value>
   </data>
   <data name="Screen_Results_Matchplayedon" xml:space="preserve">
     <value>เล่นแมตช์เมื่อวันที่ {0} เวลา {1}</value>
@@ -1379,7 +1379,7 @@
     <value>Input Settings</value>
   </data>
   <data name="Screen_Options_GamemodespecificSettings" xml:space="preserve">
-    <value>Game Mode Specific Settings</value>
+    <value>การตั้งค่าเฉพาะโหมดเกม</value>
   </data>
   <data name="Screen_Options_MiscellaneousSettings" xml:space="preserve">
     <value>Miscellaneous Settings</value>
@@ -1458,7 +1458,7 @@ for the selected game mode?</value>
     <value>Expert</value>
   </data>
   <data name="Screen_Download_MODE" xml:space="preserve">
-    <value>MODE: </value>
+    <value>โหมด: </value>
   </data>
   <data name="Screen_Download_SORTBY" xml:space="preserve">
     <value>SORT BY: </value>
@@ -1683,7 +1683,7 @@ sure you would like to start without all players ready?</value>
     <value>เปลี่ยนชื่อห้อง</value>
   </data>
   <data name="Screen_Multi_ChangeGameNameMessage" xml:space="preserve">
-    <value>Enter a new name for the multiplayer game...</value>
+    <value>ใส่ชื่อห้องผู้เล่นหลายคนใหม่...</value>
   </data>
   <data name="Screen_Multi_EnterNamePlaceholder" xml:space="preserve">
     <value>Enter a name...</value>
@@ -1692,7 +1692,7 @@ sure you would like to start without all players ready?</value>
     <value>เปลี่ยนรหัสผ่านห้อง</value>
   </data>
   <data name="Screen_Multi_ChangeGamePasswordMessage" xml:space="preserve">
-    <value>Enter a new password for the multiplayer game...</value>
+    <value>ใส่รหัสผ่านห้องผู้เล่นหลายคนใหม่...</value>
   </data>
   <data name="Screen_Multi_EnterPasswordPlaceholder" xml:space="preserve">
     <value>Enter a password...</value>
@@ -1725,88 +1725,88 @@ sure you would like to start without all players ready?</value>
     <value>ชนะ {0}</value>
   </data>
   <data name="Screen_Multiplayer_HeaderTitle" xml:space="preserve">
-    <value>MULTIPLAYER</value>
+    <value>ผู้เล่นหลายคน</value>
   </data>
   <data name="Screen_Multiplayer_HeaderSubtitle" xml:space="preserve">
-    <value>GAME</value>
+    <value>ห้อง</value>
   </data>
   <data name="Screen_Multiplayer_HeaderDescription" xml:space="preserve">
-    <value>play a match in real-time with others</value>
+    <value>เล่นแมตช์พร้อมกันกับผู้เล่นคนอื่น</value>
   </data>
   <data name="Screen_Multiplayer_Leave" xml:space="preserve">
-    <value>leave</value>
+    <value>ออก</value>
   </data>
   <data name="Screen_Multiplayer_Options" xml:space="preserve">
-    <value>options</value>
+    <value>การตั้งค่า</value>
   </data>
   <data name="Screen_Multiplayer_MatchHistory" xml:space="preserve">
-    <value>match history</value>
+    <value>ประวัติแมตช์</value>
   </data>
   <data name="Screen_Multiplayer_Commands" xml:space="preserve">
-    <value>commands</value>
+    <value>คำสั่ง</value>
   </data>
   <data name="Screen_Multiplayer_GameMode" xml:space="preserve">
-    <value>Game Mode</value>
+    <value>โหมดเกม</value>
   </data>
   <data name="Screen_Multiplayer_MaxPlayers" xml:space="preserve">
-    <value>Max Players</value>
+    <value>ผู้เล่นสูงสุด</value>
   </data>
   <data name="Screen_Multiplayer_AutoHostRotation" xml:space="preserve">
-    <value>Auto Host Rotation</value>
+    <value>เปลี่ยนเจ้าของห้องอัตโนมัติ</value>
   </data>
   <data name="Screen_Multiplayer_FreeMod" xml:space="preserve">
-    <value>Free Mod</value>
+    <value>เลือกตัวดัดแปลงได้อิสระ</value>
   </data>
   <data name="Screen_Multiplayer_FreeRate" xml:space="preserve">
-    <value>Free Rate</value>
+    <value>เลือกความเร็วได้อิสระ</value>
   </data>
   <data name="Screen_Multiplayer_EnablePreview" xml:space="preserve">
-    <value>Enable Preview</value>
+    <value>เปิดตัวอย่าง</value>
   </data>
   <data name="Screen_Multiplayer_HealthType" xml:space="preserve">
-    <value>Health Type</value>
+    <value>ประเภทพลังชีวิต</value>
   </data>
   <data name="Screen_Multiplayer_Lives" xml:space="preserve">
-    <value>Lives</value>
+    <value>ชีวิต</value>
   </data>
   <data name="Screen_Multiplayer_AllowedGameModes" xml:space="preserve">
-    <value>Allowed Game Modes</value>
+    <value>โหมดเกมที่อนุญาต</value>
   </data>
   <data name="Screen_Multiplayer_MaximumSongLength" xml:space="preserve">
-    <value>Maximum Song Length</value>
+    <value>ความยาวเพลงสูงสุด</value>
   </data>
   <data name="Screen_Multiplayer_DifficultyRange" xml:space="preserve">
-    <value>Difficulty Range</value>
+    <value>ช่วงระดับความยาก</value>
   </data>
   <data name="Screen_Multiplayer_LongNotePercentageRange" xml:space="preserve">
-    <value>Long Note % Range</value>
+    <value>ช่วง % โน้ตยาว</value>
   </data>
   <data name="Screen_Multiplayer_StartMatch" xml:space="preserve">
-    <value>START MATCH</value>
+    <value>เริ่มแมตช์</value>
   </data>
   <data name="Screen_Multiplayer_ReadyUp" xml:space="preserve">
-    <value>READY UP</value>
+    <value>เตรียมพร้อม</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishes" xml:space="preserve">
-    <value>Please wait until the match finishes before performing this action.</value>
+    <value>โปรดรอให้แมตช์จบก่อนทำสิ่งนี้</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeReadying" xml:space="preserve">
-    <value>Please wait until the match finishes before readying up.</value>
+    <value>โปรดรอให้แมตช์จบก่อนเตรียมพร้อม</value>
   </data>
   <data name="Screen_Multiplayer_CannotReadyWithoutMap" xml:space="preserve">
-    <value>You cannot ready up if you do not have the map!</value>
+    <value>ไม่สามารถเตรียมพร้อมได้ถ้าไม่มีแมพ</value>
   </data>
   <data name="Screen_Multiplayer_SelectMap" xml:space="preserve">
-    <value>select map</value>
+    <value>เลือกแมพ</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMap" xml:space="preserve">
-    <value>Please wait until the match finishes before selecting another map.</value>
+    <value>โปรดรอให้แมตช์จบก่อนเลือกแมพอื่น</value>
   </data>
   <data name="Screen_Multiplayer_CannotSelectMapIfNotHost" xml:space="preserve">
-    <value>You cannot select the map if you aren't host!</value>
+    <value>เลือกแมพไม่ได้ถ้าไม่ใช่เจ้าของห้อง!</value>
   </data>
   <data name="Screen_Multiplayer_Unready" xml:space="preserve">
-    <value>UNREADY</value>
+    <value>ยกเลิกเตรียมพร้อม</value>
   </data>
   <data name="Screen_Multiplayer_Ready" xml:space="preserve">
     <value>พร้อม</value>
@@ -1815,19 +1815,19 @@ sure you would like to start without all players ready?</value>
     <value>ไม่พร้อม</value>
   </data>
   <data name="Screen_Multiplayer_CancelMatchStart" xml:space="preserve">
-    <value>CANCEL MATCH START</value>
+    <value>ยกเลิกเริ่มแมตช์</value>
   </data>
   <data name="Screen_Multiplayer_Modifiers" xml:space="preserve">
     <value>ตัวดัดแปลง</value>
   </data>
   <data name="Screen_Multiplayer_WaitUntilMatchFinishesBeforeSelectingMods" xml:space="preserve">
-    <value>Please wait until the match finishes before selecting mods.</value>
+    <value>โปรดรอให้แมตช์จบก่อนเลือกตัวดัดแปลง</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeam" xml:space="preserve">
     <value>เปลี่ยนทีม</value>
   </data>
   <data name="Screen_Multiplayer_MustUnreadyToSwitchTeams" xml:space="preserve">
-    <value>You must unready in order to switch teams!</value>
+    <value>ต้องยกเลิกเตรียมพร้อมก่อนเปลี่ยนทีม!</value>
   </data>
   <data name="Screen_Multiplayer_CannotSwitchTeamsDuringCountdown" xml:space="preserve">
     <value>You cannot switch teams when the countdown timer is active</value>
@@ -1863,7 +1863,7 @@ sure you would like to start without all players ready?</value>
     <value>กรรมการ</value>
   </data>
   <data name="Screen_Multiplayer_PlayersCount" xml:space="preserve">
-    <value>({0}/{1}) Players</value>
+    <value>ผู้เล่น ({0}/{1}) คน</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
     <value>Waiting to start</value>
@@ -1878,7 +1878,7 @@ sure you would like to start without all players ready?</value>
     <value>Match in progress. Please wait until the next one!</value>
   </data>
   <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
-    <value>Mods: None</value>
+    <value>ตัวดัดแปลง: ไม่มี</value>
   </data>
   <data name="Screen_Multiplayer_HostSelectingMap" xml:space="preserve">
     <value>Host is currently selecting a map!</value>
@@ -1914,7 +1914,7 @@ sure you would like to start without all players ready?</value>
     <value>แมตช์ได้เริ่มไปแล้ว คลิกเพื่อดูแมตช์บนเว็บในฐานะกรรมการ </value>
   </data>
   <data name="Screen_MultiplayerLobby_MatchDetails" xml:space="preserve">
-    <value>รายละเอียดของแมตช์</value>
+    <value>รายละเอียดแมตช์</value>
   </data>
   <data name="Screen_MultiplayerLobby_ViewInformationAboutMatch" xml:space="preserve">
     <value>View information about a match</value>
@@ -1965,10 +1965,10 @@ sure you would like to start without all players ready?</value>
     <value>รหัสผ่าน</value>
   </data>
   <data name="Screen_MultiplayerLobby_GamesFound" xml:space="preserve">
-    <value>เกมที่ค้นเจอ</value>
+    <value>ห้องที่ค้นเจอ</value>
   </data>
   <data name="Screen_MultiplayerLobby_GameFound" xml:space="preserve">
-    <value>เกมที่ค้นเจอ</value>
+    <value>ห้องที่ค้นเจอ</value>
   </data>
   <data name="Screen_MultiplayerLobby_SearchForGames" xml:space="preserve">
     <value>ค้นหาห้อง...</value>
@@ -2061,7 +2061,7 @@ sure you would like to start without all players ready?</value>
     <value>ผู้เล่น</value>
   </data>
   <data name="Screen_MultiplayerLobby_AllowedGameModes" xml:space="preserve">
-    <value>Allowed Game Modes</value>
+    <value>โหมดเกมที่อนุญาต</value>
   </data>
   <data name="Screen_MultiplayerLobby_None" xml:space="preserve">
     <value>None</value>
@@ -2163,7 +2163,7 @@ sure you would like to start without all players ready?</value>
     <value>Swap Lanes of Objects</value>
   </data>
   <data name="Screen_Editor_Lane" xml:space="preserve">
-    <value>Lane {0}</value>
+    <value>แถวที่ {0}</value>
   </data>
   <data name="Screen_Editor_MoveObjectsToLayer" xml:space="preserve">
     <value>Move Objects To Layer</value>
@@ -2196,7 +2196,7 @@ sure you would like to start without all players ready?</value>
     <value>Set Song Select Preview Time</value>
   </data>
   <data name="Screen_Editor_EnableAutoMod" xml:space="preserve">
-    <value>Enable AutoMod</value>
+    <value>เปิดใช้งาน AutoMod</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMap" xml:space="preserve">
     <value>Apply Offset To Map</value>
