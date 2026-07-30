@@ -169,13 +169,13 @@
     <value>提示:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>按下{0}可以打開設定</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>把譜面檔案拉進遊戲視窗就可以直接導入譜面哦!</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>選擇譜面時按{0}鍵就可以打開譜面預覽哦!</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>遊玩時暫停會防止成績上傳</value>
@@ -190,10 +190,10 @@
     <value>把mp3檔案拉進遊戲視窗就可以創造全新的譜面!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>選擇譜面時按{0}鍵的話, Quaver會選擇一個隨機的譜面!</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>遊玩時按{0}/{1}鍵就可以調整你的下落速度!</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>你可以在設定裏整理你的音訊/視覺延遲!</value>
