@@ -169,13 +169,13 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Tryk {0} for at åbne indstillingerne.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Træk mapfiler (.qp) ind i spilvinduet for at importere dem.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Tryk {0} under sangvalg for at se en forhåndsvisning af et map.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>At pause i gameplay forhindrer dig i at indsende din score.</value>
@@ -190,10 +190,10 @@
     <value>Træk en .mp3-fil ind i spillet for at lave et nyt map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Tryk {0} under sangvalg for at vælge en tilfældig sang.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Tryk {0}/{1} i gameplay for at ændre din rullehastighed.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Dit offset kan kalibreres i indstillingerne.</value>
@@ -2653,7 +2653,7 @@ Use the filters to narrow your search.</value>
     <value>Scroll velocities (SV) giver dig mulighed for at ændre hastigheden og retningen som objekterne bevæger sig, dynamisk.</value>
   </data>
   <data name="Screen_Editor_ScrollPointInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual {0} point to edit it and double-click to go to its position in time.</value>
+    <value>Du kan klikke på et individuelt {0}-point for at redigere det, og dobbeltklikke for at gå til dets position.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>(Difference from SF)</value>
