@@ -169,13 +169,13 @@
     <value>你知道吗：</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>按下 {0} 打开选项菜单。</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>将谱面文件（.qp）拖入游戏窗口即可导入。</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>在选歌界面按下 {0} 键可以显示谱面预览。</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>如果在游玩时暂停，成绩将不会上传。</value>
@@ -190,10 +190,10 @@
     <value>如需创建谱面，请将 .mp3 文件拖入游戏窗口！</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>在选歌界面按下 {0} 键会随机选择一首歌曲。</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>在游玩时按下 {0}/{1} 键可以更改物件移动速度。</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>在选项菜单可以校正您的延迟。</value>
@@ -2593,22 +2593,22 @@ Use the filters to narrow your search.</value>
     <value>已禁用 {0} 上色</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
+    <value>在当前位置添加书签。将鼠标置于黄色书签线上可查看其中的注释。.&amp;#xA左键书签线以编辑，右键以删除。快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>吸附分度</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
+    <value>更改当前吸附分度。&#xA;快捷键：{0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
+    <value>更改播放速度。&#xA;快捷键：{0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>试玩</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
+    <value>保存并试玩谱面。&#xA;右键以选择试玩使用的模组。&#xA;快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>BPM 编辑器</value>
@@ -2653,7 +2653,7 @@ Use the filters to narrow your search.</value>
     <value>SV可以动态更改物件下落速度与方向。</value>
   </data>
   <data name="Screen_Editor_ScrollPointInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual {0} point to edit it and double-click to go to its position in time.</value>
+    <value>点击单个 {0} 节点以编辑，双击可跳转到节点时间。</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>（与 SSF 的区别）</value>
@@ -2662,7 +2662,7 @@ Use the filters to narrow your search.</value>
     <value>SV</value>
   </data>
   <data name="Screen_Editor_SelectCurrentScrollPoint" xml:space="preserve">
-    <value>Select current {0}</value>
+    <value>选择当前 {0}</value>
   </data>
   <data name="Screen_Editor_Multiplier" xml:space="preserve">
     <value>倍率</value>
@@ -2776,7 +2776,7 @@ Use the filters to narrow your search.</value>
     <value>Mod</value>
   </data>
   <data name="Screen_Editor_FreeKeybindTooltip" xml:space="preserve">
-    <value>Turning on Mod means that pressing the key with additional modifiers (ctrl, alt, ...) will also trigger the action.</value>
+    <value>启用“任意”后会允许任意额外修饰键（Ctrl、Alt等）也能触发此操作</value>
   </data>
   <data name="Screen_Editor_SearchActions" xml:space="preserve">
     <value>搜索操作</value>
@@ -2986,10 +2986,10 @@ Use the filters to narrow your search.</value>
     <value>预览时间已改为：{0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
-    <value>Zoom In ({0})</value>
+    <value>放大（{0}）</value>
   </data>
   <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
-    <value>Zoom Out ({0})</value>
+    <value>缩小（{0}）</value>
   </data>
   <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
     <value>检测到密集线段。线段将不再频繁绘制。</value>
@@ -3001,10 +3001,10 @@ Use the filters to narrow your search.</value>
     <value>正在加载频谱图......</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>跳转至时间线里下一个书签。&#xA;快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>跳转至时间线里上一个书签。&#xA;快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>已选择 {0} 个 BPM 节点</value>
@@ -3016,7 +3016,7 @@ Use the filters to narrow your search.</value>
     <value>此时间组的 SV 将嵌入其他所有时间组中。</value>
   </data>
   <data name="Screen_Editor_SelectCurrentScrollPointTooltip" xml:space="preserve">
-    <value>This will select the {0} at the current editor timestamp. If Ctrl is held, it will add it to your selection instead. If Shift is held, it will select all {0}s up to that range, if one is selected already.</value>
+    <value>此按钮将选择当前时间应用的 {0} 节点。如果同时按下 Ctrl 则会将其加入选择中。如果同时按下 Shift 且已经选择了一个节点，则会从那个节点开始选择直到当前节点的所有节点。</value>
   </data>
   <data name="Screen_Editor_ScrollSpeedFactorsSelected" xml:space="preserve">
     <value>已选择 {0} 个 SSF</value>
