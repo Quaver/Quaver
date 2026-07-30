@@ -169,13 +169,13 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>{0} indrukken opent het optiemenu.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Sleep mapbestanden (.qp) naar het spel om ze te importeren.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Door op {0} te drukken in de nummerselectie wordt een voorbeeld van de map weergegeven.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pauzeren in gameplay voorkomt dat score wordt ingediend.</value>
@@ -190,10 +190,10 @@
     <value>Sleep een .mp3 bestand in het spel om een nieuwe map aan te maken!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Door op {0} te drukken in de nummerselectie kies je een willekeurig lied.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Het indrukken van {0}/{1} in het spel verandert de scrolsnelheid.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Je offset kan worden gekalibreerd in het optiemenu.</value>
