@@ -148,7 +148,7 @@
     <value>ออกจาก Quaver</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>แน่ใจหรือไม่ว่าจะปิดเกม?</value>
+    <value>Quit the game?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>แข่งขันชิงอันดับในกระดานจัดอันดับ</value>
@@ -169,13 +169,13 @@
     <value>เคล็ดลับ:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>การกดปุ่ม Ctrl+O จะเปิดเมนูการตั้งค่า</value>
+    <value>Pressing {0} will open the options menu.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>ลากไฟล์แมพ (.qp) เข้าไปในเกมเพื่อนำเข้า</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>การกดปุ่ม F3 ในหน้าเลือกเพลงจะแสดงตัวอย่างแมพ</value>
+    <value>Pressing {0} in song select displays a map preview.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>การหยุดระหว่างเล่นจะทำให้คะแนนไม่นับ</value>
@@ -190,13 +190,10 @@
     <value>ลากไฟล์ .mp3 เข้ามาในเกมเพื่อสร้างแมพใหม่!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>การกดปุ่ม F2 ในหน้าเลือกเพลงจะสุ่มเลือกเพลง</value>
-  </data>
-  <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>การกดปุ่ม F10 ในเมนูจะเปิดการ์ดผู้เล่นของคุณ</value>
+    <value>Pressing {0} in song select chooses a random song.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>การกดปุ่ม F3/F4 ในระหว่างเกมการเล่นจะเปลี่ยนอัตราเร็วในการเลื่อน</value>
+    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>คุณสามารถปรับค่า Offset ได้ในเมนูการตั้งค่า</value>
@@ -800,7 +797,7 @@
     <value>เกิดปัญหาระหว่างการนำออกรีเพลย์!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>ได้แก้ค่า Offset เฉพาะของแมพนี้ไปแล้ว! ไม่จำเป็นต้องแก้อีกรอบ</value>
+    <value>This map's local offset is already fixed.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
     <value>ไม่มีข้อมูลที่จะช่วยแก้ค่า Offset เฉพาะของแมพนี้ให้ได้!</value>
@@ -1018,9 +1015,6 @@
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
     <value>Use Smooth Audio Start Timing During Gameplay</value>
   </data>
-  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Display Gameplay Overlay (Shift + F6)</value>
-  </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
     <value>Display Notifications During Gameplay</value>
   </data>
@@ -1120,242 +1114,53 @@
   <data name="Screen_Options_Searchforoptions" xml:space="preserve">
     <value>Search for options...</value>
   </data>
-  <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1K Gameplay Layout</value>
+  <data name="Screen_Options_KeyCountGameplayLayout" xml:space="preserve">
+    <value>{0}K Gameplay Layout</value>
   </data>
-  <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1K Scroll Speed</value>
+  <data name="Screen_Options_KeyCountScrollSpeed" xml:space="preserve">
+    <value>{0}K Scroll Speed</value>
   </data>
-  <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1K Scroll Direction</value>
+  <data name="Screen_Options_KeyCountScrollDirection" xml:space="preserve">
+    <value>{0}K Scroll Direction</value>
   </data>
-  <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1K Scratch Layout</value>
+  <data name="Screen_Options_KeyCountScratchLayout" xml:space="preserve">
+    <value>{0}K Scratch Layout</value>
   </data>
-  <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 1K Scratch Lane On Left</value>
+  <data name="Screen_Options_KeyCountPlaceScratchLaneOnLeft" xml:space="preserve">
+    <value>Place {0}K Scratch Lane On Left</value>
   </data>
-  <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1K Co-op Layout</value>
+  <data name="Screen_Options_KeyCountCoopLayout" xml:space="preserve">
+    <value>{0}K Co-op Layout</value>
   </data>
-  <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritized 1K Difficulty</value>
+  <data name="Screen_Options_KeyCountPrioritizedDifficulty" xml:space="preserve">
+    <value>Prioritized {0}K Difficulty</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
     <value>1 Keys</value>
   </data>
-  <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 2K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritized 2K Difficulty</value>
-  </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
     <value>2 Keys</value>
-  </data>
-  <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 3K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Prioritized 3K Difficulty</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
     <value>3 Keys</value>
   </data>
-  <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 4K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritized 4K Difficulty</value>
-  </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
     <value>4 Keys</value>
-  </data>
-  <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 5K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritized 5K Difficulty</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
     <value>5 Keys</value>
   </data>
-  <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 6K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritized 6K Difficulty</value>
-  </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
     <value>6 Keys</value>
-  </data>
-  <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 7K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritized 7K Difficulty</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
     <value>7 Keys</value>
   </data>
-  <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 8K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritized 8K Difficulty</value>
-  </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
     <value>8 Keys</value>
   </data>
-  <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 9K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritized 9K Difficulty</value>
-  </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
     <value>9 Keys</value>
-  </data>
-  <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10K Gameplay Layout</value>
-  </data>
-  <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10K Scroll Speed</value>
-  </data>
-  <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10K Scroll Direction</value>
-  </data>
-  <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10K Scratch Layout</value>
-  </data>
-  <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Place 10K Scratch Lane On Left</value>
-  </data>
-  <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10K Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritized 10K Difficulty</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Keys</value>
@@ -1400,7 +1205,7 @@
     <value>Music is now playing!</value>
   </data>
   <data name="Screen_Download_Thismapsetisalreadydownloading" xml:space="preserve">
-    <value>This mapset is already downloading!</value>
+    <value>กำลังดาวน์โหลดแมพเซตนี้อยู่!</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
     <value>RECOMMEND DIFFICULTY</value>
@@ -1511,17 +1316,11 @@ for the selected game mode?</value>
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
     <value>FILTER OPTIONS</value>
   </data>
-  <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Upload Date</value>
-  </data>
-  <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Last Update Date</value>
-  </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
-    <value>Display Owned Mapsets</value>
+    <value>แสดงแมพเซตที่มีอยู่แล้ว</value>
   </data>
   <data name="Screen_Download_DisplayExplicitMapsets" xml:space="preserve">
-    <value>Display Explicit Mapsets</value>
+    <value>แสดงแมพเซตที่มีเนื้อหาโจ่งแจ้ง</value>
   </data>
   <data name="Screen_Download_Maps" xml:space="preserve">
     <value>Maps: </value>
@@ -1530,9 +1329,9 @@ for the selected game mode?</value>
     <value>No Song Selected</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>คลิกที่เพลงสองครั้งเพื่อดาวน์โหลด
-คลิกหนึ่งครั้งจะเล่นตัวอย่างของเพลง
-คุณสามารถใช้ตัวกรองด้านล่างเพื่อช่วยค้นหาได้</value>
+    <value>Double-click a song to download it.
+Click once to preview it.
+Use the filters to narrow your search.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>End Date</value>
@@ -1647,7 +1446,7 @@ sure you would like to start without all players ready?</value>
     <value>EXIT TO LOBBY</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Are you sure you would like to exit to the lobby?</value>
+    <value>Exit to the lobby?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
     <value>ออก</value>
@@ -1713,7 +1512,7 @@ sure you would like to start without all players ready?</value>
     <value>อัพโหลดแมพเซตที่ไม่ได้อัปโหลดสำหรับห้องผู้เล่นหลายคนสำเร็จ!</value>
   </data>
   <data name="Screen_Multi_UploadMapsetError" xml:space="preserve">
-    <value>There was an error while uploading the mapset.</value>
+    <value>เกิดปัญหาขณะกำลังอัปโหลดแมพเซต</value>
   </data>
   <data name="Screen_Multi_Loading" xml:space="preserve">
     <value>กำลังโหลด...</value>
@@ -1830,7 +1629,7 @@ sure you would like to start without all players ready?</value>
     <value>ต้องยกเลิกเตรียมพร้อมก่อนเปลี่ยนทีม!</value>
   </data>
   <data name="Screen_Multiplayer_CannotSwitchTeamsDuringCountdown" xml:space="preserve">
-    <value>You cannot switch teams when the countdown timer is active</value>
+    <value>ไม่สามารถเปลี่ยนทีมได้ขณะที่เวลากำลังนับถอยหลังอยู่</value>
   </data>
   <data name="Screen_Multiplayer_ViewProfile" xml:space="preserve">
     <value>ดูโปรไฟล์</value>
@@ -1839,22 +1638,22 @@ sure you would like to start without all players ready?</value>
     <value>โปรไฟล์ Steam</value>
   </data>
   <data name="Screen_Multiplayer_KickPlayer" xml:space="preserve">
-    <value>Kick Player</value>
+    <value>เตะผู้เล่น</value>
   </data>
   <data name="Screen_Multiplayer_GiveHost" xml:space="preserve">
-    <value>Give Host</value>
+    <value>ให้เป็นเจ้าของห้อง</value>
   </data>
   <data name="Screen_Multiplayer_ChangeTeamWithTeam" xml:space="preserve">
-    <value>Change Team ({0})</value>
+    <value>เปลี่ยนทีม ({0})</value>
   </data>
   <data name="Screen_Multiplayer_Close" xml:space="preserve">
-    <value>Close</value>
+    <value>ปิด</value>
   </data>
   <data name="Screen_Multiplayer_OptionsFor" xml:space="preserve">
-    <value>Options for {0}</value>
+    <value>การตั้งค่าสำหรับ {0}</value>
   </data>
   <data name="Screen_Multiplayer_Loading" xml:space="preserve">
-    <value>Loading...</value>
+    <value>กำลังโหลด...</value>
   </data>
   <data name="Screen_Multiplayer_Wins" xml:space="preserve">
     <value>ชนะ {0}</value>
@@ -1866,22 +1665,22 @@ sure you would like to start without all players ready?</value>
     <value>ผู้เล่น ({0}/{1}) คน</value>
   </data>
   <data name="Screen_Multiplayer_WaitingToStart" xml:space="preserve">
-    <value>Waiting to start</value>
+    <value>กำลังรอเริ่ม</value>
   </data>
   <data name="Screen_Multiplayer_WaitingForServer" xml:space="preserve">
-    <value>Waiting for server</value>
+    <value>กำลังรอเซิร์ฟเวอร์</value>
   </data>
   <data name="Screen_Multiplayer_MatchIsNowStarting" xml:space="preserve">
-    <value>Match is now starting: {0}</value>
+    <value>แมตช์กำลังเริ่ม: {0}</value>
   </data>
   <data name="Screen_Multiplayer_MatchInProgress" xml:space="preserve">
-    <value>Match in progress. Please wait until the next one!</value>
+    <value>แมตช์นี้กำลังเล่นอยู่ โปรดรอแมตช์ถัดไป!</value>
   </data>
   <data name="Screen_Multiplayer_ModsNone" xml:space="preserve">
     <value>ตัวดัดแปลง: ไม่มี</value>
   </data>
   <data name="Screen_Multiplayer_HostSelectingMap" xml:space="preserve">
-    <value>Host is currently selecting a map!</value>
+    <value>เจ้าของห้องกำลังเลือกแมพ!</value>
   </data>
   <data name="Screen_Multiplayer_PleaseWait" xml:space="preserve">
     <value>โปรดรอสักครู่...</value>
@@ -1896,7 +1695,7 @@ sure you would like to start without all players ready?</value>
     <value>คุณไม่มีแมพนี้ ดาวน์โหลดแมพนี้ไม่ได้!</value>
   </data>
   <data name="Screen_Multiplayer_MapsetAlreadyDownloading" xml:space="preserve">
-    <value>The mapset is already downloading. Slow down!</value>
+    <value>กำลังดาวน์โหลดแมพเซตนี้อยู่ ช้า ๆ หน่อย!</value>
   </data>
   <data name="Screen_Multiplayer_DownloadingMap" xml:space="preserve">
     <value>กำลังดาวน์โหลดแมพ: {0}%</value>
@@ -2484,10 +2283,10 @@ sure you would like to start without all players ready?</value>
     <value>Add a bookmark note...</value>
   </data>
   <data name="Screen_Editor_CreateNewMapset" xml:space="preserve">
-    <value>CREATE NEW MAPSET</value>
+    <value>สร้างแมพเซตใหม่</value>
   </data>
   <data name="Screen_Editor_CreateNewMapsetMessage" xml:space="preserve">
-    <value>To create a new mapset, drag a .mp3 file into the game window...</value>
+    <value>ลากไฟล์ .mp3 เข้ามาในหน้าต่างเกมเพื่อสร้างแมพเซตใหม่</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
     <value>Enter a value to apply an offset to all of your map's objects, timing points,&#xA; and scroll velocities...</value>
@@ -2502,7 +2301,7 @@ sure you would like to start without all players ready?</value>
     <value>UNSAVED CHANGES</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
+    <value>This map hasn't been saved.&#xA;Refreshing from .qua will discard unsaved changes. Continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
@@ -2523,7 +2322,7 @@ sure you would like to start without all players ready?</value>
     <value>NO</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Are you sure you would like to submit your mapset for rank?&#xA;Note: It must follow the ranking criteria in order to be accepted.</value>
+    <value>Submit this mapset for rank?&#xA;It must meet the ranking criteria.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>CUSTOM BEAT SNAP</value>
@@ -2565,7 +2364,7 @@ sure you would like to start without all players ready?</value>
     <value>ADD DIFFICULTY FROM FILE</value>
   </data>
   <data name="Screen_Editor_AddDifficultyFromFileMessage" xml:space="preserve">
-    <value>Drag a .qua file into the window to add it to the mapset.</value>
+    <value>ลากไฟล์ .qua เข้ามาในหน้าต่างเกมเพื่อเพิ่มมันในแมพเซตนี้</value>
   </data>
   <data name="Screen_Editor_InvalidQuaFile" xml:space="preserve">
     <value>The .qua file you have dragged in is not valid!</value>
@@ -2574,16 +2373,16 @@ sure you would like to start without all players ready?</value>
     <value>There was an issue while creating a new difficulty.</value>
   </data>
   <data name="Screen_Editor_UploadMapset" xml:space="preserve">
-    <value>UPLOAD MAPSET</value>
+    <value>อัปโหลดแมพเซต</value>
   </data>
   <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
     <value>Are you sure you would like to upload your mapset to the server?&#xA;Note: You must own the rights to all files you upload.</value>
   </data>
   <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
-    <value>You cannot submit a mapset that is already ranked!</value>
+    <value>ไม่สามารถอัปโหลดแมพเซตที่จัดอันดับแล้วได้!</value>
   </data>
   <data name="Screen_Editor_MapsetDoesNotBelongToYou" xml:space="preserve">
-    <value>This mapset does not belong to you! The creator usernames of every map do not match yours.</value>
+    <value>แมพเซตนี้ไม่ใช่ของคุณ! ชื่อคนสร้างของทุกแมพไม่ตรงกับชื่อผู้ใช้ของคุณ</value>
   </data>
   <data name="Screen_Editor_ApplyModifier" xml:space="preserve">
     <value>APPLY MODIFIER</value>
@@ -2628,10 +2427,10 @@ sure you would like to start without all players ready?</value>
     <value>Please wait while your map is being submitted for rank...</value>
   </data>
   <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
-    <value>Your mapset has issues that prevent it from being ranked. Please review the AutoMod for each difficulty, and then try again.</value>
+    <value>AutoMod found ranking blockers. Review each difficulty and try again.</value>
   </data>
   <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
-    <value>An error occurred while submitting your mapset for rank.</value>
+    <value>เกิดปัญหาขณะกำลังส่งแมพเซตเพื่อจัดอันดับ</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
     <value>When set to ON, A BPM change will also change the Scroll Velocity.&#xA;For instance, going from 120BPM to 240BPM effectively creates&#xA;an implicit 2x Scroll Velocity multiplier starting from the beginning&#xA;of that BPM change until the next. Scroll Velocity is still applied.</value>
@@ -2730,22 +2529,22 @@ sure you would like to start without all players ready?</value>
     <value>Finish what you're doing before test playing!</value>
   </data>
   <data name="Screen_Editor_CreateMapsetError" xml:space="preserve">
-    <value>There was an issue while creating a new mapset.</value>
+    <value>เกิดปัญหาขณะกำลังสร้างแมพเซตใหม่</value>
   </data>
   <data name="Screen_Editor_SwitchDifficultyError" xml:space="preserve">
     <value>There was an issue while switching difficulty.</value>
   </data>
   <data name="Screen_Editor_MustBeLoggedInToUpload" xml:space="preserve">
-    <value>You must be logged in to upload your mapset!</value>
+    <value>ต้องล็อกอินเพื่ออัปโหลดแมพเซต!</value>
   </data>
   <data name="Screen_Editor_Only4KAnd7KRanked" xml:space="preserve">
     <value>Only 4K and 7K are allowed for ranking.</value>
   </data>
   <data name="Screen_Editor_ExportingMapset" xml:space="preserve">
-    <value>Please wait while the mapset is being exported...</value>
+    <value>โปรดรอสักครู่ขณะกำลังนำออกแมพเซต...</value>
   </data>
   <data name="Screen_Editor_MapsetExportedSuccessfully" xml:space="preserve">
-    <value>The mapset has been successfully exported!</value>
+    <value>นำออกแมพเซตสำเร็จ!</value>
   </data>
   <data name="Screen_Editor_CannotImportCurrentKeymap" xml:space="preserve">
     <value>You cannot import the keymap you are already using!</value>
@@ -2781,7 +2580,7 @@ sure you would like to start without all players ready?</value>
     <value>You cannot create new difficulties for maps from other games. Create a new set!</value>
   </data>
   <data name="Screen_Editor_MustBeLoggedInToSubmitForRank" xml:space="preserve">
-    <value>You must be logged in to submit your mapset for rank!</value>
+    <value>ต้องล็อกอินเพื่อส่งแมพเซตเพื่อจัดอันดับ!</value>
   </data>
   <data name="Screen_Editor_SaveAndUploadBeforeSubmitForRank" xml:space="preserve">
     <value>Your map has unsaved changes. Please save &amp; upload before submitting for rank.</value>
@@ -2796,22 +2595,22 @@ sure you would like to start without all players ready?</value>
     <value>Disabled {0} coloring</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: CTRL + B</value>
+    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Beat Snap</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: CTRL + Up/Down/Scroll Wheel</value>
+    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: CTRL + -/+</value>
+    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Test Play</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: F4</value>
+    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Timing Point Editor</value>
@@ -3189,10 +2988,10 @@ sure you would like to start without all players ready?</value>
     <value>Preview time changed to: {0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
-    <value>Zoom In (Page Up)</value>
+    <value>Zoom In ({0})</value>
   </data>
   <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
-    <value>Zoom Out (Page Down)</value>
+    <value>Zoom Out ({0})</value>
   </data>
   <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
     <value>Dense lines detected. Lines will be drawn less frequently.</value>
@@ -3204,10 +3003,10 @@ sure you would like to start without all players ready?</value>
     <value>Loading Spectrogram...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: CTRL + Right</value>
+    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: CTRL + Left</value>
+    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} timing points selected</value>
@@ -3252,7 +3051,7 @@ sure you would like to start without all players ready?</value>
     <value>Ready for rank!</value>
   </data>
   <data name="Screen_Editor_AutoModWarningTooltip" xml:space="preserve">
-    <value>This is a warning of a potential error. You can ignore this if it isn't an issue.</value>
+    <value>Potential error; ignore it if harmless.</value>
   </data>
   <data name="Screen_Editor_AutoModCriticalTooltip" xml:space="preserve">
     <value>This is a critical error which affects the playability of your map.</value>
