@@ -169,13 +169,13 @@
     <value>CONSEIL:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>Appuyez sur {0} pour ouvrir les options.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Faites glisser les fichiers de map (.qp) dans le jeu pour les importer.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>Appuyer sur {0} lors de la sélection d'une map affiche un aperçu de la carte.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Mettre le jeu en pause empêche la soumission du score.</value>
@@ -190,10 +190,10 @@
     <value>Faites glisser un fichier .mp3 dans le jeu pour créer une nouvelle map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>Appuyer sur {0} lors de la sélection des maps permet de choisir une map au hasard.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>Appuyer sur {0} ou {1} en cours de jeu modifie la vitesse de défilement.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Vous pouvez calibrer votre décalage dans les options.</value>
@@ -2654,7 +2654,7 @@ Use the filters to narrow your search.</value>
     <value>La Vélocité de Défilement (SV) vous permet de changer dynamiquement la vitesse et la direction à laquelle les objets tombent.</value>
   </data>
   <data name="Screen_Editor_ScrollPointInteractionHelp" xml:space="preserve">
-    <value>You can click on an individual {0} point to edit it and double-click to go to its position in time.</value>
+    <value>Vous pouvez cliquer sur un point {0} en particulier pour le modifier et double-cliquer pour aller à sa position dans le temps.</value>
   </data>
   <data name="Screen_Editor_DifferenceFromSf" xml:space="preserve">
     <value>(Difference from SF)</value>
@@ -2663,7 +2663,7 @@ Use the filters to narrow your search.</value>
     <value>SV</value>
   </data>
   <data name="Screen_Editor_SelectCurrentScrollPoint" xml:space="preserve">
-    <value>Select current {0}</value>
+    <value>Sélectionner le {0} actuel</value>
   </data>
   <data name="Screen_Editor_Multiplier" xml:space="preserve">
     <value>Multiplicateur</value>
