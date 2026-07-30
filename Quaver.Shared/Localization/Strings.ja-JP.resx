@@ -169,13 +169,13 @@
     <value>ヒント：</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Pressing {0} will open the options menu.</value>
+    <value>{0} で設定のメニューが開きます。</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>譜面ファイル（.qp）をゲーム内にドラッグするとインポートできます。</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Pressing {0} in song select displays a map preview.</value>
+    <value>選曲画面で {0} を押すと譜面のプレビューが表示されます。</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>プレイ中に一時停止するとスコアが送信されなくなります。</value>
@@ -190,10 +190,10 @@
     <value>.mp3 ファイルをゲーム内にドラッグすると新しい譜面を作成できます！</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Pressing {0} in song select chooses a random song.</value>
+    <value>選曲画面で{0}を押すとランダムな曲が選ばれます。</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
+    <value>プレイ中に {0}/{1} を押すとスクロール速度が変わります。</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>オフセットは設定のメニューで調整できます。</value>
