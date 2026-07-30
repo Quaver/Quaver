@@ -148,7 +148,7 @@
     <value>AVSLUTT QUAVER</value>
   </data>
   <data name="Screen_Main_QuitDialogMessage" xml:space="preserve">
-    <value>Er du sikker på at du vil avslutte spillet?</value>
+    <value>Quit the game?</value>
   </data>
   <data name="Screen_Main_SinglePlayerDescription" xml:space="preserve">
     <value>Konkurranse for rangeringslister</value>
@@ -169,13 +169,13 @@
     <value>TIP:</value>
   </data>
   <data name="Screen_Main_TipOpenOptions" xml:space="preserve">
-    <value>Ved å trykke på CTRL+O vil åpne innstillinger-menyen.</value>
+    <value>Pressing {0} will open the options menu.</value>
   </data>
   <data name="Screen_Main_TipImportMapFiles" xml:space="preserve">
     <value>Dra map-filer (.qp) inn i spillet for å importere dem.</value>
   </data>
   <data name="Screen_Main_TipMapPreview" xml:space="preserve">
-    <value>Ved å trykke på F3 i sang-velgeren vises det forhåndsvisning av map.</value>
+    <value>Pressing {0} in song select displays a map preview.</value>
   </data>
   <data name="Screen_Main_TipPauseSubmission" xml:space="preserve">
     <value>Pauser mens du spiller hindrer score-submisjon.</value>
@@ -190,13 +190,10 @@
     <value>Dra en .mp3 fil inni spillet for å lage et nytt map!</value>
   </data>
   <data name="Screen_Main_TipRandomSong" xml:space="preserve">
-    <value>Ved å trykke på F2 i sang-velgeren velger du en tilfeldig sang.</value>
-  </data>
-  <data name="Screen_Main_TipPlayercard" xml:space="preserve">
-    <value>Ved å trykke på F10 i menyen åpner det spilletkortet ditt.</value>
+    <value>Pressing {0} in song select chooses a random song.</value>
   </data>
   <data name="Screen_Main_TipScrollSpeed" xml:space="preserve">
-    <value>Ved å trykke på F3/F4 midt i spill endrer det rullehastighet.</value>
+    <value>Pressing {0}/{1} in gameplay changes scroll speed.</value>
   </data>
   <data name="Screen_Main_TipCalibrateOffset" xml:space="preserve">
     <value>Ditt offset kan kalibreres i instillngene.</value>
@@ -800,7 +797,7 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>En feil oppstod under eksport av spillingen!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>Du har allerede fikset din lokale offset på denne mappen. Det er ikke nødvendig å gjøre det igjen.</value>
+    <value>This map's local offset is already fixed.</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
     <value>Det er ingen data som kan fikse ditt lokale offset!</value>
@@ -1018,9 +1015,6 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
   <data name="Screen_Options_UseSmoothAudioStartTimingDuringGameplay" xml:space="preserve">
     <value>Bruk jevnt lydstart under spilling</value>
   </data>
-  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
-    <value>Vis spilloverlegg (Shift + F6)</value>
-  </data>
   <data name="Screen_Options_DisplayNotificationsDuringGameplay" xml:space="preserve">
     <value>Vis varsler under spillingen</value>
   </data>
@@ -1120,242 +1114,53 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
   <data name="Screen_Options_Searchforoptions" xml:space="preserve">
     <value>Søk etter instillinger...</value>
   </data>
-  <data name="Screen_Options_1KGameplayLayout" xml:space="preserve">
-    <value>1T Spill-layout</value>
+  <data name="Screen_Options_KeyCountGameplayLayout" xml:space="preserve">
+    <value>{0}K Gameplay Layout</value>
   </data>
-  <data name="Screen_Options_1KScrollSpeed" xml:space="preserve">
-    <value>1T Rullehastighet</value>
+  <data name="Screen_Options_KeyCountScrollSpeed" xml:space="preserve">
+    <value>{0}K Scroll Speed</value>
   </data>
-  <data name="Screen_Options_1KScrollDirection" xml:space="preserve">
-    <value>1T Rulleretning</value>
+  <data name="Screen_Options_KeyCountScrollDirection" xml:space="preserve">
+    <value>{0}K Scroll Direction</value>
   </data>
-  <data name="Screen_Options_1KScratchLayout" xml:space="preserve">
-    <value>1T Scratch-layout</value>
+  <data name="Screen_Options_KeyCountScratchLayout" xml:space="preserve">
+    <value>{0}K Scratch Layout</value>
   </data>
-  <data name="Screen_Options_Place1KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 1T Scratch Lane til Venstre</value>
+  <data name="Screen_Options_KeyCountPlaceScratchLaneOnLeft" xml:space="preserve">
+    <value>Place {0}K Scratch Lane On Left</value>
   </data>
-  <data name="Screen_Options_1KCoopLayout" xml:space="preserve">
-    <value>1T Co-op Layout</value>
+  <data name="Screen_Options_KeyCountCoopLayout" xml:space="preserve">
+    <value>{0}K Co-op Layout</value>
   </data>
-  <data name="Screen_Options_Prioritized1KDifficulty" xml:space="preserve">
-    <value>Prioritert 1T Vanskelighetsgrad</value>
+  <data name="Screen_Options_KeyCountPrioritizedDifficulty" xml:space="preserve">
+    <value>Prioritized {0}K Difficulty</value>
   </data>
   <data name="Screen_Options_1Keys" xml:space="preserve">
     <value>1 Tast</value>
   </data>
-  <data name="Screen_Options_2KGameplayLayout" xml:space="preserve">
-    <value>2T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_2KScrollSpeed" xml:space="preserve">
-    <value>2T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_2KScrollDirection" xml:space="preserve">
-    <value>2T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_2KScratchLayout" xml:space="preserve">
-    <value>2T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place2KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 2T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_2KCoopLayout" xml:space="preserve">
-    <value>2T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized2KDifficulty" xml:space="preserve">
-    <value>Prioritert 2T Vanskelighetsgrad</value>
-  </data>
   <data name="Screen_Options_2Keys" xml:space="preserve">
     <value>2 Taster</value>
-  </data>
-  <data name="Screen_Options_3KGameplayLayout" xml:space="preserve">
-    <value>3T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_3KScrollSpeed" xml:space="preserve">
-    <value>3T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_3KScrollDirection" xml:space="preserve">
-    <value>3T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_3KScratchLayout" xml:space="preserve">
-    <value>3T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place3KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 3T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_3KCoopLayout" xml:space="preserve">
-    <value>3T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized3KDifficulty" xml:space="preserve">
-    <value>Prioritert 3T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_3Keys" xml:space="preserve">
     <value>3 Taster</value>
   </data>
-  <data name="Screen_Options_4KGameplayLayout" xml:space="preserve">
-    <value>4T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_4KScrollSpeed" xml:space="preserve">
-    <value>4T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_4KScrollDirection" xml:space="preserve">
-    <value>4T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_4KScratchLayout" xml:space="preserve">
-    <value>4T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place4KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 4T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_4KCoopLayout" xml:space="preserve">
-    <value>4T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized4KDifficulty" xml:space="preserve">
-    <value>Prioritert 4T Vanskelighetsgrad</value>
-  </data>
   <data name="Screen_Options_4Keys" xml:space="preserve">
     <value>4 Taster</value>
-  </data>
-  <data name="Screen_Options_5KGameplayLayout" xml:space="preserve">
-    <value>5T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_5KScrollSpeed" xml:space="preserve">
-    <value>5T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_5KScrollDirection" xml:space="preserve">
-    <value>5T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_5KScratchLayout" xml:space="preserve">
-    <value>5T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place5KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 5T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_5KCoopLayout" xml:space="preserve">
-    <value>5T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized5KDifficulty" xml:space="preserve">
-    <value>Prioritert 5T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_5Keys" xml:space="preserve">
     <value>5 Taster</value>
   </data>
-  <data name="Screen_Options_6KGameplayLayout" xml:space="preserve">
-    <value>6T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_6KScrollSpeed" xml:space="preserve">
-    <value>6T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_6KScrollDirection" xml:space="preserve">
-    <value>6T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_6KScratchLayout" xml:space="preserve">
-    <value>6T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place6KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 6T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_6KCoopLayout" xml:space="preserve">
-    <value>6T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized6KDifficulty" xml:space="preserve">
-    <value>Prioritert 6T Vanskelighetsgrad</value>
-  </data>
   <data name="Screen_Options_6Keys" xml:space="preserve">
     <value>6 Taster</value>
-  </data>
-  <data name="Screen_Options_7KGameplayLayout" xml:space="preserve">
-    <value>7T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_7KScrollSpeed" xml:space="preserve">
-    <value>7T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_7KScrollDirection" xml:space="preserve">
-    <value>7T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_7KScratchLayout" xml:space="preserve">
-    <value>7T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place7KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 7T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_7KCoopLayout" xml:space="preserve">
-    <value>7T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized7KDifficulty" xml:space="preserve">
-    <value>Prioritert 7T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_7Keys" xml:space="preserve">
     <value>7 Taster</value>
   </data>
-  <data name="Screen_Options_8KGameplayLayout" xml:space="preserve">
-    <value>8T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_8KScrollSpeed" xml:space="preserve">
-    <value>8T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_8KScrollDirection" xml:space="preserve">
-    <value>8T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_8KScratchLayout" xml:space="preserve">
-    <value>8T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place8KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 8T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_8KCoopLayout" xml:space="preserve">
-    <value>8T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized8KDifficulty" xml:space="preserve">
-    <value>Prioritert 8T Vanskelighetsgrad</value>
-  </data>
   <data name="Screen_Options_8Keys" xml:space="preserve">
     <value>8 Taster</value>
   </data>
-  <data name="Screen_Options_9KGameplayLayout" xml:space="preserve">
-    <value>9T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_9KScrollSpeed" xml:space="preserve">
-    <value>9T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_9KScrollDirection" xml:space="preserve">
-    <value>9T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_9KScratchLayout" xml:space="preserve">
-    <value>9T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place9KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 9T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_9KCoopLayout" xml:space="preserve">
-    <value>9T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized9KDifficulty" xml:space="preserve">
-    <value>Prioritert 9T Vanskelighetsgrad</value>
-  </data>
   <data name="Screen_Options_9Keys" xml:space="preserve">
     <value>9 Taster</value>
-  </data>
-  <data name="Screen_Options_10KGameplayLayout" xml:space="preserve">
-    <value>10T Spill-layout</value>
-  </data>
-  <data name="Screen_Options_10KScrollSpeed" xml:space="preserve">
-    <value>10T Rullehastighet</value>
-  </data>
-  <data name="Screen_Options_10KScrollDirection" xml:space="preserve">
-    <value>10T Rulleretning</value>
-  </data>
-  <data name="Screen_Options_10KScratchLayout" xml:space="preserve">
-    <value>10T Scratch-layout</value>
-  </data>
-  <data name="Screen_Options_Place10KScratchLaneOnLeft" xml:space="preserve">
-    <value>Plasser 10T Scratch Lane til Venstre</value>
-  </data>
-  <data name="Screen_Options_10KCoopLayout" xml:space="preserve">
-    <value>10T Co-op Layout</value>
-  </data>
-  <data name="Screen_Options_Prioritized10KDifficulty" xml:space="preserve">
-    <value>Prioritert 10T Vanskelighetsgrad</value>
   </data>
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10 Taster</value>
@@ -1510,12 +1315,6 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
   <data name="Screen_Download_FILTEROPTIONS" xml:space="preserve">
     <value>FILTRER ALTERNATIVER</value>
   </data>
-  <data name="Screen_Download_UploadDate" xml:space="preserve">
-    <value>Opplastningsdato</value>
-  </data>
-  <data name="Screen_Download_LastUpdateDate" xml:space="preserve">
-    <value>Siste oppdateringsdato</value>
-  </data>
   <data name="Screen_Download_DisplayOwnedMapsets" xml:space="preserve">
     <value>Vis egne mapsett</value>
   </data>
@@ -1529,9 +1328,9 @@ Hvis mappen ble ikke fullført, vil det i tillegg vise ytelsen dersom alle påf�
     <value>Ingen sang valgt</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>For å starte nedlastingen, dobbelklikk på en sang.
-Å klikke en gang vil la deg til å forhåndsvise sangen.
-Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
+    <value>Double-click a song to download it.
+Click once to preview it.
+Use the filters to narrow your search.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>Slutt Dato</value>
@@ -1645,7 +1444,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>DRA TIL LOBBYEN</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Er du sikker på at du vil dra til lobbyen?</value>
+    <value>Exit to the lobby?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
     <value>Dra</value>
@@ -2500,7 +2299,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>UNSAVED CHANGES</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>This map hasn't been saved yet.&#xA;Refreshing from the .qua file will discard your unsaved changes.&#xA;Would you like to continue?</value>
+    <value>This map hasn't been saved.&#xA;Refreshing from .qua will discard unsaved changes. Continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>Du har ulagrede endringer. Ønsker du å lagre&#xA;før du lager ny vanskelighetsgrad?</value>
@@ -2521,7 +2320,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>NEI</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Er du sikker på at du vil sende inn mapsettet ditt for rangering?&#xA;Notat: Husk at den må følge rangeringskriteriene for å bli akseptert.</value>
+    <value>Submit this mapset for rank?&#xA;It must meet the ranking criteria.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>TILPASSET TAKTSLAG</value>
@@ -2626,7 +2425,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Vennligst vent mens din map sendes inn for rangering...</value>
   </data>
   <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
-    <value>Ditt mapsett har problemer som hindrer den fra å bli rangert. Sjekk AutoMod for hver vanskelighetsgrad, og deretter prøv på nytt.</value>
+    <value>AutoMod found ranking blockers. Review each difficulty and try again.</value>
   </data>
   <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
     <value>En feil oppstod under sending av din mapsett for rangering.</value>
@@ -2794,22 +2593,22 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Deaktiverte {0} farging</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Legger til et bokmerke i gjeldende posisjon i tidslinjen.&#xA;- Hold musepekeren over et bokmerke for å vise notater som er forbundet med den.&#xA;- Venstreklikk et bokmerke til å redigere den.&#xA;- Høyreklikk et bokmerke for å slette den.&#xA;-Hurtigtast: CTRL + B</value>
+    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Taktslag</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Endre nåværende taktslag divisor&#xA;Hurtigtast: CTRL + Opp/Ned/Scroll Hjul</value>
+    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Endre avspillingshastighet.&#xA;Hurtigtast: CTRL + -/+</value>
+    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Prøvespill</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Lagre og prøvespill din map.&#xA;Høyreklikk lar deg velge modifikatorer til å bruke mens du prøvespiller.&#xA;Hurtigtast: F4</value>
+    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Tidspunkt editor</value>
@@ -3187,10 +2986,10 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Forhåndsvisningstid endret til: {0}</value>
   </data>
   <data name="Screen_Editor_ZoomInTooltip" xml:space="preserve">
-    <value>Zoom inn (Page Up)</value>
+    <value>Zoom In ({0})</value>
   </data>
   <data name="Screen_Editor_ZoomOutTooltip" xml:space="preserve">
-    <value>Zoom inn (Page Down)</value>
+    <value>Zoom Out ({0})</value>
   </data>
   <data name="Screen_Editor_DenseLinesDetected" xml:space="preserve">
     <value>Tett linjer oppdaget. Linjer vil bli tegnet sjeldnere.</value>
@@ -3202,10 +3001,10 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Laster spektrogram...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Søk til neste bokmerke i tidslinjen.&#xA;Hurtigtast: CTRL + Høyre</value>
+    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Søk til forrige bokmerke i tidslinjen.&#xA;Hurtigtast: CTRL + Venstre</value>
+    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} tidspunkter valgt</value>
@@ -3250,7 +3049,7 @@ Du kan bruke filtrene nedenfor til å begrense søket ditt.</value>
     <value>Klar for rangering!</value>
   </data>
   <data name="Screen_Editor_AutoModWarningTooltip" xml:space="preserve">
-    <value>Dette er en advarsel om en potensiell feil. Du kan ignorere dette hvis det er ikke et problem.</value>
+    <value>Potential error; ignore it if harmless.</value>
   </data>
   <data name="Screen_Editor_AutoModCriticalTooltip" xml:space="preserve">
     <value>Dette er en kritisk feil som påvirker mappens spillbarhet.</value>
