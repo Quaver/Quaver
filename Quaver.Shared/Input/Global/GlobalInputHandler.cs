@@ -112,13 +112,15 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
             {
                 ConfigManager.VisualOffset.Value = 0;
                 NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
-                    $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", null, true);
+                    $"Visual offset has been reset to: {ConfigManager.VisualOffset.Value} ms", forceShow: true,
+                    highlightedValue: ConfigManager.VisualOffset.Value.ToString());
             }
             else
             {
                 MapManager.Selected.Value.LocalOffset = 0;
                 NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
-                    $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+                    $"Local map audio offset has been reset to: {MapManager.Selected.Value.LocalOffset} ms",
+                    forceShow: true, highlightedValue: MapManager.Selected.Value.LocalOffset.ToString());
 
                 ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
             }
@@ -130,13 +132,15 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
             {
                 ConfigManager.VisualOffset.Value += change;
                 NotificationManager.ShowOrUpdate(VISUAL_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
-                    $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", null, true);
+                    $"Visual offset has been changed to: {ConfigManager.VisualOffset.Value} ms", forceShow: true,
+                    highlightedValue: ConfigManager.VisualOffset.Value.ToString());
             }
             else
             {
                 MapManager.Selected.Value.LocalOffset += change;
                 NotificationManager.ShowOrUpdate(LOCAL_MAP_OFFSET_NOTIFICATION_KEY, NotificationLevel.Success,
-                    $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", null, true);
+                    $"Local map audio offset is now: {MapManager.Selected.Value.LocalOffset} ms", forceShow: true,
+                    highlightedValue: MapManager.Selected.Value.LocalOffset.ToString());
 
                 ThreadScheduler.Run(() => MapDatabaseCache.UpdateMap(MapManager.Selected.Value));
             }
@@ -167,7 +171,7 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
 
                 NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                     $"Scroll speed (local) has been reset to global: {scrollSpeed.Value / 10f:0.0}",
-                    null, true);
+                    forceShow: true, highlightedValue: (scrollSpeed.Value / 10f).ToString("0.0"));
             }
             else
             {
@@ -176,7 +180,7 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
 
                 NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                     $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
-                    null, true);
+                    forceShow: true, highlightedValue: (targetScrollSpeed / 10f).ToString("0.0"));
             }
         }
         else
@@ -188,7 +192,7 @@ public class GlobalInputHandler : IInputHandler<GlobalKeybindActions>
 
             NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
                 $"Scroll speed (global) has been changed to: {scrollSpeed.Value / 10f:0.0}",
-                null, true);
+                forceShow: true, highlightedValue: (scrollSpeed.Value / 10f).ToString("0.0"));
         }
     }
 }

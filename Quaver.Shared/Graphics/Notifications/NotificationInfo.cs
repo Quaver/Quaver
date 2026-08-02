@@ -13,6 +13,11 @@ namespace Quaver.Shared.Graphics.Notifications
         public string Text { get; }
 
         /// <summary>
+        ///     The changing portion of <see cref="Text"/> that should be highlighted when this notification is reused.
+        /// </summary>
+        public string HighlightedValue { get; }
+
+        /// <summary>
         /// </summary>
         public EventHandler ClickAction { get; }
 
@@ -36,10 +41,13 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="automaticallySlide"></param>
         /// <param name="clickAction"></param>
         /// <param name="forceShow"></param>
-        public NotificationInfo(NotificationLevel level, string text, bool automaticallySlide, EventHandler clickAction = null, bool forceShow = false)
+        /// <param name="highlightedValue"></param>
+        public NotificationInfo(NotificationLevel level, string text, bool automaticallySlide,
+            EventHandler clickAction = null, bool forceShow = false, string highlightedValue = null)
         {
             Level = level;
             Text = text;
+            HighlightedValue = highlightedValue;
 
             AutomaticallySlide = automaticallySlide;
             ClickAction = clickAction;

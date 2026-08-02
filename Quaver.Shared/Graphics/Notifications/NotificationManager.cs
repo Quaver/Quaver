@@ -102,7 +102,9 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="text"></param>
         /// <param name="onClick"></param>
         /// <param name="forceShow"></param>
-        internal static void ShowOrUpdate(string key, NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false)
+        /// <param name="highlightedValue"></param>
+        internal static void ShowOrUpdate(string key, NotificationLevel level, string text,
+            EventHandler onClick = null, bool forceShow = false, string highlightedValue = null)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -110,7 +112,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 return;
             }
 
-            var info = new NotificationInfo(level, text, true, onClick, forceShow);
+            var info = new NotificationInfo(level, text, true, onClick, forceShow, highlightedValue);
 
             lock (QueuedNotifications)
             {

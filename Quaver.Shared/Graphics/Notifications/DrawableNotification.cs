@@ -25,6 +25,11 @@ namespace Quaver.Shared.Graphics.Notifications
         private const int PADDING = 14;
 
         /// <summary>
+        ///     The duration of the value highlight animation.
+        /// </summary>
+        private const int HIGHLIGHT_DURATION = 500;
+
+        /// <summary>
         /// </summary>
         public override int HEIGHT { get; } = 0;
 
@@ -39,6 +44,21 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         /// </summary>
         private SpriteTextPlus Text { get; set; }
+
+        /// <summary>
+        ///     The elapsed time of the current value highlight animation.
+        /// </summary>
+        private double HighlightElapsed { get; set; }
+
+        /// <summary>
+        ///     The start of the value currently being highlighted.
+        /// </summary>
+        private int HighlightedValueStart { get; set; }
+
+        /// <summary>
+        ///     Whether the changed value is currently fading back to its original color.
+        /// </summary>
+        private bool IsHighlightingValue { get; set; }
 
         /// <summary>
         ///     The amount of time the notification has been inactive (not hovered)
@@ -101,6 +121,7 @@ namespace Quaver.Shared.Graphics.Notifications
             if (Item.AutomaticallySlide && !HasSlidOut && IsSlidingOut && Animations.Count == 0)
                 HasSlidOut = true;
 
+            UpdateHighlightedValue(gameTime);
             base.Update(gameTime);
         }
 
@@ -119,7 +140,7 @@ namespace Quaver.Shared.Graphics.Notifications
                 if (Item.AutomaticallySlide)
                     SlideIn();
 
-                ApplyContent();
+                ApplyContent(false);
             });
         }
 
@@ -129,6 +150,8 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="item"></param>
         internal void Refresh(NotificationInfo item)
         {
+            var highlightValue = !string.IsNullOrEmpty(item.HighlightedValue) && item.HighlightedValue != Item.HighlightedValue;
+
             Item = item;
             TimeInactive = 0;
             IsSlidingOut = false;
@@ -137,7 +160,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
             ScheduleUpdate(() =>
             {
-                ApplyContent();
+                ApplyContent(highlightValue);
 
                 if (Item.AutomaticallySlide)
                     MoveToX(-30, Easing.OutQuint, 450);
@@ -146,15 +169,22 @@ namespace Quaver.Shared.Graphics.Notifications
 
         /// <summary>
         /// </summary>
-        private void ApplyContent()
+        /// <param name="highlightValue"></param>
+        private void ApplyContent(bool highlightValue)
         {
             Border.Tint = GetColor();
             Icon.Image = GetIconTexture();
 
+            Text.ClearTextColorRanges();
             Text.Text = Item.Text;
 
             const int padding = 30;
             Height = Math.Max(Icon.Height + padding, Text.Height + padding);
+
+            if (highlightValue)
+                StartHighlightedValueAnimation();
+            else
+                IsHighlightingValue = false;
         }
 
         /// <summary>
@@ -227,6 +257,45 @@ namespace Quaver.Shared.Graphics.Notifications
                 MaxWidth = Width - PADDING - PADDING - Icon.Width - PADDING,
                 UsePreviousSpriteBatchOptions = true
             };
+        }
+
+        /// <summary>
+        ///     Starts a color highlight over the value that changed.
+        /// </summary>
+        private void StartHighlightedValueAnimation()
+        {
+            HighlightedValueStart = Item.Text.LastIndexOf(Item.HighlightedValue, StringComparison.Ordinal);
+
+            if (HighlightedValueStart < 0)
+            {
+                IsHighlightingValue = false;
+                return;
+            }
+
+            Text.SetTextColorRange(HighlightedValueStart, Item.HighlightedValue.Length, GetColor());
+            HighlightElapsed = 0;
+            IsHighlightingValue = true;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void UpdateHighlightedValue(GameTime gameTime)
+        {
+            if (!IsHighlightingValue)
+                return;
+
+            HighlightElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
+            var progress = Math.Min(HighlightElapsed / HIGHLIGHT_DURATION, 1);
+
+            Text.SetTextColorRange(HighlightedValueStart, Item.HighlightedValue.Length,
+                Color.Lerp(GetColor(), Color.White, (float)progress));
+
+            if (progress < 1)
+                return;
+
+            Text.ClearTextColorRanges();
+            IsHighlightingValue = false;
         }
 
         /// <summary>
