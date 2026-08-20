@@ -300,7 +300,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
         {
             StatLines[0].Text = $"FPS / UPS: {PerformanceStats.FrameRate} / {PerformanceStats.UpdateRate}";
             StatLines[1].Text = $"Frame: {PerformanceStats.FrameTimeMs:0.00} ms avg {PerformanceStats.AverageFrameTimeMs:0.00} ms";
-            StatLines[2].Text = $"Draw: {PerformanceStats.DrawTimeMs:0.00} ms avg {PerformanceStats.AverageDrawTimeMs:0.00} ms";
+            StatLines[2].Text = $"Game draw: {PerformanceStats.GameDrawTimeMs:0.00} ms avg {PerformanceStats.AverageGameDrawTimeMs:0.00} ms";
             StatLines[3].Text = $"Screen draw: {PerformanceStats.ScreenDrawTimeMs:0.00} ms";
             StatLines[4].Text = $"Drawn drawables: {PerformanceStats.DrawnDrawableCount}";
             StatLines[5].Text = $"New group: {(NewButtonGroup.Visible ? "visible" : "hidden")}";
