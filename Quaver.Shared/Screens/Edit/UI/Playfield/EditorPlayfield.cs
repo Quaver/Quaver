@@ -504,7 +504,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             try
             {
-                GameBase.Game.SpriteBatch.End();
+                GameBase.Game.EndBatch();
             }
             catch (Exception)
             {
@@ -513,7 +513,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             var transformMatrix = Matrix.CreateTranslation(0, TrackPositionY, 0) * WindowManager.Scale;
 
-            GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, transformMatrix);
+            GameBase.Game.BeginBatch(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null,
+                transformMatrix);
 
             Timeline.Draw(gameTime);
 
@@ -527,7 +528,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
             DrawHitObjects(gameTime);
 
-            GameBase.Game.SpriteBatch.End();
+            GameBase.Game.EndBatch();
 
             // Draw the button on top of the hitobjects because it serves as a dimming
             Button.Draw(gameTime);
