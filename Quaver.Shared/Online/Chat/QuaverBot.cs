@@ -42,9 +42,9 @@ namespace Quaver.Shared.Online.Chat
                 case "help":
                     ExecuteHelpCommand();
                     break;
-                case "server":
-                    ExecuteServerCommand(args);
-                    break;
+                // case "server":
+                //     ExecuteServerCommand(args);
+                //     break;
             }
         }
 
@@ -55,22 +55,22 @@ namespace Quaver.Shared.Online.Chat
         /// </summary>
         public static void ExecuteServerCommand(string[] args)
         {
-            if (args.Length > 1 && OnlineManager.Client != null)
-            {
-                var server = args[1];
-
-                NotificationManager.Show(NotificationLevel.Info, $"Switching to {server}");
-
-                OnlineClient.SERVER_ENDPOINT = server;
-
-                OnlineManager.Client.OnDisconnection += OnDisconnection;
-
-                OnlineManager.Client.Disconnect();
-            }
-            else
-            {
-                SendMessage(OnlineChat.Instance.ActiveChannel.Value, $"No server provided!");
-            }
+            // if (args.Length > 1 && OnlineManager.Client != null)
+            // {
+            //     var server = args[1];
+            //
+            //     NotificationManager.Show(NotificationLevel.Info, $"Switching to {server}");
+            //
+            //     OnlineClient.SERVER_ENDPOINT = server;
+            //
+            //     OnlineManager.Client.OnDisconnection += OnDisconnection;
+            //
+            //     OnlineManager.Client.Disconnect();
+            // }
+            // else
+            // {
+            //     SendMessage(OnlineChat.Instance.ActiveChannel.Value, $"No server provided!");
+            // }
         }
 
         /// <summary>
