@@ -33,12 +33,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///     The texture for the long note's body
         /// </summary>
-        public Texture2D TextureBody { get; private set; }
+        public TextureRegion TextureBody { get; private set; }
 
         /// <summary>
         ///     The texture for the long note's end.
         /// </summary>
-        public Texture2D TextureTail { get; private set; }
+        public TextureRegion TextureTail { get; private set; }
 
         /// <summary>
         ///     Displays when the object is selected
@@ -134,7 +134,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Body = new Sprite
             {
                 Parent = this,
-                Image = TextureBody,
+                Region = TextureBody,
                 Size = new ScalableVector2(Width, GetLongNoteHeight()),
             };
 
@@ -143,7 +143,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             Tail = new Sprite
             {
                 Parent = this,
-                Image = TextureTail,
+                Region = TextureTail,
                 Size = new ScalableVector2(Width, GetTailHeight()),
                 Y = -Body.Height,
             };
@@ -218,7 +218,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetBodyTexture()
+        private TextureRegion GetBodyTexture()
         {
             var lane = Info.Lane - 1;
             return Info.Type switch
@@ -236,7 +236,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetTailTexture()
+        private TextureRegion GetTailTexture()
         {
             var lane = Info.Lane - 1;
             return Info.Type switch
@@ -290,12 +290,12 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// </summary>
         public void UpdateTextures()
         {
-            Image = GetHitObjectTexture();
+            Region = GetHitObjectTexture();
             TextureBody = GetBodyTexture();
             TextureTail = GetTailTexture();
 
-            Body.Image = TextureBody;
-            Tail.Image = TextureTail;
+            Body.Region = TextureBody;
+            Tail.Region = TextureTail;
 
             if (SkinMode.RotateHitObjectsByColumn && (Coloring.Value == HitObjectColoring.None || SkinMode.RotateEditorObjectsByColumn))
                 SpriteRotation = GameplayHitObjectKeys.GetObjectRotation(Map.Mode, Info.Lane - 1);

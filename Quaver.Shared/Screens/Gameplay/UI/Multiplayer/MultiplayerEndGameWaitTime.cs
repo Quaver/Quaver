@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Multiplayer
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Waiting for other players to finish!")
+            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Waiting for other players to finish!")
             {
                 Parent = this,
                 FontSize = 20,

@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Tournament
             if (TournamentScreen.GameplayScreens.Count == 0)
             {
                 OnlineManager.LeaveGame();
-                TournamentScreen.Exit(() => new MultiplayerLobbyScreen());
+                TournamentScreen.Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
             }
 
             foreach (var gameplayScreen in TournamentScreen.GameplayScreens)
@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Tournament
             {
                 var screen = TournamentScreen.GameplayScreens[i];
 
-                var username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                var username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                     screen.LoadedReplay?.PlayerName ?? $"Player {i + 1}", 24)
                 {
                     Parent = screen.Ruleset.Playfield.Container,

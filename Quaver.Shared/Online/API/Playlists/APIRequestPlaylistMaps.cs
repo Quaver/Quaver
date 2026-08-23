@@ -28,7 +28,7 @@ namespace Quaver.Shared.Online.API.Playlists
             var request = new RestRequest($"{APIEndpoint}playlist/{Playlist.OnlineMapPoolId}/maps", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
-            var response = client.Execute(request);
+            var response = ExecuteApiRequest(client, request);
 
             var json = JObject.Parse(response.Content);
 

@@ -111,27 +111,26 @@ namespace Quaver.Shared.Database.Maps
             {
                 if (OnlineManager.CurrentGame != null)
                 {
-                    var select = game.CurrentScreen as SelectionScreen;
-                    screen.Exit(() => new ImportingScreen(null, true));
+                    screen.Exit(() => QuaverScreenFactory.CreateImporting(null, true));
                     return;
                 }
 
-                screen.Exit(() => new ImportingScreen());
+                screen.Exit(() => QuaverScreenFactory.CreateImporting());
                 return;
             }
 
             if (screen.Type == QuaverScreenType.Music)
             {
-                screen.Exit(() => new ImportingScreen());
+                screen.Exit(() => QuaverScreenFactory.CreateImporting());
                 return;
             }
 
             if (screen.Type == QuaverScreenType.Multiplayer)
             {
-                var multi = (MultiplayerGameScreen)screen;
-                multi.DontLeaveGameUponScreenSwitch = true;
+                if (screen is IMultiplayerGameScreenState multi)
+                    multi.DontLeaveGameUponScreenSwitch = true;
 
-                screen.Exit(() => new ImportingScreen());
+                screen.Exit(() => QuaverScreenFactory.CreateImporting());
             }
         }
 
@@ -225,7 +224,7 @@ namespace Quaver.Shared.Database.Maps
                     AudioEngine.LoadCurrentTrack();
                     AudioEngine.Track?.Play();
 
-                    screen.Exit(() => new ResultsScreen(MapManager.Selected.Value, replay));
+                    screen.Exit(() => QuaverScreenFactory.CreateResults(MapManager.Selected.Value, replay));
                 }
                 catch (Exception ex)
                 {

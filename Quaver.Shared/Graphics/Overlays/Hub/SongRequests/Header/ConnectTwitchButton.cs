@@ -26,7 +26,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header
             Size = new ScalableVector2(135, 27);
             Tint = ColorHelper.HexToColor("#9146FF");
             SetIcon(UserInterface.TwitchIconWhite, new Vector2(16, 16));
-            SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CONNECT", 16, Color.White);
+            SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CONNECT", 16, Color.White);
             Clicked += OnClicked;
         }
 
@@ -36,7 +36,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), IsTwitchConnected ? "UNLINK" : "CONNECT", 16, Color.White);
+            SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), IsTwitchConnected ? "UNLINK" : "CONNECT", 16, Color.White);
 
             base.Update(gameTime);
         }

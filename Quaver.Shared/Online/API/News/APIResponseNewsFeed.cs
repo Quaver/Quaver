@@ -40,6 +40,9 @@ namespace Quaver.Shared.Online.API.News
         [JsonProperty("ingame_thumbnail")]
         public string IngameThumbnail { get; set; }
 
+        [JsonProperty("website_v2_thumbnail")]
+        public string WebsiteThumbnail { get; set; }
+
         [JsonProperty("date_published")]
         public DateTime DatePublished { get; set; }
 

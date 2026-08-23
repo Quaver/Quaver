@@ -101,7 +101,17 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
-        public bool IsImGuiHovered { get; private set; }
+        public bool IsImGuiHovered => IsImGuiMouseCaptured || IsImGuiKeyboardCaptured;
+
+        /// <summary>
+        ///     Whether an ImGui context currently owns or requests mouse input.
+        /// </summary>
+        public bool IsImGuiMouseCaptured { get; private set; }
+
+        /// <summary>
+        ///     Whether an ImGui context currently owns or requests keyboard input.
+        /// </summary>
+        public bool IsImGuiKeyboardCaptured { get; private set; }
 
         /// <summary>
         ///     The back-to-front draw order of editor plugins.
@@ -182,7 +192,8 @@ namespace Quaver.Shared.Screens.Edit
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
             Container?.Draw(gameTime);
 
-            IsImGuiHovered = false;
+            IsImGuiMouseCaptured = false;
+            IsImGuiKeyboardCaptured = false;
 
             if (MenuBar != null && !EditScreen.Exiting)
             {
@@ -192,11 +203,14 @@ namespace Quaver.Shared.Screens.Edit
                 MenuBar?.Draw(gameTime);
                 GameBase.Game.TryEndBatch();
 
-                if (ImGui.IsAnyItemHovered())
-                    IsImGuiHovered = true;
+                if (ImGui.IsAnyItemHovered() || ImGui.IsAnyItemActive() || ImGui.IsAnyItemFocused())
+                {
+                    IsImGuiMouseCaptured = true;
+                    IsImGuiKeyboardCaptured = true;
+                }
             }
 
-            Button.IsGloballyClickable = !IsImGuiHovered;
+            Button.IsGloballyClickable = !IsImGuiMouseCaptured;
         }
 
         /// <inheritdoc />
@@ -344,6 +358,9 @@ namespace Quaver.Shared.Screens.Edit
 
             // Makes it so that the playfield bookmark tooltips appear above reference difficulty
             Playfield.Parent = Container;
+
+            // Keep the selection rectangle above both playfields and their hit objects.
+            Selector.Parent = Container;
         }
 
         /// <summary>
@@ -419,7 +436,19 @@ namespace Quaver.Shared.Screens.Edit
                     activatedPlugin = plugin;
 
                 if (ImGui.IsAnyItemHovered() || plugin.IsWindowHovered)
-                    IsImGuiHovered = true;
+                {
+                    IsImGuiMouseCaptured = true;
+                    IsImGuiKeyboardCaptured = true;
+                }
+
+                if (plugin is not SpriteImGui imgui)
+                    continue;
+
+                if (imgui.IsMouseHovered || imgui.IsMouseInputOwner || imgui.WantsMouseInput)
+                    IsImGuiMouseCaptured = true;
+
+                if (imgui.IsMouseHovered || imgui.IsMouseInputOwner || imgui.WantsKeyboardInput)
+                    IsImGuiKeyboardCaptured = true;
             }
 
             if (activatedPlugin == null || PluginDrawOrder[^1] == activatedPlugin)

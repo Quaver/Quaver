@@ -7,6 +7,7 @@ using Hexa.NET.ImGui;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Interop;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble.Logging;
 
 #pragma warning disable
@@ -217,6 +218,15 @@ namespace Quaver.Shared.Scripting
                 s_scaledWindows.Remove(s_scaledWindows.Last());
             }
         }
+
+        internal static IEditorPlugin CurrentEditorPlugin { get; set; }
+
+        public static bool Begin(string name) => Begin(name, ImGuiWindowFlags.None);
+
+        public static bool Begin(string name, ImGuiWindowFlags flags) =>
+            CurrentEditorPlugin is { } plugin
+                ? EditorImGui.Begin(plugin, name, flags)
+                : ImGui.Begin(name, flags);
 
         public static void BeginPopupContextWindow() => ImGui.BeginPopupContextWindow();
 

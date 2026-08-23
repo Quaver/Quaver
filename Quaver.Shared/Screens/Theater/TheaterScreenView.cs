@@ -103,7 +103,7 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         private void CreateExperimentalNotice()
         {
-            ExperimentalNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            ExperimentalNotice = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "This feature is experimental and not complete. Some things may not work properly.", 28)
             {
                 Parent = Container,
@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Theater
         /// </summary>
         private void CreateDragReplaysText()
         {
-            DragReplaysText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            DragReplaysText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "To begin, drag up to 16 replays into the window...", 26)
             {
                 Parent = Container,

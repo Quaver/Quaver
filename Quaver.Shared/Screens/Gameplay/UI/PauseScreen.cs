@@ -7,6 +7,7 @@
 
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Skinning;
 using System;
@@ -132,7 +133,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 UsePreviousSpriteBatchOptions = true
             };
             Buttons.Add(Continue);
-            Continue.Size = new ScalableVector2(Continue.Image.Width, Continue.Image.Height);
+            Continue.Size = new ScalableVector2(Continue.ImageWidth, Continue.ImageHeight);
             Continue.Hovered += (o, e) => HoverButton(0);
 
             // Retry Button
@@ -146,7 +147,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 UsePreviousSpriteBatchOptions = true
             };
             Buttons.Add(Retry);
-            Retry.Size = new ScalableVector2(Retry.Image.Width, Retry.Image.Height);
+            Retry.Size = new ScalableVector2(Retry.ImageWidth, Retry.ImageHeight);
             Retry.Hovered += (o, e) => HoverButton(1);
 
             // Quit Button
@@ -160,7 +161,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 UsePreviousSpriteBatchOptions = true
             };
             Buttons.Add(Quit);
-            Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
+            Quit.Size = new ScalableVector2(Quit.ImageWidth, Quit.ImageHeight);
             Quit.Hovered += (o, e) => HoverButton(2);
 
             // Select continue button on initialization
@@ -170,11 +171,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Handle Up Navigation Button
         /// </summary>
-        private void HandleKeyPressUp()
+        internal void HandleKeyPressUp()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateUp.Value))
-                return;
-
             var index = SelectedIndex == 0 ? Buttons.Count - 1 : SelectedIndex - 1;
             HoverButton(index);
         }
@@ -182,11 +180,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Handle Down Navigation Button
         /// </summary>
-        private void HandleKeyPressDown()
+        internal void HandleKeyPressDown()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateDown.Value))
-                return;
-
             var index = SelectedIndex == Buttons.Count - 1 ? 0 : SelectedIndex + 1;
             HoverButton(index);
         }
@@ -194,11 +189,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///     Handle Select Button
         /// </summary>
-        private void HandleKeyPressSelect()
+        internal void HandleKeyPressSelect()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyNavigateSelect.Value))
-                return;
-
             if (Selected == Continue)
                 InitiateContinue();
 
@@ -212,11 +204,8 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <summary>
         ///		Handle Restart Button
         /// </summary>
-        private void HandleKeyPressRestart()
+        internal void HandleKeyPressRestart()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
-                return;
-
             InitiateRetry();
         }
 
@@ -316,14 +305,6 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Continue.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
             Retry.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
             Quit.IsClickable = Screen.IsPaused && Visible && !Screen.InReplayMode;
-
-            if (Screen.IsPaused && DialogManager.Dialogs.Count == 0 && Screen.SpectatorClient == null && !Screen.IsSongSelectPreview)
-            {
-                HandleKeyPressDown();
-                HandleKeyPressUp();
-                HandleKeyPressSelect();
-                HandleKeyPressRestart();
-            }
 
             base.Update(gameTime);
         }

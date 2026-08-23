@@ -87,7 +87,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             Visible = false;
 
             // Create watching text outside of replay mode because other text relies on it.
-            Watching = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Watching = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"Watching {(screen.InReplayMode ? Screen.LoadedReplay.PlayerName : "")}", 20)
             {
                 Parent = this,
@@ -96,7 +96,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"{Screen.Map.Artist} - {Screen.Map.Title}", 20)
             {
                 Parent = this,
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0,
             };
 
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"[{Screen.Map.DifficultyName}]", 20)
             {
                 Parent = this,
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                 Alpha = 0
             };
 
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"Mapped By: \"{Screen.Map.Creator}\"", 20)
             {
                 Parent = this,
@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             var difficulty = Screen.Map.SolveDifficulty(ModManager.Mods, true).OverallDifficulty;
 
-            Rating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Rating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"Difficulty: {StringHelper.AccuracyToString(difficulty).Replace("%", "")}",
                 20)
             {
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
 
             modsString += $" ({JudgementWindowsDatabaseCache.Selected.Value.Name})";
 
-            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), modsString, 20)
+            Mods = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), modsString, 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,

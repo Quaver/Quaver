@@ -532,7 +532,9 @@ namespace Quaver.Shared.Database.Maps
                 Logger.Important($"Downloading latest version of map: {outdated.Id}", LogType.Runtime);
 
                 var client = new RestClient($"{OnlineClient.API_ENDPOINT}");
-                client.DownloadData(new RestRequest($"{OnlineClient.API_ENDPOINT}/d/web/map/{outdated.MapId}", Method.GET)).SaveAs(path);
+                ApiRequestExecutor.Execute(client,
+                    new RestRequest($"{OnlineClient.API_ENDPOINT}/d/web/map/{outdated.MapId}", Method.GET),
+                    message => Logger.Error(message, LogType.Network)).RawBytes.SaveAs(path);
 
                 Logger.Important($"Successfully downloaded latest version of map: {outdated.Id}", LogType.Runtime);
 

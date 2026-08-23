@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="frames"></param>
-        internal SkipDisplay(GameplayScreen screen, List<Texture2D> frames) : base(frames)
+        internal SkipDisplay(GameplayScreen screen, List<TextureRegion> frames) : base(frames)
         {
             Screen = screen;
             Size = new ScalableVector2(230, 56);

@@ -98,7 +98,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             SelectedHitObjects = selectedHitObjects;
             DefaultLayer = defaultLayer;
 
-            Image = GetHitObjectTexture();
+            Region = GetHitObjectTexture();
             SetPosition();
             Tint = GetNoteTint();
         }
@@ -118,7 +118,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         public virtual void SetSize()
         {
             Width = Playfield.ColumnSize - Playfield.BorderLeft.Width * 2;
-            Height = (Playfield.ColumnSize - Playfield.BorderLeft.Width * 2) * Image.Height / Image.Width;
+            Height = (Playfield.ColumnSize - Playfield.BorderLeft.Width * 2) * ImageHeight / ImageWidth;
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <summary>
         ///    Returns the texture for the hitobject
         /// </summary>
-        public Texture2D GetHitObjectTexture()
+        public TextureRegion GetHitObjectTexture()
         {
             var index = SkinMode.ColorObjectsBySnapDistance && Map.TimingPoints.Count > 0 ? HitObjectManager.GetBeatSnap(Info, Info.GetTimingPoint(Map.TimingPoints)) : 0;
             var lane = Info.Lane - 1;

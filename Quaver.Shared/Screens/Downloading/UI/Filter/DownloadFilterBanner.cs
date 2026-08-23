@@ -144,7 +144,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateNoMapHeader()
         {
-            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("No Song Selected"), 20)
+            NoMapHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), DownloadLocalization.Get("No Song Selected"), 20)
             {
                 Parent = this,
                 Y = 32,
@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 Tint = ColorHelper.HexToColor("#F9645D")
             };
 
-            NoMapSubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            NoMapSubHeader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 DownloadLocalization.Get("No Song Selected Description"), 18)
             {
                 Parent = this,
@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
                 Visible = false
             };
 
-            ModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 14)
+            ModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 14)
             {
                 Parent = Mode,
                 Alignment = Alignment.MidCenter,
@@ -239,7 +239,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 16)
             {
                 Parent = this,
                 Y = Title.Y + Title.Height + 10,
@@ -309,7 +309,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Y = DifficultyRange.Y + DifficultyRange.Height + 10,
@@ -376,7 +376,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter
 
             var (statusText, statusColor) = DrawableDownloadableMapset.GetRankedStatusInfo(e.Value);
             RankedStatus.Tint = statusColor;
-            RankedStatus.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), statusText, 16, Color.White);
+            RankedStatus.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), statusText, 16, Color.White);
 
             const int spacing = 30;
 

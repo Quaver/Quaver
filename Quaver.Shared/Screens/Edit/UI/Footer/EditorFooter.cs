@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Menu.Border.Components.Buttons;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks;
 using Quaver.Shared.Screens.Edit.UI.Footer.Time;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -82,8 +83,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         public EditorFooter(EditScreen screen, IAudioTrack track) : base(MenuBorderType.Footer, new List<Drawable>()
         {
             new IconTextButtonExit(screen),
-            new IconTextButtonOptions(),
-            new IconTextButtonAddBookmark(screen)
+            new IconTextButtonOptions()
         }, new List<Drawable>()
         {
             new IconTextButtonTestPlay(screen),
@@ -144,13 +144,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             const int posX = 14;
 
-            CurrentTime = new EditorFooterTime(EditorFooterTimeType.Current, FontManager.GetWobbleFont(Fonts.InterBold), Track)
+            CurrentTime = new EditorFooterTime(EditorFooterTimeType.Current, FontManager.GetWobbleFont(Fonts.InterSemiBold), Track)
             {
                 Parent = this,
                 X = posX,
             };
 
-            TimeLeft = new EditorFooterTime(EditorFooterTimeType.Left, FontManager.GetWobbleFont(Fonts.InterBold), Track)
+            TimeLeft = new EditorFooterTime(EditorFooterTimeType.Left, FontManager.GetWobbleFont(Fonts.InterSemiBold), Track)
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
@@ -188,8 +188,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             FastForwardButton.Clicked += (o, e) => Screen.SeekToNearestBookmark(Direction.Forward);
             FastForwardButton.Hovered += (o, e) =>
             {
-                Screen.ActivateTooltip(new Tooltip("Seek to the next bookmark in the timeline.\n" +
-                                                   "" + "Hotkey: CTRL + Right", ColorHelper.HexToColor("#808080")));
+                Screen.ActivateTooltip(new Tooltip(LocalizationManager.Get("Screen_Editor_NextBookmarkTooltip",
+                        Screen.InputManager.InputConfig.GetOrDefault(EditorKeybindActions.SeekToNextBookmark).ToDisplayString()),
+                    ColorHelper.HexToColor("#808080")));
             };
             FastForwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }
@@ -210,8 +211,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
             BackwardButton.Clicked += (sender, args) => Screen.SeekToNearestBookmark(Direction.Backward);
             BackwardButton.Hovered += (o, e) =>
             {
-                Screen.ActivateTooltip(new Tooltip("Seek to the previous bookmark in the timeline.\n" +
-                                                   "Hotkey: CTRL + Left", ColorHelper.HexToColor("#808080")));
+                Screen.ActivateTooltip(new Tooltip(LocalizationManager.Get("Screen_Editor_PreviousBookmarkTooltip",
+                        Screen.InputManager.InputConfig.GetOrDefault(EditorKeybindActions.SeekToLastBookmark).ToDisplayString()),
+                    ColorHelper.HexToColor("#808080")));
             };
             BackwardButton.LeftHover += (o, e) => Screen.DeactivateTooltip();
         }

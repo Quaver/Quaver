@@ -158,7 +158,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
         /// <summary>
         /// </summary>
-        private void CreateRank() => Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "0.", 20)
+        private void CreateRank() => Rank = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "0.", 20)
         {
             Parent = this,
             UsePreviousSpriteBatchOptions = true,
@@ -180,7 +180,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
 
         /// <summary>
         /// </summary>
-        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
         {
             Parent = this,
             UsePreviousSpriteBatchOptions = true,
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
                 }
                 else
                 {
-                    val = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Value, 20)
+                    val = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), item.Value, 20)
                     {
                         Parent = this,
                         TextAlignment = TextAlignment.Center,

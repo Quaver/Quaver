@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
             Processor = processor;
 
             Image = SkinManager.Skin?.Results?.ResultsScoreContainerPanel ?? UserInterface.ResultsScoreContainerPanel;
-            Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
+            Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, ImageHeight);
         }
 
         /// <summary>

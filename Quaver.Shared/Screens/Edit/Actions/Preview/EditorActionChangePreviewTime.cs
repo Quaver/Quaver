@@ -3,6 +3,7 @@ using MoonSharp.Interpreter;
 using Quaver.API.Maps;
 using Quaver.Shared.Graphics.Notifications;
 using TagLib.Matroska;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Actions.Preview
 {
@@ -33,7 +34,8 @@ namespace Quaver.Shared.Screens.Edit.Actions.Preview
             WorkingMap.SongPreviewTime = Time;
 
             var timeStr = TimeSpan.FromMilliseconds(Time).ToString(@"mm\:ss\.fff");
-            NotificationManager.Show(NotificationLevel.Info, $"Preview time changed to: {timeStr}");
+            NotificationManager.Show(NotificationLevel.Info,
+                LocalizationManager.Get("Screen_Editor_PreviewTimeChanged", timeStr));
 
             ActionManager.TriggerEvent(Type, new EditorChangedPreviewTimeEventArgs(Time, OriginalTime));
         }

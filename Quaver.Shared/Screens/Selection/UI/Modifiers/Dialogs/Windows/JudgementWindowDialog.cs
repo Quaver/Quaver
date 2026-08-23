@@ -213,7 +213,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "Customize Judgement Windows".ToUpper(), 22)
             {
                 Parent = Panel,
@@ -273,7 +273,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateFootNote()
         {
-            FootNote = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            FootNote = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "NOTE: Scores with custom judgement windows must be passing on Standard* in order to be ranked.", 18)
             {
                 Parent = FooterBackground,
@@ -298,7 +298,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Dialogs.Windows
         /// </summary>
         private void CreateTextPresets()
         {
-            TextPresets = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PRESETS", 22)
+            TextPresets = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "PRESETS", 22)
             {
                 Parent = HeaderBanner,
                 Alignment = Alignment.MidLeft,

@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonMapPreview : IconTextButton
     {
         public IconTextButtonMapPreview(Bindable<SelectContainerPanel> activeLeftPanel)
-            : base(FontAwesome.Get(FontAwesomeIcon.fa_eye_open), FontManager.GetWobbleFont(Fonts.InterBold),
+            : base(FontAwesome.Get(FontAwesomeIcon.fa_eye_open), FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "View Map", (sender, args) =>
                 {
                     if (activeLeftPanel == null)

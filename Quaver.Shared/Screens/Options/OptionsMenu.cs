@@ -10,6 +10,7 @@ using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Screens.Options.Content;
 using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Items.Custom;
@@ -259,7 +260,8 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Navigation", new List<OptionsItem>()
                     {
-                        new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder")
+                        new OptionsItemOpenSkinFolder(containerRect, "Open Skin Folder"),
+                        new OptionsItemGenerateSkinV2Config(containerRect, "Generate Editable skin.yml")
                     }),
                     new OptionsSubcategory("Sharing", new List<OptionsItem>()
                     {
@@ -283,41 +285,61 @@ namespace Quaver.Shared.Screens.Options
                 {
                     new OptionsSubcategory("Gameplay Controls", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybindGeneric(containerRect, "Pause", ConfigManager.KeyPause),
-                        new OptionsItemKeybind(containerRect, "Quick Restart", ConfigManager.KeyRestartMap),
-                        new OptionsItemKeybind(containerRect, "Quick Exit", ConfigManager.KeyQuickExit),
-                        new OptionsItemKeybindGeneric(containerRect, "Skip Song Intro", ConfigManager.KeySkipIntro),
-                        new OptionsItemKeybind(containerRect, "Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
-                        new OptionsItemKeybind(containerRect, "Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed),
-                        new OptionsItemKeybind(containerRect, "Decrease Map Offset", ConfigManager.KeyDecreaseMapOffset),
-                        new OptionsItemKeybind(containerRect, "Increase Map Offset", ConfigManager.KeyIncreaseMapOffset),
-                        new OptionsItemKeybind(containerRect, "Reset Map Offset", ConfigManager.KeyResetMapOffset),
-                    }),
+                        new OptionsItemKeybindGeneric(containerRect, "Pause", GlobalKeybindActions.GameplayPause),
+                        new OptionsItemKeybindGeneric(containerRect, "Quick Restart", GlobalKeybindActions.GameplayRetry),
+                        new OptionsItemKeybindGeneric(containerRect, "Quick Exit", GlobalKeybindActions.GameplayQuickExit),
+                        new OptionsItemKeybindGeneric(containerRect, "Skip Song Intro", GlobalKeybindActions.GameplaySkipIntro),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Scroll Speed (-1)", GlobalKeybindActions.DecreaseScrollSpeed),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Scroll Speed (+1)", GlobalKeybindActions.IncreaseScrollSpeed),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Scroll Speed (-0.1)", GlobalKeybindActions.DecreaseScrollSpeedSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Scroll Speed (+0.1)", GlobalKeybindActions.IncreaseScrollSpeedSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Local Scroll Speed (-1)", GlobalKeybindActions.DecreaseLocalScrollSpeed),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Local Scroll Speed (+1)", GlobalKeybindActions.IncreaseLocalScrollSpeed),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Local Scroll Speed (-0.1)", GlobalKeybindActions.DecreaseLocalScrollSpeedSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Local Scroll Speed (+0.1)", GlobalKeybindActions.IncreaseLocalScrollSpeedSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Map Offset (-5ms)", GlobalKeybindActions.DecreaseOffset),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Map Offset (+5ms)", GlobalKeybindActions.IncreaseOffset),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Map Offset (-1ms)", GlobalKeybindActions.DecreaseOffsetSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Map Offset (+1ms)", GlobalKeybindActions.IncreaseOffsetSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Visual Offset (-5ms)", GlobalKeybindActions.DecreaseVisualOffset),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Visual Offset (+5ms)", GlobalKeybindActions.IncreaseVisualOffset),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Visual Offset (-1ms)", GlobalKeybindActions.DecreaseVisualOffsetSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Visual Offset (+1ms)", GlobalKeybindActions.IncreaseVisualOffsetSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Reset Map Offset", GlobalKeybindActions.ResetOffset),
+                        new OptionsItemKeybindGeneric(containerRect, "Reset Visual Offset", GlobalKeybindActions.ResetVisualOffset),
+                    }, "Mod Keybind Tooltip"),
                     new OptionsSubcategory("Gameplay User Interface", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Toggle Scoreboard Visibility", ConfigManager.KeyScoreboardVisible),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Scoreboard Visibility", GlobalKeybindActions.GameplayToggleScoreboard),
                     }),
                     new OptionsSubcategory("User Interface", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Toggle Chat Overlay", ConfigManager.KeyToggleOverlay)
+                        new OptionsItemKeybindGeneric(containerRect, "Open Options", GlobalKeybindActions.OpenOptions),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Fullscreen", GlobalKeybindActions.ToggleFullscreen),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Chat Overlay", GlobalKeybindActions.GameplayToggleOverlay),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Online Hub", GlobalKeybindActions.ToggleOnlineHub),
+                        new OptionsItemKeybindGeneric(containerRect, "Pause/Unpause Music", GlobalKeybindActions.TogglePause),
                     }),
                     new OptionsSubcategory("Song Selection", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Decrease Gameplay Rate", ConfigManager.KeyDecreaseGameplayAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Gameplay Rate", ConfigManager.KeyIncreaseGameplayAudioRate),
-                        new OptionsItemKeybind(containerRect, "Toggle Mirror Mod", ConfigManager.KeyToggleMirror),
-                        new OptionsItemKeybind(containerRect, "Toggle Pitch", ConfigManager.KeyTogglePitch),
-                        new OptionsItemKeybind(containerRect, "Remove All Mods", ConfigManager.KeyRemoveAllMods),
-                    }),
-                    new OptionsSubcategory("Editor", new List<OptionsItem>()
-                    {
-                        new OptionsItemKeybind(containerRect, "Pause/Play Track", ConfigManager.KeyEditorPausePlay),
-                        new OptionsItemKeybind(containerRect, "Decrease Playback Rate", ConfigManager.KeyEditorDecreaseAudioRate),
-                        new OptionsItemKeybind(containerRect, "Increase Playback Rate", ConfigManager.KeyEditorIncreaseAudioRate),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Gameplay Rate", GlobalKeybindActions.DecreaseRate),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Gameplay Rate", GlobalKeybindActions.IncreaseRate),
+                        new OptionsItemKeybindGeneric(containerRect, "Decrease Gameplay Rate (Half Step)", GlobalKeybindActions.DecreaseRateSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Increase Gameplay Rate (Half Step)", GlobalKeybindActions.IncreaseRateSmall),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Mirror Mod", GlobalKeybindActions.ToggleMirror),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Pitch", GlobalKeybindActions.TogglePitch),
+                        new OptionsItemKeybindGeneric(containerRect, "Remove All Mods", GlobalKeybindActions.RemoveMods),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Modifiers Panel", GlobalKeybindActions.SelectionToggleModifiers),
+                        new OptionsItemKeybindGeneric(containerRect, "Select Random Map", GlobalKeybindActions.SelectionSelectRandomMap),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Map Preview Panel", GlobalKeybindActions.SelectionToggleMapPreview),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle User Profile Panel", GlobalKeybindActions.SelectionToggleUserProfile),
+                        new OptionsItemKeybindGeneric(containerRect, "Refresh Songs", GlobalKeybindActions.SelectionRefresh),
                     }),
                     new OptionsSubcategory("Misc", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Take Screenshot", ConfigManager.KeyScreenshot),
+                        new OptionsItemKeybindGeneric(containerRect, "Take Screenshot", GlobalKeybindActions.Screenshot),
+                        new OptionsItemKeybindGeneric(containerRect, "Cycle FPS Limiter", GlobalKeybindActions.CycleFpsLimiter),
+                        new OptionsItemKeybindGeneric(containerRect, "Reload Skin", GlobalKeybindActions.ReloadSkin),
                     })
                 }),
                 // new OptionsSection("Gamemode specific", UserInterface.OptionsInput, new List<OptionsSubcategory>{
@@ -369,8 +391,7 @@ namespace Quaver.Shared.Screens.Options
                     new OptionsSubcategory("Video", CreateAdvancedVideoOptions(containerRect)),
                     new OptionsSubcategory("Audio", new List<OptionsItem>()
                     {
-                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay),
-                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio Start Timing During Gameplay", ConfigManager.SmoothAudioStart)
+                        new OptionsItemCheckbox(containerRect, "Use Smooth Audio/Frame Timing During Gameplay", ConfigManager.SmoothAudioTimingGameplay)
                     }),
                     new OptionsSubcategory("Gameplay", new List<OptionsItem>()
                     {
@@ -395,7 +416,7 @@ namespace Quaver.Shared.Screens.Options
                     }),
                     new OptionsSubcategory("Input", new List<OptionsItem>()
                     {
-                        new OptionsItemKeybind(containerRect, "Toggle Playtest Autoplay", ConfigManager.KeyTogglePlaytestAutoplay),
+                        new OptionsItemKeybindGeneric(containerRect, "Toggle Playtest Autoplay", GlobalKeybindActions.GameplayTogglePlaytestAutoplay),
                         new OptionsItemCheckbox(containerRect, "Invert Editor Scrolling", ConfigManager.InvertEditorScrolling),
                         new OptionsItemCheckbox(containerRect, "Invert Scrolling", ConfigManager.InvertScrolling)
                     }),
@@ -457,6 +478,8 @@ namespace Quaver.Shared.Screens.Options
             }
 
             options.Add(new OptionsSlider(containerRect, "Editor ImGui Scale", ConfigManager.EditorImGuiScalePercentage));
+            options.Add(new OptionsSlider(containerRect, "Editor ImGui Font Size", ConfigManager.EditorImGuiFontSize,
+                value => $"{value}px"));
 
             return options;
         }

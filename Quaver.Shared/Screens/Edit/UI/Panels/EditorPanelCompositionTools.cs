@@ -26,17 +26,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
         /// <summary>
         /// </summary>
         /// <param name="tool"></param>
-        public EditorPanelCompositionTools(Bindable<EditorCompositionTool> tool) : base("Composition Tools")
+        public EditorPanelCompositionTools(Bindable<EditorCompositionTool> tool)
+            : base(LocalizationManager.Get("Screen_Editor_CompositionTools"))
         {
             Tool = tool;
             Depth = 1;
 
             ToolList = new List<DrawableEditorCompositionTool>
             {
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Select, UserInterface.EditorIconSelect, "Select"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Note, UserInterface.EditorIconNote, "Note"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.LongNote, UserInterface.EditorIconLongNote, "Long Note"),
-                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Mine, UserInterface.EditorIconMine, "Mine"),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Select, UserInterface.EditorIconSelect,
+                    LocalizationManager.Get("Screen_Editor_SelectTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Note, UserInterface.EditorIconNote,
+                    LocalizationManager.Get("Screen_Editor_NoteTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.LongNote, UserInterface.EditorIconLongNote,
+                    LocalizationManager.Get("Screen_Editor_LongNoteTool")),
+                new DrawableEditorCompositionTool(Tool, EditorCompositionTool.Mine, UserInterface.EditorIconMine,
+                    LocalizationManager.Get("Screen_Editor_MineTool")),
             };
 
             AlignTools();
@@ -108,7 +113,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels
                 Icon.Size = new ScalableVector2(12, 20);
             }
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), name, 18)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), name, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

@@ -22,8 +22,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public EditorSetLiveMapOffsetDialog(EditScreen screen) : base("SET LIVEMAP OFFSET",
-            "Enter a value to apply an offset to notes placed during live-mapping...")
+        public EditorSetLiveMapOffsetDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_SetLiveMapOffset"),
+            LocalizationManager.Get("Screen_Editor_SetLiveMapOffsetMessage"))
         {
             Screen = screen;
             CreateTextbox();
@@ -39,8 +40,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, ConfigManager.EditorLiveMapOffset.Value.ToString(), "Enter an offset for live-mapping...", OnSubmit)
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterSemiBold),
+                20, ConfigManager.EditorLiveMapOffset.Value.ToString(),
+                LocalizationManager.Get("Screen_Editor_SetLiveMapOffsetPlaceholder"), OnSubmit)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,

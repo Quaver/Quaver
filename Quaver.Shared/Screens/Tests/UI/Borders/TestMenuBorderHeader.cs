@@ -16,11 +16,11 @@ namespace Quaver.Shared.Screens.Tests.UI.Borders
         public TestMenuBorderHeader() : base(MenuBorderType.Header, new List<Drawable>
             {
                 new MenuBorderLogo(),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.InterBold),"Home"),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), FontManager.GetWobbleFont(Fonts.InterBold),"Download Maps"),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_trophy), FontManager.GetWobbleFont(Fonts.InterBold),"Leaderboards"),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_speech_bubbles_comment_option), FontManager.GetWobbleFont(Fonts.InterBold),"Community Chat"),
-                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_bug), FontManager.GetWobbleFont(Fonts.InterBold),"Report Bugs"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.InterSemiBold),"Home"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive), FontManager.GetWobbleFont(Fonts.InterSemiBold),"Download Maps"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_trophy), FontManager.GetWobbleFont(Fonts.InterSemiBold),"Leaderboards"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_speech_bubbles_comment_option), FontManager.GetWobbleFont(Fonts.InterSemiBold),"Community Chat"),
+                new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_bug), FontManager.GetWobbleFont(Fonts.InterSemiBold),"Report Bugs"),
             },
             new List<Drawable>
             {

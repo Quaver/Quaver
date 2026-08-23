@@ -233,7 +233,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateHeader()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), HeaderText.ToUpper(), 22)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), HeaderText.ToUpper(), 22)
             {
                 Parent = Panel,
                 Alignment = Alignment.TopLeft,
@@ -246,7 +246,7 @@ namespace Quaver.Shared.Graphics
         /// </summary>
         private void CreateConfirmation()
         {
-            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfirmationText, 22)
+            Confirmation = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), ConfirmationText, 22)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter,
@@ -285,7 +285,7 @@ namespace Quaver.Shared.Graphics
                 Tint = ConfirmColor
             };
 
-            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "SURE", 20, Color.White);
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "SURE", 20, Color.White);
 
             NoButton = new RoundedButton((o, e) =>
             {
@@ -301,7 +301,7 @@ namespace Quaver.Shared.Graphics
                 Tint = CancelColor
             };
 
-            NoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CANCEL", 20, Color.White);
+            NoButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CANCEL", 20, Color.White);
         }
     }
 }

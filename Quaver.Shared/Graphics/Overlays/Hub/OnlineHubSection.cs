@@ -119,7 +119,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
         protected void CreateNotImplementedText()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{Name}\nARE NOT IMPLEMENTED YET.\nCHECK BACK LATER!",
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), $"{Name}\nARE NOT IMPLEMENTED YET.\nCHECK BACK LATER!",
                 22)
             {
                 Parent = Container,
@@ -154,11 +154,25 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
 
         /// <summary>
         /// </summary>
-        public void MarkAsUnread() => IsUnread = true;
+        public void MarkAsUnread()
+        {
+            if (IsUnread)
+                return;
+
+            IsUnread = true;
+            Hub.OnSectionUnreadStateChanged();
+        }
 
         /// <summary>
         /// </summary>
-        public void MarkAsRead() => IsUnread = false;
+        public void MarkAsRead()
+        {
+            if (!IsUnread)
+                return;
+
+            IsUnread = false;
+            Hub.OnSectionUnreadStateChanged();
+        }
 
         /// <summary>
         ///     The icon of the section

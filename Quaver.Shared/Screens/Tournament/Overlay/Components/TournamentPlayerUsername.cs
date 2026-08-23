@@ -45,10 +45,10 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
-            Image = Flags.Get(Player.User.OnlineUser.CountryFlag)
+            Region = Flags.GetRegion(Player.User.OnlineUser.CountryFlag)
         };
 
-        private void CreateUsername() => TextUsername = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateUsername() => TextUsername = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             Player.User.OnlineUser.Username)
         {
             Parent = this,

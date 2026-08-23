@@ -1,146 +1,80 @@
-using System;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics;
-using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
-using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
-using Wobble.Graphics.UI.Buttons;
-using Wobble.Graphics.UI.Form;
+using Microsoft.Xna.Framework.Input;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
-    public abstract class ColorDialog : YesNoDialog
+    public abstract class ColorDialog : DialogScreen
     {
-        protected Textbox Textbox { get; set; }
-
-        protected ImageButton ColorBox { get; set; }
-
-        protected Sprite RandomButton { get; set; }
-
-        private Random RNG { get; } = new Random();
-
-        private Color NewColor { get; set; }
+        private readonly string header;
+        private EditorColorPicker colorPicker;
+        private Color initialColor = Color.Black;
+        private bool isClosing;
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ColorDialog(string header = "SELECT COLOR", string confirmationText = "Enter a new RGB color...") : base(header, confirmationText)
+        protected ColorDialog(string header = null)
+            : base(0.65f)
         {
-            CreateTextbox();
-            CreateColorBox();
-            CreateRandomButton();
-
-            Panel.Height += 50;
-            YesButton.Y = -30;
-            NoButton.Y = YesButton.Y;
-
-            YesButton.Clicked += (sender, args) => OnSubmit(Textbox.RawText);
+            this.header = header ?? LocalizationManager.Get("Screen_Editor_SelectColor");
         }
 
-        /// <summary>
-        /// </summary>
-        private void CreateTextbox()
+        public override void CreateContent()
         {
-            var color = NewColor;
-            var val = $"{color.R},{color.G},{color.B}";
-
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.86f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, val, "Enter RGB color (ex: 255,255,255)...", OnSubmit)
-            {
-                Parent = Panel,
-                Alignment = Alignment.BotLeft,
-                Y = -100,
-                X = 24,
-                Tint = ColorHelper.HexToColor("#2F2F2F"),
-                AlwaysFocused = true,
-                StoppedTypingActionCalltime = 100
-            };
-
-            Textbox.OnStoppedTyping += s =>
-            {
-                var col = ParseColor(s);
-                if (col.HasValue)
-                    UpdateColor(col.Value);
-            };
-
-            Textbox.AddBorder(ColorHelper.HexToColor("#363636"), 2);
         }
 
-        private void CreateColorBox()
+        public override void HandleInput(GameTime gameTime)
         {
-            ColorBox = new IconButton(UserInterface.BlankBox)
-            {
-                Parent = Panel,
-                Alignment = Alignment.BotRight,
-                Y = Textbox.Y,
-                X = -Textbox.X,
-                Tint = NewColor,
-                Size = new ScalableVector2(Textbox.Height, Textbox.Height)
-            };
-
-            ColorBox.Clicked += (sender, args) =>
-            {
-                var col = new Color(RNG.Next(255), RNG.Next(255), RNG.Next(255));
-                UpdateColor(col);
-            };
+            if (IsOnTop && KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                Close();
         }
 
-        private void CreateRandomButton()
+        public override void Update(GameTime gameTime)
         {
-            RandomButton = new Sprite()
-            {
-                Parent = ColorBox,
-                Alignment = Alignment.MidCenter,
-                Size = new ScalableVector2(0, 0, 0.45f, 0.45f),
-                Image = FontAwesome.Get(FontAwesomeIcon.fa_refresh_arrow),
-                Tint = Color.Black
-            };
+            // Color dialogs can be queued from inside another SpriteImGui's layout.
+            // Creating this renderer there would replace that layout's current ImGui context.
+            EnsureColorPicker();
+            base.Update(gameTime);
+            colorPicker.Update(gameTime);
         }
 
-        public void UpdateColor(Color c)
+        public override void Draw(GameTime gameTime)
         {
-            NewColor = c;
-            ColorBox.Tint = c;
+            base.Draw(gameTime);
+            colorPicker?.Draw(gameTime);
+        }
 
-            Textbox.RawText = $"{c.R},{c.G},{c.B}";
-            Textbox.InputText.Text = Textbox.RawText;
+        public void UpdateColor(Color color)
+        {
+            initialColor = color;
+            colorPicker?.SetColor(color);
         }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Close()
+        private void Close()
         {
-            Textbox.Visible = false;
-            ColorBox.Visible = false;
-
-            base.Close();
-        }
-
-        private Color? ParseColor(string c)
-        {
-            var split = c.Split(',');
-
-            try
-            {
-                return new Color(byte.Parse(split[0]), byte.Parse(split[1]), byte.Parse(split[2]));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private void OnSubmit(string s)
-        {
-            var color = ParseColor(s);
-            if (!color.HasValue)
+            if (isClosing)
                 return;
 
-            OnColorChange(color.Value);
+            isClosing = true;
+            colorPicker?.Close();
+            DialogManager.Dismiss(this);
+        }
+
+        public override void Destroy()
+        {
+            colorPicker?.Destroy();
+            base.Destroy();
+        }
+
+        private void EnsureColorPicker()
+        {
+            colorPicker ??= new EditorColorPicker(header, initialColor, OnColorChange, Close);
         }
 
         protected abstract void OnColorChange(Color newColor);

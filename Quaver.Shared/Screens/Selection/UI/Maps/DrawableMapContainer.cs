@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
 
                 OnlineGrade.Visible = true;
                 OnlineGrade.Image = SkinManager.Skin.Grades[map.OnlineGrade];
-                OnlineGrade.Size = new ScalableVector2(width, (float) OnlineGrade.Image.Height / OnlineGrade.Image.Width * width);
+                OnlineGrade.Size = new ScalableVector2(width, (float) OnlineGrade.ImageHeight / OnlineGrade.ImageWidth * width);
 
                 Name.X = OnlineGrade.X + OnlineGrade.Width + 16;
                 ByText.X = Name.X;
@@ -244,7 +244,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// </summary>
         private void CreateDifficultyName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "DIFFICULTY", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "DIFFICULTY", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(PaddingX, 18),

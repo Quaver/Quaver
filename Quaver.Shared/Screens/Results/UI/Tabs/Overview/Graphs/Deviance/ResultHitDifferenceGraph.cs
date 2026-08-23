@@ -229,7 +229,7 @@ namespace Quaver.Shared.Screens.Result.UI
             var y = 6;
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 ResultsLocalization.Get("Late hit window", unscaledLargestHitWindow), 16, false)
             {
                 Parent = this,
@@ -238,7 +238,7 @@ namespace Quaver.Shared.Screens.Result.UI
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 ResultsLocalization.Get("Early hit window", unscaledLargestHitWindow), 18, false)
             {
                 Parent = this,

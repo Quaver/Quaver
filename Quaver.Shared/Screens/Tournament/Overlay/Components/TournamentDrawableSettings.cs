@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
         /// <summary>
         ///     The font to be used for the text
         /// </summary>
-        public Bindable<string> Font { get; } = new Bindable<string>(Fonts.InterBold);
+        public Bindable<string> Font { get; } = new Bindable<string>(Fonts.InterSemiBold);
 
         /// <summary>
         ///     The color of the text when the player is losing

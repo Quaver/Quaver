@@ -234,7 +234,7 @@ namespace Quaver.Shared.Online.API.MapsetSearch
                 });
                 request.AddQueryParameter("show_explicit", ShowExplicit ? "true" : "false");
 
-                var response = client.Execute(request);
+                var response = ExecuteApiRequest(client, request);
                 var json = JObject.Parse(response.Content);
 
                 return JsonConvert.DeserializeObject<APIResponseMapsetSearch>(json.ToString());

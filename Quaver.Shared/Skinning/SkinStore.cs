@@ -28,6 +28,7 @@ using SkiaSharp;
 using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Form;
 using Wobble.Logging;
 
@@ -146,12 +147,12 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
-        internal List<Texture2D> HitBubblesBackground { get; private set; }
+        internal List<TextureRegion> HitBubblesBackground { get; private set; }
 
         /// <summary>
         ///     Judgement animation elements
         /// </summary>
-        internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
+        internal Dictionary<Judgement, List<TextureRegion>> Judgements { get; } = [];
 
         /// <summary>
         ///     The numbers that display the user's current score.
@@ -256,17 +257,17 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     The health bar displayed in the background. (Non-Moving one.)
         /// </summary>
-        internal List<Texture2D> HealthBarBackground { get; private set; }
+        internal List<TextureRegion> HealthBarBackground { get; private set; }
 
         /// <summary>
         ///     The health bar displayed in the foreground (Moving)
         /// </summary>
-        internal List<Texture2D> HealthBarForeground { get; private set; }
+        internal List<TextureRegion> HealthBarForeground { get; private set; }
 
         /// <summary>
         ///     Skip animation when user is on a break.
         /// </summary>
-        internal List<Texture2D> Skip { get; private set; }
+        internal List<TextureRegion> Skip { get; private set; }
 
         /// <summary>
         ///     Displayed when the user achieves high combos
@@ -489,6 +490,44 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Loads a single texture element.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="resource"></param>
+        /// <param name="extension"></param>
+        internal TextureRegion LoadSingleTexture(string path, string resource, TextureRegion? fallback, string extension = ".png")
+        {
+            path += extension;
+
+            try
+            {
+                byte[] buffer;
+                if (File.Exists(path))
+                {
+                    buffer = File.ReadAllBytes(path);
+                }
+                else
+                {
+                    if (fallback.HasValue)
+                    {
+                        return fallback.Value;
+                    }
+                    buffer = GameBase.Game.Resources.Get(resource);
+                    if (buffer == null)
+                    {
+                        return UserInterface.BlankBox;
+                    }
+                }
+                return GetTextureFromCacheOr(buffer, AssetLoader.LoadTexture2D);
+            }
+            catch (Exception)
+            {
+                Logger.Warning($"Failed to load: {resource}. Using default!", LogType.Runtime, false);
+                return UserInterface.BlankBox;
+            }
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="folder"></param>
@@ -498,7 +537,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        internal List<Texture2D> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<Texture2D>? fallback = null)
+        internal List<TextureRegion> LoadSpritesheet(string folder, string element, string resource, int rows, int columns, List<TextureRegion>? fallback = null)
         {
             try
             {
@@ -521,14 +560,14 @@ namespace Quaver.Shared.Skinning
                             // Load it up if so.
                             var texture = GetTextureFromCacheOr(file, AssetLoader.LoadTexture2D);
 
-                            return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value),
+                            return AssetLoader.SpritesheetToRegions(texture, int.Parse(match.Groups[1].Value),
                                 int.Parse(match.Groups[2].Value));
                         }
 
                         // Otherwise check to see if that base element (without animations) actually exists.
                         // if so, load it singularly into a list.
                         if (Path.GetFileNameWithoutExtension(f) == element)
-                            return new List<Texture2D> { AssetLoader.LoadTexture2DFromFile(f) };
+                            return [AssetLoader.LoadTexture2DFromFile(f)];
                     }
                 }
 
@@ -540,21 +579,21 @@ namespace Quaver.Shared.Skinning
                 // If we end up getting down here, that means we need to load the spritesheet from our resources.
                 // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
                 if (rows == 0 && columns == 0)
-                    return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource + ".png", null) };
+                    return [LoadSingleTexture($"{dir}/{element}", resource + ".png", null)];
 
                 if (resource == null)
-                    return new List<Texture2D> { UserInterface.BlankBox };
+                    return [UserInterface.BlankBox];
 
                 var buffer = GameBase.Game.Resources.Get($"{resource}@{rows}x{columns}.png");
                 if (buffer == null)
-                    return new List<Texture2D> { UserInterface.BlankBox };
+                    return [UserInterface.BlankBox];
 
-                return AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(buffer), rows, columns);
+                return AssetLoader.SpritesheetToRegions(AssetLoader.LoadTexture2D(buffer), rows, columns);
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Runtime);
-                return new List<Texture2D> { UserInterface.BlankBox };
+                return [UserInterface.BlankBox];
             }
         }
 
@@ -1002,6 +1041,11 @@ namespace Quaver.Shared.Skinning
                             $"Could not load workshop skin {new DirectoryInfo(directory).Name} because it contains errors!");
                         workshopList.Add($"Unknown <{new DirectoryInfo(directory).Name}>");
                     }
+                }
+                else if (File.Exists($"{directory}/skin.yml"))
+                {
+                    var directoryName = new DirectoryInfo(directory).Name;
+                    workshopList.Add($"{directoryName} <{directoryName}>");
                 }
             }
 

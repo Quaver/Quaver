@@ -173,7 +173,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                     Username.Text = $"Loading (#{OnlineUser.Id})...";
                     Username.Tint = Color.White;
                     Username.X = Flag.X + Flag.Width + 8;
-                    Flag.Image = Flags.Get("XX");
+                    Flag.Region = Flags.GetRegion("XX");
                     Status.Text = "Idle";
                 }
                 else
@@ -189,7 +189,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                     Username.Text = OnlineUser.Username;
                     Username.Tint = Colors.GetUserChatColor(OnlineUser.UserGroups);
                     Username.X = hasClan ? Clan.X + Clan.Width : Flag.X + Flag.Width + 8;
-                    Flag.Image = Flags.Get(OnlineUser.CountryFlag);
+                    Flag.Region = Flags.GetRegion(OnlineUser.CountryFlag);
                     UpdateUserStatus();
                 }
 
@@ -245,7 +245,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 Size = new ScalableVector2(25, 25),
                 X = Avatar.X + Avatar.Width + 14,
                 Y = 8,
-                Image = Flags.Get("XX"),
+                Region = Flags.GetRegion("XX"),
                 UsePreviousSpriteBatchOptions = true
             };
         }
@@ -254,7 +254,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateClan()
         {
-            Clan = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Clan = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -268,7 +268,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Loading...", 18)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Loading...", 18)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -282,7 +282,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Idle", 16)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Idle", 16)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,

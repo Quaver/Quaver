@@ -13,7 +13,7 @@ namespace Quaver.Shared.Graphics
     {
         public SpriteTextPlus Text { get; }
 
-        public Tooltip(string text, Color color, bool cacheText = true)
+        public Tooltip(string text, Color color, bool cacheText = true, float? maxTextWidth = null)
         {
             Tint = ColorHelper.HexToColor("#161616");
             AddBorder(color, 2);
@@ -22,10 +22,11 @@ namespace Quaver.Shared.Graphics
             SetChildrenAlpha = true;
             SetChildrenVisibility = true;
 
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20, cacheText)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20, cacheText)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
+                MaxWidth = maxTextWidth
             };
 
             ChangeText(text);

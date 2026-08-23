@@ -14,6 +14,7 @@ using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -63,9 +64,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
         /// </summary>Sta
         public void HandleInput(double dt)
         {
-            // Handle scroll speed changes if necessary.
-            ChangeScrollSpeed();
-
             // Handle Replay Input Manager if necessary.
             // - Grab the previous replay frame that we're on and update the replay's input manager to see if we have any updated frames.
             // - If the current and previous frames are the same, we don't have to do anything.
@@ -435,72 +433,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Input
 
             // Update Object Pool
             info.State = HitObjectState.Dead;
-        }
-
-        /// <summary>
-        ///     Handles scroll speed changes.
-        /// </summary>
-        private void ChangeScrollSpeed()
-        {
-            // Only allow scroll speed changes if the map hasn't started or if we're on a break
-            if (Ruleset.Screen.IsSongSelectPreview || Ruleset.Screen.Timing.Time >= 5000 && !Ruleset.Screen.EligibleToSkip && !(Ruleset.Screen is TournamentGameplayScreen) && !Ruleset.Screen.InReplayMode)
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value) &&
-                !KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-                return;
-
-            var speedIncrease = KeyboardManager.IsCtrlDown() ? 1 : 10;
-
-            var scrollSpeed = ConfigManager.ScrollSpeeds[Ruleset.Screen.Map.Mode];
-
-            if (KeyboardManager.IsShiftDown())
-            {
-                // Handle local scroll speed changes with <shift> key held.
-                var targetScrollSpeed = MapManager.CustomScrollSpeed ?? scrollSpeed.Value;
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
-                {
-                    targetScrollSpeed += speedIncrease;
-                }
-                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-                {
-                    targetScrollSpeed -= speedIncrease;
-                }
-
-                if (targetScrollSpeed == scrollSpeed.Value)
-                {
-                    // Reset to global if the target speed is the same as global
-                    MapManager.CustomScrollSpeed = null;
-
-                    NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
-                        $"Scroll speed (local) has been reset to global: {scrollSpeed.Value / 10f:0.0}",
-                        null, true);
-                }
-                else
-                {
-                    // Set custom local scroll speed
-                    MapManager.CustomScrollSpeed = targetScrollSpeed;
-
-                    NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
-                        $"Scroll speed (local) has been changed to: {targetScrollSpeed / 10f:0.0}",
-                        null, true);
-                }
-            }
-            else
-            {
-                // Update the global scroll speed.
-                // If there is a custom local scroll speed set, this would not have any
-                // visual effect right away.
-
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
-                    scrollSpeed.Value += speedIncrease;
-                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
-                    scrollSpeed.Value -= speedIncrease;
-
-                NotificationManager.ShowOrUpdate("gameplay-scroll-speed", NotificationLevel.Info,
-                    $"Scroll speed (global) has been changed to: {scrollSpeed.Value / 10f:0.0}",
-                    null, true);
-            }
         }
 
         /// <summary>

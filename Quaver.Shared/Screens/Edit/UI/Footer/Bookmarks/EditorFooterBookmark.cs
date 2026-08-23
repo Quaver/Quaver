@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
+using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
@@ -13,6 +14,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
     /// </summary>
     public class EditorFooterBookmark : ImageButton
     {
+        private const int MaximumNoteWidth = 360;
+
         private EditScreen Screen { get; }
         
         private BookmarkInfo Bookmark { get; }
@@ -23,9 +26,14 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
         {
             Screen = screen;
             Bookmark = bookmark;
-            Tint = Color.Yellow;
-            Tooltip = new Tooltip(Bookmark.Note, Tint) { DestroyIfParentIsNull = false };
+            Tint = GetColor();
+            Tooltip = new Tooltip(Bookmark.Note, Tint, maxTextWidth: MaximumNoteWidth)
+            {
+                DestroyIfParentIsNull = false
+            };
 
+            Clicked += (sender, args) =>
+                DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, Bookmark));
             Hovered += (sender, args) =>
             {
                 if (string.IsNullOrEmpty(Bookmark.Note))
@@ -35,9 +43,17 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             };
             
             LeftHover += (sender, args) => screen.DeactivateTooltip();
-            Clicked += (sender, args) => DialogManager.Show(new EditorBookmarkDialog(Screen.ActionManager, Screen.Track, Bookmark)); 
             RightClicked += (sender, args) => screen.ActionManager.RemoveBookmark(Bookmark);
         }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Tint = GetColor();
+            Tooltip.Border.Tint = Tint;
+            base.Draw(gameTime);
+        }
+
+        private Color GetColor() => ColorHelper.ToXnaColor(Bookmark.GetColor());
 
         public override void Destroy()
         {

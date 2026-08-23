@@ -110,7 +110,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             var diffName = GetDifficultyName();
 
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), game.Map.Replace($"[{diffName}]", ""))
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), game.Map.Replace($"[{diffName}]", ""))
             {
                 Parent = this,
                 X = Background.X + Background.Width + 16,
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(ArtistTitle);
 
-            Mode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
+            Mode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "[" + ModeHelper.ToShortHand((GameMode)game.GameMode) + "]")
             {
                 Parent = this,
                 X = ArtistTitle.X,
@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(Mode);
 
-            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{game.DifficultyRating:0.00}")
+            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), $"{game.DifficultyRating:0.00}")
             {
                 Parent = this,
                 X = Mode.X + Mode.Width + 8,
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(DifficultyRating);
 
-            DifficultyName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), " - \"" + diffName + "\"")
+            DifficultyName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), " - \"" + diffName + "\"")
             {
                 Parent = this,
                 X = DifficultyRating.X + DifficultyRating.Width + 2,
@@ -151,7 +151,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
             AddContainedDrawable(DifficultyName);
 
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("ModsNone"))
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("ModsNone"))
             {
                 Parent = this,
                 X = Mode.X,
@@ -426,7 +426,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             {
                 var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
-                screen?.Exit(() => new SelectionScreen(), 0, QuaverScreenChangeType.AddToStack);
+                screen?.Exit(() => QuaverScreenFactory.CreateSelection(), 0, QuaverScreenChangeType.AddToStack);
                 return;
             }
 
@@ -478,7 +478,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 var game = GameBase.Game as QuaverGame;
 
                 if (game?.CurrentScreen.Type == QuaverScreenType.Multiplayer || game?.CurrentScreen.Type == QuaverScreenType.Select)
-                    game?.CurrentScreen.Exit(() => new ImportingScreen(Screen), 0, QuaverScreenChangeType.AddToStack);
+                    game?.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting(Screen), 0, QuaverScreenChangeType.AddToStack);
             }
 
             CurrentDownload = null;

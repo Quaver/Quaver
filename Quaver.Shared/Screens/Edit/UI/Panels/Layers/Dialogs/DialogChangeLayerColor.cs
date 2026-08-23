@@ -5,6 +5,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Actions;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
 {
@@ -20,8 +21,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         /// <summary>
         /// </summary>
         public DialogChangeLayerColor(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap) : base(
-            "CHANGE LAYER COLOR",
-            "Enter a new RGB color for your layer...")
+            LocalizationManager.Get("Screen_Editor_ChangeLayerColor"))
         {
             ActionManager = manager;
             Layer = layer;

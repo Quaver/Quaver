@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
@@ -23,42 +24,44 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
     {
         private static Dictionary<MapsetSubmissionStatusCode, string> StatusCodeMessages { get; } = new Dictionary<MapsetSubmissionStatusCode, string>()
         {
-            {MapsetSubmissionStatusCode.ErrorInternalServer, "An internal server error has occurred. Please try again!"},
-            {MapsetSubmissionStatusCode.ErrorUnauthorized, "Please re-log and try again!"},
-            {MapsetSubmissionStatusCode.ErrorBanned, "You cannot upload a mapset while banned!"},
-            {MapsetSubmissionStatusCode.ErrorNoMapsetSent, "No mapset was sent with the request!"},
-            {MapsetSubmissionStatusCode.ErrorRequestTooLarge, "Your mapset is too large! The max file size is 50mb"},
-            {MapsetSubmissionStatusCode.ErrorInvalidMapsetFileExtension, "File extension error. Please report this to a developer!"},
-            {MapsetSubmissionStatusCode.ErrorMapsetNotZipFile, "Your mapset was not a zip file. Please report this to a developer!"},
-            {MapsetSubmissionStatusCode.ErrorInvalidFileType, "Your mapset contains files of an invalid type!"},
-            {MapsetSubmissionStatusCode.ErrorNoContainingQuaFiles, "Your mapset does not contain any .qua files!"},
-            {MapsetSubmissionStatusCode.ErrorInvalidMapFile, "One or more of your map files are invalid! (No objects, timing points?)!"},
-            {MapsetSubmissionStatusCode.ErrorInvalidMapMetadata, "One or more of your map files do not have completed metadata!"},
-            {MapsetSubmissionStatusCode.ErrorUserNotCreator, "You are not the creator of this mapset!"},
-            {MapsetSubmissionStatusCode.ErrorConflictingMapIds, "One or more of your maps have conflicting map ids!"},
-            {MapsetSubmissionStatusCode.ErrorConflictingMapsetIds, "One or more of your maps have conflicting mapset ids!"},
-            {MapsetSubmissionStatusCode.ErrorConflictingDifficultyNames, "One or more of your maps have the same difficulty name!"},
-            {MapsetSubmissionStatusCode.ErrorNoExistingMapsetFound, "You're trying to update a mapset, but this mapset isn't uploaded online!"},
-            {MapsetSubmissionStatusCode.ErrorAlreadyRanked, "You cannot update a mapset that is already ranked!"},
-            {MapsetSubmissionStatusCode.ErrorContainsNonUploadedNotNewMapId, "One or more of your maps contains a non-uploaded map id!"},
-            {MapsetSubmissionStatusCode.SuccessUploaded, "Success! Your mapset has been uploaded!"},
-            {MapsetSubmissionStatusCode.SuccessUpdated, "Success! Your mapset has been updated!"},
-            {MapsetSubmissionStatusCode.ErrorExceededLimit, "You have exceeded the amount of maps you can upload at this time!"}
+            {MapsetSubmissionStatusCode.ErrorInternalServer, LocalizationManager.Get("Screen_Editor_UploadErrorInternalServer")},
+            {MapsetSubmissionStatusCode.ErrorUnauthorized, LocalizationManager.Get("Screen_Editor_UploadErrorUnauthorized")},
+            {MapsetSubmissionStatusCode.ErrorBanned, LocalizationManager.Get("Screen_Editor_UploadErrorBanned")},
+            {MapsetSubmissionStatusCode.ErrorNoMapsetSent, LocalizationManager.Get("Screen_Editor_UploadErrorNoMapsetSent")},
+            {MapsetSubmissionStatusCode.ErrorRequestTooLarge, LocalizationManager.Get("Screen_Editor_UploadErrorRequestTooLarge")},
+            {MapsetSubmissionStatusCode.ErrorInvalidMapsetFileExtension, LocalizationManager.Get("Screen_Editor_UploadErrorInvalidMapsetFileExtension")},
+            {MapsetSubmissionStatusCode.ErrorMapsetNotZipFile, LocalizationManager.Get("Screen_Editor_UploadErrorMapsetNotZipFile")},
+            {MapsetSubmissionStatusCode.ErrorInvalidFileType, LocalizationManager.Get("Screen_Editor_UploadErrorInvalidFileType")},
+            {MapsetSubmissionStatusCode.ErrorNoContainingQuaFiles, LocalizationManager.Get("Screen_Editor_UploadErrorNoContainingQuaFiles")},
+            {MapsetSubmissionStatusCode.ErrorInvalidMapFile, LocalizationManager.Get("Screen_Editor_UploadErrorInvalidMapFile")},
+            {MapsetSubmissionStatusCode.ErrorInvalidMapMetadata, LocalizationManager.Get("Screen_Editor_UploadErrorInvalidMapMetadata")},
+            {MapsetSubmissionStatusCode.ErrorUserNotCreator, LocalizationManager.Get("Screen_Editor_UploadErrorUserNotCreator")},
+            {MapsetSubmissionStatusCode.ErrorConflictingMapIds, LocalizationManager.Get("Screen_Editor_UploadErrorConflictingMapIds")},
+            {MapsetSubmissionStatusCode.ErrorConflictingMapsetIds, LocalizationManager.Get("Screen_Editor_UploadErrorConflictingMapsetIds")},
+            {MapsetSubmissionStatusCode.ErrorConflictingDifficultyNames, LocalizationManager.Get("Screen_Editor_UploadErrorConflictingDifficultyNames")},
+            {MapsetSubmissionStatusCode.ErrorNoExistingMapsetFound, LocalizationManager.Get("Screen_Editor_UploadErrorNoExistingMapsetFound")},
+            {MapsetSubmissionStatusCode.ErrorAlreadyRanked, LocalizationManager.Get("Screen_Editor_UploadErrorAlreadyRanked")},
+            {MapsetSubmissionStatusCode.ErrorContainsNonUploadedNotNewMapId, LocalizationManager.Get("Screen_Editor_UploadErrorContainsNonUploadedNotNewMapId")},
+            {MapsetSubmissionStatusCode.SuccessUploaded, LocalizationManager.Get("Screen_Editor_UploadSuccessUploaded")},
+            {MapsetSubmissionStatusCode.SuccessUpdated, LocalizationManager.Get("Screen_Editor_UploadSuccessUpdated")},
+            {MapsetSubmissionStatusCode.ErrorExceededLimit, LocalizationManager.Get("Screen_Editor_UploadErrorExceededLimit")}
         };
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public EditorUploadingMapsetDialog(EditScreen screen) : base("UPLOADING MAPSET",
-            "Please wait while your mapset is being uploaded...", () =>
+        public EditorUploadingMapsetDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_UploadingMapset"),
+            LocalizationManager.Get("Screen_Editor_UploadingMapsetMessage"), () =>
         {
             Logger.Important($"Beginning to upload mapset...", LogType.Network);
 
             try
             {
                 screen.Save(true);
-                NotificationManager.Show(NotificationLevel.Success, "Your mapset has been successfully saved!");
+                NotificationManager.Show(NotificationLevel.Success,
+                    LocalizationManager.Get("Screen_Editor_MapsetSavedSuccessfully"));
                 Logger.Important("Successfully saved the current map", LogType.Network);
 
                 var path = MapManager.Selected.Value.Mapset.ExportToZip(false);
@@ -136,7 +139,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                             File.Delete(file);
                     }
 
-                    NotificationManager.Show(NotificationLevel.Success, $"Your mapset has been successfully uploaded!");
+                    NotificationManager.Show(NotificationLevel.Success,
+                        LocalizationManager.Get("Screen_Editor_MapsetUploadedSuccessfully"));
 
                     // If for some reason the map with the same difficulty
                     if (sameDifficultyMap == null)
@@ -155,12 +159,14 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 }
 
                 Logger.Important($"Error uploading mapset: {response.ResponseStatus} | {responseParsed.Error}", LogType.Network);
-                NotificationManager.Show(NotificationLevel.Error, $"Error uploading mapset: {responseParsed.Error}");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_UploadMapsetErrorWithReason", responseParsed.Error));
             }
             catch (Exception e)
             {
                 Logger.Error(e, LogType.Network);
-                NotificationManager.Show(NotificationLevel.Error, "There was an issue while uploading your mapset");
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Editor_UploadMapsetError"));
             }
         })
         {

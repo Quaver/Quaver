@@ -28,7 +28,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             Panel = panel;
 
             Image = UserInterface.AutoModPanelHeader;
-            Size = new ScalableVector2(Panel.Width, Image.Height);
+            Size = new ScalableVector2(Panel.Width, ImageHeight);
 
             CreateGearIcon();
             CreateText();
@@ -46,7 +46,8 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
         private void CreateText()
         {
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "AutoMod", 20)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+                LocalizationManager.Get("Screen_Editor_AutoMod"), 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

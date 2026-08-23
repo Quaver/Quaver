@@ -49,7 +49,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                 var settings = (TournamentPlayerWinnerDisplaySettings) Settings;
                 var scale = settings.Scale.Value / 100f;
 
-                Icon.Size = new ScalableVector2(Icon.Image.Width * scale, Icon.Image.Height * scale);
+                Icon.Size = new ScalableVector2(Icon.ImageWidth * scale, Icon.ImageHeight * scale);
             }
         }
 

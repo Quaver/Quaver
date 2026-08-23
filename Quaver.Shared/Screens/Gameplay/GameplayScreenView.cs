@@ -827,16 +827,16 @@ namespace Quaver.Shared.Screens.Gameplay
                         if (ModManager.Mods.HasFlag(ModIdentifier.Paused))
                             ModManager.RemoveMod(ModIdentifier.Paused);
 
-                        return new SelectionScreen();
+                        return QuaverScreenFactory.CreateSelection();
                     }
 
                     if (Screen.InReplayMode && Screen.LoadedReplay != null)
                     {
                         Screen.LoadedReplay.FromScoreProcessor(Screen.Ruleset.ScoreProcessor);
-                        return new ResultsScreen(MapManager.Selected.Value, Screen.LoadedReplay);
+                        return QuaverScreenFactory.CreateResults(MapManager.Selected.Value, Screen.LoadedReplay);
                     }
 
-                    return new ResultsScreen(Screen);
+                    return QuaverScreenFactory.CreateResults(Screen);
                 }, Screen.Failed ? Screen.FailFadeTime : 500);
 
                 ResultsScreenLoadInitiated = true;
@@ -919,13 +919,13 @@ namespace Quaver.Shared.Screens.Gameplay
             {
                 // Only exit once (multiple GameplayScreenViews), and force end (!mp end or lobby disbanded)
                 if (!Screen.Exiting && e.Force)
-                    Screen.Exit(() => new MultiplayerGameScreen());
+                    Screen.Exit(() => QuaverScreenFactory.CreateMultiplayerGame());
                 return;
             }
 
             Screen.IsPaused = true;
 
-            Screen.Exit(() => new ResultsScreen(Screen, OnlineManager.CurrentGame,
+            Screen.Exit(() => QuaverScreenFactory.CreateResults(Screen, OnlineManager.CurrentGame,
                 GetProcessorsFromScoreboard(ScoreboardLeft), GetProcessorsFromScoreboard(ScoreboardRight)));
         }
 

@@ -170,7 +170,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 Clan.UpdateFromUser(User.OnlineUser);
                 Username.X = Clan.Visible ? Clan.X + Clan.Width + 6 : Flag.Width + 8;
                 Username.Text = User.OnlineUser.Username;
-                Flag.Image = Flags.Get(User.OnlineUser.CountryFlag ?? "XX");
+                Flag.Region = Flags.GetRegion(User.OnlineUser.CountryFlag ?? "XX");
             }
             else
             {
@@ -181,7 +181,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
                 Clan.Clear();
                 Username.X = Flag.Width + 8;
                 Username.Text = MultiLocalization.Get("Loading");
-                Flag.Image = Flags.Get("XX");
+                Flag.Region = Flags.GetRegion("XX");
             }
 
             if (User.Stats.ContainsKey((GameMode) Game.Value.GameMode))
@@ -306,7 +306,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
             Parent = this,
             X = Avatar.X + Avatar.Width + 10,
             Y = 8,
-            Image = Flags.Get("XX"),
+            Region = Flags.GetRegion("XX"),
             Size = new ScalableVector2(22, 22),
             UsePreviousSpriteBatchOptions = true
         };
@@ -323,7 +323,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateUsername() => Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             MultiLocalization.Get("Loading"), 19)
         {
             Parent = Flag,
@@ -346,7 +346,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Players
 
         /// <summary>
         /// </summary>
-        private void CreateWinCount() => WinCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateWinCount() => WinCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             "", 18)
         {
             Parent = this,

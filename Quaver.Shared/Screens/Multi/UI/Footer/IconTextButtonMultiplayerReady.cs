@@ -21,7 +21,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
         /// </summary>
         /// <param name="game"></param>
         public IconTextButtonMultiplayerReady(Bindable<MultiplayerGame> game) : base(FontAwesome.Get(FontAwesomeIcon.fa_check),
-            FontManager.GetWobbleFont(Fonts.InterBold),"", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterSemiBold),"", (sender, args) =>
             {
                 if (game.Value.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                 {

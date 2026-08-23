@@ -27,7 +27,7 @@ namespace Quaver.Shared.Online.API.User
             var request = new RestRequest($"{APIEndpoint}users/full/{UserId}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
-            var response = client.Execute(request);
+            var response = ExecuteApiRequest(client, request);
 
             var json = JObject.Parse(response.Content);
 

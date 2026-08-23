@@ -7,13 +7,15 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
     public class EditorUploadConfirmationDialog : YesNoDialog
     {
-        public EditorUploadConfirmationDialog(EditScreen screen) : base("UPLOAD MAPSET",
-            "Are you sure you would like to upload your mapset to the server?\nNote: You must own the rights to all files you upload.")
+        public EditorUploadConfirmationDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_UploadMapset"),
+            LocalizationManager.Get("Screen_Editor_UploadMapsetConfirmation"))
         {
             YesAction += () =>
             {
@@ -30,14 +32,15 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
 
             if (mapset.Maps.Any(x => x.RankedStatus == RankedStatus.Ranked))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "You cannot submit a mapset that is already ranked!");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_CannotSubmitRankedMapset"));
                 return false;
             }
 
             if (mapset.Maps.Any(x => x.Creator != OnlineManager.Self?.OnlineUser?.Username))
             {
-                NotificationManager.Show(NotificationLevel.Warning, "This mapset does not belong to you! " +
-                                                                    "The creator usernames of every map do not match yours.");
+                NotificationManager.Show(NotificationLevel.Warning,
+                    LocalizationManager.Get("Screen_Editor_MapsetDoesNotBelongToYou"));
                 return false;
             }
 

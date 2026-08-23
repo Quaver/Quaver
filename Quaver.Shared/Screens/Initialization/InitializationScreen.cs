@@ -92,7 +92,7 @@ namespace Quaver.Shared.Screens.Initialization
 
             new Thread(CleanOldMapBackups).Start();
 #if !VISUAL_TESTS
-            QuaverScreenManager.ScheduleScreenChange(() => new MainMenuScreen());
+            QuaverScreenManager.ScheduleScreenChange(() => QuaverScreenFactory.CreateMainMenu());
 #endif
         }
 

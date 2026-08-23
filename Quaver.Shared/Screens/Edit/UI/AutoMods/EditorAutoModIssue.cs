@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
 
             Icon.Image = GetIconImage();
             Icon.Tint = Item.Level == AutoModIssueLevel.Ranking ? Colors.MainBlue : Color.White;
-            Icon.Size = new ScalableVector2(Icon.Image.Width, Icon.Image.Height);
+            Icon.Size = new ScalableVector2(Icon.ImageWidth, Icon.ImageHeight);
         }
 
         private void CreateButton()
@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
             };
         }
 
-        private void CreateIssueText() => IssueText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateIssueText() => IssueText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             "", 20)
         {
             Parent = this,
@@ -127,15 +127,15 @@ namespace Quaver.Shared.Screens.Edit.UI.AutoMods
                 switch (Item.Level)
                 {
                     case AutoModIssueLevel.Warning:
-                        text = "This is a warning of a potential error. You can ignore this if it isn't an issue.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModWarningTooltip");
                         color = Color.Yellow;
                         break;
                     case AutoModIssueLevel.Critical:
-                        text = "This is a critical error which affects the playability of your map.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModCriticalTooltip");
                         color = Color.Crimson;
                         break;
                     case AutoModIssueLevel.Ranking:
-                        text = "This is a ranking criteria error. Without fixing this, your map cannot be ranked.";
+                        text = LocalizationManager.Get("Screen_Editor_AutoModRankingTooltip");
                         color = Colors.MainBlue;
                         break;
                     default:

@@ -15,7 +15,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
     {
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Menu;
 
-        public IconTextButtonHome() : base(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.InterBold), "Home",
+        public IconTextButtonHome() : base(FontAwesome.Get(FontAwesomeIcon.fa_home), FontManager.GetWobbleFont(Fonts.InterSemiBold), "Home",
             localizationKey: "Screen_Main_Menu_Home")
         {
         }
@@ -25,7 +25,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
             var game = (QuaverGame) GameBase.Game;
             if (OnlineManager.CurrentGame != null)
                 OnlineManager.LeaveGame();
-            game.CurrentScreen.Exit(() => new MainMenuScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
         }
     }
 }

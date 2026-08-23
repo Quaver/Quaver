@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Name)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), item.Name)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

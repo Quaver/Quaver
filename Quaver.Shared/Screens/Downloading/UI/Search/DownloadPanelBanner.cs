@@ -116,14 +116,14 @@ namespace Quaver.Shared.Screens.Downloading.UI.Search
         /// </summary>
         private void CreateHeaderText()
         {
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("Download Maps"), 22)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), DownloadLocalization.Get("Download Maps"), 22)
             {
                 Parent = this,
                 X = 24,
                 Y = 18
             };
 
-            Subheader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Subheader = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 DownloadLocalization.Get("Find new songs to play from the community"), 18)
             {
                 Parent = this,

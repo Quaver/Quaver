@@ -8,9 +8,9 @@ namespace Quaver.Shared.Screens.Theater.UI.Footer
     public class FooterBackButton : IconTextButton
     {
         public FooterBackButton(QuaverScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_chevron_pointing_to_the_left),
-            FontManager.GetWobbleFont(Fonts.InterBold),"Back", (sender, args) =>
+            FontManager.GetWobbleFont(Fonts.InterSemiBold),"Back", (sender, args) =>
             {
-                screen.Exit(() => new MainMenuScreen());
+                screen.Exit(() => QuaverScreenFactory.CreateMainMenu());
             })
         {
         }

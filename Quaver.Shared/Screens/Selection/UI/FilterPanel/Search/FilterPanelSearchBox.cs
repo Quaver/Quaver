@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.Search
         public FilterPanelSearchBox(Bindable<string> currentSearchQuery, Bindable<List<Mapset>> availableMapsets,
             Bindable<bool> isPlayTesting, Bindable<SelectContainerPanel> activeLeftPanel, string placeHolderText,
             int fontSize = 20)
-            : base(new ScalableVector2(280, 40), FontManager.GetWobbleFont(Fonts.InterBold), fontSize, PreviousSearchTerm, placeHolderText)
+            : base(new ScalableVector2(280, 40), FontManager.GetWobbleFont(Fonts.InterSemiBold), fontSize, PreviousSearchTerm, placeHolderText)
         {
             CurrentSearchQuery = currentSearchQuery;
             AvailableMapsets = availableMapsets;

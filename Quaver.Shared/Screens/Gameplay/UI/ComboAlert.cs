@@ -58,7 +58,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
             if (SkinManager.Skin.ComboAlerts.Count != 0)
             {
                 AlertSprite.Image = SkinManager.Skin.ComboAlerts.First();
-                AlertSprite.Size = new ScalableVector2(AlertSprite.Image.Width, AlertSprite.Image.Height);
+                AlertSprite.Size = new ScalableVector2(AlertSprite.ImageWidth, AlertSprite.ImageHeight);
                 AlertSprite.X = AlertSprite.Width;
             }
         }
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
                         TextureIndex = 0;
 
                     AlertSprite.Image = SkinManager.Skin.ComboAlerts[TextureIndex];
-                    AlertSprite.Size = new ScalableVector2(AlertSprite.Image.Width, AlertSprite.Image.Height);
+                    AlertSprite.Size = new ScalableVector2(AlertSprite.ImageWidth, AlertSprite.ImageHeight);
                     AlertSprite.X = AlertSprite.Width + 10;
 
                     AlertSprite

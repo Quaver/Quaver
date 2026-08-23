@@ -76,7 +76,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
         /// <summary>
         /// </summary>
-        private void CreateName()  => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+        private void CreateName()  => Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -85,7 +85,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
 
         /// <summary>
         /// </summary>
-        private void CreateDescription() => Description = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+        private void CreateDescription() => Description = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
@@ -105,7 +105,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             };
 
             const float scale = 0.75f;
-            CloseButton.Size = new ScalableVector2(CloseButton.Image.Width * scale, CloseButton.Image.Height * scale);
+            CloseButton.Size = new ScalableVector2(CloseButton.ImageWidth * scale, CloseButton.ImageHeight * scale);
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            var text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "Play through the map. At the end, a new global audio offset will be suggested to you.", 22)
             {
                 Parent = this,

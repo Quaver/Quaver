@@ -99,11 +99,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 case MultiplayerGameRuleset.Free_For_All:
                 case MultiplayerGameRuleset.Battle_Royale:
                     Image = SkinManager.Skin?.Results?.ResultsMultiplayerFFAPanel ?? UserInterface.ResultsMultiplayerFFAPanel;
-                    Height = Image.Height + 4;
+                    Height = ImageHeight + 4;
                     break;
                 case MultiplayerGameRuleset.Team:
                     Image = SkinManager.Skin?.Results?.ResultsMultiplayerTeamPanel ?? UserInterface.ResultsMultiplayerTeamPanel;
-                    Height = Image.Height;
+                    Height = ImageHeight;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -130,7 +130,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
         /// </summary>
         private void CreateRulesetText()
         {
-            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Ruleset = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 GetRulesetText(),
                 20)
             {
@@ -185,7 +185,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
             for (var i = headers.Count - 1; i >= 0; i--)
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), headers[i], 20)
+                var txt = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), headers[i], 20)
                 {
                     Parent = HeaderContainer,
                     Alignment = Alignment.MidRight,

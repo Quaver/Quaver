@@ -163,7 +163,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateTitle(NewsFeedItem item)
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.Title, 20)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), item.Title, 20)
             {
                 Parent = Container,
                 X = 14,
@@ -178,7 +178,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreatePublishedTime(NewsFeedItem item)
         {
-            PublishedTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            PublishedTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 LocalizationManager.Get("Screen_Main_Published", item.DatePublished.ToString("d")),
                 16)
             {
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Main.UI.News
 
         private void CreateShortText(NewsFeedItem item)
         {
-            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), item.ShortText, 16)
+            ShortText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), item.ShortText, 16)
             {
                 Parent = Container,
                 X = Title.X,

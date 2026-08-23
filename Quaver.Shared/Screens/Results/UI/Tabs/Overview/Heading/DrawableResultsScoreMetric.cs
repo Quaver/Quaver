@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
                 Image = Label,
                 Size = new ScalableVector2(Label.Width, Label.Height)
             };
-            KeyText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), Key, 16)
+            KeyText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterMedium), Key, 16)
             {
                 Parent = LabelSprite, Alignment = Alignment.MidCenter, Tint = TextColor
             };
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Heading
         /// <summary>
         /// </summary>
         private void CreateValueText() => ValueText = new SpriteTextPlus(
-            FontManager.GetWobbleFont(Fonts.InterBold),
+            FontManager.GetWobbleFont(Fonts.InterSemiBold),
             Value, 32) { Parent = this, Alignment = Alignment.TopCenter, Tint = TextColor };
     }
 }

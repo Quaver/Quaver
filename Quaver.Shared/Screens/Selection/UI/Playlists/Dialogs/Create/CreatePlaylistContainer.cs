@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
         {
             var header = Dialog.Playlist != null ? "Edit Playlist" : "Create New Playlist";
 
-            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), header.ToUpper(), 20)
+            Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), header.ToUpper(), 20)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft
@@ -208,7 +208,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "Drag an image into the window...", 20)
+            DragAndDropText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Drag an image into the window...", 20)
             {
                 Parent = Banner,
                 Alignment = Alignment.MidCenter
@@ -271,7 +271,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 Tint = ColorHelper.HexToColor("#27B06E")
             };
 
-            CreateButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), Dialog.Playlist == null ? "CREATE" : "SAVE", 18, Color.White);
+            CreateButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), Dialog.Playlist == null ? "CREATE" : "SAVE", 18, Color.White);
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create
                 Tint = ColorHelper.HexToColor("#F9645D")
             };
 
-            CancelButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CANCEL", 18, Color.White);
+            CancelButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CANCEL", 18, Color.White);
         }
 
         /// <summary>

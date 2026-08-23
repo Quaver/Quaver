@@ -11,14 +11,14 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Music;
 
         public IconTextButtonMusicPlayer() : base(FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol),
-            FontManager.GetWobbleFont(Fonts.InterBold), "Jukebox", localizationKey: "Screen_Main_Menu_Jukebox")
+            FontManager.GetWobbleFont(Fonts.InterSemiBold), "Jukebox", localizationKey: "Screen_Main_Menu_Jukebox")
         {
         }
 
         public override void OnClick()
         {
             var game = (QuaverGame) GameBase.Game;
-            game.CurrentScreen.Exit(() => new MusicPlayerScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
         }
     }
 }

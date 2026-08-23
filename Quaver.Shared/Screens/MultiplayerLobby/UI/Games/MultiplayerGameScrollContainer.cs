@@ -215,7 +215,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         private void CreateNoGamesFoundText()
         {
-            NoGamesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            NoGamesFound = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "No games found!\n\nYou can either modify your filtering settings, or create your own game!".ToUpper(), 18)
             {
                 Parent = this,

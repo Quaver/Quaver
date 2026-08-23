@@ -263,7 +263,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "PLAYLIST TITLE", 24)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "PLAYLIST TITLE", 24)
             {
                 Parent = this,
                 Position = new ScalableVector2(TitleX, 18),

@@ -28,8 +28,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public DialogRenameLayer(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap) : base("RENAME LAYER",
-            "Enter a new name for your layer...")
+        public DialogRenameLayer(EditorLayerInfo layer, EditorActionManager manager, Qua workingMap) : base(
+            LocalizationManager.Get("Screen_Editor_RenameLayer"),
+            LocalizationManager.Get("Screen_Editor_RenameLayerMessage"))
         {
             ActionManager = manager;
             Layer = layer;
@@ -48,8 +49,8 @@ namespace Quaver.Shared.Screens.Edit.UI.Panels.Layers.Dialogs
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterBold),
-                20, Layer.Name, "Enter name...", s => OnSubmit(s))
+            Textbox = new Textbox(new ScalableVector2(Panel.Width * 0.90f, 50), FontManager.GetWobbleFont(Fonts.InterSemiBold),
+                20, Layer.Name, LocalizationManager.Get("Screen_Editor_EnterNamePlaceholder"), s => OnSubmit(s))
             {
                 Parent = Panel,
                 Alignment = Alignment.BotCenter,

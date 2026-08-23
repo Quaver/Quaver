@@ -9,7 +9,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Borders.Footer
     public class IconTextButtonProfile : IconTextButton
     {
         public IconTextButtonProfile(Bindable<SelectContainerPanel> activeLeftPanel)
-            : base(FontAwesome.Get(FontAwesomeIcon.fa_user_shape), FontManager.GetWobbleFont(Fonts.InterBold),
+            : base(FontAwesome.Get(FontAwesomeIcon.fa_user_shape), FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 "Profile", (sender, args) =>
                 {
                     if (activeLeftPanel == null)

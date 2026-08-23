@@ -193,7 +193,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -206,7 +206,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateStatus()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 16)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -264,7 +264,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Tint = ColorHelper.HexToColor("#E95E57")
             };
 
-            LogoutButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "LOG OUT", 13, Color.White);
+            LogoutButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterMedium), "LOG OUT", 13, Color.White);
 
             LogoutButton.Clicked += (sender, args) =>
             {
@@ -287,7 +287,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Tint = ColorHelper.HexToColor("#0583DE")
             };
 
-            ViewProfileButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "VIEW PROFILE", 13, Color.White);
+            ViewProfileButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterMedium), "VIEW PROFILE", 13, Color.White);
 
             ViewProfileButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User?.OnlineUser?.Id}");
         }
@@ -308,7 +308,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Tint = ColorHelper.HexToColor("#0FB6E0")
             };
 
-            ViewClanButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "VIEW CLAN", 13, Color.White);
+            ViewClanButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterMedium), "VIEW CLAN", 13, Color.White);
 
             ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
         }
@@ -393,7 +393,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
             Avatar.Border.Tint = Colors.GetUserChatColor(User?.OnlineUser?.UserGroups ?? UserGroups.Normal);
 
-            Flag.Image = User != null ? Flags.Get(User?.OnlineUser?.CountryFlag) : Flags.Get("XX");
+            Flag.Region = User != null ? Flags.GetRegion(User?.OnlineUser?.CountryFlag) : Flags.GetRegion("XX");
 
             Clan.UpdateFromUser(User?.OnlineUser);
             Clan.X = Flag.X + Flag.Width + 6;

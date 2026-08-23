@@ -1,12 +1,11 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Scheduling;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
-using Wobble.Input;
 using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Options
@@ -15,8 +14,19 @@ namespace Quaver.Shared.Screens.Options
     {
         private OptionsMenu Menu { get; set; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private sealed class Token(OptionsDialog dialog) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Options;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => dialog.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         public OptionsDialog() : base(0)
         {
+            GlobalInputToken = new Token(this);
             FadeTo(0.75f, Easing.Linear, 200);
             CreateContent();
 
@@ -49,14 +59,23 @@ namespace Quaver.Shared.Screens.Options
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                Close();
         }
 
         public override void Destroy()
         {
+            GlobalInputToken.Dispose();
             WindowManager.VirtualScreenSizeChanged -= OnVirtualScreenSizeChanged;
             base.Destroy();
+        }
+
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
+        {
+            if (!IsOnTop || !isKeyPress || isRelease || action.BaseWithLayer() != GlobalKeybindActions.Back)
+                return GlobalInputHandleResult.Pass;
+
+            Close();
+            return GlobalInputHandleResult.Consumed;
         }
 
         /// <summary>

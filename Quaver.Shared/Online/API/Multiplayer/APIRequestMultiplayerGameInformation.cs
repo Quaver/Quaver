@@ -27,7 +27,7 @@ public class APIRequestMultiplayerGameInformation : APIRequest<MultiplayerGameIn
         var request = new RestRequest($"{APIEndpoint}multiplayer/games/{Id}", Method.GET);
         var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
-        var response = client.Execute(request);
+        var response = ExecuteApiRequest(client, request);
 
         var json = JObject.Parse(response.Content);
 

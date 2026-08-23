@@ -123,7 +123,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
         /// <summary>
         /// </summary>
-        private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateSongTitle() => SongTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             $"{Map.Artist} - {Map.Title}", 28)
         {
             Parent = this,
@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             var rateStr = rate != 1.0f ? $" {rate}x" : "";
 
-            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Difficulty = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 $"[{Map.DifficultyName}{rateStr}] ({StringHelper.RatingToString(difficulty)})", 24)
             {
                 Parent = this,
@@ -188,7 +188,7 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents
 
             const int width = 110;
             
-            GradeSprite.Size = new ScalableVector2(width, (float) GradeSprite.Image.Height / GradeSprite.Image.Width * width);
+            GradeSprite.Size = new ScalableVector2(width, (float) GradeSprite.ImageHeight / GradeSprite.ImageWidth * width);
             GradeSprite.Y = -TabSelector.Height - 22;
         }
 

@@ -155,7 +155,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
         /// </summary>
         private void CreateStatusText()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), StatusText, 18)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), StatusText, 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
                 Tint = ColorHelper.HexToColor("#0FBAE5")
             };
 
-            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 20, Color.White);
+            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "LOG IN", 20, Color.White);
         }
 
         /// <summary>

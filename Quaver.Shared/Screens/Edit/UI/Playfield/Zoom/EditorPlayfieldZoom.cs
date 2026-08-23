@@ -1,11 +1,13 @@
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.UI.Playfield.Zoom
 {
@@ -37,7 +39,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Zoom
                 Size = ButtonSize
             };
 
-            ZoomIn.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip($"Zoom In (Page Up)", tooltipColor));
+            ZoomIn.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(
+                new Tooltip(LocalizationManager.Get("Screen_Editor_ZoomInTooltip",
+                    (game.CurrentScreen as EditScreen)?.InputManager.InputConfig
+                    .GetOrDefault(EditorKeybindActions.ZoomIn).ToDisplayString() ?? string.Empty), tooltipColor));
             ZoomIn.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
 
             ZoomOut = new IconButton(UserInterface.EditorZoomOut, (sender, args) => scrollSpeed.Value--)
@@ -47,7 +52,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Zoom
                 Size = ButtonSize
             };
 
-            ZoomOut.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(new Tooltip($"Zoom Out (Page Down)", tooltipColor));
+            ZoomOut.Hovered += (sender, args) => game?.CurrentScreen?.ActivateTooltip(
+                new Tooltip(LocalizationManager.Get("Screen_Editor_ZoomOutTooltip",
+                    (game.CurrentScreen as EditScreen)?.InputManager.InputConfig
+                    .GetOrDefault(EditorKeybindActions.ZoomOut).ToDisplayString() ?? string.Empty), tooltipColor));
             ZoomOut.LeftHover += (sender, args) => game?.CurrentScreen?.DeactivateTooltip();
 
             Size = new ScalableVector2(ButtonSize.X.Value, ButtonSize.Y.Value * 2 + 4);

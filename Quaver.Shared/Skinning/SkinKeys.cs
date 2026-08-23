@@ -27,6 +27,7 @@ using Quaver.Shared.Screens.Gameplay.UI.Health;
 using Wobble;
 using Wobble.Logging;
 using Quaver.Shared.Screens.Gameplay.UI;
+using Wobble.Graphics.Sprites;
 
 
 namespace Quaver.Shared.Skinning
@@ -409,90 +410,90 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteMines { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteMines { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteMineBodies { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteMineBodies { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteMineEnds { get; } = new List<Texture2D>();
+        internal List<TextureRegion> NoteMineEnds { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteMineStarts { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteMineStarts { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteHitObjects { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteHoldHitObjects { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteHoldHitObjects { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<List<Texture2D>> NoteHoldBodies { get; } = new List<List<Texture2D>>();
+        internal List<List<TextureRegion>> NoteHoldBodies { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
+        internal List<TextureRegion> NoteHoldEnds { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteHitObjects { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteHitObjects { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteHoldBodies { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteHoldBodies { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteHoldEnds { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteHoldEnds { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteMines { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteMines { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteMineBodies { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteMineBodies { get; } = [];
 
         /// <summary>
         /// </summary>
-        internal List<Texture2D> EditorLayerNoteMineEnds { get; } = new List<Texture2D>();
+        internal List<TextureRegion> EditorLayerNoteMineEnds { get; } = [];
 
         // ----- Receptors ----- //
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteReceptorsUp { get; } = new List<Texture2D>();
+        internal List<TextureRegion> NoteReceptorsUp { get; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> NoteReceptorsDown { get; } = new List<Texture2D>();
+        internal List<TextureRegion> NoteReceptorsDown { get; } = [];
 
         // ----- Hitlighting ----- //
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> HitLighting { get; private set; } = new List<Texture2D>();
+        internal List<TextureRegion> HitLighting { get; private set; } = [];
 
         /// <summary>
         ///
         /// </summary>
-        internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
+        internal List<TextureRegion> HoldLighting { get; private set; } = [];
 
         // ----- Lane Covers ----- //
 
@@ -793,6 +794,31 @@ namespace Quaver.Shared.Skinning
         }
 
         /// <summary>
+        ///     Loads an individual skin element.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private TextureRegion LoadTexture(SkinKeysFolder folder, string element, TextureRegion? fallback, bool shared, string extension = ".png")
+        {
+            string resource;
+            if (shared)
+            {
+                resource = $"Quaver.Resources/Textures/Skins/Shared/{folder.ToString()}/{element}.png";
+            }
+            else
+            {
+                resource = $"Quaver.Resources/Textures/Skins/{DefaultSkin}/{ModeString(Mode)}/{folder.ToString()}" +
+                           $"/{GetResourcePath(element)}.png";
+            }
+
+            var folderName = shared ? folder.ToString() : $"/{ModeShorthand(Mode).ToLower()}/{folder.ToString()}";
+            return Store.LoadSingleTexture($"{Store.Dir}/{folderName}/{element}", resource, fallback);
+        }
+
+        /// <summary>
         ///     Loads a spritesheet
         /// </summary>
         /// <param name="folder"></param>
@@ -802,7 +828,7 @@ namespace Quaver.Shared.Skinning
         /// <param name="columns"></param>
         /// <param name="extension"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, List<Texture2D>? fallback, bool shared, int rows, int columns, bool noResource = false)
+        private List<TextureRegion> LoadSpritesheet(SkinKeysFolder folder, string element, List<TextureRegion>? fallback, bool shared, int rows, int columns, bool noResource = false)
         {
             string resource = null;
             if (!noResource)
@@ -825,7 +851,7 @@ namespace Quaver.Shared.Skinning
         /// <summary>
         ///     Pads a snap texture list to the expected snap count.
         /// </summary>
-        private static List<Texture2D> PadSnapTextures(List<Texture2D> textures, int snapCount)
+        private static List<TextureRegion> PadSnapTextures(List<TextureRegion> textures, int snapCount)
         {
             var paddedTextures = textures.ToList();
 
@@ -862,12 +888,12 @@ namespace Quaver.Shared.Skinning
         /// <param name="element"></param>
         /// <param name="lane"></param>
         /// <returns></returns>
-        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int lane, IList<List<Texture2D>>? fallback, List<int> fallbackIndicies)
+        private void LoadHitObjects(IList<List<TextureRegion>> hitObjects, string element, int lane, IList<List<TextureRegion>>? fallback, List<int> fallbackIndicies)
         {
             // First load the beginning HitObject element that doesn't require snapping.
             var fallbackTexture = fallback?[fallbackIndicies[lane]]?[0];
 
-            var objectsList = new List<Texture2D> { LoadTexture(SkinKeysFolder.HitObjects, element, fallbackTexture, false) };
+            var objectsList = new List<TextureRegion> { LoadTexture(SkinKeysFolder.HitObjects, element, fallbackTexture, false) };
 
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColorObjectsBySnapDistance)
@@ -880,7 +906,9 @@ namespace Quaver.Shared.Skinning
             // It HAS to be loaded in an incremental fashion.
             // So you can't have 1/48, but not have 1/3, etc.
             // If it can find the appropriate files, load them.
-            objectsList.AddRange(SnapSuffixes.Select((snap, snapIndex) => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", fallback?[fallbackIndicies[lane]]?[snapIndex + 1], false)));
+            objectsList.AddRange(SnapSuffixes.Select((snap, snapIndex) =>
+                LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}",
+                    fallback?[fallbackIndicies[lane]]?[snapIndex + 1], false)));
             hitObjects.Insert(lane, objectsList);
         }
 
@@ -936,13 +964,13 @@ namespace Quaver.Shared.Skinning
                         NoteMines.Add(mines);
 
                         // LoadSpriteSheet returns one UserInterface.BlankBox on error
-                        if (holdobjects.Any() && holdobjects[0] != UserInterface.BlankBox)
+                        if (holdobjects.Any() && holdobjects[0].Texture != UserInterface.BlankBox)
                             NoteHoldHitObjects.Add(holdobjects);
                         else
                             NoteHoldHitObjects.Add(hitobjects);
 
                         // LoadSpriteSheet returns one UserInterface.BlankBox on error
-                        if (mineStarts.Any() && mineStarts[0] != UserInterface.BlankBox)
+                        if (mineStarts.Any() && mineStarts[0].Texture != UserInterface.BlankBox)
                             NoteMineStarts.Add(mineStarts);
                         else
                             NoteMineStarts.Add(mines);

@@ -413,7 +413,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Size = new ScalableVector2(laneSize * scale, (Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width) * scale),
                     Position = new ScalableVector2(posX, Playfield.ReceptorPositionY[i]),
                     Alignment = Alignment.TopLeft,
-                    Image = Skin.NoteReceptorsUp[i],
+                    Region = Skin.NoteReceptorsUp[i],
                     SpriteEffect = !Playfield.ScrollDirections[i].Equals(ScrollDirection.Down) && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Rotation = Skin.RotateReceptorsByColumn ? Skin.ReceptorRotations[i] / 180f * MathF.PI : 0
                 });
@@ -641,8 +641,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
                 var scale = Skin.HitLightingScale / 100;
 
-                hl.Image = Skin.HitLighting.First();
-                hl.Size = new ScalableVector2(hl.Image.Width * scale, hl.Image.Height * scale);
+                hl.Region = Skin.HitLighting.First();
+                hl.Size = new ScalableVector2(hl.ImageWidth * scale, hl.ImageHeight * scale);
 
                 var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, hl.RelativeRectangle,
                     Receptors[i].ScreenRectangle);
@@ -737,7 +737,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         public void SetReceptorAndLightingActivity(int index, bool pressed)
         {
-            Receptors[index].Image = pressed ? Skin.NoteReceptorsDown[index] : Skin.NoteReceptorsUp[index];
+            Receptors[index].Region = pressed ? Skin.NoteReceptorsDown[index] : Skin.NoteReceptorsUp[index];
             ColumnLightingObjects[index].Active = pressed;
         }
 
@@ -792,7 +792,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                 if (input.ReplayInputManager != null)
                     continue;
 
-                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+                var keybind = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                     input.BindingStore[i].Key.Value.GetName(), 32)
                 {
                     Parent = Playfield.ForegroundContainer,

@@ -31,7 +31,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Settings
             CreateDialog = createDialog;
             Name = name;
 
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), value)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), value)
             {
                 FontSize = 14
             };

@@ -215,14 +215,6 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> SmoothAudioTimingGameplay { get; private set; }
 
         /// <summary>
-        ///     When an audio starts to play, its <see cref="Quaver.Shared.Audio.AudioEngine.Track.Time"/>
-        ///     will stay 0 for some time. This causes the gameplay to freeze for a while.
-        ///     By turning this on, audio starts a bit early (amount determined at start). We then slowly
-        ///     Let the gameplay timing reach the actual audio time.
-        /// </summary>
-        internal static Bindable<bool> SmoothAudioStart { get; private set; }
-
-        /// <summary>
         ///     Determines if we should show the song time progress display in the
         ///     gameplay screen.
         /// </summary>
@@ -262,12 +254,14 @@ namespace Quaver.Shared.Config
         ///     Key to toggle the pitch of the audio
         /// </summary>
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyTogglePitch { get; private set; }
         
         /// <summary>
         ///     Key to remove all mods
         /// </summary>
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyRemoveAllMods { get; private set; }
 
         /// <summary>
@@ -448,6 +442,16 @@ namespace Quaver.Shared.Config
         ///     Scaling of ImGui windows and texts
         /// </summary>
         internal static BindableInt EditorImGuiScalePercentage { get; private set; }
+
+        /// <summary>
+        ///     Font size used by editor ImGui windows and texts.
+        /// </summary>
+        internal static BindableInt EditorImGuiFontSize { get; private set; }
+
+        /// <summary>
+        ///     User-created color presets displayed in the shared editor color picker.
+        /// </summary>
+        internal static Bindable<string> EditorColorPresets { get; private set; }
 
         /// <summary>
         ///     The scroll speed used in the editor.
@@ -634,6 +638,12 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> UseSteamWorkshopSkin { get; private set; }
 
         /// <summary>
+        ///     Whether newly-created menu screens should use registered replacement implementations.
+        ///     This value is snapshotted when the screen manager initializes and requires a restart to change.
+        /// </summary>
+        internal static Bindable<bool> UseNewScreens { get; private set; }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         internal static Bindable<bool> LowerFpsOnWindowInactive { get; private set; }
@@ -816,31 +826,37 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     Keybinding for leftward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateLeft { get; private set; }
 
         /// <summary>
         ///     Keybinding for rightward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateRight { get; private set; }
 
         /// <summary>
         ///     Keybinding for upward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateUp { get; private set; }
 
         /// <summary>
         ///     Keybinding for downward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateDown { get; private set; }
 
         /// <summary>
         ///     Keybinding for backward navigation.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateBack { get; private set; }
 
         /// <summary>
         ///     Keybinding for selection in navigation interface.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyNavigateSelect { get; private set; }
 
         [IgnoreWrite]
@@ -871,80 +887,98 @@ namespace Quaver.Shared.Config
         /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<GenericKey> KeyPause { get; private set; }
 
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<GenericKey> KeySkipIntro { get; private set; }
 
         /// <summary>
         ///     The key to toggle the overlay
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
         ///     The key to toggle the mirror mod while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyToggleMirror { get; private set; }
 
         /// <summary>
         ///     The key to decrease the gameplay rate while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key to increase the gameplay rate while in song select
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseGameplayAudioRate { get; private set; }
 
         /// <summary>
         ///     The key pressed to restart the map.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyRestartMap { get; private set; }
 
         /// <summary>
         ///     The keys to increase/decrease scroll speed.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseScrollSpeed { get; private set; }
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseScrollSpeed { get; private set; }
 
         /// <summary>
         ///     The keys to increase/decrease map offset.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyIncreaseMapOffset { get; private set; }
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyDecreaseMapOffset { get; private set; }
         
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyResetMapOffset { get; private set; }
 
         /// <summary>
         ///     The keys to toggle autoplay during playtesting
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyTogglePlaytestAutoplay { get; private set; }
 
         /// <summary>
         ///     The key to hide the scoreboard in-game.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyScoreboardVisible { get; private set; }
 
         /// <summary>
         ///     The key to quickly exit the map.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyQuickExit { get; private set; }
 
         /// <summary>
         ///     The key to pause/play the track in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorPausePlay { get; private set; }
 
         /// <summary>
         ///     The key to lower the audio rate in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorDecreaseAudioRate { get; private set; }
 
         /// <summary>
         ///     The key to increase the audio rate in the editor.
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyEditorIncreaseAudioRate { get; private set; }
 
         /// <summary>
@@ -959,6 +993,7 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         /// </summary>
+        [IgnoreWrite]
         internal static Bindable<Keys> KeyScreenshot { get; private set; }
 
         /// <summary>
@@ -1101,7 +1136,6 @@ namespace Quaver.Shared.Config
             FpsLimiterType = ReadValue(@"FpsLimiterType", FpsLimitType.Unlimited, data);
             CustomFpsLimit = ReadInt(@"CustomFpsLimit", 240, 60, 5000, data);
             SmoothAudioTimingGameplay = ReadValue(@"SmoothAudioTimingGameplay", false, data);
-            SmoothAudioStart = ReadValue(@"SmoothAudioStart", false, data);
             NormaliseScrollVelocityByRatePercentage = ReadInt(@"NormaliseScrollVelocityByRatePercentage", 0, 0, 100, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, -500, 500, data);
             Skin = ReadValue(@"Skin", "", data);
@@ -1157,6 +1191,8 @@ namespace Quaver.Shared.Config
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);
             EditorImGuiScalePercentage = ReadInt(@"EditorImGuiScalePercentage", 100, 25, 300, data);
+            EditorImGuiFontSize = ReadInt(@"EditorImGuiFontSize", 16, 8, 32, data);
+            EditorColorPresets = ReadValue(@"EditorColorPresets", "", data);
             EditorPlayfieldAlpha = ReadInt(@"EditorPlayfieldAlpha", 100, 0, 100, data);
             KeyEditorPausePlay = ReadValue(@"KeyEditorPausePlay", Keys.Space, data);
             KeyEditorDecreaseAudioRate = ReadValue(@"KeyEditorDecreaseAudioRate", Keys.OemMinus, data);
@@ -1211,6 +1247,7 @@ namespace Quaver.Shared.Config
             MultiplayerLobbyMapStatusType = ReadValue(@"MultiplayerLobbyMapStatusType", MultiplayerLobbyMapStatus.All, data);
             MultiplayerLobbyVisibilityType = ReadValue(@"MultiplayerLobbyVisibilityType", MultiplayerLobbyRoomVisibility.All, data);
             UseSteamWorkshopSkin = ReadValue(@"UseSteamWorkshopSkin", false, data);
+            UseNewScreens = ReadValue(@"UseNewScreens", false, data);
             LowerFpsOnWindowInactive = ReadValue(@"LowerFpsOnWindowInactive", true, data);
             MuteAudioOnWindowInactive = ReadValue(@"MuteAudioOnWindowInactive", false, data);
             DownloadDisplayOwnedMapsets = ReadValue(@"DownloadDisplayOwnedMapsets", true, data);

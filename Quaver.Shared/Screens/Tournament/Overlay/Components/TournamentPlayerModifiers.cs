@@ -64,7 +64,7 @@ namespace Quaver.Shared.Screens.Tournament.Overlay.Components
                         break;
                 }
 
-                icon.Size = new ScalableVector2(icon.Image.Width * scale, icon.Image.Height * scale);
+                icon.Size = new ScalableVector2(icon.ImageWidth * scale, icon.ImageHeight * scale);
                 totalSpacing += Settings.SpacingLayout.Value == Layout.Vertical ? icon.Height : icon.Width;
 
                 if (i != Icons.Count - 1)

@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
             }
 
             HeaderText = new IconTextButton(icon,
-                FontManager.GetWobbleFont(Fonts.InterBold), text, null, Color.White, Color.White)
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), text, null, Color.White, Color.White)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

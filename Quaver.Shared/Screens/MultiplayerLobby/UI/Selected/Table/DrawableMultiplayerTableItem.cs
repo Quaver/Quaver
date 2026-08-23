@@ -125,7 +125,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected.Table
         /// </summary>
         private void CreateValue()
         {
-            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

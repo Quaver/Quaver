@@ -165,10 +165,10 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateDownloadSongsButton()
         {
             DownloadSongs = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_download_to_storage_drive),
-                FontManager.GetWobbleFont(Fonts.InterBold), "Download Songs", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Download Songs", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new DownloadingScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateDownloading());
                 })
             {
                 Parent = ExploreContainer,
@@ -187,7 +187,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateOnlineMapPoolsButton()
         {
             OnlineMapPools = new IconTextButton(UserInterface.JukeboxHamburgerIcon,
-                FontManager.GetWobbleFont(Fonts.InterBold), "Online Playlists", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Online Playlists", (sender, args) =>
                 {
                     BrowserHelper.OpenURL($"https://quavergame.com/mappools/");
                 })
@@ -208,10 +208,10 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateSongSelectButton()
         {
             SongSelect = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-                FontManager.GetWobbleFont(Fonts.InterBold), "Song Select", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Song Select", (sender, args) =>
                 {
                     var game = (QuaverGame) GameBase.Game;
-                    game.CurrentScreen.Exit(() => new SelectionScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                 })
             {
                 Parent = ExploreContainer,
@@ -230,7 +230,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar
         private void CreateMapEditorButton()
         {
             MapEditor = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_pencil),
-                FontManager.GetWobbleFont(Fonts.InterBold), "Map Editor", (sender, args) =>
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Map Editor", (sender, args) =>
                 {
                     if (MapManager.Selected.Value == null)
                     {

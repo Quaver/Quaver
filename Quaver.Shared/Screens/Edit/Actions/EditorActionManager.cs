@@ -871,6 +871,23 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public void EditBookmark(BookmarkInfo bookmark, string note, bool fromLua = false) => Perform(new EditorActionEditBookmark(this, WorkingMap, bookmark, note), fromLua);
 
         /// <summary>
+        ///     Changes the color of a batch of bookmarks.
+        /// </summary>
+        /// <param name="bookmarks"></param>
+        /// <param name="color"></param>
+        public void ChangeBookmarkColorBatch(List<BookmarkInfo> bookmarks, Color color, bool fromLua = false)
+        {
+            var colorRgb = $"{color.R},{color.G},{color.B}";
+            var actions = bookmarks.Distinct()
+                .Select(bookmark => (IEditorAction)new EditorActionEditBookmark(this, WorkingMap, bookmark,
+                    bookmark.Note, colorRgb))
+                .ToList();
+
+            if (actions.Count != 0)
+                Perform(new EditorActionBatch(this, actions), fromLua);
+        }
+
+        /// <summary>
         ///     Adjusts the offset of a batch of bookmarks
         /// </summary>
         /// <param name="bookmarks"></param>

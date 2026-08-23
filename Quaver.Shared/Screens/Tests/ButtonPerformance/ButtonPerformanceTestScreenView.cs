@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
 
         private void CreateHeader()
         {
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "BUTTON PERFORMANCE", 26)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "BUTTON PERFORMANCE", 26)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -67,7 +67,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 Tint = Color.White
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterRegular), "1: new buttons  |  2: old image buttons  |  R: reset both", 18)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterLight), "1: new buttons  |  2: old image buttons  |  R: reset both", 18)
             {
                 Parent = Container,
                 Alignment = Alignment.TopCenter,
@@ -95,7 +95,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 Tint = ColorHelper.HexToColor("#1F2933")
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), text, 15)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), text, 15)
             {
                 Parent = button,
                 Alignment = Alignment.MidCenter,
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 SetChildrenVisibility = true
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), title, 17)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), title, 17)
             {
                 Parent = group,
                 Alignment = Alignment.TopCenter,
@@ -160,7 +160,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 PerformHoverFade = false
             };
 
-            button.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), $"NEW BUTTON {index + 1}", 16, Color.White);
+            button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), $"NEW BUTTON {index + 1}", 16, Color.White);
             button.Clicked += (sender, args) => { };
 
             return button;
@@ -174,7 +174,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 Tint = ColorHelper.HexToColor(index % 2 == 0 ? "#0FBAE5" : "#755CDE")
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"OLD BUTTON {index + 1}", 16)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), $"OLD BUTTON {index + 1}", 16)
             {
                 Parent = button,
                 Alignment = Alignment.MidCenter,
@@ -186,7 +186,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
             return button;
         }
 
-        private SpriteTextPlus CreateGroupStateText(string text, float x) => new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), text, 18)
+        private SpriteTextPlus CreateGroupStateText(string text, float x) => new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterMedium), text, 18)
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
                 Size = new ScalableVector2(320, 210)
             };
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "LIVE STATS", 18)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "LIVE STATS", 18)
             {
                 Parent = panel,
                 Alignment = Alignment.TopLeft,
@@ -215,7 +215,7 @@ namespace Quaver.Shared.Screens.Tests.ButtonPerformance
 
             for (var i = 0; i < 8; i++)
             {
-                StatLines.Add(new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterRegular), string.Empty, 16)
+                StatLines.Add(new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterLight), string.Empty, 16)
                 {
                     Parent = panel,
                     Alignment = Alignment.TopLeft,

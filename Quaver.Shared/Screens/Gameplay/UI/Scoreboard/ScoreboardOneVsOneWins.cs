@@ -34,7 +34,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
             if (myWins != null)
                 myWinCount = myWins.Wins;
 
-            SelfWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), myWinCount.ToString())
+            SelfWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), myWinCount.ToString())
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Scoreboard
                     otherWins = otherPlayerWinCount.Wins;
             }
 
-            OtherWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), otherWins.ToString())
+            OtherWins = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), otherWins.ToString())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,

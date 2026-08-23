@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateReadyUpButton()
         {
-            ReadyUp = new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold),
+            ReadyUp = new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 OnlineManager.CurrentGame.Host == OnlineManager.Self.OnlineUser ? MultiplayerLocalization.Get("StartMatch") : MultiplayerLocalization.Get("ReadyUp"), 14, (o, e) =>
                 {
                     if (OnlineManager.CurrentGame.InProgress)
@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateSelectMapButton()
         {
-            SelectMap = new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("SelectMap"), 14, (o, e) =>
+            SelectMap = new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("SelectMap"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
@@ -145,7 +145,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                 var game = (QuaverGame)GameBase.Game;
                 var screen = game.CurrentScreen as MultiplayerScreen;
-                screen?.Exit(() => new SelectionScreen(), 0);
+                screen?.Exit(() => QuaverScreenFactory.CreateSelection(), 0);
             })
             {
                 DestroyIfParentIsNull = false
@@ -304,7 +304,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
         /// </summary>
         private void CreateModifiersButton()
         {
-            SelectModifiers = new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("Modifiers"), 14, (o, e) =>
+            SelectModifiers = new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("Modifiers"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.InProgress)
                 {
@@ -324,7 +324,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         private void CreateChangeTeamButton()
         {
-            ChangeTeam = new ButtonText(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("ChangeTeam"), 14, (o, e) =>
+            ChangeTeam = new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("ChangeTeam"), 14, (o, e) =>
             {
                 if (OnlineManager.CurrentGame.PlayersReady.Contains(OnlineManager.Self.OnlineUser.Id))
                 {

@@ -24,7 +24,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 {
-    public class DrawableBanner : SpriteAlphaMaskBlend
+    public class DrawableBanner : Sprite
     {
         /// <summary>
         /// </summary>
@@ -64,11 +64,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// <summary>
         /// </summary>
         public static float DeselectedAlpha { get; } = 0.75f;
-
-        /// <summary>
-        ///     The original unmasked texture.
-        /// </summary>
-        private Texture2D OriginalTexture { get; set; }
 
         /// <summary>
         /// </summary>
@@ -238,25 +233,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
             }
 
             var selected = Type == DrawableBannerType.Mapsets ? Mapset.IsSelected : PlaylistManager.Selected.Value == Playlist;
-            var mask = SkinManager.Skin?.SongSelect?.MapsetBannerMask ?? UserInterface.MapsetBannerMask;
 
-            if (OriginalTexture != tex)
+            if (Image != tex)
             {
-                OriginalTexture = tex;
-
-                AddScheduledUpdate(() => GameBase.Game.ScheduleRenderTargetDraw(() =>
-                {
-                    if (IsDisposed || !ShouldDisplayBanners || tex == null || tex.IsDisposed || mask == null || mask.IsDisposed)
-                        return;
-
-                    Image = PerformBlend(tex, mask);
-                }));
-
+                Image = tex;
                 Visible = true;
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
             }
             else
             {
+                Image = tex;
                 Visible = true;
                 ClearAnimations();
                 FadeTo(selected ? 1 : DeselectedAlpha, Easing.OutQuint, 700);
@@ -283,7 +269,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
         /// </summary>
         private void DisableBanner()
         {
-            if (!Visible && Alpha == 0 && !HasBannerLoaded && TimeSinceLoadRequested == 0 && OriginalTexture == null)
+            if (!Visible && Alpha == 0 && !HasBannerLoaded && TimeSinceLoadRequested == 0)
                 return;
 
             Visible = false;
@@ -292,7 +278,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
             HasBannerLoaded = false;
             TimeSinceLoadRequested = 0;
-            OriginalTexture = null;
         }
 
         /// <summary>

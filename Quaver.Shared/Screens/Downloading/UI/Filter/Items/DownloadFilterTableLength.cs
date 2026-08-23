@@ -48,7 +48,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// </summary>
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
-        public DownloadFilterItemLengthTextbox(string placeholder, BindableInt bindable) : base(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+        public DownloadFilterItemLengthTextbox(string placeholder, BindableInt bindable) : base(FontManager.GetWobbleFont(Fonts.InterMedium),
             20, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^(?!.*\..*\.)[.\d]+$");

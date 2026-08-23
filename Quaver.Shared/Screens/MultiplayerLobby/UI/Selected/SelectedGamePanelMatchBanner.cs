@@ -200,7 +200,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateNameText()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
             {
                 Parent = this,
                 Position = new ScalableVector2(14, 14),
@@ -212,7 +212,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateMapText()
         {
-            Map = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Map = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Name.Y + Name.Height + 32)
@@ -226,7 +226,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateDifficultyRatingText()
         {
-            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Position = new ScalableVector2(Name.X, Map.Y + Map.Height + 5)
@@ -338,10 +338,10 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                     var game = (QuaverGame) GameBase.Game;
 
                     // Automatically start importing
-                    var multi = (MultiplayerGameScreen) game.CurrentScreen;
-                    multi.DontLeaveGameUponScreenSwitch = true;
+                    if (game.CurrentScreen is IMultiplayerGameScreenState multi)
+                        multi.DontLeaveGameUponScreenSwitch = true;
 
-                    multi.Exit(() => new SelectionScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                 }
                 else if (SelectedGame.Value.MapId != -1)
                     BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");
@@ -377,7 +377,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
         /// </summary>
         private void CreateDownloadStatus()
         {
-            DownloadStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            DownloadStatus = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Alignment = Bpm.Alignment,
@@ -540,15 +540,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var download = MapsetDownloadManager.Download(response.Map.MapsetId, response.Map.Artist, response.Map.Title);
 
                 // Automatically start importing
-                var multi = (MultiplayerGameScreen) game.CurrentScreen;
-                multi.DontLeaveGameUponScreenSwitch = true;
+                if (game.CurrentScreen is IMultiplayerGameScreenState multi)
+                    multi.DontLeaveGameUponScreenSwitch = true;
 
                 download.Status.ValueChanged += (sender2, args2) =>
                 {
                     if (args2.Value.Status != FileDownloaderStatus.Complete)
                         return;
 
-                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting());
                 };
 
                 MapsetDownloadManager.OpenOnlineHub();
@@ -580,15 +580,15 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                 var download = MapsetDownloadManager.DownloadSharedMultiplayerMapset(SelectedGame.Value.GetMapName(), "");
 
                 // Automatically start importing
-                var multi = (MultiplayerGameScreen) game.CurrentScreen;
-                multi.DontLeaveGameUponScreenSwitch = true;
+                if (game.CurrentScreen is IMultiplayerGameScreenState multi)
+                    multi.DontLeaveGameUponScreenSwitch = true;
 
                 download.Status.ValueChanged += (sender2, args2) =>
                 {
                     if (args2.Value.Status != FileDownloaderStatus.Complete)
                         return;
 
-                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting());
                 };
 
                 MapsetDownloadManager.OpenOnlineHub();

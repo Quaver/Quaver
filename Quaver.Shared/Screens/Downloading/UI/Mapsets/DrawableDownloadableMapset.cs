@@ -190,7 +190,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
 
                 var (statusText, statusColor) = GetRankedStatusInfo(Item);
                 RankedStatusIcon.Tint = statusColor;
-                RankedStatusIcon.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), statusText, 16, Color.White);
+                RankedStatusIcon.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), statusText, 16, Color.White);
                 GameModeHelper.SetGameModeTexture(item.Maps.Select(x => x.GameMode), GameModeIcon, GameModeText);
 
                 DifficultyRange.ChangeValue(Item.Maps.Min(x => x.DifficultyRating),
@@ -291,7 +291,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateArtistTitle()
         {
-            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            ArtistTitle = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = ContentContainer,
                 Position = new ScalableVector2(22, 18),
@@ -304,7 +304,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateByText()
         {
-            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), DownloadLocalization.Get("By:"), 18)
+            ByText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), DownloadLocalization.Get("By:"), 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -320,7 +320,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
         /// </summary>
         private void CreateCreator()
         {
-            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Creator = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = ContentContainer,
                 Alignment = Alignment.TopLeft,
@@ -361,7 +361,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Mapsets
                 UsePreviousSpriteBatchOptions = true
             };
 
-            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 14)
+            GameModeText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 14)
             {
                 Parent = GameModeIcon,
                 Alignment = Alignment.MidCenter,

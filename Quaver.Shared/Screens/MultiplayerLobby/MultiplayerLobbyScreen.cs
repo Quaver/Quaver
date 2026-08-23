@@ -89,7 +89,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
-                Exit(() => new MainMenuScreen());
+                Exit(() => QuaverScreenFactory.CreateMainMenu());
                 return;
             }
         }

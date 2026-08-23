@@ -18,7 +18,7 @@ namespace Quaver.Shared.Online.API.Leaderboard
             var request = new RestRequest($"{APIEndpoint}leaderboard?mode={(int)Mode}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
-            var response = client.Execute(request);
+            var response = ExecuteApiRequest(client, request);
 
             var json = JObject.Parse(response.Content);
 

@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private void CreateHeader() => Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateHeader() => Header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             HeaderText, 18)
         {
             Parent = this,
@@ -64,7 +64,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Footer
 
         /// <summary>
         /// </summary>
-        private void CreateValue() => Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateValue() => Value = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             ValueText, 20)
         {
             Parent = this,

@@ -225,7 +225,7 @@ namespace Quaver.Shared.Graphics
                     });
 
                     // Set size
-                    Digits[i].Size = new ScalableVector2(Digits[i].Image.Width * ImageScale.X, Digits[i].Image.Height * ImageScale.Y);
+                    Digits[i].Size = new ScalableVector2(Digits[i].ImageWidth * ImageScale.X, Digits[i].ImageHeight * ImageScale.Y);
                     recomputeWidth = true;
                     recomputeHeight = true;
                 }
@@ -235,7 +235,7 @@ namespace Quaver.Shared.Graphics
                     var previousSize = Digits[i].Size;
 
                     Digits[i].Image = CharacterToTexture(Value[i]);
-                    Digits[i].Size = new ScalableVector2(Digits[i].Image.Width * ImageScale.X, Digits[i].Image.Height * ImageScale.Y);
+                    Digits[i].Size = new ScalableVector2(Digits[i].ImageWidth * ImageScale.X, Digits[i].ImageHeight * ImageScale.Y);
 
                     if (Digits[i].Size.X.Value != previousSize.X.Value)
                         recomputeWidth = true;

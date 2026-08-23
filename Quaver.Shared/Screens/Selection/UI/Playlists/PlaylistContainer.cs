@@ -55,7 +55,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists
         public PlaylistContainer(Bindable<SelectScrollContainerType> activeScrollContainer) : base(PlaylistManager.Playlists, 12)
         {
             ActiveScrollContainer = activeScrollContainer;
-            NoPlaylistText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), "No playlists created!", 28)
+            NoPlaylistText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "No playlists created!", 28)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -100,10 +100,10 @@ namespace Quaver.Shared.Graphics.Online
                 Y = -12,
                 Size = new ScalableVector2(24, 24),
                 X = Avatar.X + Avatar.Width + 10,
-                Image = Flags.Get("XX")
+                Region = Flags.GetRegion("XX")
             };
 
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ConfigManager.Username.Value)
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), ConfigManager.Username.Value)
             {
                 Parent = Flag,
                 Alignment = Alignment.MidLeft,
@@ -111,7 +111,7 @@ namespace Quaver.Shared.Graphics.Online
                 FontSize = 18
             };
 
-            GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
+            GameMode = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), ModeHelper.ToShortHand(ConfigManager.SelectedGameMode.Value))
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
@@ -120,7 +120,7 @@ namespace Quaver.Shared.Graphics.Online
                 Tint = Colors.SecondaryAccent,
             };
 
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Offline")
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Offline")
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Graphics.Online
                     LoadingWheel.Visible = true;
                     break;
                 case ConnectionStatus.Connected:
-                    Flag.Image = Flags.Get(OnlineManager.Self.OnlineUser.CountryFlag);
+                    Flag.Region = Flags.GetRegion(OnlineManager.Self.OnlineUser.CountryFlag);
                     Username.Tint = Colors.GetUserChatColor(OnlineManager.Self.OnlineUser.UserGroups);
                     Avatar.Border.Tint = Username.Tint;
 

@@ -187,26 +187,28 @@ public abstract class TimingGroupControllerKeys : TimingGroupController<HitObjec
     public bool InRange(NoteControllerKeys info)
     {
         if (!info.IsLongNote)
-        {
-            return Math.Abs(info.InitialTrackPosition - CurrentTrackPosition) <= RenderThreshold;
-        }
-        else
-        {
-            if (Math.Abs(info.EarliestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
-                return true;
+            return IsWithinRenderThreshold(info.InitialTrackPosition);
 
-            if (Math.Abs(info.LatestTrackPosition - CurrentTrackPosition) <= RenderThreshold)
-                return true;
+        if (CurrentTrackPosition >= info.EarliestTrackPosition &&
+            CurrentTrackPosition <= info.LatestTrackPosition)
+            return true;
 
-            if (info.EarliestTrackPosition <= CurrentTrackPosition - RenderThreshold &&
-                CurrentTrackPosition - RenderThreshold <= info.LatestTrackPosition)
-                return true;
+        var nearestPosition = CurrentTrackPosition < info.EarliestTrackPosition
+            ? info.EarliestTrackPosition
+            : info.LatestTrackPosition;
+        return IsWithinRenderThreshold(nearestPosition);
+    }
 
-            if (info.EarliestTrackPosition <= CurrentTrackPosition + RenderThreshold &&
-                CurrentTrackPosition + RenderThreshold <= info.LatestTrackPosition)
-                return true;
+    private bool IsWithinRenderThreshold(long position)
+    {
+        // Flipping the sign bit preserves signed ordering in unsigned space, avoiding overflow while subtracting.
+        const ulong signBit = 1UL << 63;
+        var positionOrdered = (ulong)position ^ signBit;
+        var currentPositionOrdered = (ulong)CurrentTrackPosition ^ signBit;
+        var distance = positionOrdered >= currentPositionOrdered
+            ? positionOrdered - currentPositionOrdered
+            : currentPositionOrdered - positionOrdered;
 
-            return false;
-        }
+        return RenderThreshold >= 0 && distance <= (ulong)RenderThreshold;
     }
 }

@@ -14,6 +14,7 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Loading;
@@ -28,7 +29,7 @@ using Wobble.Input;
 
 namespace Quaver.Shared.Screens.Multi
 {
-    public sealed class MultiplayerGameScreen : QuaverScreen, IHasLeftPanel
+    public sealed class MultiplayerGameScreen : QuaverScreen, IHasLeftPanel, IMultiplayerGameScreenState
     {
         /// <inheritdoc />
         /// <summary>
@@ -55,19 +56,30 @@ namespace Quaver.Shared.Screens.Multi
         /// </summary>
         public bool DontLeaveGameUponScreenSwitch { get; set; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; set; }
+
+        private class Token(MultiplayerGameScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Multiplayer;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         /// </summary>
         public MultiplayerGameScreen()
         {
             if (OnlineManager.CurrentGame == null)
             {
-                Exit(() => new MultiplayerLobbyScreen());
+                Exit(() => QuaverScreenFactory.CreateMultiplayerLobby());
                 return;
             }
 
             CreateGameBindable();
             InitializeActiveLeftPanelBindable();
             InitializeTestPlayingBindable();
+            GlobalInputToken = new Token(this);
 
             ScreenExiting += (sender, args) =>
             {
@@ -137,6 +149,7 @@ namespace Quaver.Shared.Screens.Multi
             Game?.Dispose();
             ActiveLeftPanel?.Dispose();
             IsPlayTestingInPreview?.Dispose();
+            GlobalInputToken?.Dispose();
 
             if (OnlineManager.Client != null)
             {
@@ -259,65 +272,43 @@ namespace Quaver.Shared.Screens.Multi
             if (KeyboardManager.IsUniqueKeyPress(Keys.Tab) && ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
                 SelectionScreen.HandleKeyPressTab();
 
-            HandleKeyPressControlInput();
-            HandleKeyPressAltInput();
         }
 
-        /// <summary>
-        ///     Handles when the user holds control down and performs input actions
-        /// </summary>
-        private void HandleKeyPressControlInput()
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
         {
-            if (!KeyboardManager.IsCtrlDown() || KeyboardManager.IsAltDown())
-                return;
+            if (Exiting || DialogManager.Dialogs.Count != 0 || !isKeyPress || isRelease)
+                return GlobalInputHandleResult.Pass;
 
-            // Increase rate.
-            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate))
+            if ((action.BaseWithLayer()) is GlobalKeybindActions.IncreaseRate &&
+                (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Rate)))
             {
-                // Increase rate.
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
-                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(true, KeyboardManager.IsShiftDown()));
+                ModManager.AddSpeedMods(SelectionScreen.GetNextRate(
+                    !action.HasFlag(GlobalKeybindActions.Reverse),
+                    action.HasFlag(GlobalKeybindActions.Small)));
 
-                // Decrease Rate
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
-                    ModManager.AddSpeedMods(SelectionScreen.GetNextRate(false, KeyboardManager.IsShiftDown()));
+                return GlobalInputHandleResult.Consumed;
             }
 
-            if (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular))
+            if (action == GlobalKeybindActions.ToggleMirror &&
+                (Game.Value.HostId == OnlineManager.Self?.OnlineUser?.Id || Game.Value.FreeModType.HasFlag(MultiplayerFreeModType.Regular)))
             {
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
-                {
-                    if (ModManager.IsActivated(ModIdentifier.Mirror))
-                        ModManager.RemoveMod(ModIdentifier.Mirror, true);
-                    else
-                        ModManager.AddMod(ModIdentifier.Mirror, true);
-                }
+                if (ModManager.IsActivated(ModIdentifier.Mirror))
+                    ModManager.RemoveMod(ModIdentifier.Mirror, true);
+                else
+                    ModManager.AddMod(ModIdentifier.Mirror, true);
+
+                return GlobalInputHandleResult.Consumed;
             }
-        }
 
-        /// <summary>
-        ///     Handles when the user holds ALT down and performs input actions
-        /// </summary>
-        private void HandleKeyPressAltInput()
-        {
-            if (!KeyboardManager.IsAltDown())
-                return;
-
-            if (MapManager.Selected.Value != null)
+            if ((action.BaseWithLayer()) == GlobalKeybindActions.IncreaseOffset &&
+                MapManager.Selected.Value != null)
             {
-                var offsetChange = KeyboardManager.IsCtrlDown() ? 1 : 5;
-
-                if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseMapOffset.Value))
-                {
-                    MapManager.Selected.Value.LocalOffset += offsetChange;
-                    HandleOffsetChange();
-                }
-                else if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseMapOffset.Value))
-                {
-                    MapManager.Selected.Value.LocalOffset -= offsetChange;
-                    HandleOffsetChange();
-                }
+                GlobalInputHandler.HandleOffsetAction(action);
+                return GlobalInputHandleResult.Consumed;
             }
+
+            return GlobalInputHandleResult.Pass;
         }
 
         /// <summary>
@@ -363,19 +354,6 @@ namespace Quaver.Shared.Screens.Multi
                 ActiveLeftPanel.Value = SelectContainerPanel.UserProfile;
             else
                 ActiveLeftPanel.Value = SelectContainerPanel.MatchSettings;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void HandleOffsetChange()
-        {
-            var map = MapManager.Selected.Value;
-
-            if (map == null)
-                return;
-
-            NotificationManager.Show(NotificationLevel.Info, $"Local map offset changed to: {map.LocalOffset} ms");
-            MapDatabaseCache.UpdateMap(map);
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers.Components
                 Tint = ColorHelper.HexToColor("#F2C94C")
             };
 
-            customizeButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CUSTOMIZE", 16, ColorHelper.HexToColor("#242424"));
+            customizeButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CUSTOMIZE", 16, ColorHelper.HexToColor("#242424"));
 
             Clicked += (sender, args) => DialogManager.Show(new JudgementWindowDialog());
         }

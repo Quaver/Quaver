@@ -50,7 +50,7 @@ namespace Quaver.Shared.Graphics.Dialogs.Menu
             };
 
             // ReSharper disable once ObjectCreationAsStatement
-            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), Name)
+            new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), Name)
             {
                 Parent = DialogBox,
                 Y = -25,

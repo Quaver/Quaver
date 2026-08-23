@@ -12,6 +12,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.Edit.Dialogs
 {
@@ -19,8 +20,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
     {
         private EditScreen Screen { get; }
 
-        public EditorAddDifficultyFromQuaDialog(EditScreen screen) : base("ADD DIFFICULTY FROM FILE",
-            "Drag a .qua file into the window to add it to the mapset.")
+        public EditorAddDifficultyFromQuaDialog(EditScreen screen) : base(
+            LocalizationManager.Get("Screen_Editor_AddDifficultyFromFile"),
+            LocalizationManager.Get("Screen_Editor_AddDifficultyFromFileMessage"))
         {
             Screen = screen;
 
@@ -59,7 +61,8 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 catch (Exception ex)
                 {
                     Logger.Error(ex, LogType.Runtime);
-                    NotificationManager.Show(NotificationLevel.Error, $"The .qua file you have dragged in is not valid!");
+                    NotificationManager.Show(NotificationLevel.Error,
+                        LocalizationManager.Get("Screen_Editor_InvalidQuaFile"));
                     return;
                 }
 
@@ -91,7 +94,7 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
                 {
                     Logger.Error(ex, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error,
-                        "There was an issue while creating a new difficulty.");
+                        LocalizationManager.Get("Screen_Editor_CreateDifficultyError"));
                 }
                 finally
                 {

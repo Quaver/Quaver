@@ -136,17 +136,14 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                 X = Avatar.X + Avatar.Width + Avatar.Border.Thickness + 12,
                 Y = Avatar.Y + 4,
                 Size = new ScalableVector2(24, 24),
-                Image = Flags.Get("XX"),
+                Region = Flags.GetRegion("XX"),
                 Alpha = 0,
                 Visible = false
             };
 
             if (OnlineManager.Connected)
             {
-                var flag = Flags.Get(OnlineManager.Self?.OnlineUser?.CountryFlag);
-
-                if (flag != null)
-                    Flag.Image = flag;
+                Flag.Region = Flags.GetRegion(OnlineManager.Self?.OnlineUser?.CountryFlag);
             }
         }
 
@@ -154,7 +151,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
         /// </summary>
         private void CreateUsername()
         {
-            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+            Username = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
                 Profile.Value.Username ?? ConfigManager.Username?.Value ?? SelectionLocalization.Get("Player"), 22)
             {
                 Parent = this,
@@ -179,7 +176,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
             if (Profile.Value.IsOnline)
                 typeStr = SelectionLocalization.Get("Online Profile");
 
-            ProfileType = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), typeStr, 18)
+            ProfileType = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), typeStr, 18)
             {
                 Parent = this,
                 Y = Flag.Y + Flag.Height + 6,

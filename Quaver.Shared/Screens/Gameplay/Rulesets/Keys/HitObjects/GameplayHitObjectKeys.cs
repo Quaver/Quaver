@@ -21,6 +21,7 @@ using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield.Hits;
 using Quaver.Shared.Skinning;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
@@ -198,8 +199,8 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             };
 
             // Set long note end properties.
-            LongNoteEndSprite.Image = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
-            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndSprite.Region = SkinManager.Skin.Keys[ruleset.Mode].NoteHoldEnds[lane];
+            LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.ImageHeight / LongNoteEndSprite.ImageWidth;
             LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
             // Hits go above the hit object.
@@ -244,15 +245,20 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
             tint.A = 255;
 
+            // Cancel any leftover tint fade so it doesn't keep animating the Tint we're about to set below.
+            HitObjectSprite.ClearAnimations(AnimationProperty.Color);
+            LongNoteBodySprite.ClearAnimations(AnimationProperty.Color);
+            LongNoteEndSprite.ClearAnimations(AnimationProperty.Color);
+
             // Update hitobject sprites
-            HitObjectSprite.Image = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
+            HitObjectSprite.Region = GetHitObjectTexture(info.Lane, manager.Ruleset.Mode);
             HitObjectSprite.Visible = true;
             HitObjectSprite.Tint = tint;
             StopLongNoteAnimation();
 
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new ScalableVector2(laneSize,
-                defaultLaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
+                defaultLaneSize * HitObjectSprite.ImageHeight / HitObjectSprite.ImageWidth);
             LongNoteBodySprite.Width = laneSize;
             LongNoteEndSprite.Width = laneSize;
             LongNoteBodyOffset = HitObjectSprite.Height / 2;
@@ -273,12 +279,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
                 var bodies = GetHoldBodyTexture(info.Lane, manager.Ruleset.Mode);
                 LongNoteBodySprite.ReplaceFrames(bodies);
 
-                LongNoteEndSprite.Image = GetHoldEndTexture(info.Lane, manager.Ruleset.Mode);
+                LongNoteEndSprite.Region = GetHoldEndTexture(info.Lane, manager.Ruleset.Mode);
                 LongNoteEndSprite.Visible = SkinManager.Skin.Keys[Ruleset.Mode].DrawLongNoteEnd;
                 LongNoteBodySprite.Visible = true;
 
                 // Set long note end properties.
-                LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+                LongNoteEndSprite.Height = laneSize * LongNoteEndSprite.ImageHeight / LongNoteEndSprite.ImageWidth;
                 LongNoteEndOffset = LongNoteEndSprite.Height / 2f;
 
                 InitializeLongNoteSize();
@@ -498,7 +504,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     If not, we default it to the first beat snap in the list.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHitObjectTexture(int lane, GameMode mode)
+        private TextureRegion GetHitObjectTexture(int lane, GameMode mode)
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
@@ -526,7 +532,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     the note is a long note or note.
         /// </summary>
         /// <returns></returns>
-        private List<Texture2D> GetHoldBodyTexture(int lane, GameMode mode)
+        private List<TextureRegion> GetHoldBodyTexture(int lane, GameMode mode)
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
@@ -545,7 +551,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     the note is a long note or note.
         /// </summary>
         /// <returns></returns>
-        private Texture2D GetHoldEndTexture(int lane, GameMode mode)
+        private TextureRegion GetHoldEndTexture(int lane, GameMode mode)
         {
             lane = lane - 1;
             var skin = SkinManager.Skin.Keys[mode];
@@ -567,9 +573,12 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.HitObjects
             Tint = SkinManager.Skin.Keys[Ruleset.Mode].DeadNoteColor;
             var tint = Tint * (HitObjectManager.ShowHits ? HitObjectManagerKeys.SHOW_HITS_NOTE_ALPHA : 1);
             tint.A = 255;
+            HitObjectSprite.ClearAnimations(AnimationProperty.Color);
             HitObjectSprite.Tint = tint;
             if (Info.IsLongNote)
             {
+                LongNoteBodySprite.ClearAnimations(AnimationProperty.Color);
+                LongNoteEndSprite.ClearAnimations(AnimationProperty.Color);
                 LongNoteBodySprite.Tint = tint;
                 LongNoteEndSprite.Tint = tint;
             }

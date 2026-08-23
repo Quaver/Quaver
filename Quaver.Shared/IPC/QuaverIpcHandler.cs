@@ -101,11 +101,43 @@ namespace Quaver.Shared.IPC
             message = message.Replace("%7C", "|");
 
             var game = GameBase.Game as QuaverGame;
+            var screen = game?.CurrentScreen as EditScreen;
 
-            if (game?.CurrentScreen is EditScreen screen)
-                screen.GoToObjects(message);
-            else
-                NotificationManager.Show(NotificationLevel.Warning, "You must be in the editor to use this function!");
+            // Check for map id
+            var mapIdEndIndex = message.IndexOf('/');
+            if (mapIdEndIndex == -1)
+            {
+                // Format : quaver://editor/<selection>
+                if (screen != null)
+                    screen.GoToObjects(message);
+                else
+                    NotificationManager.Show(NotificationLevel.Warning, "You must be in the editor to use this function!");
+                return;
+            }
+
+            // Format: quaver://editor/<map-id>/<selection>
+            if (!int.TryParse(message.Substring(0, mapIdEndIndex), out var mapId))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "The provided map id was not valid.");
+                return;
+            }
+
+            var map = MapManager.FindMapFromOnlineId(mapId);
+            if (map == null)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "This map must be downloaded before it can be opened in the editor.");
+                return;
+            }
+
+            var selection = message.Length > mapIdEndIndex ? message.Substring(mapIdEndIndex + 1) : null;
+            if (screen != null && mapId == screen.Map.MapId && selection != null)
+            {
+                screen.GoToObjects(selection);
+                return;
+            }
+
+            MapManager.Selected.Value = map;
+            game?.CurrentScreen?.Exit(() => new EditScreen(map, AudioEngine.LoadMapAudioTrack(map), initialSelection: selection));
         }
 
         /// <summary>
@@ -304,9 +336,9 @@ namespace Quaver.Shared.IPC
                 dialog?.Close();
 
                 if (isMap)
-                    game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false, id));
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting(null, true, false, id));
                 else
-                    game.CurrentScreen.Exit(() => new ImportingScreen(null, true, false));
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting(null, true, false));
             };
         }
     }

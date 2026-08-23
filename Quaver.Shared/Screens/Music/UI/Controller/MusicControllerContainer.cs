@@ -116,7 +116,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateTitle()
         {
-            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "No Track Playing", 32)
+            Title = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "No Track Playing", 32)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -129,7 +129,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateArtist()
         {
-            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Unknown Artist", 26)
+            Artist = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Unknown Artist", 26)
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -192,7 +192,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateCurrentTime()
         {
-            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "00:00", 22)
+            CurrentTime = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "00:00", 22)
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
@@ -205,7 +205,7 @@ namespace Quaver.Shared.Screens.Music.UI.Controller
         /// </summary>
         private void CreateTimeLeft()
         {
-            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "-00:00", CurrentTime.FontSize)
+            TimeLeft = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "-00:00", CurrentTime.FontSize)
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,

@@ -73,7 +73,7 @@ namespace Quaver.Shared.Screens.Theater
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
-                Exit(() => new MainMenuScreen());
+                Exit(() => QuaverScreenFactory.CreateMainMenu());
                 return;
             }
         }

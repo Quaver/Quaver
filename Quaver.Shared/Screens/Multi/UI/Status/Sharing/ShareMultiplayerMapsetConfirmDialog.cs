@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Sharing
             MultiLocalization.Get("UploadUnsubmittedMapsetConfirmMessage"),
             () => DialogManager.Show(new UploadMultiplayerMapsetLoadingDialog()))
         {
-            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "UPLOAD MAPSET", 20, Color.White);
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "UPLOAD MAPSET", 20, Color.White);
         }
     }
 }

@@ -12,9 +12,11 @@ using Quaver.Shared.Screens.Options.Items;
 using Quaver.Shared.Screens.Options.Sections;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Tooltips;
 using Wobble.Input;
 using Wobble.Managers;
 using RectangleF = MonoGame.Extended.RectangleF;
@@ -26,6 +28,14 @@ namespace Quaver.Shared.Screens.Options.Content
         /// <summary>
         /// </summary>
         private OptionsSection Section { get; }
+
+        /// <summary>
+        /// </summary>
+        private List<IDisposable> HeaderTooltipRegistrations { get; } = new List<IDisposable>();
+
+        /// <summary>
+        /// </summary>
+        private List<RoundedButton> HeaderTooltipButtons { get; } = new List<RoundedButton>();
 
         /// <inheritdoc />
         /// <summary>
@@ -77,6 +87,7 @@ namespace Quaver.Shared.Screens.Options.Content
             foreach (var category in Section.Subcategories)
                 category.ScrolledTo -= OnScrolledToCategory;
 
+            DisposeHeaderTooltips();
             base.Destroy();
         }
 
@@ -84,6 +95,8 @@ namespace Quaver.Shared.Screens.Options.Content
         {
             foreach (var category in Section.Subcategories)
                 category.ScrolledTo -= OnScrolledToCategory;
+
+            DisposeHeaderTooltips();
 
             for (var i = ContentContainer.Children.Count - 1; i >= 0; i--)
             {
@@ -138,13 +151,53 @@ namespace Quaver.Shared.Screens.Options.Content
                 // Create header if the subcategory has a valid name
                 if (!string.IsNullOrEmpty(subcategory.Name))
                 {
-                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), subcategory.Name, 20)
+                    var header = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), subcategory.Name, 20)
                     {
                         Position = new ScalableVector2(28, totalHeight),
                         Tint = ColorHelper.HexToColor("#45D6F5")
                     };
 
                     AddContainedDrawable(header);
+
+                    if (!string.IsNullOrWhiteSpace(subcategory.Tooltip))
+                    {
+                        var tooltipButton = new RoundedButton
+                        {
+                            Position = new ScalableVector2(Width - 86, totalHeight),
+                            Size = new ScalableVector2(58, header.Height),
+                            Tint = Color.Transparent,
+                            PerformHoverFade = false,
+                            IsClickable = false
+                        };
+
+                        var tooltipLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Mod", 16)
+                        {
+                            Parent = tooltipButton,
+                            Position = new ScalableVector2(0, (tooltipButton.Height - 16) / 2),
+                            Tint = ColorHelper.HexToColor("#45D6F5"),
+                            UsePreviousSpriteBatchOptions = true
+                        };
+
+                        var tooltipIcon = new Sprite
+                        {
+                            Parent = tooltipButton,
+                            Position = new ScalableVector2(tooltipButton.Width - 16,
+                                (tooltipButton.Height - 16) / 2),
+                            Size = new ScalableVector2(16, 16),
+                            Image = FontAwesome.Get(FontAwesomeIcon.fa_question_sign),
+                            Tint = ColorHelper.HexToColor("#45D6F5"),
+                            UsePreviousSpriteBatchOptions = true
+                        };
+
+                        AddContainedDrawable(tooltipButton);
+                        HeaderTooltipButtons.Add(tooltipButton);
+                        HeaderTooltipRegistrations.Add(tooltipButton.AddTooltip(new TooltipOptions(subcategory.Tooltip)
+                        {
+                            Anchor = TooltipAnchor.TopCenter,
+                            MaximumWidth = 360
+                        }));
+                    }
+
                     totalHeight += header.Height + 20;
                 }
 
@@ -171,6 +224,21 @@ namespace Quaver.Shared.Screens.Options.Content
 
             foreach (var category in Section.Subcategories)
                 category.ScrolledTo += OnScrolledToCategory;
+        }
+
+        /// <summary>
+        /// </summary>
+        private void DisposeHeaderTooltips()
+        {
+            foreach (var registration in HeaderTooltipRegistrations)
+                registration.Dispose();
+
+            HeaderTooltipRegistrations.Clear();
+
+            foreach (var button in HeaderTooltipButtons)
+                button.Destroy();
+
+            HeaderTooltipButtons.Clear();
         }
 
         private static void SetDrawableTreeVisible(Drawable drawable, bool visible)
@@ -200,6 +268,9 @@ namespace Quaver.Shared.Screens.Options.Content
                 if (child is SpriteTextPlus text)
                     text.Visible = Visible && !RectangleF.Intersection(text.ScreenRectangle, ScreenRectangle).IsEmpty;
             }
+
+            foreach (var button in HeaderTooltipButtons)
+                button.Visible = Visible && !RectangleF.Intersection(button.ScreenRectangle, ScreenRectangle).IsEmpty;
         }
 
         /// <summary>

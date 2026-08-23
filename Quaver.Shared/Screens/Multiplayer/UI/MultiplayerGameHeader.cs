@@ -27,7 +27,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                 Size = new ScalableVector2(20, 20)
             };
 
-            RoomName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), OnlineManager.CurrentGame.Name)
+            RoomName = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), OnlineManager.CurrentGame.Name)
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,

@@ -57,7 +57,7 @@ namespace Quaver.Shared.Screens.Downloading.UI.Filter.Items
         /// </summary>
         /// <param name="placeholder"></param>
         /// <param name="bindable"></param>
-        public DownloadFilterItemDifficultyTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+        public DownloadFilterItemDifficultyTextbox(string placeholder, BindableFloat bindable) : base(FontManager.GetWobbleFont(Fonts.InterMedium),
             20, "", placeholder)
         {
             AllowedCharacters = new Regex(@"^(?!.*\..*\.)[.\d]+$");

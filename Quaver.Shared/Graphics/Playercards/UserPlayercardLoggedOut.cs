@@ -91,7 +91,7 @@ namespace Quaver.Shared.Graphics.Playercards
         /// </summary>
         private void CreateUsername()
         {
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = Avatar,
                 Alignment = Alignment.MidLeft,
@@ -117,7 +117,7 @@ namespace Quaver.Shared.Graphics.Playercards
                 Tint = ColorHelper.HexToColor("#0EAED6")
             };
 
-            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "LOG IN", 15, Color.White);
+            LoginButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "LOG IN", 15, Color.White);
 
             LoginButton.Clicked += (sender, args) => OnlineManager.Login();
         }

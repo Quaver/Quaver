@@ -425,14 +425,6 @@ namespace Quaver.Shared.Database.Maps
         public void ChangeSelected()
         {
             MapManager.Selected.Value = this;
-
-            Task.Run(async () =>
-            {
-                using (var writer = File.CreateText(ConfigManager.TempDirectory + "/Now Playing/map.txt"))
-                {
-                    await writer.WriteAsync($"{Artist} - {Title} [{DifficultyName}]");
-                }
-            });
         }
 
         /// <summary>

@@ -80,7 +80,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// </summary>
         public void UpdateWidth()
         {
-            Width = Height * ((float)Image.Width / Image.Height);
+            Width = Height * ((float)ImageWidth / ImageHeight);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Dialogs.Create
             Password.Height = 0;
 
             YesButton.Y = -30;
-            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CREATE", 20, Color.White);
+            YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CREATE", 20, Color.White);
             NoButton.Y = YesButton.Y;
 
             YesAction += OnCreateClicked;

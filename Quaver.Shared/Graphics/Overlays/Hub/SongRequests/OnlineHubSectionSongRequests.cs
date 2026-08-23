@@ -89,7 +89,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.SongRequests
         private void CreateClearButton()
         {
             ClearButton = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
-                FontManager.GetWobbleFont(Fonts.InterBold), "Clear All",
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Clear All",
                 (sender, args) => RequestContainer.RemoveAll(), ColorHelper.HexToColor($"#FF6868"))
             {
                 Parent = Container,

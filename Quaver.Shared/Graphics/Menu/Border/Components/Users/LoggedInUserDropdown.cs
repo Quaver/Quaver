@@ -18,7 +18,7 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 {
-    public class LoggedInUserDropdown : ScrollContainer
+    public class LoggedInUserDropdown : LoggedInUserDropdownBase
     {
         /// <summary>
         /// </summary>
@@ -26,7 +26,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
 
         /// <summary>
         /// </summary>
-        public ImageButton Button { get; }
+        public override ImageButton Button { get; }
 
         /// <summary>
         /// </summary>
@@ -61,8 +61,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             ScreenDarkness = new Sprite()
             {
                 Parent = game?.CurrentScreen.View.Container,
-                Size = new ScalableVector2(WindowManager.Width, WindowManager.Height - 56 * 2),
-                Y = 56,
+                Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Tint = Color.Black,
                 Alpha = 0
             };
@@ -105,6 +104,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             const int inactivePos = -1000;
             const int activePos = 18;
 
+            ScreenDarkness.Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
+
             if (!IsOpen && Animations.Count == 0)
             {
                 UserPlayercard.Y = inactivePos;
@@ -144,11 +145,12 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
         {
             // ReSharper disable once DelegateSubtraction
             OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+            ScreenDarkness.Destroy();
 
             base.Destroy();
         }
 
-        public void Open()
+        public override void Open()
         {
             IsOpen = true;
             var height = ActiveSprite.Visible ? ActiveSprite.Height + 40 : 0;
@@ -160,7 +162,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Users
             ScreenDarkness.FadeTo(0.75f, Easing.Linear, 200);
         }
 
-        public void Close()
+        public override void Close()
         {
             ClearAnimations();
             ChangeHeightTo(0, Easing.OutQuint, 550);

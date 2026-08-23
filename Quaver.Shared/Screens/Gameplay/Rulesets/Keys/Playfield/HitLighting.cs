@@ -94,7 +94,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
             var previewScale = Playfield.LaneSize / (skin.ColumnSize * WindowManager.BaseToVirtualRatio);
             var scale = (skinScale / 100f) * previewScale;
 
-            Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
+            Size = new ScalableVector2(ImageWidth * scale, ImageHeight * scale);
 
             var relativeRect = new RectangleF(0, 0, RelativeRectangle.Width, RelativeRectangle.Height);
             var pos = GraphicsHelper.AlignRect(Alignment.MidCenter, relativeRect, Playfield.Stage.Receptors[ColumnIndex].ScreenRectangle);

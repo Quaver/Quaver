@@ -264,7 +264,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         private void CreateName()
         {
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 22)
             {
                 Parent = Panel,
                 X = Banner.X + Banner.Width + 18,
@@ -277,7 +277,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         private void CreateDifficultyRating()
         {
-            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            DifficultyRating = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotLeft,
@@ -335,7 +335,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
         /// </summary>
         private void CreatePlayerCount()
         {
-            PlayerCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 20)
+            PlayerCount = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 20)
             {
                 Parent = Panel,
                 Alignment = Alignment.BotRight,

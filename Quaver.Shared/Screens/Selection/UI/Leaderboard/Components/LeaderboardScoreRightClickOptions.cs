@@ -60,7 +60,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                 switch (args.Text)
                 {
                     case ViewResults:
-                        game.CurrentScreen.Exit(() => new ResultsScreen(MapManager.Selected.Value, Score));
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateResults(MapManager.Selected.Value, Score));
                         break;
                     case WatchReplay:
                         // Download Online Replay
@@ -77,7 +77,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                                         return;
                                     }
 
-                                    game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), replay));
+                                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMapLoading(new List<Score>(), replay));
                                 });
 
                             DialogManager.Show(dialog);
@@ -90,7 +90,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
                             return;
                         }
 
-                        game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), new Replay(replayPath)));
+                        game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMapLoading(new List<Score>(), new Replay(replayPath)));
                         break;
                     case DownloadReplay:
                         if (!Score.IsOnline)

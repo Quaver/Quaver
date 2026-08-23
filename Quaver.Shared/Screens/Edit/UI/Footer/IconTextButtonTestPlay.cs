@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border.Components;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.Edit.Dialogs;
+using Quaver.Shared.Screens.Edit.Input;
 using Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs.Create;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
@@ -16,13 +17,13 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
     public class IconTextButtonTestPlay : IconTextButton
     {
         public IconTextButtonTestPlay(EditScreen screen) : base(FontAwesome.Get(FontAwesomeIcon.fa_play_button),
-            FontManager.GetWobbleFont(Fonts.InterBold),"Test Play", (sender, args) => screen.ExitToTestPlay())
+            FontManager.GetWobbleFont(Fonts.InterSemiBold), LocalizationManager.Get("Screen_Editor_TestPlay"),
+            (sender, args) => screen.ExitToTestPlay())
         {
-            var tooltip = new Tooltip("Save and test play your map.\n" +
-                         "Right-clicking will allow you to select modifers to use while test playing.\n" +
-                         "Hotkey: F4", ColorHelper.HexToColor("#808080"));
-
-            Hovered += (sender, args) => screen?.ActivateTooltip(tooltip);
+            Hovered += (sender, args) => screen?.ActivateTooltip(new Tooltip(
+                LocalizationManager.Get("Screen_Editor_TestPlayTooltip",
+                    screen.InputManager.InputConfig.GetOrDefault(EditorKeybindActions.PlayTest).ToDisplayString()),
+                ColorHelper.HexToColor("#808080")));
             LeftHover += (sender, args) => screen?.DeactivateTooltip();
 
             RightClicked += (sender, args) => DialogManager.Show(new EditorModifierMenuDialog());

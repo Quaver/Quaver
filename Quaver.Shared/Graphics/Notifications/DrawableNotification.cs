@@ -219,7 +219,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void CreateText()
         {
-            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 18)
+            Text = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 18)
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,

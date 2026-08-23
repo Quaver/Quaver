@@ -16,6 +16,11 @@ namespace Quaver.Shared.Screens.Options.Sections
         public List<OptionsItem> Items { get; }
 
         /// <summary>
+        ///     Optional tooltip displayed beside the subcategory title.
+        /// </summary>
+        public string Tooltip { get; }
+
+        /// <summary>
         /// </summary>
         public event EventHandler<EventArgs> ScrolledTo;
 
@@ -23,10 +28,12 @@ namespace Quaver.Shared.Screens.Options.Sections
         /// </summary>
         /// <param name="name"></param>
         /// <param name="items"></param>
-        public OptionsSubcategory(string name, List<OptionsItem> items = null)
+        /// <param name="tooltip"></param>
+        public OptionsSubcategory(string name, List<OptionsItem> items = null, string tooltip = null)
         {
             Name = OptionsLocalization.Get(name);
             Items = items;
+            Tooltip = OptionsLocalization.Get(tooltip);
 
             if (Items == null)
                 Items = new List<OptionsItem>();

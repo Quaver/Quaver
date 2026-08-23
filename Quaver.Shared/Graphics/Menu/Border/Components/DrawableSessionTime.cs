@@ -62,7 +62,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
 
             Clock = TimeSpan.FromMilliseconds(GameBase.Game.TimeRunning);
 
-            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterHeavy), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 16)
+            Time = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), $"{Clock.Hours:00}:{Clock.Minutes:00}:{Clock.Seconds:00}", 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -80,7 +80,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components
                     BorderColor = Colors.MainAccent,
                     BorderThickness = 2,
                     TextSize = 20,
-                    TextWeight = FontWeight.Bold,
+                    TextWeight = FontWeight.SemiBold,
                     RoundedCorners = false
                 }
             });

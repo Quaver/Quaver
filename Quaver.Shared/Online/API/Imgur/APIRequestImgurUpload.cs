@@ -36,7 +36,7 @@ namespace Quaver.Shared.Online.API.Imgur
                 request.AddHeader("Authorization", $"Client-ID {ClientId}");
                 request.AddFile("image", FilePath);
 
-                var response = client.Execute(request);
+                var response = ExecuteApiRequest(client, request);
                 var json = JObject.Parse(response.Content);
 
                 if (!(bool)json["success"])

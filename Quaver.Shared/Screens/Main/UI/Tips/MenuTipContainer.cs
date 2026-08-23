@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -44,7 +46,6 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
             "Screen_Main_TipRequestFeatures",
             "Screen_Main_TipCreateMap",
             "Screen_Main_TipRandomSong",
-            "Screen_Main_TipPlayercard",
             "Screen_Main_TipScrollSpeed",
             "Screen_Main_TipCalibrateOffset",
             "Screen_Main_TipDefaultJudgement",
@@ -91,7 +92,7 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
 
         /// <summary>
         /// </summary>
-        private void CreateLabel() => Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
+        private void CreateLabel() => Label = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
             GetTipLabel(), 18)
         {
             Parent = this,
@@ -119,8 +120,8 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
         /// </summary>
         private void CreateTextTip()
         {
-            TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold),
-                LocalizationManager.Get(TipKeys[12]), 16)
+            TextTip = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold),
+                GetTipText(TipKeys[^1]), 16)
             {
                 Alignment = Alignment.MidLeft,
                 Tint = SkinManager.Skin?.MainMenu?.TipTextColor ?? Color.White
@@ -139,10 +140,31 @@ namespace Quaver.Shared.Screens.Main.UI.Tips
 
         private void PickRandomTip()
         {
-            TextTip.Text = LocalizationManager.Get(TipKeys[RNG.Next(0, TipKeys.Length)]);
+            TextTip.Text = GetTipText(TipKeys[RNG.Next(0, TipKeys.Length)]);
         }
 
         private static string GetTipLabel() => LocalizationManager.Get("Screen_Main_TipLabel");
+
+        private static string GetTipText(string key)
+        {
+            if (GameBase.Game is not QuaverGame game)
+                return LocalizationManager.Get(key);
+
+            var inputConfig = game.InputManager.InputConfig;
+            return key switch
+            {
+                "Screen_Main_TipOpenOptions" => LocalizationManager.Get(key,
+                    inputConfig.GetOrDefault(GlobalKeybindActions.OpenOptions).ToDisplayString()),
+                "Screen_Main_TipMapPreview" => LocalizationManager.Get(key,
+                    inputConfig.GetOrDefault(GlobalKeybindActions.SelectionToggleMapPreview).ToDisplayString()),
+                "Screen_Main_TipRandomSong" => LocalizationManager.Get(key,
+                    inputConfig.GetOrDefault(GlobalKeybindActions.SelectionSelectRandomMap).ToDisplayString()),
+                "Screen_Main_TipScrollSpeed" => LocalizationManager.Get(key,
+                    inputConfig.GetOrDefault(GlobalKeybindActions.DecreaseScrollSpeed).ToDisplayString(),
+                    inputConfig.GetOrDefault(GlobalKeybindActions.IncreaseScrollSpeed).ToDisplayString()),
+                _ => LocalizationManager.Get(key)
+            };
+        }
 
         private float GetScrollingContainerX()
         {

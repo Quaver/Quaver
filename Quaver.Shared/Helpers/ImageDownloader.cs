@@ -25,6 +25,13 @@ namespace Quaver.Shared.Helpers
 
         private static Dictionary<int, Task<Texture2D>> MapsetBannerTasks { get; } = new Dictionary<int, Task<Texture2D>>();
 
+        private static readonly object ProfileCoverLock = new object();
+
+        private static Dictionary<int, Texture2D> ProfileCovers { get; } = new Dictionary<int, Texture2D>();
+
+        private static Dictionary<int, Task<Texture2D>> ProfileCoverTasks { get; } =
+            new Dictionary<int, Task<Texture2D>>();
+
         /// <summary>
         ///     Downloads a mapset banner and returns a stream for it
         /// </summary>
@@ -75,6 +82,60 @@ namespace Quaver.Shared.Helpers
             {
                 MapsetBanners[id] = texture;
                 MapsetBannerTasks.Remove(id);
+            }
+
+            return texture;
+        }
+
+        /// <summary>
+        ///     Downloads and caches a donator's profile cover.
+        /// </summary>
+        /// <param name="userId"></param>
+        public static async Task<Texture2D> DownloadProfileCover(int userId)
+        {
+            Task<Texture2D> task;
+
+            lock (ProfileCoverLock)
+            {
+                if (ProfileCovers.TryGetValue(userId, out var cover))
+                    return cover;
+
+                if (!ProfileCoverTasks.TryGetValue(userId, out task))
+                {
+                    task = DownloadProfileCoverTask(userId);
+                    ProfileCoverTasks[userId] = task;
+                }
+            }
+
+            return await task;
+        }
+
+        private static async Task<Texture2D> DownloadProfileCoverTask(int userId)
+        {
+            Texture2D texture = null;
+
+            try
+            {
+                using (var webClient = new WebClient())
+                {
+                    var url = $"https://cdn.quavergame.com/profile-covers/{userId}.jpg";
+                    var data = await webClient.DownloadDataTaskAsync(url);
+
+                    using (var mem = new MemoryStream(data))
+                        texture = AssetLoader.LoadTexture2D(mem);
+                }
+            }
+            catch (Exception)
+            {
+                // Missing or invalid covers use the dropdown's configured static color.
+            }
+
+            lock (ProfileCoverLock)
+            {
+                if (texture != null)
+                    ProfileCovers[userId] = texture;
+
+                ProfileCoverTasks.Remove(userId);
             }
 
             return texture;

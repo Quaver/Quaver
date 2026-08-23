@@ -30,6 +30,23 @@ namespace Quaver.Shared.Graphics.Online.Playercard
         /// <param name="icon"></param>
         /// <param name="text"></param>
         public IconedText(Texture2D icon, string text)
+            : this(text)
+        {
+            Icon.Image = icon;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <param name="text"></param>
+        public IconedText(TextureRegion icon, string text)
+            : this(text)
+        {
+            Icon.Region = icon;
+        }
+
+        private IconedText(string text)
         {
             Alpha = 0;
             SetChildrenVisibility = true;
@@ -37,12 +54,11 @@ namespace Quaver.Shared.Graphics.Online.Playercard
             Icon = new Sprite
             {
                 Parent = this,
-                Image = icon,
                 Size = new ScalableVector2(20, 20),
                 UsePreviousSpriteBatchOptions = true,
             };
 
-            Value = new SpriteText(Fonts.InterBold, " ", 24)
+            Value = new SpriteText(Fonts.InterSemiBold, " ", 24)
             {
                 Parent = Icon,
                 Alignment = Alignment.MidLeft,

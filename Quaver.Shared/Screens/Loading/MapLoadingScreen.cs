@@ -107,7 +107,7 @@ namespace Quaver.Shared.Screens.Loading
                 try
                 {
                     ParseAndLoadMap();
-                    QueueStreamerFilesWrite(MapManager.Selected.Value);
+                    QueueStreamerFilesWrite();
                     LoadGameplayScreen();
                 }
                 catch (Exception e)
@@ -115,7 +115,7 @@ namespace Quaver.Shared.Screens.Loading
                     Logger.Error(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Failed to load the map. Is your .qua file valid?");
                     GameBase.Game.GlobalUserInterface.Cursor.Alpha = 1;
-                    Exit(() => new SelectionScreen());
+                    Exit(() => QuaverScreenFactory.CreateSelection());
                 }
             });
 
@@ -145,7 +145,7 @@ namespace Quaver.Shared.Screens.Loading
 
                 if (MapManager.Selected.Value == null)
                 {
-                    Exit(() => new MultiplayerGameScreen());
+                    Exit(() => QuaverScreenFactory.CreateMultiplayerGame());
                     return;
                 }
             }
@@ -182,14 +182,14 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         /// <param name="map"></param>
         /// <param name="delay"></param>
-        public static void QueueStreamerFilesWrite(Map map, int delay = 0)
-            => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(map, ModManager.Mods), delay);
+        public static void QueueStreamerFilesWrite(int delay = 0)
+            => StreamerFilesWriteTask.Run(new StreamerFilesWriteRequest(MapManager.Selected.Value, ModManager.Mods), delay);
 
         /// <summary>
         ///    Queues files for livestreamers to be written.
         /// </summary>
         /// <param name="map"></param>
-        public static void WriteStreamerFiles(Map map) => QueueStreamerFilesWrite(map);
+        public static void WriteStreamerFiles(Map map) => QueueStreamerFilesWrite();
 
         /// <summary>
         ///    Writes files for livestreamers.

@@ -32,6 +32,9 @@ namespace Quaver.Shared.Graphics.Form
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            if (!Visible && !UpdateWhenInvisible)
+                return;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             Alpha = MathHelper.Lerp(Alpha, IsHovered ? 0.75f : 1, (float)Math.Min(dt / 60, 1));
 

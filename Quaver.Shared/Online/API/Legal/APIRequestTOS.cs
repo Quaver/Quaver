@@ -11,7 +11,7 @@ namespace Quaver.Shared.Online.API.Legal
             var request = new RestRequest($"{BaseUrl}/md/Legal/Terms/en.md", Method.GET);
             var client = new RestClient(BaseUrl);
 
-            var response = client.Execute(request);
+            var response = ExecuteApiRequest(client, request);
 
             return string.IsNullOrEmpty(response.Content) ? null : response.Content;
         }

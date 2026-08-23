@@ -345,7 +345,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
         /// </summary>
         private void CreateStatusText()
         {
-            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 16)
+            StatusText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 16)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

@@ -52,7 +52,7 @@ namespace Quaver.Shared.Screens.Music.UI.Sidebar.Playlists
                 UsePreviousSpriteBatchOptions = true
             };
 
-            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "", 22)
+            Name = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "", 22)
             {
                 Parent = Button,
                 Alignment = Alignment.MidLeft,

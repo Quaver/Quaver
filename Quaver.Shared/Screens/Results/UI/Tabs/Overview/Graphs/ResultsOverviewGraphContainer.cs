@@ -124,7 +124,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
             ScoreSubmissionStats = scoreSubmissionStats;
 
             Image = SkinManager.Skin?.Results?.ResultsGraphContainerPanel ?? UserInterface.ResultsGraphContainerPanel;
-            Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, Image.Height);
+            Size = new ScalableVector2(ResultsScreenView.CONTENT_WIDTH - ResultsTabContainer.PADDING_X, ImageHeight);
 
             Statistics = Processor.Value.Stats != null ? Processor.Value.GetHitStatistics() : new HitStatistics();
 
@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 return;
             }
 
-            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), ResultsLocalization.Get("Statistics Not Available"), 18)
+            var _ = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), ResultsLocalization.Get("Statistics Not Available"), 18)
             {
                 Parent = GraphContainer,
                 Alignment = Alignment.MidCenter

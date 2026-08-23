@@ -324,30 +324,35 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Timeline
                     VisibleMeasureLines.Add(line);
             }
 
-            // Dense sections are the merged time spans between adjacent measure numbers whose rendered bounds
-            // overlap. Outside these spans, timeline line rendering remains unchanged.
+            // Dense sections are runs of at least three measure numbers whose rendered bounds overlap. A single
+            // close pair can occur around a short timing-point section and should not hide either timing line.
+            var denseRunStartIndex = -1;
+
             for (var i = 1; i < VisibleMeasureLines.Count; i++)
             {
                 var previous = VisibleMeasureLines[i - 1];
                 var current = VisibleMeasureLines[i];
 
-                if (!current.MeasureOverlaps(previous))
-                    continue;
-
-                var startTime = Math.Min(previous.StartTime, current.StartTime);
-                var endTime = Math.Max(previous.StartTime, current.StartTime);
-
-                if (DenseMeasureRanges.Count == 0 ||
-                    startTime > DenseMeasureRanges[DenseMeasureRanges.Count - 1].EndTime)
+                if (current.MeasureOverlaps(previous))
                 {
-                    DenseMeasureRanges.Add((startTime, endTime));
+                    if (denseRunStartIndex == -1)
+                        denseRunStartIndex = i - 1;
+
                     continue;
                 }
 
-                var lastRange = DenseMeasureRanges[DenseMeasureRanges.Count - 1];
-                DenseMeasureRanges[DenseMeasureRanges.Count - 1] =
-                    (lastRange.StartTime, Math.Max(lastRange.EndTime, endTime));
+                if (denseRunStartIndex != -1 && i - denseRunStartIndex >= 3)
+                {
+                    DenseMeasureRanges.Add((VisibleMeasureLines[denseRunStartIndex].StartTime,
+                        previous.StartTime));
+                }
+
+                denseRunStartIndex = -1;
             }
+
+            if (denseRunStartIndex != -1 && VisibleMeasureLines.Count - denseRunStartIndex >= 3)
+                DenseMeasureRanges.Add((VisibleMeasureLines[denseRunStartIndex].StartTime,
+                    VisibleMeasureLines[VisibleMeasureLines.Count - 1].StartTime));
 
             // Keep as many evenly spaced measure numbers as will fit instead of reducing a dense run to only its
             // endpoints. This preserves useful numerical gaps throughout the visible timeline.

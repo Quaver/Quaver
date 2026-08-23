@@ -45,7 +45,7 @@ namespace Quaver.Shared.Helpers.Input
                 Dialog.Header.Text = "CREATE QUAVER";
                 Dialog.Confirmation.Text = $"You cannot quit Quaver, only create it.";
 
-                Dialog.YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "CREATE", 20, Color.White);
+                Dialog.YesButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CREATE", 20, Color.White);
                 Dialog.YesButton.MoveToX(Dialog.Panel.Width / 2f - Dialog.YesButton.Width / 2f, Easing.OutQuint, 450);
             });
         }

@@ -44,7 +44,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.Notifications
             };
 
             ClearButton = new IconTextButton(FontAwesome.Get(FontAwesomeIcon.fa_times),
-                FontManager.GetWobbleFont(Fonts.InterBold), "Clear All",
+                FontManager.GetWobbleFont(Fonts.InterSemiBold), "Clear All",
                 (sender, args) => ScrollContainer.ClearAll(), ColorHelper.HexToColor($"#FF6868"))
             {
                 Parent = Container,

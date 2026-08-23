@@ -125,7 +125,7 @@ namespace Quaver.Shared.Online
                     // Exit out to the main menu
                     game.IsMouseVisible = false;
                     game.GlobalUserInterface.Cursor.Show(1);
-                    game.CurrentScreen.Exit(() => new MainMenuScreen());
+                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     AudioTrack.AllowPlayback = true;
                 }
 
@@ -141,7 +141,7 @@ namespace Quaver.Shared.Online
             if (game.CurrentScreen.Type == QuaverScreenType.Importing && !forceIfImporting)
                 return;
 
-            game.CurrentScreen.Exit(() => new MapLoadingScreen(new List<Score>(), Replay, this));
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateMapLoading(new List<Score>(), Replay, this));
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Quaver.Shared.Online
                                 case QuaverScreenType.Importing:
                                     break;
                                 default:
-                                    game.CurrentScreen.Exit(() => new ImportingScreen());
+                                    game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateImporting());
                                     break;
                             }
                         }

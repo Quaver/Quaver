@@ -124,6 +124,20 @@ namespace Quaver.Shared.Screens.Edit.Plugins
             PushDefaultStyles();
         }
 
+        protected override void RenderImguiLayout()
+        {
+            ImGuiRedirect.CurrentEditorPlugin = this;
+
+            try
+            {
+                base.RenderImguiLayout();
+            }
+            finally
+            {
+                ImGuiRedirect.CurrentEditorPlugin = null;
+            }
+        }
+
         /// <summary>
         ///     Called after rendering the plugin to pop the default style vars
         /// </summary>

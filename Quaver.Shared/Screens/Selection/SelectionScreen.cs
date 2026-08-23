@@ -16,6 +16,7 @@ using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
@@ -42,7 +43,7 @@ using Wobble.Logging;
 
 namespace Quaver.Shared.Screens.Selection
 {
-    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel
+    public sealed class SelectionScreen : QuaverScreen, IHasLeftPanel, ISelectionScreenState
     {
         /// <inheritdoc />
         /// <summary>
@@ -73,6 +74,10 @@ namespace Quaver.Shared.Screens.Selection
         ///     The currently active scroll container on the right-side of the screen
         /// </summary>
         public Bindable<SelectScrollContainerType> ActiveScrollContainer { get; private set; }
+
+        SelectScrollContainerType ISelectionScreenState.ActiveScrollContainer => ActiveScrollContainer.Value;
+
+        SelectContainerPanel ISelectionScreenState.ActiveLeftPanel => ActiveLeftPanel.Value;
 
         /// <summary>
         /// </summary>
@@ -108,6 +113,16 @@ namespace Quaver.Shared.Screens.Selection
         /// </summary>
         public Bindable<bool> IsPlayTestingInPreview { get; private set; }
 
+        private GlobalInputScopeToken GlobalInputToken { get; }
+
+        private class Token(SelectionScreen screen) : GlobalInputScopeToken
+        {
+            public override GlobalInputScope Scope => GlobalInputScope.Selection;
+
+            public override GlobalInputHandleResult Handle(GlobalKeybindActions action, bool isKeyPress = true,
+                bool isRelease = false) => screen.HandleGlobalInputAction(action, isKeyPress, isRelease);
+        }
+
         /// <summary>
         /// </summary>
         public SelectionScreen(SelectScrollContainerType? activeScrollContainer = null,
@@ -125,7 +140,7 @@ namespace Quaver.Shared.Screens.Selection
             if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
                                                || MapDatabaseCache.MapsToUpdate.Count != 0)
             {
-                Exit(() => new ImportingScreen(null, true));
+                Exit(() => QuaverScreenFactory.CreateImporting(null, true));
                 return;
             }
 
@@ -151,9 +166,10 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.Selected.ValueChanged += OnSelectedMapChangedForStreamerFiles;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
-            MapLoadingScreen.QueueStreamerFilesWrite(MapManager.Selected.Value);
+            MapLoadingScreen.QueueStreamerFilesWrite();
 
             View = new SelectionScreenView(this);
+            GlobalInputToken = new Token(this);
         }
 
         /// <inheritdoc />
@@ -194,6 +210,7 @@ namespace Quaver.Shared.Screens.Selection
             ActiveLeftPanel?.Dispose();
             ActiveScrollContainer?.Dispose();
             IsPlayTestingInPreview?.Dispose();
+            GlobalInputToken.Dispose();
             RandomMapsetSelected = null;
             MapManager.MapsetDeleted -= OnMapsetDeleted;
             MapManager.MapDeleted -= OnMapDeleted;
@@ -282,14 +299,6 @@ namespace Quaver.Shared.Screens.Selection
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
-            HandleKeyPressEscape();
-            HandleKeyPressF1();
-            HandleKeyPressF2();
-            HandleKeyPressF3();
-            HandleKeyPressF4();
-            HandleKeyPressF5();
-            HandleKeyPressEnter();
-            HandleKeyPressControlInput();
             HandleThumb1MouseButtonClick();
 
             if (ActiveLeftPanel.Value == SelectContainerPanel.Leaderboard)
@@ -297,24 +306,10 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
-        ///     Handles when the user presses escape
+        ///     Toggles the modifier panel.
         /// </summary>
-        private void HandleKeyPressEscape()
+        private void ToggleModifiersPanel()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-                return;
-
-            HandleBackAction();
-        }
-
-        /// <summary>
-        ///     Handles when the user presses F1
-        /// </summary>
-        private void HandleKeyPressF1()
-        {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F1))
-                return;
-
             if (ActiveLeftPanel.Value == SelectContainerPanel.Modifiers)
                 ActiveLeftPanel.Value = SelectContainerPanel.Leaderboard;
             else
@@ -322,28 +317,30 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
-        ///     Handles random map selection through key press
+        ///     Selects a random map or the previous random map.
         /// </summary>
-        private void HandleKeyPressF2()
+        /// <param name="action"></param>
+        private void HandleSelectRandomMapAction(GlobalKeybindActions action)
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F2))
-                return;
-
-            if (KeyboardManager.IsShiftDown())
-                SelectPrevRandomMap();
-            else
-                SelectRandomMap();
+            switch (action)
+            {
+                case GlobalKeybindActions.SelectionSelectPreviousRandomMap:
+                    SelectPrevRandomMap();
+                    break;
+                case GlobalKeybindActions.SelectionSelectRandomMap:
+                    SelectRandomMap();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+            }
         }
 
         /// <summary>
-        ///    Handles exporting mapsets through F3 key press
+        ///    Toggles the map preview panel.
         /// </summary>
-        private void HandleKeyPressF3()
+        private void ToggleMapPreviewPanel()
         {
             if (KeyboardManager.IsCtrlDown())
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F3))
                 return;
 
             if (ActiveLeftPanel.Value == SelectContainerPanel.MapPreview)
@@ -354,12 +351,9 @@ namespace Quaver.Shared.Screens.Selection
 
         /// <summary>
         /// </summary>
-        private void HandleKeyPressF4()
+        private void ToggleUserProfilePanel()
         {
             if (KeyboardManager.IsCtrlDown())
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F4))
                 return;
 
             if (ActiveLeftPanel.Value == SelectContainerPanel.UserProfile)
@@ -371,25 +365,19 @@ namespace Quaver.Shared.Screens.Selection
         /// <summary>
         ///		Prompts the user to begin a force refresh for mapsets.
         ///	</summary>
-        private void HandleKeyPressF5()
+        private void HandleRefreshAction()
         {
             if (KeyboardManager.IsCtrlDown())
-                return;
-
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.F5))
                 return;
 
             DialogManager.Show(new RefreshDialog());
         }
 
         /// <summary>
-        ///     Handles when the user presses the enter key
+        ///     Handles song selection confirmation.
         /// </summary>
-        private void HandleKeyPressEnter()
+        private void HandleNavigateSelectAction()
         {
-            if (!KeyboardManager.IsUniqueKeyPress(Keys.Enter))
-                return;
-
             if (KeyboardManager.IsAltDown())
                 return;
 
@@ -442,43 +430,55 @@ namespace Quaver.Shared.Screens.Selection
             ConfigManager.LeaderboardSection.Value = (LeaderboardType)newIndex;
         }
 
-        /// <summary>
-        ///     Handles when the user holds control down and performs input actions
-        /// </summary>
-        private void HandleKeyPressControlInput()
+        private GlobalInputHandleResult HandleGlobalInputAction(GlobalKeybindActions action,
+            bool isKeyPress = true, bool isRelease = false)
         {
-            if (!KeyboardManager.IsCtrlDown())
-                return;
+            if (Exiting || DialogManager.Dialogs.Count != 0 || !isKeyPress || isRelease)
+                return GlobalInputHandleResult.Pass;
 
-            var shiftHeld = KeyboardManager.IsShiftDown();
-
-            // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyIncreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(true, shiftHeld));
-
-            // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyDecreaseGameplayAudioRate.Value))
-                ModManager.AddSpeedMods(GetNextRate(false, shiftHeld));
-
-            // Change from pitched to non-pitched
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyTogglePitch.Value))
-                ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
-            
-            // Remove all mods
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRemoveAllMods.Value))
-                ModManager.RemoveAllMods();
-
-            // Toggle Mirror
-            if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyToggleMirror.Value))
+            switch (action.BaseWithLayer())
             {
-                if (ModManager.IsActivated(ModIdentifier.Mirror))
-                    ModManager.RemoveMod(ModIdentifier.Mirror);
-                else
-                    ModManager.AddMod(ModIdentifier.Mirror);
+                case GlobalKeybindActions.Back:
+                    HandleBackAction();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.NavigateSelect:
+                    HandleNavigateSelectAction();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.SelectionToggleModifiers:
+                    ToggleModifiersPanel();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.SelectionSelectRandomMap:
+                    HandleSelectRandomMapAction(action);
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.SelectionToggleMapPreview:
+                    ToggleMapPreviewPanel();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.SelectionToggleUserProfile:
+                    ToggleUserProfilePanel();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.SelectionRefresh:
+                    HandleRefreshAction();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.IncreaseRate:
+                    ModManager.AddSpeedMods(GetNextRate(
+                        !action.HasFlag(GlobalKeybindActions.Reverse),
+                        action.HasFlag(GlobalKeybindActions.Small)));
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.TogglePitch:
+                    ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.RemoveMods:
+                    ModManager.RemoveAllMods();
+                    return GlobalInputHandleResult.Consumed;
+                case GlobalKeybindActions.ToggleMirror:
+                    if (ModManager.IsActivated(ModIdentifier.Mirror))
+                        ModManager.RemoveMod(ModIdentifier.Mirror);
+                    else
+                        ModManager.AddMod(ModIdentifier.Mirror);
+                    return GlobalInputHandleResult.Consumed;
+                default:
+                    return GlobalInputHandleResult.Pass;
             }
-
-
-            ChangeScrollSpeed();
         }
 
         /// <summary>
@@ -584,41 +584,6 @@ namespace Quaver.Shared.Screens.Selection
         }
 
         /// <summary>
-        ///     Changes the user's scroll speed for the selected game mode
-        ///     CTRL+F3/CTRL+F4
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ChangeScrollSpeed()
-        {
-            if (MapManager.Selected.Value == null)
-                return;
-
-            var scrollSpeed = ConfigManager.ScrollSpeeds[MapManager.Selected.Value.Mode];
-
-            var changed = false;
-
-            var speedIncrease = KeyboardManager.IsShiftDown() ? 1 : 10;
-
-            // Change scroll speed down
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F3))
-            {
-                scrollSpeed.Value -= speedIncrease;
-                changed = true;
-            }
-            else if (KeyboardManager.IsUniqueKeyPress(Keys.F4))
-            {
-                scrollSpeed.Value += speedIncrease;
-                changed = true;
-            }
-
-            if (changed)
-            {
-                NotificationManager.Show(NotificationLevel.Info, $"Your {ModeHelper.ToShortHand(MapManager.Selected.Value.Mode)} " +
-                                                                 $"scroll speed has been changed to: {scrollSpeed.Value / 10f:0.0}");
-            }
-        }
-
-        /// <summary>
         ///     Undoes the random map choice
         /// </summary>
         public void SelectPrevRandomMap()
@@ -692,7 +657,7 @@ namespace Quaver.Shared.Screens.Selection
                 Exit(() => new TournamentScreen(2));
                 return;
             }
-            Exit(() => new MapLoadingScreen(new List<Score>()));
+            Exit(() => QuaverScreenFactory.CreateMapLoading(new List<Score>()));
         }
 
         /// <summary>
@@ -705,10 +670,10 @@ namespace Quaver.Shared.Screens.Selection
                 if (IsMultiplayer)
                 {
                     OnlineManager.Client?.SetGameCurrentlySelectingMap(false);
-                    return new MultiplayerGameScreen();
+                    return QuaverScreenFactory.CreateMultiplayerGame();
                 }
 
-                return new MainMenuScreen();
+                return QuaverScreenFactory.CreateMainMenu();
             });
         }
 
@@ -785,7 +750,7 @@ namespace Quaver.Shared.Screens.Selection
 
                 OnlineManager.Client.SetGameCurrentlySelectingMap(false);
 
-                Exit(() => new MultiplayerGameScreen());
+                Exit(() => QuaverScreenFactory.CreateMultiplayerGame());
             });
         }
 
@@ -1030,7 +995,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSelectedMapChangedForStreamerFiles(object sender, BindableValueChangedEventArgs<Map> e)
-            => MapLoadingScreen.QueueStreamerFilesWrite(e.Value, 250);
+            => MapLoadingScreen.QueueStreamerFilesWrite(250);
 
         /// <summary>
         /// </summary>
@@ -1038,7 +1003,7 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
         private void OnAutoLoadOsuBeatmapsChanged(object sender, BindableValueChangedEventArgs<bool> e)
-            => Exit(() => new ImportingScreen(null, true));
+            => Exit(() => QuaverScreenFactory.CreateImporting(null, true));
 
         /// <inheritdoc />
         /// <summary>

@@ -24,16 +24,17 @@ namespace Quaver.Shared.Screens.Multi.UI.Status.Selection
 
             const float scale = 0.85f;
 
-            Size = new ScalableVector2(Image.Width * scale, Image.Height * scale);
+            Size = new ScalableVector2(ImageWidth * scale, ImageHeight * scale);
 
             Clicked += (sender, args) =>
             {
                 var quaver = GameBase.Game as QuaverGame;
 
-                if (quaver?.CurrentScreen is MultiplayerGameScreen multi)
+                if (quaver?.CurrentScreen is QuaverScreen screen &&
+                    screen is IMultiplayerGameScreenState multi)
                 {
                     multi.DontLeaveGameUponScreenSwitch = true;
-                    multi.Exit(() => new SelectionScreen());
+                    screen.Exit(() => QuaverScreenFactory.CreateSelection());
                 }
             };
         }

@@ -152,7 +152,7 @@ namespace Quaver.Shared.Screens.Multiplayer
                 // Make sure map is absolutely correct before going to map loading screen.
                 view.Map.UpdateContent();
 
-                return new MapLoadingScreen(MapManager.Selected.Value.Scores.Value);
+                return QuaverScreenFactory.CreateMapLoading(MapManager.Selected.Value.Scores.Value);
             });*/
         }
 
@@ -206,7 +206,7 @@ namespace Quaver.Shared.Screens.Multiplayer
 
             OnlineManager.LeaveGame();
             ThreadScheduler.RunAfter(Destroy, 1000);
-            return new MultiplayerLobbyScreen();
+            return QuaverScreenFactory.CreateMultiplayerLobby();
         });
 
         /// <summary>

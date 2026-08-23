@@ -81,7 +81,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels
         /// </summary>
         private void CreateHeaderText()
         {
-            HeaderText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), "Chat Channels".ToUpper(), 18)
+            HeaderText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), "Chat Channels".ToUpper(), 18)
             {
                 Parent = HeaderBackground,
                 Alignment = Alignment.MidLeft,

@@ -6,6 +6,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form.Dropdowns.RightClick;
 using Quaver.Shared.Helpers;
+using Wobble.Managers;
 using Quaver.Shared.Screens.Edit.Dialogs;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -70,7 +71,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
             ItemSelected += (sender, args) =>
             {
-                if (args.Text == "Custom")
+                if (args.Text == LocalizationManager.Get("Screen_Editor_Custom"))
                 {
                     DialogManager.Show(new CustomBeatSnapDialog(beatSnap, AvailableBeatSnaps));
                     return;
@@ -117,7 +118,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
 
             // You cannot add more snaps, so this option is redundant.
             if (availableSnaps.Count is not 48)
-                options.Add("Custom", Color.White);
+                options.Add(LocalizationManager.Get("Screen_Editor_Custom"), Color.White);
 
             return options;
         }
@@ -140,7 +141,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer
         {
             foreach (var item in Items)
             {
-                if (item.Text.Text == "Custom")
+                if (item.Text.Text == LocalizationManager.Get("Screen_Editor_Custom"))
                 {
                     Checks[item].Visible = false;
                     continue;

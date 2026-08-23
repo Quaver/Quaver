@@ -11,14 +11,14 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public override QuaverScreenType Screen { get; } = QuaverScreenType.Theatre;
 
         public IconTextButtonTheater() : base(FontAwesome.Get(FontAwesomeIcon.fa_photo_camera),
-            FontManager.GetWobbleFont(Fonts.InterBold), "Theater")
+            FontManager.GetWobbleFont(Fonts.InterSemiBold), "Theater")
         {
         }
 
         public override void OnClick()
         {
             var game = (QuaverGame) GameBase.Game;
-            game.CurrentScreen.Exit(() => new TheaterScreen());
+            game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateTheater());
         }
     }
 }

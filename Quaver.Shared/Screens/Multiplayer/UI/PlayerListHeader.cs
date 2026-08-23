@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
@@ -32,6 +31,10 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
         /// <summary>
         /// </summary>
+        private int WaitingEllipsisCount { get; set; }
+
+        /// <summary>
+        /// </summary>
         private double LastNearestSecond { get; set; }
 
         /// <summary>
@@ -55,14 +58,14 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
             Tint = Color.Black;
             Alpha = 0f;
 
-            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("PlayersCount", 0, 14))
+            Count = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("PlayersCount", 0, 14))
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 FontSize = 14,
             };
 
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), MultiplayerLocalization.Get("WaitingToStart"))
+            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("WaitingToStart"))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,
@@ -96,21 +99,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
 
                     if (TimeSinceLastElipsis >= 600)
                     {
-                        switch (Status.Text.Count(x => x == '.'))
-                        {
-                            case 0:
-                                Status.Text = MultiplayerLocalization.Get("WaitingToStartOneDot");
-                                break;
-                            case 1:
-                                Status.Text = MultiplayerLocalization.Get("WaitingToStartTwoDots");
-                                break;
-                            case 2:
-                                Status.Text = MultiplayerLocalization.Get("WaitingToStartThreeDots");
-                                break;
-                            case 3:
-                                Status.Text = MultiplayerLocalization.Get("WaitingToStart");
-                                break;
-                        }
+                        WaitingEllipsisCount = (WaitingEllipsisCount + 1) % 4;
+                        Status.Text = MultiplayerLocalization.Get("WaitingToStart") + new string('.', WaitingEllipsisCount);
 
                         TimeSinceLastElipsis = 0;
                     }

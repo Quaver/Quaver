@@ -69,7 +69,7 @@ namespace Quaver.Shared.Screens.Gameplay.UI
         /// <param name="frames"></param>
         /// <param name="size"></param>
         /// <param name="posY"></param>
-        public JudgementHitBurst(GameplayScreen screen, List<Texture2D> frames, Vector2 size, float posY) : base(frames)
+        public JudgementHitBurst(GameplayScreen screen, List<TextureRegion> frames, Vector2 size, float posY) : base(frames)
         {
             Screen = screen;
             OriginalPosY = posY;
