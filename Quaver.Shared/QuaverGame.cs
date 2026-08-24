@@ -137,6 +137,58 @@ namespace Quaver.Shared
         /// </summary>
         public const float SkinScalingFactor = 1920f / 1366;
 
+        /// <summary>
+        ///     The bounds of the monitor the window was on right before entering full screen.
+        ///     <see cref="GameWindow.Position"/> always reports (0, 0) while actually in full screen mode,
+        ///     so this is captured beforehand (while still windowed) and used to restore the window to the
+        ///     correct monitor when full screen is turned back off.
+        /// </summary>
+        private MonitorHelper.Bounds? _fullScreenMonitorBounds;
+
+        /// <summary>
+        ///     Debounce delay (ms) for windowed resize events, so an animated snap/tile doesn't
+        ///     reload the screen on every intermediate frame.
+        /// </summary>
+        private const double ClientSizeChangeDebounceMs = 200;
+
+        /// <summary>
+        ///     Whether a resize is waiting for <see cref="ClientSizeChangeDebounceMs"/> to elapse.
+        /// </summary>
+        private bool _pendingClientSizeChange;
+
+        /// <summary>
+        ///     Limits <see cref="ReconcileWindowSize"/> to a single retry per resize.
+        /// </summary>
+        private bool _resizeRetried;
+
+        /// <summary>
+        ///     <see cref="Stopwatch.GetTimestamp"/> at the last <see cref="Window.ClientSizeChanged"/> event.
+        /// </summary>
+        private long _lastClientSizeChangeTime;
+
+        /// <summary>
+        ///     Backbuffer size before the pending resize sequence started. Wobble's own resize handler
+        ///     syncs the backbuffer immediately, so by the time the debounce fires, comparing against
+        ///     the live size would miss the change.
+        /// </summary>
+        private Point _preResizeBackBufferSize;
+
+        /// <summary>
+        ///     Last requested window size, kept apart from <see cref="ConfigManager.WindowWidth"/>/
+        ///     <see cref="ConfigManager.WindowHeight"/> since <see cref="OnClientSizeChanged"/>
+        ///     overwrites those with whatever the OS actually produced (e.g. a Snap/tile clamp).
+        /// </summary>
+        private int? _requestedWindowWidth;
+
+        /// <inheritdoc cref="_requestedWindowWidth"/>
+        private int? _requestedWindowHeight;
+
+        /// <summary>
+        ///     Set while <see cref="ChangeResolution"/> applies an explicit request, so
+        ///     <see cref="OnClientSizeChanged"/> doesn't mistake its clamp echo for a new request.
+        /// </summary>
+        private bool _applyingExplicitResize;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -534,8 +586,90 @@ namespace Quaver.Shared
             HandleMuteAudioOnWindowInactive();
             HandleMusicVolumeFade(gameTime);
             UpdateFpsCounterPosition();
+            HandlePendingClientSizeChange();
 
             Window.AllowUserResizing = QuaverWindowManager.CanChangeResolutionOnScene;
+        }
+
+        /// <summary>
+        ///     Rebuilds the active screen once <see cref="ClientSizeChangeDebounceMs"/> has elapsed since the
+        ///     last resize event. Scaling itself is kept live by <see cref="OnClientSizeChanged"/>.
+        /// </summary>
+        private void HandlePendingClientSizeChange()
+        {
+            if (!_pendingClientSizeChange)
+                return;
+
+            if (Stopwatch.GetElapsedTime(_lastClientSizeChangeTime).TotalMilliseconds < ClientSizeChangeDebounceMs)
+                return;
+
+            _pendingClientSizeChange = false;
+
+            if (!QuaverWindowManager.CanChangeResolutionOnScene || CurrentScreen == null || CurrentScreen.Exiting)
+                return;
+
+            if (ReconcileWindowSize())
+                return;
+
+            RebuildActiveScreenForResolution();
+        }
+
+        /// <summary>
+        ///     Detects a resize the OS silently clamped (e.g. a Windows Snap-tiled window), retries once,
+        ///     and otherwise falls back to matching whatever size the window actually has.
+        /// </summary>
+        /// <returns>Whether a retry was just issued and the caller should wait for it to settle.</returns>
+        private bool ReconcileWindowSize()
+        {
+            var targetWidth = _requestedWindowWidth ?? ConfigManager.WindowWidth.Value;
+            var targetHeight = _requestedWindowHeight ?? ConfigManager.WindowHeight.Value;
+
+            if (Window.ClientBounds.Width == targetWidth && Window.ClientBounds.Height == targetHeight)
+            {
+                _resizeRetried = false;
+                return false;
+            }
+
+            if (!_resizeRetried && Graphics.PreferredBackBufferWidth == targetWidth && Graphics.PreferredBackBufferHeight == targetHeight)
+            {
+                _resizeRetried = true;
+
+                if (MonitorHelper.RestoreIfMaximized(Window))
+                {
+                    WindowManager.ChangeScreenResolution(new Point(targetWidth, targetHeight));
+                    Graphics.ApplyChanges();
+
+                    _pendingClientSizeChange = true;
+                    _lastClientSizeChangeTime = Stopwatch.GetTimestamp();
+                    return true;
+                }
+            }
+
+            _resizeRetried = false;
+
+            var actualWidth = Window.ClientBounds.Width;
+            var actualHeight = Window.ClientBounds.Height;
+
+            _requestedWindowWidth = actualWidth;
+            _requestedWindowHeight = actualHeight;
+
+            if (Graphics.PreferredBackBufferWidth == actualWidth && Graphics.PreferredBackBufferHeight == actualHeight)
+                return false;
+
+            ConfigManager.WindowWidth.Value = actualWidth;
+            ConfigManager.WindowHeight.Value = actualHeight;
+
+            WindowManager.ChangeScreenResolution(new Point(actualWidth, actualHeight));
+
+            var ratio = (float)actualWidth / actualHeight;
+
+            if (ratio >= 16f / 9f)
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+            else
+                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+
+            Graphics.ApplyChanges();
+            return false;
         }
 
         /// <inheritdoc />
@@ -630,9 +764,24 @@ namespace Quaver.Shared
                     
                     ConfigManager.WindowFullScreen.ChangeWithoutTrigger(false);
                 }
+                else if (e.Value)
+                {
+                    var centerX = Window.Position.X + Window.ClientBounds.Width / 2;
+                    var centerY = Window.Position.Y + Window.ClientBounds.Height / 2;
+                    _fullScreenMonitorBounds = MonitorHelper.GetBoundsAtPoint(centerX, centerY);
+
+                    Graphics.IsFullScreen = true;
+                }
                 else
                 {
-                    Graphics.IsFullScreen = e.Value;
+                    Graphics.IsFullScreen = false;
+                    Graphics.ApplyChanges();
+
+                    if (_fullScreenMonitorBounds.HasValue)
+                        MonitorHelper.CenterOnMonitor(Window, _fullScreenMonitorBounds.Value, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+
+                    _fullScreenMonitorBounds = null;
+                    Window.IsBorderless = ConfigManager.WindowBorderless.Value;
                 }
             };
             
@@ -1207,22 +1356,66 @@ namespace Quaver.Shared
         }
 
         /// <summary>
+        ///     Applies the configured game resolution and updates the virtual screen size to maintain the
+        ///     correct aspect ratio, then centers the window on the active display. If
+        ///     <paramref name="rebuildScreen"/> is set, the screen rebuild itself is deferred - see
+        ///     <see cref="RebuildActiveScreenForResolution"/>.
         /// </summary>
-        public void ChangeResolution()
+        /// <param name="centerWindow">Whether to recenter the window after applying the change.</param>
+        /// <param name="preResizeBackBufferSize">Old backbuffer size to diff against, if not the live value.</param>
+        /// <param name="rebuildScreen">Whether to recreate the current screen and volume controller.</param>
+        public void ChangeResolution(bool centerWindow = true, Point? preResizeBackBufferSize = null, bool rebuildScreen = true)
         {
             if (!QuaverWindowManager.CanChangeResolutionOnScene)
                 return;
 
-            if (Graphics.PreferredBackBufferWidth != ConfigManager.WindowWidth.Value || Graphics.PreferredBackBufferHeight != ConfigManager.WindowHeight.Value)
-                WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+            var targetWidth = ConfigManager.WindowWidth.Value;
+            var targetHeight = ConfigManager.WindowHeight.Value;
 
-            var ratio = (float)ConfigManager.WindowWidth.Value / ConfigManager.WindowHeight.Value;
+            if (rebuildScreen)
+            {
+                _requestedWindowWidth = targetWidth;
+                _requestedWindowHeight = targetHeight;
+            }
 
-            if (ratio >= 16 / 9f)
-                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
-            else
-                WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+            var oldPos = Window.Position;
+            var oldWidth = preResizeBackBufferSize?.X ?? Graphics.PreferredBackBufferWidth;
+            var oldHeight = preResizeBackBufferSize?.Y ?? Graphics.PreferredBackBufferHeight;
 
+            if (oldWidth != targetWidth || oldHeight != targetHeight)
+            {
+                if (!Graphics.IsFullScreen && centerWindow)
+                    MonitorHelper.RestoreIfMaximized(Window);
+
+                WindowManager.ChangeScreenResolution(new Point(targetWidth, targetHeight));
+
+                var ratio = (float)targetWidth / targetHeight;
+
+                if (ratio >= 16f / 9f)
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.Y * ratio, WindowManager.BaseResolution.Y));
+                else
+                    WindowManager.ChangeVirtualScreenSize(new Vector2(WindowManager.BaseResolution.X, WindowManager.BaseResolution.X / ratio));
+            }
+
+            _applyingExplicitResize = rebuildScreen;
+            Graphics.ApplyChanges();
+            _applyingExplicitResize = false;
+
+            if (centerWindow)
+                MonitorHelper.CenterOnCurrentMonitor(Window, oldPos, oldWidth, oldHeight, targetWidth, targetHeight);
+
+            if (rebuildScreen)
+            {
+                _pendingClientSizeChange = true;
+                _lastClientSizeChangeTime = Stopwatch.GetTimestamp();
+            }
+        }
+
+        /// <summary>
+        ///     Recreates the current screen and volume controller to reflect the latest window size.
+        /// </summary>
+        private void RebuildActiveScreenForResolution()
+        {
             if (CurrentScreen == null)
                 return;
 
@@ -1232,7 +1425,10 @@ namespace Quaver.Shared
                     CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMainMenu());
                     break;
                 case QuaverScreenType.Select:
-                    CurrentScreen?.Exit(() => QuaverScreenFactory.CreateSelection());
+                    var selectScreen = (SelectionScreen)CurrentScreen;
+                    var activeScroll = selectScreen.ActiveScrollContainer.Value;
+                    var activePanel = selectScreen.ActiveLeftPanel.Value;
+                    CurrentScreen?.Exit(() => new SelectionScreen(activeScroll, activePanel));
                     break;
                 case QuaverScreenType.Download:
                     CurrentScreen?.Exit(() => QuaverScreenFactory.CreateDownloading(CurrentScreen.Type));
@@ -1259,10 +1455,28 @@ namespace Quaver.Shared
 
         private void OnClientSizeChanged(object sender, EventArgs e)
         {
+            // Fullscreen reports the monitor's size here, not a real resize.
+            if (Graphics.IsFullScreen)
+                return;
+
+            // Capture the pre-resize size once per sequence, before Wobble's handler syncs it.
+            if (!_pendingClientSizeChange)
+                _preResizeBackBufferSize = new Point(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+
             ConfigManager.WindowWidth.Value = Window.ClientBounds.Width;
             ConfigManager.WindowHeight.Value = Window.ClientBounds.Height;
 
-            ChangeResolution();
+            if (!_applyingExplicitResize)
+            {
+                _requestedWindowWidth = Window.ClientBounds.Width;
+                _requestedWindowHeight = Window.ClientBounds.Height;
+            }
+
+            // Keep scaling live every event (avoids stretching mid-drag); defer only the screen rebuild.
+            ChangeResolution(centerWindow: false, preResizeBackBufferSize: _preResizeBackBufferSize, rebuildScreen: false);
+
+            _pendingClientSizeChange = true;
+            _lastClientSizeChangeTime = Stopwatch.GetTimestamp();
         }
 
         private static void OnAudioOutputDeviceChanged(string deviceName)
