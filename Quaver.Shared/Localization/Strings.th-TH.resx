@@ -2583,13 +2583,13 @@ sure you would like to start without all players ready?</value>
     <value>You must be logged in to upload your mapset!</value>
   </data>
   <data name="Screen_Editor_Only4KAnd7KRanked" xml:space="preserve">
-    <value>Only 4K and 7K are allowed for ranking.</value>
+    <value>อนุญาตให้จัดอันดับแค่ 4K และ 7K เท่านั้น</value>
   </data>
   <data name="Screen_Editor_ExportingMapset" xml:space="preserve">
     <value>Please wait while the mapset is being exported...</value>
   </data>
   <data name="Screen_Editor_MapsetExportedSuccessfully" xml:space="preserve">
-    <value>The mapset has been successfully exported!</value>
+    <value>นำออกแมพเซตสำเร็จ!</value>
   </data>
   <data name="Screen_Editor_CannotImportCurrentKeymap" xml:space="preserve">
     <value>You cannot import the keymap you are already using!</value>
@@ -2598,10 +2598,10 @@ sure you would like to start without all players ready?</value>
     <value>The keymap has been applied!</value>
   </data>
   <data name="Screen_Editor_EnabledSetting" xml:space="preserve">
-    <value>Enabled {0}</value>
+    <value>เปิดใช้งาน {0} แล้ว</value>
   </data>
   <data name="Screen_Editor_DisabledSetting" xml:space="preserve">
-    <value>Disabled {0}</value>
+    <value>ปิดใช้งาน {0} แล้ว</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImageInstruction" xml:space="preserve">
     <value>To add a background image, drag a .jpg or .png file into the window.</value>
@@ -2742,7 +2742,7 @@ sure you would like to start without all players ready?</value>
     <value>Selected timing group: {0}</value>
   </data>
   <data name="Screen_Editor_SelectNotes" xml:space="preserve">
-    <value>Select Notes</value>
+    <value>เลือกโน้ต</value>
   </data>
   <data name="Screen_Editor_SelectNotesInTimingGroupsTooltip" xml:space="preserve">
     <value>Selects all notes in the selected timing group(s).</value>
@@ -2766,7 +2766,7 @@ sure you would like to start without all players ready?</value>
     <value>แก้ไขในตัวแก้ไข SV</value>
   </data>
   <data name="Screen_Editor_Name" xml:space="preserve">
-    <value>Name</value>
+    <value>ชื่อ</value>
   </data>
   <data name="Screen_Editor_InvalidName" xml:space="preserve">
     <value>Invalid name!</value>
@@ -2859,7 +2859,7 @@ sure you would like to start without all players ready?</value>
     <value>โปรดล็อกอินใหม่แล้วลองอีกรอบ!</value>
   </data>
   <data name="Screen_Editor_UploadErrorBanned" xml:space="preserve">
-    <value>You cannot upload a mapset while banned!</value>
+    <value>ไม่สามารถอัปโหลดแมพเซตได้ขณะโดนแบน!</value>
   </data>
   <data name="Screen_Editor_UploadErrorNoMapsetSent" xml:space="preserve">
     <value>No mapset was sent with the request!</value>
@@ -2889,19 +2889,19 @@ sure you would like to start without all players ready?</value>
     <value>คุณไม่ใช่คนสร้างแมพเซตนี้!</value>
   </data>
   <data name="Screen_Editor_UploadErrorConflictingMapIds" xml:space="preserve">
-    <value>One or more of your maps have conflicting map ids!</value>
+    <value>มีแมพอย่างน้อยหนึ่งแมพที่มีไอดีแมพขัดแย้งกัน!</value>
   </data>
   <data name="Screen_Editor_UploadErrorConflictingMapsetIds" xml:space="preserve">
-    <value>One or more of your maps have conflicting mapset ids!</value>
+    <value>มีแมพอย่างน้อยหนึ่งแมพที่มีไอดีแมพเซตขัดแย้งกัน!</value>
   </data>
   <data name="Screen_Editor_UploadErrorConflictingDifficultyNames" xml:space="preserve">
-    <value>One or more of your maps have the same difficulty name!</value>
+    <value>มีแมพอย่างน้อยหนึ่งแมพที่มีชื่อระดับความยากซ้ำกัน!</value>
   </data>
   <data name="Screen_Editor_UploadErrorNoExistingMapsetFound" xml:space="preserve">
     <value>You're trying to update a mapset, but this mapset isn't uploaded online!</value>
   </data>
   <data name="Screen_Editor_UploadErrorAlreadyRanked" xml:space="preserve">
-    <value>You cannot update a mapset that is already ranked!</value>
+    <value>ไม่สามารถอัปเดตแมพเซตที่จัดอันดับแล้วได้!</value>
   </data>
   <data name="Screen_Editor_UploadErrorContainsNonUploadedNotNewMapId" xml:space="preserve">
     <value>One or more of your maps contains a non-uploaded map id!</value>
@@ -2919,22 +2919,22 @@ sure you would like to start without all players ready?</value>
     <value>กำลังอัปโหลดแมพเซต</value>
   </data>
   <data name="Screen_Editor_UploadingMapsetMessage" xml:space="preserve">
-    <value>Please wait while your mapset is being uploaded...</value>
+    <value>โปรดรอสักครู่ขณะกำลังอัปโหลดแมพเซต...</value>
   </data>
   <data name="Screen_Editor_MapsetSavedSuccessfully" xml:space="preserve">
-    <value>Your mapset has been successfully saved!</value>
+    <value>บันทึกแมพเซตนี้สำเร็จ!</value>
   </data>
   <data name="Screen_Editor_MapsetUploadedSuccessfully" xml:space="preserve">
-    <value>Your mapset has been successfully uploaded!</value>
+    <value>อัปโหลดแมพเซตนี้สำเร็จ!</value>
   </data>
   <data name="Screen_Editor_UploadMapsetErrorWithReason" xml:space="preserve">
     <value>Error uploading mapset: {0}</value>
   </data>
   <data name="Screen_Editor_UploadMapsetError" xml:space="preserve">
-    <value>There was an issue while uploading your mapset</value>
+    <value>เกิดปัญหาขณะกำลังอัปโหลดแมพเซต</value>
   </data>
   <data name="Screen_Editor_AddBackgroundImageInstructionPngJpg" xml:space="preserve">
-    <value>To add a background image, drag a .png or .jpg into the window.</value>
+    <value>ลากไฟล์ .png หรือ .jpg เข้ามาในหน้าต่างนี้เพื่อเพิ่มภาพพื้นหลัง</value>
   </data>
   <data name="Screen_Editor_FilterLabel" xml:space="preserve">
     <value>ตัวกรอง:</value>
@@ -2949,7 +2949,7 @@ sure you would like to start without all players ready?</value>
     <value>HitObjects</value>
   </data>
   <data name="Screen_Editor_Mapset" xml:space="preserve">
-    <value>Mapset</value>
+    <value>แมพเซต</value>
   </data>
   <data name="Screen_Editor_Metadata" xml:space="preserve">
     <value>Metadata</value>
@@ -2985,7 +2985,7 @@ sure you would like to start without all players ready?</value>
     <value>ระเบิด</value>
   </data>
   <data name="Screen_Editor_Layer" xml:space="preserve">
-    <value>Layer {0}</value>
+    <value>เลเยอร์ {0}</value>
   </data>
   <data name="Screen_Editor_RenameLayer" xml:space="preserve">
     <value>เปลี่ยนชื่อเลเยอร์</value>
@@ -3000,10 +3000,10 @@ sure you would like to start without all players ready?</value>
     <value>เปลี่ยนสีเลเยอร์</value>
   </data>
   <data name="Screen_Editor_EditName" xml:space="preserve">
-    <value>Edit Name</value>
+    <value>แก้ไขชื่อ</value>
   </data>
   <data name="Screen_Editor_ChangeColor" xml:space="preserve">
-    <value>Change Color</value>
+    <value>เปลี่ยนสี</value>
   </data>
   <data name="Screen_Editor_MoveLayerUp" xml:space="preserve">
     <value>ย้ายเลเยอร์ขึ้น</value>
@@ -3120,7 +3120,7 @@ sure you would like to start without all players ready?</value>
     <value>สถานะ:</value>
   </data>
   <data name="Screen_Editor_Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>กำหนดเอง</value>
   </data>
   <data name="Screen_Editor_ResnappedNote" xml:space="preserve">
     <value>Resnapped {0} note</value>
@@ -3135,10 +3135,10 @@ sure you would like to start without all players ready?</value>
     <value>Unsnapped {0} notes</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor_Default" xml:space="preserve">
-    <value>Default</value>
+    <value>ค่าเริ่มต้น</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor_White" xml:space="preserve">
-    <value>White</value>
+    <value>สีขาว</value>
   </data>
   <data name="Screen_Editor_BeatSnapColor_Legacy" xml:space="preserve">
     <value>Legacy</value>
@@ -3183,7 +3183,7 @@ sure you would like to start without all players ready?</value>
     <value>วงกลม</value>
   </data>
   <data name="Screen_Editor_Hitsound_Normal" xml:space="preserve">
-    <value>Normal</value>
+    <value>ปกติ</value>
   </data>
   <data name="Screen_Editor_Hitsound_Whistle" xml:space="preserve">
     <value>Whistle</value>
@@ -3195,7 +3195,7 @@ sure you would like to start without all players ready?</value>
     <value>Clap</value>
   </data>
   <data name="Screen_Editor_HitObjectColoring_None" xml:space="preserve">
-    <value>None</value>
+    <value>ไม่มี</value>
   </data>
   <data name="Screen_Editor_HitObjectColoring_Layer" xml:space="preserve">
     <value>เลเยอร์</value>
@@ -3204,7 +3204,7 @@ sure you would like to start without all players ready?</value>
     <value>กลุ่มกำหนดจังหวะเวลา</value>
   </data>
   <data name="Screen_Editor_Modifier_Mirror" xml:space="preserve">
-    <value>Mirror</value>
+    <value>กลับด้าน</value>
   </data>
   <data name="Screen_Editor_Modifier_NoLongNotes" xml:space="preserve">
     <value>NoLongNotes</value>
