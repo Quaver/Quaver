@@ -415,16 +415,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
-            if (ImGui.InputFloat("", ref time, 1, 0.1f, format,
+            if (ImGui.InputFloat("##time", ref time, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
-                if (SelectedScrollVelocities.Count == 1)
-                {
-                    var sv = SelectedScrollVelocities.First();
+                var sv = SelectedScrollVelocities.First();
 
-                    Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
-                        time - sv.StartTime);
-                }
+                Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
+                    Math.Max(time - sv.StartTime, (float)-1e+5));
             }
         }
 
@@ -437,7 +434,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
-            if (ImGui.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat("##movetimesby", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
                 Screen.ActionManager.ChangeScrollVelocityOffsetBatch(
                     new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
         }
@@ -466,10 +463,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Multiplier"));
 
-            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format,
+            if (ImGui.InputFloat("##multiplier", ref multiplier, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(
-                    new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
+                    new List<SliderVelocityInfo>(SelectedScrollVelocities), Math.Clamp(multiplier, (float)-1e10, (float)1e10));
         }
 
         /// <summary>
@@ -693,7 +690,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 var point = new SliderVelocityInfo()
                 {
-                    StartTime = obj.StartTime + difference, Multiplier = obj.Multiplier
+                    StartTime = obj.StartTime + difference,
+                    Multiplier = obj.Multiplier
                 };
 
                 clonedObjects.Add(point);
