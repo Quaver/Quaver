@@ -20,6 +20,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         public double SongTime => EditorPluginUtils.EditScreen.Track.Time;
 
+        public bool IsPlaying => EditorPluginUtils.EditScreen.Track.IsPlaying;
+
         /// <summary>
         ///     The objects that are currently selected by the user
         /// </summary>
@@ -38,7 +40,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         ///     Current scroll group we're working on
         /// </summary>
         public ScrollGroup SelectedScrollGroup => EditorPluginUtils.EditScreen.SelectedScrollGroup;
-        
+
         /// <summary>
         ///     The current scroll velocity in the map
         /// </summary>
