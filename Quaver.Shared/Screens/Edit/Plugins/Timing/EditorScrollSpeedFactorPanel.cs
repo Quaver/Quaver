@@ -409,7 +409,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
             if (ImGui.InputFloat("##Time", ref time, 1, 0.1f, format,
-                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
             {
                 var ssf = SelectedScrollSpeedFactors.First();
 
@@ -427,7 +427,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
-            if (ImGui.InputFloat("##MoveTimesBy", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat("##MoveTimesBy", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(
                     new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), time);
         }
@@ -457,7 +457,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Multiplier"));
 
             if (ImGui.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
-                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollSpeedFactorMultiplierBatch(
                     new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), Math.Clamp(multiplier, -1000, 1000));
         }
