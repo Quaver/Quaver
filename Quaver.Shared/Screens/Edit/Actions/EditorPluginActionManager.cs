@@ -209,11 +209,11 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
-        public void StartPlayback() => ActionManager.StartPlayback();
+        public void StartPlayback() => ActionManager.StartPlayback(true);
 
         /// <summary>
         /// </summary>
-        public void StopPlayback() => ActionManager.StopPlayback();
+        public void StopPlayback() => ActionManager.StopPlayback(true);
 
         /// <summary>
         /// </summary>
