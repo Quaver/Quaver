@@ -9,8 +9,6 @@ using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.Edit.Actions.TimingGroups.Rename;
-using Wobble;
 using Wobble.Graphics.ImGUI;
 using Wobble.Input;
 using Wobble.Managers;
@@ -410,16 +408,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
-            if (ImGui.InputFloat("", ref time, 1, 0.1f, format,
+            if (ImGui.InputFloat("##Time", ref time, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
-                if (SelectedScrollSpeedFactors.Count == 1)
-                {
-                    var ssf = SelectedScrollSpeedFactors.First();
+                var ssf = SelectedScrollSpeedFactors.First();
 
-                    Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(new List<ScrollSpeedFactorInfo> { ssf },
-                        time - ssf.StartTime);
-                }
+                Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(new List<ScrollSpeedFactorInfo> { ssf },
+                    Math.Max(time - ssf.StartTime, (float)-1e+5));
             }
         }
 
@@ -432,7 +427,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
-            if (ImGui.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat("##MoveTimesBy", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
                 Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(
                     new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), time);
         }
@@ -461,10 +456,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Multiplier"));
 
-            if (ImGui.InputFloat(" ", ref multiplier, 1, 0.1f, format,
+            if (ImGui.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
                 Screen.ActionManager.ChangeScrollSpeedFactorMultiplierBatch(
-                    new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), multiplier);
+                    new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), Math.Clamp(multiplier, -1000, 1000));
         }
 
         /// <summary>
@@ -688,7 +683,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 var point = new ScrollSpeedFactorInfo()
                 {
-                    StartTime = obj.StartTime + difference, Multiplier = obj.Multiplier
+                    StartTime = obj.StartTime + difference,
+                    Multiplier = obj.Multiplier
                 };
 
                 clonedObjects.Add(point);

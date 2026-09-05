@@ -415,7 +415,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
-            if (ImGui.InputFloat("##time", ref time, 1, 0.1f, format,
+            if (ImGui.InputFloat("##Time", ref time, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
             {
                 var sv = SelectedScrollVelocities.First();
@@ -434,7 +434,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
-            if (ImGui.InputFloat("##movetimesby", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputFloat("##MoveTimesBy", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
                 Screen.ActionManager.ChangeScrollVelocityOffsetBatch(
                     new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
         }
