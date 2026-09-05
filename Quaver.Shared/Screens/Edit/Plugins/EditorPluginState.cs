@@ -18,7 +18,11 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         ///     The current time in the song
         /// </summary>
-        public double SongTime => EditorPluginUtils.EditScreen.Track.Time;
+        public double SongTime
+        {
+            get => EditorPluginUtils.EditScreen.Track.Time;
+            set => EditorPluginUtils.EditScreen.Track.Seek(value);
+        }
 
         public bool IsPlaying => EditorPluginUtils.EditScreen.Track.IsPlaying;
 
