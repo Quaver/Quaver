@@ -2097,6 +2097,9 @@ Bruk filtrene til å begrense søket.</value>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>Vis forhåndsvisning av spillopplevelse</value>
   </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
+  </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Vanskelighetsgrad (Referanse)</value>
   </data>
