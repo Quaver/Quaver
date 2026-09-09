@@ -83,7 +83,8 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     {
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
         ImGui.PushFont(Options.Fonts.First().Context);
-        EditorImGui.Begin(this, Name);
+        var open = IsActive;
+        ImGui.Begin(Name, ref open);
         IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
 
         DrawDescription();
@@ -117,6 +118,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
 
         ImGui.End();
         LastInputConfigVersion = Screen.InputManager.InputConfig.Version;
+        IsActive = open;
     }
 
     private void DrawDescription()
