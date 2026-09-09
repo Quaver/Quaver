@@ -847,6 +847,9 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                     ? HitObjectColoring.None
                     : HitObjectColoring.TimingGroup;
 
+            if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_ShowBookmarks"), "", Screen.ShowBookmarks.Value))
+                Screen.ShowBookmarks.Value = !Screen.ShowBookmarks.Value;
+
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_ColorSvLinesByTimingGroup"), "", ConfigManager.EditorColorSvLineByTimingGroup.Value))
                 ConfigManager.EditorColorSvLineByTimingGroup.Value = !ConfigManager.EditorColorSvLineByTimingGroup.Value;
 

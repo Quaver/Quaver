@@ -119,6 +119,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
+        private Bindable<bool> ShowBookmarks { get; }
+
+        /// <summary>
+        /// </summary>
         private Bindable<EditorPlayfieldWaveformAudioDirection> WaveFormAudioDirection { get; }
 
         /// <summary>
@@ -332,6 +336,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
         /// <param name="placeObjectsOnNearestTick"></param>
         /// <param name="showWaveform"></param>
         /// <param name="showSpectrogram"></param>
+        /// <param name="showBookmarks"></param>
         /// <param name="waveFormAudioDirection"></param>
         /// <param name="waveformFilter"></param>
         /// <param name="spectrogramFftSize"></param>
@@ -344,7 +349,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             BindableInt longNoteOpacity, BindableList<HitObjectInfo> selectedHitObjects,
             Bindable<EditorLayerInfo> selectedLayer,
             EditorLayerInfo defaultLayer, Bindable<bool> placeObjectsOnNearestTick, Bindable<bool> showWaveform,
-            Bindable<bool> showSpectrogram,
+            Bindable<bool> showSpectrogram, Bindable<bool> showBookmarks,
             Bindable<EditorPlayfieldWaveformAudioDirection> waveFormAudioDirection,
             Bindable<EditorPlayfieldWaveformFilter> waveformFilter,
             BindableInt spectrogramFftSize,
@@ -369,6 +374,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             PlaceObjectsOnNearestTick = placeObjectsOnNearestTick;
             ShowWaveform = showWaveform;
             ShowSpectrogram = showSpectrogram;
+            ShowBookmarks = showBookmarks;
             WaveFormAudioDirection = waveFormAudioDirection;
             WaveformFilter = waveformFilter;
             SpectrogramFftSize = spectrogramFftSize;
@@ -685,7 +691,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
 
         /// <summary>
         /// </summary>
-        private void CreateLineContainer() => LineContainer = new EditorPlayfieldLineContainer(this, Map, Track, ActionManager);
+        private void CreateLineContainer() => LineContainer = new EditorPlayfieldLineContainer(this, Map, Track, ActionManager, ShowBookmarks);
 
         /// <summary>
         /// </summary>

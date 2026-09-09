@@ -3319,94 +3319,94 @@ Bruk filtrene til å begrense søket.</value>
     <value>Tilbakestill</value>
   </data>
   <data name="SkinEditor_AddStop" xml:space="preserve">
-    <value>Add Gradient Stop</value>
+    <value>Legg til gradientstopp</value>
   </data>
   <data name="SkinEditor_SearchAssets" xml:space="preserve">
-    <value>Search assets...</value>
+    <value>Søk ressurser...</value>
   </data>
   <data name="SkinEditor_LoadingAssets" xml:space="preserve">
-    <value>Loading assets…</value>
+    <value>Laster inn ressurser...</value>
   </data>
   <data name="SkinEditor_AssetScanFailed" xml:space="preserve">
-    <value>Could not scan skin assets.</value>
+    <value>Kunne ikke skanne stilressurser.</value>
   </data>
   <data name="SkinEditor_AllFolders" xml:space="preserve">
-    <value>All folders</value>
+    <value>Alle mapper</value>
   </data>
   <data name="SkinEditor_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Last inn på nytt</value>
   </data>
   <data name="SkinEditor_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>Åpne mappe</value>
   </data>
   <data name="SkinEditor_InvalidValue" xml:space="preserve">
-    <value>Enter a valid value.</value>
+    <value>Angi en gyldig verdi.</value>
   </data>
   <data name="SkinEditor_InvalidRange" xml:space="preserve">
-    <value>Enter a value from {0} to {1}.</value>
+    <value>Angi en verdi fra {0} til {1}.</value>
   </data>
   <data name="SkinEditor_InvalidColor" xml:space="preserve">
-    <value>Use #RRGGBB or #RRGGBBAA format.</value>
+    <value>Bruk #RRGGBB eller #RRGGBBAA format.</value>
   </data>
   <data name="SkinEditor_InvalidAssetPath" xml:space="preserve">
-    <value>Choose a file inside this skin.</value>
+    <value>Velg en fil inni denne stilen.</value>
   </data>
   <data name="SkinEditor_InvalidGradientStop" xml:space="preserve">
-    <value>Use unique positions from 0 to 1 and valid hex colors.</value>
+    <value>Bruk unike posisjoner fra 0 til 1 og gyldig hex-farger.</value>
   </data>
   <data name="SkinEditor_SelectorTooltip" xml:space="preserve">
-    <value>Click to select the next option.</value>
+    <value>Klikk for å velge det neste valget.</value>
   </data>
   <data name="SkinEditor_Component_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Bakgrunn</value>
   </data>
   <data name="SkinEditor_Component_BackgroundEffects" xml:space="preserve">
-    <value>Background Effects</value>
+    <value>Bakgrunnseffekter</value>
   </data>
   <data name="SkinEditor_Component_Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
   <data name="SkinEditor_Component_LogoAccent" xml:space="preserve">
-    <value>Logo Accent</value>
+    <value>Logo-detalj</value>
   </data>
   <data name="SkinEditor_Component_Actions" xml:space="preserve">
-    <value>Action Buttons</value>
+    <value>Handlingsknapper</value>
   </data>
   <data name="SkinEditor_Component_News" xml:space="preserve">
-    <value>News Card</value>
+    <value>Nyhetskort</value>
   </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
-    <value>Top Navigation</value>
+    <value>Topp-navigasjon</value>
   </data>
   <data name="SkinEditor_Component_BottomNavigation" xml:space="preserve">
-    <value>Bottom Navigation</value>
+    <value>Bunn navigasjon</value>
   </data>
   <data name="SkinEditor_Component_NavigationButtons" xml:space="preserve">
-    <value>Navigation Buttons</value>
+    <value>Navigasjonsknapper</value>
   </data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
-    <value>Screen Title</value>
+    <value>Skjermtittel</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve">
-    <value>Solid Color</value>
+    <value>Solid farge</value>
   </data>
   <data name="SkinEditor_Property_Path" xml:space="preserve">
-    <value>Image Path</value>
+    <value>Bildefilbane</value>
   </data>
   <data name="SkinEditor_Property_Fit" xml:space="preserve">
-    <value>Image Fit</value>
+    <value>Bilde Tilpassning</value>
   </data>
   <data name="SkinEditor_Property_Stops" xml:space="preserve">
-    <value>Gradient Stops</value>
+    <value>Gradient stopper</value>
   </data>
   <data name="SkinEditor_Property_AngleDegrees" xml:space="preserve">
-    <value>Angle</value>
+    <value>Vinkel</value>
   </data>
   <data name="SkinEditor_Property_X" xml:space="preserve">
     <value>Origin X</value>
@@ -3418,55 +3418,55 @@ Bruk filtrene til å begrense søket.</value>
     <value>Radial Radius</value>
   </data>
   <data name="SkinEditor_Property_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>Effekt</value>
   </data>
   <data name="SkinEditor_Property_PrimaryColor" xml:space="preserve">
-    <value>Primary Color</value>
+    <value>Primærfarge</value>
   </data>
   <data name="SkinEditor_Property_SecondaryColor" xml:space="preserve">
-    <value>Secondary Color</value>
+    <value>Sekundærfarge</value>
   </data>
   <data name="SkinEditor_Property_Primary" xml:space="preserve">
-    <value>Primary Image</value>
+    <value>Primært bilde</value>
   </data>
   <data name="SkinEditor_Property_Secondary" xml:space="preserve">
-    <value>Secondary Image</value>
+    <value>Sekundært bilde</value>
   </data>
   <data name="SkinEditor_Property_Tertiary" xml:space="preserve">
-    <value>Tertiary Image</value>
+    <value>Tertiært bilde</value>
   </data>
   <data name="SkinEditor_Property_Image" xml:space="preserve">
-    <value>Image</value>
+    <value>Bilde</value>
   </data>
   <data name="SkinEditor_Property_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Farge</value>
   </data>
   <data name="SkinEditor_Property_HoverColor" xml:space="preserve">
-    <value>Hover Color</value>
+    <value>Hover-farge</value>
   </data>
   <data name="SkinEditor_Property_AccentColor" xml:space="preserve">
-    <value>Accent Color</value>
+    <value>Aksentfarge</value>
   </data>
   <data name="SkinEditor_Property_TextColor" xml:space="preserve">
-    <value>Text Color</value>
+    <value>Tekstfarge</value>
   </data>
   <data name="SkinEditor_Property_BottomOffset" xml:space="preserve">
-    <value>Bottom Offset</value>
+    <value>Bunn forskyvning</value>
   </data>
   <data name="SkinEditor_Property_Scale" xml:space="preserve">
-    <value>Scale</value>
+    <value>Skala</value>
   </data>
   <data name="SkinEditor_Property_FallbackImage" xml:space="preserve">
-    <value>Fallback Image</value>
+    <value>Falltilbake bilde</value>
   </data>
   <data name="SkinEditor_Group_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Nedlast</value>
   </data>
   <data name="SkinEditor_Component_SearchArea" xml:space="preserve">
-    <value>Search Area</value>
+    <value>Søkeområde</value>
   </data>
   <data name="SkinEditor_Property_BackgroundColor" xml:space="preserve">
-    <value>Background Color</value>
+    <value>Bakgrunnsfarge</value>
   </data>
   <data name="SkinEditor_Property_ForegroundColor" xml:space="preserve">
     <value>Foreground Color</value>
