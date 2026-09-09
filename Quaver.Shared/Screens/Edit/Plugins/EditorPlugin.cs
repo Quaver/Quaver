@@ -142,6 +142,6 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public override LuaPluginState GetStateObject() => new EditorPluginState(Options);
+        public override LuaPluginState GetStateObject() => new EditorPluginState(Options, () => IsActive = false);
     }
 }
