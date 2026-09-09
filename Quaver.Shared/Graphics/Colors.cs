@@ -75,12 +75,18 @@ namespace Quaver.Shared.Graphics
                 return ColorHelper.HexToColor($"#ef2828");
             if (userGroups.HasFlag(UserGroups.Moderator))
                 return ColorHelper.HexToColor($"#4cb0f7");
+            if (userGroups.HasFlag(UserGroups.TrialRankingSupervisor))
+                return ColorHelper.HexToColor($"#9d66ff");
             if (userGroups.HasFlag(UserGroups.RankingSupervisor))
                 return ColorHelper.HexToColor($"#49e6ef");
+            if (userGroups.HasFlag(UserGroups.HeadRankingSupervisor))
+                return ColorHelper.HexToColor($"#ff7168");
             if (userGroups.HasFlag(UserGroups.Contributor))
                 return ColorHelper.HexToColor($"#75e475");
             if (userGroups.HasFlag(UserGroups.Donator))
                 return ColorHelper.HexToColor($"#f47fff");
+            if (userGroups.HasFlag(UserGroups.CommunityManager))
+                return ColorHelper.HexToColor($"#e9ab55");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 
