@@ -3277,10 +3277,10 @@ for other players to download?</value>
     <value>Workshop skins are read-only.</value>
   </data>
   <data name="SkinEditor_UnsavedTitle" xml:space="preserve">
-    <value>Unsaved skin changes</value>
+    <value>未保存のスキン変更</value>
   </data>
   <data name="SkinEditor_UnsavedMessage" xml:space="preserve">
-    <value>Save your staged skin changes before closing?</value>
+    <value>閉じる前に、変更中のスキンを保存しますか？</value>
   </data>
   <data name="SkinEditor_ConflictTitle" xml:space="preserve">
     <value>skin.yml changed externally</value>

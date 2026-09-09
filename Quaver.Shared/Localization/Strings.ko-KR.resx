@@ -3248,19 +3248,19 @@ for other players to download?</value>
     <value>Screen Components</value>
   </data>
   <data name="SkinEditor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>저장</value>
   </data>
   <data name="SkinEditor_Close" xml:space="preserve">
-    <value>Close</value>
+    <value>닫기</value>
   </data>
   <data name="SkinEditor_Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>취소</value>
   </data>
   <data name="SkinEditor_Discard" xml:space="preserve">
     <value>Discard</value>
   </data>
   <data name="SkinEditor_Reload" xml:space="preserve">
-    <value>Reload</value>
+    <value>새로고침</value>
   </data>
   <data name="SkinEditor_Overwrite" xml:space="preserve">
     <value>Overwrite</value>
@@ -3314,16 +3314,16 @@ for other players to download?</value>
     <value>This component has no editable properties.</value>
   </data>
   <data name="SkinEditor_On" xml:space="preserve">
-    <value>On</value>
+    <value>켜기</value>
   </data>
   <data name="SkinEditor_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>끄기</value>
   </data>
   <data name="SkinEditor_Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
   <data name="SkinEditor_ResetDefault" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>기본값으로 초기화</value>
   </data>
   <data name="SkinEditor_AddStop" xml:space="preserve">
     <value>Add Gradient Stop</value>
@@ -3425,7 +3425,7 @@ for other players to download?</value>
     <value>Radial Radius</value>
   </data>
   <data name="SkinEditor_Property_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>효과</value>
   </data>
   <data name="SkinEditor_Property_PrimaryColor" xml:space="preserve">
     <value>Primary Color</value>
