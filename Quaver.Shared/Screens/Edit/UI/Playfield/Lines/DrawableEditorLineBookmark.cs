@@ -75,6 +75,16 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
         public override string GetValue() => "";
 
         public override float StartTime => Bookmark.StartTime;
+
+        /// <summary>
+        ///     Sets the visibility of the bookmark line, note, and interaction surface together.
+        /// </summary>
+        public void SetVisibility(bool visible)
+        {
+            Visible = visible;
+            ImageButton.Visible = visible;
+            Tooltip.Visible = visible && !string.IsNullOrEmpty(Bookmark.Note);
+        }
         
         public override void SetSize()
         {

@@ -6,6 +6,7 @@ using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Edit;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Offset;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Bookmarks.RemoveBatch;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Window;
 
@@ -32,6 +33,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             Screen.ActionManager.BookmarkBatchRemoved += OnBookmarkBatchRemoved;
             Screen.ActionManager.BookmarkEdited += OnBookmarkEdited;
             Screen.ActionManager.BookmarkBatchOffsetChanged += OnBookmarkBatchOffsetChanged;
+            Screen.ShowBookmarks.ValueChanged += OnShowBookmarksChanged;
         }
         
         public override void Destroy()
@@ -42,6 +44,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
             Screen.ActionManager.BookmarkBatchRemoved -= OnBookmarkBatchRemoved;
             Screen.ActionManager.BookmarkEdited -= OnBookmarkEdited;
             Screen.ActionManager.BookmarkBatchOffsetChanged -= OnBookmarkBatchOffsetChanged;
+            Screen.ShowBookmarks.ValueChanged -= OnShowBookmarksChanged;
             base.Destroy();
         }
 
@@ -56,12 +59,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
 
         private void AddBookmark(BookmarkInfo bookmark)
         {
-            Bookmarks.Add(bookmark, new EditorFooterBookmark(Screen, bookmark)
+            var display = new EditorFooterBookmark(Screen, bookmark)
             {
                 Parent = this,
                 X = (float) (bookmark.StartTime / Screen.Track.Length) * Width,
-                Size = new ScalableVector2(4, Height)
-            });
+                Size = new ScalableVector2(4, Height),
+                Visible = Screen.ShowBookmarks.Value
+            };
+
+            Bookmarks.Add(bookmark, display);
         }
 
         private void RemoveBookmark(BookmarkInfo bookmark)
@@ -101,6 +107,15 @@ namespace Quaver.Shared.Screens.Edit.UI.Footer.Bookmarks
                 RemoveBookmark(bookmark);
                 AddBookmark(bookmark);
             }
+        }
+
+        private void OnShowBookmarksChanged(object sender, BindableValueChangedEventArgs<bool> e)
+        {
+            foreach (var bookmark in Bookmarks.Values)
+                bookmark.Visible = e.Value;
+
+            if (!e.Value)
+                Screen.DeactivateTooltip();
         }
     }
 }
