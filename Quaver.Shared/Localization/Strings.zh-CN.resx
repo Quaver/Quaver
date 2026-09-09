@@ -2097,6 +2097,9 @@
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>显示游玩预览</value>
   </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
+  </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>参考难度</value>
   </data>
