@@ -209,6 +209,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
 
         /// <summary>
         /// </summary>
+        public void StartPlayback() => ActionManager.StartPlayback(true);
+
+        /// <summary>
+        /// </summary>
+        public void StopPlayback() => ActionManager.StopPlayback(true);
+
+        /// <summary>
+        /// </summary>
         /// <param name="input"></param>
         public void GoToObjects(string input) => ActionManager.GoToObjects(input, true);
 
