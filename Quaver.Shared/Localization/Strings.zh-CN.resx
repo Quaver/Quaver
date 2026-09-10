@@ -2098,7 +2098,7 @@
     <value>显示游玩预览</value>
   </data>
   <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
-    <value>Show Bookmarks</value>
+    <value>显示书签</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>参考难度</value>
@@ -2347,7 +2347,8 @@
     <value>未保存的改动</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>这张谱面还没有保存。&#xA;从 .qua 刷新将丢弃所有未保存的改动。要继续吗？</value>
+    <value>这张谱面还没有保存。
+从 .qua 刷新将丢弃所有未保存的改动。要继续吗？</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>你有未保存的改动。是否在创建难度前保存该谱面？</value>
