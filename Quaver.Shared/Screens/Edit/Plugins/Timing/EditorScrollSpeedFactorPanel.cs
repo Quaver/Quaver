@@ -398,6 +398,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
+            var MIN_TIME = (float)-1e+5;
+
             if (SelectedScrollSpeedFactors.Count == 1)
             {
                 var point = SelectedScrollSpeedFactors.First();
@@ -414,7 +416,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var ssf = SelectedScrollSpeedFactors.First();
 
                 Screen.ActionManager.ChangeScrollSpeedFactorOffsetBatch(new List<ScrollSpeedFactorInfo> { ssf },
-                    Math.Max(time - ssf.StartTime, (float)-1e+5));
+                    Math.Max(time - ssf.StartTime, MIN_TIME));
             }
         }
 
@@ -439,6 +441,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var multiplier = 0f;
             var format = "";
 
+            var MAX_SSF = 1000;
+
             if (SelectedScrollSpeedFactors.Count == 1)
             {
                 var point = SelectedScrollSpeedFactors.First();
@@ -459,7 +463,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (ImGui.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollSpeedFactorMultiplierBatch(
-                    new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), Math.Clamp(multiplier, -1000, 1000));
+                    new List<ScrollSpeedFactorInfo>(SelectedScrollSpeedFactors), Math.Clamp(multiplier, -MAX_SSF, MAX_SSF));
         }
 
         /// <summary>
