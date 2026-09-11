@@ -405,7 +405,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
-            var MIN_TIME = (float)-1e+5
+            var MIN_TIME = (float)-1e+5;
 
             if (SelectedScrollVelocities.Count == 1)
             {
@@ -448,7 +448,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var multiplier = 0f;
             var format = "";
 
-            var MAX_MULTIPLIER = (float)1e10
+            var MAX_MULTIPLIER = (float)1e10;
 
             if (SelectedScrollVelocities.Count == 1)
             {
