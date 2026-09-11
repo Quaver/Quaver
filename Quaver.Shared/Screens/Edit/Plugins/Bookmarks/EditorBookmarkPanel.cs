@@ -91,7 +91,8 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(600, float.MaxValue));
         ImGui.PushFont(Options.Fonts.First().Context);
         ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
-        EditorImGui.Begin(this, Name);
+        var open = IsActive;
+        ImGui.Begin(Name, ref open);
 
         DrawHeaderText();
         ImGui.Dummy(new Vector2(0, 10));
@@ -124,6 +125,7 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         IsWindowHovered = IsWindowHovered || isHovered;
         ImGui.End();
         ((IColoredImGuiTitle)this).ImGuiPopTitleColors();
+        IsActive = open;
     }
 
     private static void DrawHeaderText()

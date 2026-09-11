@@ -84,8 +84,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         [MoonSharpVisible(false)]
         private ImGuiOptions Options { get; }
 
+        private Action ClosePluginAction { get; }
+
         [MoonSharpVisible(false)]
-        public EditorPluginState(ImGuiOptions options) => Options = options;
+        public EditorPluginState(ImGuiOptions options) : this(options, null)
+        {
+        }
+
+        [MoonSharpVisible(false)]
+        internal EditorPluginState(ImGuiOptions options, Action closePluginAction)
+        {
+            Options = options;
+            ClosePluginAction = closePluginAction;
+        }
+
+        /// <summary>
+        ///     Closes and disables this plugin.
+        /// </summary>
+        public void ClosePlugin() => ClosePluginAction?.Invoke();
 
         /// <summary>
         ///     Pushes all styles to the current imgui context
@@ -97,6 +113,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins
         /// </summary>
         /// <returns>The deep copy of this instance.</returns>
         public override LuaPluginState Clone(Converter<DynValue, DynValue> nonconvertible) =>
-            new EditorPluginState(Options) { IsWindowHovered = IsWindowHovered, Values = CloneValues(nonconvertible) };
+            new EditorPluginState(Options, ClosePluginAction)
+            {
+                IsWindowHovered = IsWindowHovered,
+                Values = CloneValues(nonconvertible)
+            };
     }
 }
