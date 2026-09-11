@@ -49,6 +49,17 @@ namespace Quaver.Shared.Screens.Result.UI
         private static readonly Color MineHitColor = new(179, 179, 179);
 
         /// <summary>
+        ///     The default alpha of a judgement window area line, before any highlighting is applied.
+        /// </summary>
+        private const float JudgementAreaLineAlpha = 0.5f;
+
+        /// <summary>
+        ///     The alpha applied to dots/miss-lines that don't match the current highlight. Unlike the
+        ///     judgement window lines, dots already sit at full alpha at rest so they have no headroom to brighten.
+        /// </summary>
+        private const float DimmedDotAlpha = 0.25f;
+
+        /// <summary>
         ///     The largest of the dot sizes. Used for things like minimum graph width and dot positioning.
         /// </summary>
         private static float MaxDotSize => Math.Max(DotSize, MissDotSize);
@@ -88,6 +99,36 @@ namespace Quaver.Shared.Screens.Result.UI
         /// </summary>
         public Sprite MiddleLine { get; private set; }
 
+        /// <summary>
+        ///     Every hit dot that was drawn, along with the judgement/mine metadata needed to highlight it.
+        ///     Misses are represented on this graph by a dot only. the separate combo-break miss line
+        ///     (<see cref="CreateMissLines"/>) is a distinct visual and is intentionally left out of the
+        ///     highlight system so a single miss doesn't get highlighted twice over.
+        /// </summary>
+        private List<(Sprite Sprite, Judgement Judgement, bool IsMine, float BaseAlpha)> Dots { get; } =
+            new List<(Sprite, Judgement, bool, float)>();
+
+        /// <summary>
+        ///     Line shown at the mean hit difference when hovering "Mean" (or the combined zone).
+        /// </summary>
+        private Sprite MeanLine { get; set; }
+
+        /// <summary>
+        ///     Line shown at -StandardDeviation when hovering "Std. Dev." (or the combined zone).
+        /// </summary>
+        private Sprite StdDevLineLow { get; set; }
+
+        /// <summary>
+        ///     Line shown at +StandardDeviation when hovering "Std. Dev." (or the combined zone).
+        /// </summary>
+        private Sprite StdDevLineHigh { get; set; }
+
+        /// <summary>
+        ///     The mean/standard deviation of the hit differences, used to position <see cref="MeanLine"/>
+        ///     and the std. dev. lines.
+        /// </summary>
+        private HitStatistics Statistics { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -121,6 +162,9 @@ namespace Quaver.Shared.Screens.Result.UI
                 CreateDotsWithHitDifference();
                 CreateDotsWithoutHitDifference();
             }
+
+            Statistics = Processor.Stats != null ? Processor.GetHitStatistics() : new HitStatistics();
+            CreateMeanAndStdDevLines();
         }
 
         /// <summary>
@@ -206,7 +250,7 @@ namespace Quaver.Shared.Screens.Result.UI
                     var line = new Sprite()
                     {
                         Parent = this,
-                        Alpha = 0.5f,
+                        Alpha = JudgementAreaLineAlpha,
                         Tint = ResultsJudgementGraphJudgementBar.GetColor(judgement),
                         Alignment = Alignment.MidCenter,
                         Y = k * HitDifferenceToY(difference) - k * height,
@@ -215,6 +259,103 @@ namespace Quaver.Shared.Screens.Result.UI
 
                     LineData.Add(new HitDifferenceGraphLineData(judgement, line, (difference - windowSize) * k));
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Creates the (initially hidden) overlay lines shown when hovering Mean/Std. Dev.
+        /// </summary>
+        private void CreateMeanAndStdDevLines()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            MeanLine = new Sprite
+            {
+                Parent = this,
+                Alpha = 0f,
+                Tint = Color.White,
+                Alignment = Alignment.MidCenter,
+                Y = HitDifferenceToY((float) Statistics.Mean),
+                Size = new ScalableVector2(Width, 2),
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            StdDevLineLow = new Sprite
+            {
+                Parent = this,
+                Alpha = 0f,
+                Tint = Color.White,
+                Alignment = Alignment.MidCenter,
+                Y = -HitDifferenceToY((float) Statistics.StandardDeviation),
+                Size = new ScalableVector2(Width, 2),
+            };
+
+            // ReSharper disable once ObjectCreationAsStatement
+            StdDevLineHigh = new Sprite
+            {
+                Parent = this,
+                Alpha = 0f,
+                Tint = Color.White,
+                Alignment = Alignment.MidCenter,
+                Y = HitDifferenceToY((float) Statistics.StandardDeviation),
+                Size = new ScalableVector2(Width, 2),
+            };
+        }
+
+        /// <summary>
+        ///     Applies a highlight state, dimming/hiding the lines and dots that don't match it.
+        /// </summary>
+        /// <param name="state"></param>
+        public void ApplyHighlight(DevianceHighlight state)
+        {
+            switch (state.Type)
+            {
+                case DevianceHighlightType.Judgement:
+                    foreach (var line in LineData)
+                        line.Line.Alpha = line.Judgement == state.Judgement ? 1f : JudgementAreaLineAlpha;
+
+                    foreach (var dot in Dots)
+                        dot.Sprite.Alpha = dot.Judgement == state.Judgement && !dot.IsMine ? 1f : DimmedDotAlpha;
+
+                    MeanLine.Alpha = 0f;
+                    StdDevLineLow.Alpha = 0f;
+                    StdDevLineHigh.Alpha = 0f;
+                    break;
+                case DevianceHighlightType.MineMiss:
+                    foreach (var line in LineData)
+                        line.Line.Alpha = JudgementAreaLineAlpha;
+
+                    foreach (var dot in Dots)
+                        dot.Sprite.Alpha = dot.IsMine ? 1f : DimmedDotAlpha;
+
+                    MeanLine.Alpha = 0f;
+                    StdDevLineLow.Alpha = 0f;
+                    StdDevLineHigh.Alpha = 0f;
+                    break;
+                case DevianceHighlightType.Mean:
+                case DevianceHighlightType.StdDev:
+                case DevianceHighlightType.MeanAndStdDev:
+                    foreach (var line in LineData)
+                        line.Line.Alpha = 0f;
+
+                    foreach (var dot in Dots)
+                        dot.Sprite.Alpha = dot.BaseAlpha;
+
+                    MeanLine.Alpha = state.Type is DevianceHighlightType.Mean or DevianceHighlightType.MeanAndStdDev ? 1f : 0f;
+                    var showStdDev = state.Type is DevianceHighlightType.StdDev or DevianceHighlightType.MeanAndStdDev;
+                    StdDevLineLow.Alpha = showStdDev ? 1f : 0f;
+                    StdDevLineHigh.Alpha = showStdDev ? 1f : 0f;
+                    break;
+                default:
+                    foreach (var line in LineData)
+                        line.Line.Alpha = JudgementAreaLineAlpha;
+
+                    foreach (var dot in Dots)
+                        dot.Sprite.Alpha = dot.BaseAlpha;
+
+                    MeanLine.Alpha = 0f;
+                    StdDevLineLow.Alpha = 0f;
+                    StdDevLineHigh.Alpha = 0f;
+                    break;
             }
         }
 
@@ -284,20 +425,20 @@ namespace Quaver.Shared.Screens.Result.UI
         private void CreateMissLines()
         {
             foreach (var miss in Processor.Stats.FindAll(s => s.Judgement == Judgement.Miss))
+            {
+                var isMine = miss.HitObject.Type == HitObjectType.Mine;
+
                 _ = new Sprite
                 {
                     Parent = this,
                     Alpha = 0.35f,
-                    Tint = miss.HitObject.Type switch
-                    {
-                        HitObjectType.Mine => MineHitColor,
-                        _ => ResultsJudgementGraphJudgementBar.GetColor(miss.Judgement),
-                    },
+                    Tint = isMine ? MineHitColor : ResultsJudgementGraphJudgementBar.GetColor(miss.Judgement),
                     Alignment = Alignment.MidLeft,
                     X = TimeToX(miss.SongPosition),
                     Y = 0,
                     Size = new ScalableVector2(MissLineWidth, Height)
                 };
+            }
         }
 
         /// <summary>
@@ -316,8 +457,9 @@ namespace Quaver.Shared.Screens.Result.UI
             // Create a sprite for every dot.
             foreach (var breakdown in StatsWithHitDifference)
             {
-                // ReSharper disable once ObjectCreationAsStatement
-                new Sprite
+                var isMine = breakdown.HitObject.Type == HitObjectType.Mine;
+
+                var dot = new Sprite
                 {
                     Parent = this,
                     Tint = ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
@@ -327,6 +469,8 @@ namespace Quaver.Shared.Screens.Result.UI
                     Y = (int) HitDifferenceToY(breakdown.HitDifference),
                     Alignment = Alignment.MidLeft,
                 };
+
+                Dots.Add((dot, breakdown.Judgement, isMine, dot.Alpha));
             }
         }
 
@@ -341,21 +485,20 @@ namespace Quaver.Shared.Screens.Result.UI
 
             foreach (var breakdown in StatsWithoutHitDifference)
             {
-                // ReSharper disable once ObjectCreationAsStatement
-                new Sprite
+                var isMine = breakdown.HitObject.Type == HitObjectType.Mine && breakdown.Type == HitStatType.Miss;
+
+                var dot = new Sprite
                 {
                     Parent = this,
-                    Tint = breakdown.HitObject.Type switch
-                    {
-                        HitObjectType.Mine when breakdown.Type == HitStatType.Miss => MineHitColor,
-                        _ => ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
-                    },
+                    Tint = ResultsJudgementGraphJudgementBar.GetColor(breakdown.Judgement),
                     Size = new ScalableVector2(MissDotSize, MissDotSize),
                     Image = FontAwesome.Get(FontAwesomeIcon.fa_circle),
                     X = (int) TimeToX(breakdown.SongPosition) - (int) (MissDotSize / 2),
                     Y = 0,
                     Alignment = Alignment.MidLeft,
                 };
+
+                Dots.Add((dot, breakdown.Judgement, isMine, dot.Alpha));
             }
         }
     }

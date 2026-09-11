@@ -105,6 +105,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         private HitStatistics Statistics { get; }
 
         /// <summary>
+        ///     What's currently being hovered on the judgement list / Mean / Std. Dev., so the deviance
+        ///     graph can highlight the matching dots/lines.
+        /// </summary>
+        private Bindable<DevianceHighlight> HighlightState { get; } = new Bindable<DevianceHighlight>(DevianceHighlight.None);
+
+        /// <summary>
         /// </summary>
         private ScalableVector2 GraphSize => new ScalableVector2(GraphContainer.Width * 0.95f, GraphContainer.Height * 0.95f);
 
@@ -148,6 +154,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         {
             if (ConfigManager.ResultGraph != null)
                 ConfigManager.ResultGraph.ValueChanged -= OnResultGraphDropdownChanged;
+
+            HighlightState.Dispose();
 
             base.Destroy();
         }
@@ -199,7 +207,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private void CreateJudgementGraph() => JudgementGraph = new ResultsJudgementGraph(Processor,
+        private void CreateJudgementGraph() => JudgementGraph = new ResultsJudgementGraph(Processor, HighlightState,
             new ScalableVector2(LeftContainer.Width - 50, LeftContainer.Height))
         {
             Parent = LeftContainer,
@@ -207,12 +215,29 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         };
 
         /// <summary>
+        ///     Creates an invisible overlay over <paramref name="target"/> that sets
+        ///     <see cref="HighlightState"/> to <paramref name="highlight"/> while hovered.
+        /// </summary>
+        private void CreateStatHoverArea(Drawable target, DevianceHighlight highlight)
+        {
+            var hoverArea = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = target,
+                Size = target.Size,
+                Alpha = 0f
+            };
+
+            hoverArea.Hovered += (o, e) => HighlightState.Value = highlight;
+            hoverArea.LeftHover += (o, e) => HighlightState.Value = DevianceHighlight.None;
+        }
+
+        /// <summary>
         /// </summary>
         private void CreateMineHits()
         {
-            var mineHits = Processor.Value.CountMineHit.ToString();
+            var mineMissCount = Processor.Value.CountMineHit;
 
-            MineMiss = new TextKeyValue(ResultsLocalization.Get("Mine Miss:"), mineHits, 20, Color.White)
+            MineMiss = new TextKeyValue(ResultsLocalization.Get("Mine Miss:"), mineMissCount.ToString(), 20, Color.White)
             {
                 Parent = RightContainer,
                 X = -GraphDropdown.X,
@@ -221,6 +246,11 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Value = {Tint =new Color(249,100,93)},
             };
             MineMiss.Y -= MineMiss.Height / 2f;
+
+            // Skip the hover highlight entirely when there are no mine misses so hovering it doesn't
+            // dim the rest of the graph for a category with nothing to show.
+            if (mineMissCount > 0)
+                CreateStatHoverArea(MineMiss, DevianceHighlight.MineMiss);
         }
 
         /// <summary>
@@ -236,6 +266,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Value = {Tint = ColorHelper.HexToColor("#45D6F5")}
             };
 
+            CreateStatHoverArea(Mean, DevianceHighlight.Mean);
         }
 
         /// <summary>
@@ -251,6 +282,28 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 Key = {Tint = Mean.Key.Tint},
                 Value = {Tint = Mean.Value.Tint}
             };
+
+            CreateStatHoverArea(StandardDeviation, DevianceHighlight.StdDev);
+            CreateMeanAndStdDevGapHoverArea();
+        }
+
+        /// <summary>
+        ///     Creates the hoverable gap between <see cref="Mean"/> and <see cref="StandardDeviation"/> that
+        ///     highlights both at once.
+        /// </summary>
+        private void CreateMeanAndStdDevGapHoverArea()
+        {
+            var hoverArea = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = RightContainer,
+                Size = new ScalableVector2(STATISTICS_SPACING_X, Mean.Height),
+                X = Mean.X + Mean.Width,
+                Y = Mean.Y,
+                Alpha = 0f
+            };
+
+            hoverArea.Hovered += (o, e) => HighlightState.Value = DevianceHighlight.MeanAndStdDev;
+            hoverArea.LeftHover += (o, e) => HighlightState.Value = DevianceHighlight.None;
         }
 
         /// <summary>
@@ -297,7 +350,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
         /// <summary>
         ///     Creates/Enables the deviance graph
         /// </summary>
-        private void CreateDevianceGraph() => Graphs[ResultGraphs.Deviance] = new CachedHitDifferenceGraph(Map, Processor, GraphSize)
+        private void CreateDevianceGraph() => Graphs[ResultGraphs.Deviance] = new CachedHitDifferenceGraph(Map, Processor, HighlightState, GraphSize)
         {
             Parent = GraphContainer,
             Alignment = Alignment.MidCenter,
