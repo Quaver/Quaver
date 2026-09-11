@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Client.Enums;
 using Quaver.Shared.Assets;
@@ -112,7 +111,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             var color = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
             Username.Tint = UsernameButton.IsHovered ? Darken(color) : color;
-            Icon.Tint = Username.Tint;
+            Icon.Tint = UsernameButton.IsHovered ? Darken(Color.White) : Color.White;
 
             Clan.Tint = UsernameButton.IsHovered ? Darken(Clan.BaseColor) : Clan.BaseColor;
             Time.Tint = TimeButton.IsHovered ? Darken(TimestampColor) : TimestampColor;
@@ -140,8 +139,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
 
             if (icon != null)
             {
-                Icon.Image = icon;
-                Icon.Tint = Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
+                Icon.Region = icon;
+                Icon.Tint = Color.White;
                 Icon.X = labelStartX;
 
                 labelStartX = Icon.X + Icon.Width + MetadataSpacing;
@@ -246,7 +245,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(16, 16)
+                Size = new ScalableVector2(UserGroupAssets.SmallBadgeWidth, UserGroupAssets.BadgeHeight)
             };
         }
 
@@ -311,33 +310,43 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         /// <param name="groups"></param>
         /// <returns></returns>
-        public static Texture2D GetIcon(UserGroups groups)
+        public static TextureRegion? GetIcon(UserGroups groups)
         {
             if (groups.HasFlag(UserGroups.Swan))
-                return FontAwesome.Get(FontAwesomeIcon.fa_code);
+                return UserGroupAssets.Get(GlobalUserGroup.Swan);
 
             if (groups.HasFlag(UserGroups.Developer))
-                return FontAwesome.Get(FontAwesomeIcon.fa_code);
+                return UserGroupAssets.Get(GlobalUserGroup.Developer);
 
-            // Bot
+            if (groups.HasFlag(UserGroups.GraphicDesigner))
+                return UserGroupAssets.Get(GlobalUserGroup.GraphicDesigner);
+
             if (groups.HasFlag(UserGroups.Bot))
-                return FontAwesome.Get(FontAwesomeIcon.fa_open_wrench_tool_silhouette);
+                return UserGroupAssets.Get(GlobalUserGroup.Bot);
 
-            // Admin
             if (groups.HasFlag(UserGroups.Admin))
-                return FontAwesome.Get(FontAwesomeIcon.fa_legal_hammer);
+                return UserGroupAssets.Get(GlobalUserGroup.Administrator);
 
             if (groups.HasFlag(UserGroups.Moderator))
-                return FontAwesome.Get(FontAwesomeIcon.fa_ban_circle_symbol);
+                return UserGroupAssets.Get(GlobalUserGroup.Moderator);
+
+            if (groups.HasFlag(UserGroups.TrialRankingSupervisor))
+                return UserGroupAssets.Get(GlobalUserGroup.TrialRankingSupervisor);
 
             if (groups.HasFlag(UserGroups.RankingSupervisor))
-                return FontAwesome.Get(FontAwesomeIcon.fa_music_note_black_symbol);
+                return UserGroupAssets.Get(GlobalUserGroup.RankingSupervisor);
+
+            if (groups.HasFlag(UserGroups.HeadRankingSupervisor))
+                return UserGroupAssets.Get(GlobalUserGroup.HeadRankingSupervisor);
 
             if (groups.HasFlag(UserGroups.Contributor))
-                return FontAwesome.Get(FontAwesomeIcon.fa_light_bulb);
+                return UserGroupAssets.Get(GlobalUserGroup.Contributor);
 
             if (groups.HasFlag(UserGroups.Donator))
-                return FontAwesome.Get(FontAwesomeIcon.fa_heart_shape_silhouette);
+                return UserGroupAssets.Get(GlobalUserGroup.Donator);
+
+            if (groups.HasFlag(UserGroups.CommunityManager))
+                return UserGroupAssets.Get(GlobalUserGroup.CommunityManager);
 
             return null;
         }
