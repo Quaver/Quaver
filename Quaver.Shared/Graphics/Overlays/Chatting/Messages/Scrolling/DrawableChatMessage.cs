@@ -318,6 +318,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             if (groups.HasFlag(UserGroups.Developer))
                 return UserGroupAssets.Get(GlobalUserGroup.Developer);
 
+            if (groups.HasFlag(UserGroups.GraphicDesigner))
+                return UserGroupAssets.Get(GlobalUserGroup.GraphicDesigner);
+
             if (groups.HasFlag(UserGroups.Bot))
                 return UserGroupAssets.Get(GlobalUserGroup.Bot);
 

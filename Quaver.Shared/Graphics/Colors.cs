@@ -69,6 +69,8 @@ namespace Quaver.Shared.Graphics
                 return Swan;
             if (userGroups.HasFlag(UserGroups.Developer))
                 return ColorHelper.HexToColor("#bb79e5");
+            if (userGroups.HasFlag(UserGroups.GraphicDesigner))
+                return ColorHelper.HexToColor("#09d18b");
             if (userGroups.HasFlag(UserGroups.Bot))
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
