@@ -2098,6 +2098,9 @@ Utilisez les filtres pour affiner votre recherche.</value>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>Afficher l'Aperçu du Gameplay</value>
   </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
+  </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Difficulté de Référence</value>
   </data>

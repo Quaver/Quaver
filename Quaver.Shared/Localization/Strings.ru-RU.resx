@@ -2098,6 +2098,9 @@
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>Отображать Геймплей Игры</value>
   </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
+  </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Сравнить Сложность</value>
   </data>
