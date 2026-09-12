@@ -301,13 +301,6 @@ namespace Quaver.Shared.Screens.Multi
                 return GlobalInputHandleResult.Consumed;
             }
 
-            if ((action.BaseWithLayer()) == GlobalKeybindActions.IncreaseOffset &&
-                MapManager.Selected.Value != null)
-            {
-                GlobalInputHandler.HandleOffsetAction(action);
-                return GlobalInputHandleResult.Consumed;
-            }
-
             return GlobalInputHandleResult.Pass;
         }
 
