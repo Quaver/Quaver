@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Bindables;
@@ -432,7 +433,8 @@ namespace Quaver.Shared.Screens.V2.Downloading.UI
             }
 
             var target = State.MapsetsExpanded.Value ? 1f : 0f;
-            if (Math.Abs(target - ExpansionProgress) > 0.001f)
+            if (V2PerformanceMode.TransitionsEnabled &&
+                Math.Abs(target - ExpansionProgress) > 0.001f)
             {
                 var change = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
                                       Math.Max(1, Config.SearchArea.ExpansionDurationMilliseconds));

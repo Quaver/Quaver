@@ -9,6 +9,7 @@ using Quaver.Shared.Screens.V2.Multi;
 using Quaver.Shared.Screens.V2.Multiplayer;
 using Quaver.Shared.Screens.V2.MultiplayerLobby;
 using Quaver.Shared.Screens.V2.Music;
+using Quaver.Shared.Screens.V2.Options;
 using Quaver.Shared.Screens.V2.Results;
 using Quaver.Shared.Screens.V2.Selection;
 using Quaver.Shared.Screens.V2.Theater;
@@ -59,6 +60,26 @@ namespace Quaver.Shared.Skinning.V2
 
         [Required]
         public SkinV2NavigationConfig Navigation { get; set; } = new SkinV2NavigationConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2DropdownConfig Dropdown { get; set; } = new SkinV2DropdownConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2ToggleConfig Toggle { get; set; } = new SkinV2ToggleConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2ButtonConfig Button { get; set; } = new SkinV2ButtonConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2SliderConfig Slider { get; set; } = new SkinV2SliderConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2SearchConfig Search { get; set; } = new SkinV2SearchConfig();
     }
 
     public sealed class SkinV2BrandConfig
@@ -147,6 +168,8 @@ namespace Quaver.Shared.Skinning.V2
 
         [Required]
         public SkinV2MusicPlayerConfig Music { get; set; } = new SkinV2MusicPlayerConfig();
+
+        public SkinV2OptionsConfig Options { get; set; } = new SkinV2OptionsConfig();
 
         [Required]
         public SkinV2TheaterConfig Theater { get; set; } = new SkinV2TheaterConfig();

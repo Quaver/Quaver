@@ -18,7 +18,6 @@ using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
 using Quaver.Shared.Screens.Multiplayer;
 using Quaver.Shared.Screens.Music;
-using Quaver.Shared.Screens.Options.Items.Custom;
 using Quaver.Shared.Screens.Selection;
 using Wobble.Logging;
 using Wobble.Screens;
@@ -121,7 +120,7 @@ namespace Quaver.Shared.Screens.Importing
             Logger.Important($"Map import has completed", LogType.Runtime);
 
             if (FullSync || refreshMapsetStatuses)
-                OptionsItemUpdateRankedStatuses.Run(false);
+                MapMetadataUpdater.UpdateRankedStatusesInBackground();
 
             ImportProgressEventArgs.Report(progress, "Import Complete", "Returning to song select", 1, 1, false);
 

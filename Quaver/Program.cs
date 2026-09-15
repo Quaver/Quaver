@@ -101,6 +101,7 @@ namespace Quaver
             Environment.CurrentDirectory = WorkingDirectory;
 
             ConfigManager.Initialize();
+            QuaverYamlConfigManager.Initialize();
             StructuredConfigManager.Initialize();
             StartIpcServer();
 

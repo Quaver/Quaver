@@ -6,6 +6,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.API.News;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.V2.Main;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
@@ -89,9 +90,16 @@ namespace Quaver.Shared.Screens.V2.Main.UI
         {
             base.Update(gameTime);
 
+            var targetAlpha = Card.IsHovered ? Config.HoverOverlayOpacity : 0;
+
+            if (!V2PerformanceMode.TransitionsEnabled)
+            {
+                BannerHoverOverlay.Alpha = targetAlpha;
+                return;
+            }
+
             var progress = (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds /
                                             Config.HoverTransitionMilliseconds, 1);
-            var targetAlpha = Card.IsHovered ? Config.HoverOverlayOpacity : 0;
             BannerHoverOverlay.Alpha = MathHelper.Lerp(BannerHoverOverlay.Alpha, targetAlpha, progress);
         }
 

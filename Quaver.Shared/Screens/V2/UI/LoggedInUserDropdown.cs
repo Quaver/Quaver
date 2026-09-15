@@ -35,6 +35,18 @@ namespace Quaver.Shared.Screens.V2.UI
     /// </summary>
     internal sealed class LoggedInUserDropdown : LoggedInUserDropdownBase
     {
+        private const int OpenAnimationDuration = 450;
+
+        private const int CloseAnimationDuration = 550;
+
+        private const int DarknessAnimationDuration = 200;
+
+        /// <summary>
+        ///     How long the panel takes to grow or shrink when a sign-in or sign-out changes which of
+        ///     its two layouts it is showing, while it is already open.
+        /// </summary>
+        private const int ResizeAnimationDuration = 250;
+
         public static ScalableVector2 ContainerSize
         {
             get
@@ -427,21 +439,24 @@ namespace Quaver.Shared.Screens.V2.UI
             Visible = true;
             RefreshState();
             ClearAnimations();
-            ChangeHeightTo((int) ActiveContentHeight, Easing.OutQuint, 450);
+            this.ChangeHeightToOrSnap((int) ActiveContentHeight, Easing.OutQuint, OpenAnimationDuration);
 
             ScreenDarkness.ClearAnimations();
-            ScreenDarkness.FadeTo(Config.DarknessOpacity, Easing.Linear, 200);
+            ScreenDarkness.FadeToOrSnap(Config.DarknessOpacity, Easing.Linear, DarknessAnimationDuration);
         }
 
         public override void Close()
         {
             IsOpen = false;
-            CloseAnimationRemaining = 550;
+            CloseAnimationRemaining = V2PerformanceMode.Duration(CloseAnimationDuration);
             ClearAnimations();
-            ChangeHeightTo(0, Easing.OutQuint, 550);
+            this.ChangeHeightToOrSnap(0, Easing.OutQuint, CloseAnimationDuration);
 
             ScreenDarkness.ClearAnimations();
-            ScreenDarkness.FadeTo(0, Easing.Linear, 200);
+            ScreenDarkness.FadeToOrSnap(0, Easing.Linear, DarknessAnimationDuration);
+
+            if (CloseAnimationRemaining <= 0)
+                Visible = false;
         }
 
         private Container CreateConnectedPanel()
@@ -615,7 +630,8 @@ namespace Quaver.Shared.Screens.V2.UI
             if (IsOpen && Math.Abs(previousHeight - ActiveContentHeight) > 0.001f)
             {
                 ClearAnimations();
-                ChangeHeightTo((int) ActiveContentHeight, Easing.OutQuint, 250);
+                this.ChangeHeightToOrSnap((int) ActiveContentHeight, Easing.OutQuint,
+                    ResizeAnimationDuration);
             }
 
             if (connected)
@@ -883,8 +899,6 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 base.Draw(gameTime);
 
-                // The following labels and icons share their parent's batch, so restore a plain,
-                // scissor-safe batch instead of allowing the rounded shader to leak into them.
                 PlainScissorOptions.Begin();
             }
         }

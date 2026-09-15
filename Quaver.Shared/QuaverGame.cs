@@ -973,7 +973,9 @@ namespace Quaver.Shared
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
                 case QuaverScreenType.Results:
-                    DialogManager.Show(new OptionsDialog());
+                    DialogManager.Show(CurrentScreen is Screens.V2.SkinV2Screen
+                        ? new Screens.V2.Options.OptionsDialogV2()
+                        : new OptionsDialog());
                     break;
             }
         }
