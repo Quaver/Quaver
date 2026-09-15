@@ -50,6 +50,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private const int ButtonEnterAnimationDuration = 100;
 
+        /// <summary>
+        ///     How long an app button takes to widen and show its label on hover. The same as the default
+        ///     of <see cref="NavigationBarButtonOptions.HoverExpansionDuration"/>, set here so the
+        ///     performance preset can turn it off. It is the most costly hover effect in the bar.
+        /// </summary>
+        private const int ButtonHoverExpansionDuration = 150;
+
         private static readonly Rectangle BundledLogoSourceRectangle = new Rectangle(0, 0, 153, 132);
 
         private const int BundledLogoTextureWidth = 53;
@@ -465,7 +472,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
             ApplicationLogo.ClearAnimations();
             ApplicationLogo.X = -Config.EdgePadding - ApplicationLogo.Width;
-            ApplicationLogo.MoveToX(0, Easing.OutCubic, LogoEnterAnimationDuration);
+            ApplicationLogo.MoveToXOrSnap(0, Easing.OutCubic, LogoEnterAnimationDuration);
         }
 
         private void BeginApplicationLogoExit()
@@ -477,6 +484,15 @@ namespace Quaver.Shared.Screens.V2.UI
 
             TopBar.Remove(ApplicationLogoSlot, destroy: false);
             TopLayoutButtons.Remove(ApplicationLogoSlot);
+
+            if (!V2PerformanceMode.TransitionsEnabled)
+            {
+                ApplicationLogoSlot.Destroy();
+                ApplicationLogoSlot = null;
+                ApplicationLogo = null;
+                ApplicationLogoUsesBundledAsset = false;
+                return;
+            }
 
             ApplicationLogo.ClearAnimations();
             ApplicationLogo.MoveToX(-Config.EdgePadding - ApplicationLogo.Width, Easing.InCubic,
@@ -516,6 +532,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void AnimateNavigationButtonsEntrance(IEnumerable<RoundedButton> buttons, int delay)
         {
+            if (!V2PerformanceMode.TransitionsEnabled)
+                return;
+
             foreach (var button in buttons)
             {
                 button.ClearAnimations();
@@ -579,6 +598,8 @@ namespace Quaver.Shared.Screens.V2.UI
                     ForegroundColor = SkinV2Color.Parse(Config.Button.ForegroundColor),
                     ExpandLabelOnHover = true,
                     AlwaysShowLabel = active,
+                    HoverExpansionDuration =
+                        V2PerformanceMode.Duration(ButtonHoverExpansionDuration),
                     ExpandedLabelRightPadding = Config.Button.ExpandedLabelRightPadding,
                     ClickAction = (sender, args) => action()
                 });

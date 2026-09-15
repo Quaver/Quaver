@@ -64,6 +64,22 @@ namespace Quaver.Shared.Skinning.V2
         [Required]
         [ConfigEditable]
         public SkinV2DropdownConfig Dropdown { get; set; } = new SkinV2DropdownConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2ToggleConfig Toggle { get; set; } = new SkinV2ToggleConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2ButtonConfig Button { get; set; } = new SkinV2ButtonConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2SliderConfig Slider { get; set; } = new SkinV2SliderConfig();
+
+        [Required]
+        [ConfigEditable]
+        public SkinV2SearchConfig Search { get; set; } = new SkinV2SearchConfig();
     }
 
     public sealed class SkinV2BrandConfig

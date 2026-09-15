@@ -108,11 +108,15 @@ namespace Quaver.Shared.Screens.V2.UI
     ///     Shared V2 dropdown selector. The trigger remains in its owner's layout while the opened
     ///     menu is created as a transient child of the caller-provided full-screen overlay host.
     /// </summary>
-    public sealed class V2Dropdown<T> : V2DropdownBase
+    public sealed class V2Dropdown<T> : V2DropdownBase, IViewportCullExempt
     {
         private const int MinimumMenuHeight = 1;
-        // ButtonManager resolves overlapping buttons from the lowest depth first. Keep transient
-        // menu rows ahead of controls underneath the menu, even when their rectangles overlap.
+
+        /// <summary>
+        ///     How many items past the visible part of the menu stay active.
+        /// </summary>
+        private const float MenuCullMarginItems = 2;
+
         private const int OpenMenuButtonDepth = int.MinValue;
 
         private IReadOnlyList<DropdownEntry<T>> Entries { get; }
@@ -136,6 +140,13 @@ namespace Quaver.Shared.Screens.V2.UI
         private HorizontalClippingContainer MenuClip { get; set; }
 
         private ScrollContainer MenuScroll { get; set; }
+
+        /// <summary>
+        ///     The open menu lives in the overlay host, so it stays on screen when the trigger scrolls away.
+        ///     It is moved, animated and closed from this drawable's update, so this keeps updating while
+        ///     the menu is open.
+        /// </summary>
+        public bool IsCullExempt => Menu != null;
 
         private List<V2DropdownOptionButton> OptionButtons { get; } =
             new List<V2DropdownOptionButton>();
@@ -179,9 +190,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public V2Dropdown(float width, Bindable<T> value, IReadOnlyList<DropdownEntry<T>> entries,
             WobbleFontStore font, SkinV2DropdownConfig config, Container overlayHost,
-            TextureRegion? selectedIcon = null)
+            TextureRegion? selectedIcon = null, TextureRegion? chevronIcon = null)
             : this(width, entries, font, config, overlayHost, DropdownSelectionMode.Single,
-                selectedIcon, null)
+                selectedIcon, null, chevronIcon)
         {
             Value = value ?? throw new ArgumentNullException(nameof(value));
             Value.ValueChanged += OnValueChanged;
@@ -190,9 +201,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public V2Dropdown(float width, IReadOnlyList<DropdownEntry<T>> entries,
             IEnumerable<T> selectedValues, WobbleFontStore font, SkinV2DropdownConfig config,
-            Container overlayHost, TextureRegion? selectedIcon = null)
+            Container overlayHost, TextureRegion? selectedIcon = null, TextureRegion? chevronIcon = null)
             : this(width, entries, font, config, overlayHost, DropdownSelectionMode.Multiple,
-                selectedIcon, selectedValues)
+                selectedIcon, selectedValues, chevronIcon)
         {
             RefreshTrigger();
         }
@@ -200,7 +211,7 @@ namespace Quaver.Shared.Screens.V2.UI
         private V2Dropdown(float width, IReadOnlyList<DropdownEntry<T>> entries,
             WobbleFontStore font, SkinV2DropdownConfig config, Container overlayHost,
             DropdownSelectionMode selectionMode, TextureRegion? selectedIcon,
-            IEnumerable<T> selectedValues)
+            IEnumerable<T> selectedValues, TextureRegion? chevronIcon)
         {
             if (entries == null)
                 throw new ArgumentNullException(nameof(entries));
@@ -227,16 +238,16 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 Parent = this,
                 Size = Size,
-                Depth = 20,
+                Depth = -100,
                 PerformHoverFade = true
             };
-            Trigger.Configure(Font, config);
+            Trigger.Configure(Font, config, chevronIcon);
             Trigger.Clicked += OnTriggerClicked;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (Opened && DialogManager.Dialogs.Count != 0)
+            if (Opened && !DialogManager.IsInputAllowed(this))
                 CloseImmediatelyInternal();
 
             base.Update(gameTime);
@@ -259,7 +270,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
             RefreshMenuLayout();
             MenuScroll.InputEnabled = IsMenuScrollInputAllowed();
-            RefreshMenuVisibility();
+            UpdateMenuCulling();
 
             if (MouseManager.IsUniqueClick(MouseButton.Left) && !Contains(Trigger.ScreenRectangle,
                     MouseManager.CurrentState.Position) && !Contains(Menu.ScreenRectangle,
@@ -283,15 +294,19 @@ namespace Quaver.Shared.Screens.V2.UI
             if (Trigger == null)
                 return;
 
-            Trigger.Size = Size;
-            RefreshTrigger();
+            if (Trigger.SizeDiffers(Size))
+            {
+                Trigger.Size = Size;
+                RefreshTrigger();
+            }
+
             if (Menu != null)
                 RefreshMenuLayout();
         }
 
         public void Open()
         {
-            if (Opened || DialogManager.Dialogs.Count != 0 || ExternalAlpha <= 0.001f)
+            if (Opened || !DialogManager.IsInputAllowed(this) || ExternalAlpha <= 0.001f)
                 return;
 
             V2DropdownRegistry.Activate(this);
@@ -329,6 +344,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (time < 0)
                 time = Config.AnimationDurationMilliseconds;
+
+            time = V2PerformanceMode.Duration(time);
 
             Opened = false;
             V2DropdownRegistry.Deactivate(this);
@@ -498,19 +515,38 @@ namespace Quaver.Shared.Screens.V2.UI
             IsOpening = true;
             RefreshMenuLayout(false);
 
-            var duration = Math.Max(1, Config.AnimationDurationMilliseconds);
-            Menu.ChangeHeightTo((int)TargetMenuHeight, Easing.OutQuint, duration);
+            var duration = V2PerformanceMode.Duration(Math.Max(1, Config.AnimationDurationMilliseconds));
+            Menu.ChangeHeightToOrSnap((int)TargetMenuHeight, Easing.OutQuint, duration);
             FadeMenuTo(1, duration);
+
+            var staggered = !V2PerformanceMode.TransitionsEnabled
+                ? 0
+                : MaxVisibleItems > 0
+                    ? Math.Min(MaxVisibleItems, OptionButtons.Count)
+                    : OptionButtons.Count;
 
             for (var i = 0; i < OptionButtons.Count; i++)
             {
                 var button = OptionButtons[i];
+
+                if (i >= staggered)
+                {
+                    button.Alpha = 1;
+                    continue;
+                }
+
                 button.Alpha = 0;
                 button.FadeTo(1, Easing.OutQuint, duration + i * 12);
             }
 
             foreach (var divider in EntryDividers)
-                divider.FadeTo(1, Easing.OutQuint, duration);
+                divider.FadeToOrSnap(1, Easing.OutQuint, duration);
+
+            foreach (var button in OptionButtons)
+                DrawableViewportCuller.Prepare(button);
+
+            foreach (var divider in EntryDividers)
+                DrawableViewportCuller.Prepare(divider);
         }
 
         private V2DropdownOptionButton CreateOptionButton(DropdownOption<T> option)
@@ -579,20 +615,29 @@ namespace Quaver.Shared.Screens.V2.UI
                 button.SetSelected(IsSelected(button.Option));
         }
 
-        private void RefreshMenuVisibility()
+        /// <summary>
+        ///     Hides the options outside the visible part of the menu, so long menus (skins, resolutions)
+        ///     stay fast. While the menu is opening or closing, every option is shown.
+        /// </summary>
+        private void UpdateMenuCulling()
         {
             if (MenuScroll == null)
                 return;
 
-            // ScrollContainer owns clipping. Do not fade rows based on their current screen
-            // rectangle: that makes rows pop in and out while the viewport is animating or
-            // while the content is being scrolled. Rows should keep their menu animation alpha
-            // and simply be clipped by the scroll container at its edges.
-            foreach (var button in OptionButtons)
-                button.Visible = true;
+            if (IsOpening || IsClosing)
+            {
+                foreach (var button in OptionButtons)
+                    button.Visible = true;
 
-            foreach (var divider in EntryDividers)
-                divider.Visible = true;
+                foreach (var divider in EntryDividers)
+                    divider.Visible = true;
+
+                return;
+            }
+
+            var margin = Config.ItemHeight * MenuCullMarginItems;
+            DrawableViewportCuller.Apply(OptionButtons, MenuScroll.ScreenRectangle, margin);
+            DrawableViewportCuller.Apply(EntryDividers, MenuScroll.ScreenRectangle, margin);
         }
 
         private bool IsMenuScrollable()
@@ -639,12 +684,12 @@ namespace Quaver.Shared.Screens.V2.UI
                 : Trigger.ScreenRectangle.Top - Config.MenuGap - currentHeight;
             var hostX = x - OverlayHost.ScreenRectangle.Left;
             var hostY = y - OverlayHost.ScreenRectangle.Top;
-            Menu.Position = new ScalableVector2(hostX, hostY);
+            Menu.SetPositionIfChanged(hostX, hostY);
             Menu.Width = Width;
 
-            MenuDivider.Position = new ScalableVector2(Config.DividerInset,
+            MenuDivider.SetPositionIfChanged(Config.DividerInset,
                 OpensDown ? 0 : Math.Max(0, currentHeight - Config.DividerThickness));
-            MenuDivider.Size = new ScalableVector2(Math.Max(1, Width - Config.DividerInset * 2),
+            MenuDivider.SetSizeIfChanged(Math.Max(1, Width - Config.DividerInset * 2),
                 Config.DividerThickness);
 
             var dividerSpace = Config.DividerThickness;
@@ -654,10 +699,10 @@ namespace Quaver.Shared.Screens.V2.UI
                 OpensDown ? dividerSpace + Config.MenuPadding : Config.MenuPadding);
             var viewportSize = new ScalableVector2(Math.Max(1, Width),
                 viewportHeight);
-            MenuClip.Position = viewportPosition;
-            MenuClip.Size = viewportSize;
-            MenuScroll.Position = new ScalableVector2(0, 0);
-            MenuScroll.Size = viewportSize;
+            MenuClip.SetPositionIfChanged(viewportPosition);
+            MenuClip.SetSizeIfChanged(viewportSize);
+            MenuScroll.SetPositionIfChanged(0, 0);
+            MenuScroll.SetSizeIfChanged(viewportSize);
             // Use the requested item limit and the available viewport as the source of truth.
             // Comparing the animated viewport to content height directly can expose a scrollbar
             // for a rounding remainder even when every option is already visible.
@@ -670,7 +715,9 @@ namespace Quaver.Shared.Screens.V2.UI
                 !IsClosing && !IsOpening)
                 Menu.Height = menuHeight;
 
-            Trigger.CornerRadii = GetTriggerRadii();
+            var radii = GetTriggerRadii();
+            if (!Trigger.CornerRadii.HasValue || !Trigger.CornerRadii.Value.Equals(radii))
+                Trigger.CornerRadii = radii;
         }
 
         private float CalculateTargetMenuHeight(float contentHeight, int optionCount)
@@ -709,8 +756,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void FadeMenuTo(float alpha, int time)
         {
-            MenuDivider?.FadeTo(alpha, Easing.OutQuint, time);
-            MenuScroll?.FadeTo(alpha, Easing.OutQuint, time);
+            MenuDivider.FadeToOrSnap(alpha, Easing.OutQuint, time);
+            MenuScroll.FadeToOrSnap(alpha, Easing.OutQuint, time);
         }
 
         private IReadOnlyList<DropdownOption<T>> GetSelectedOptions()
@@ -874,7 +921,8 @@ namespace Quaver.Shared.Screens.V2.UI
                 };
             }
 
-            public void Configure(WobbleFontStore font, SkinV2DropdownConfig config)
+            public void Configure(WobbleFontStore font, SkinV2DropdownConfig config,
+                TextureRegion? chevronIcon = null)
             {
                 Font = font;
                 Config = config;
@@ -888,6 +936,8 @@ namespace Quaver.Shared.Screens.V2.UI
                 };
                 MarqueeLabel.StartDelayMilliseconds = 450;
                 MarqueeLabel.TextSprite.Tint = SkinV2Color.Parse(config.TextColor);
+                if (chevronIcon.HasValue)
+                    Chevron.Region = chevronIcon.Value;
                 Chevron.Size = new ScalableVector2(config.ChevronSize, config.ChevronSize);
                 Chevron.X = -config.HorizontalPadding;
                 Chevron.Tint = SkinV2Color.Parse(config.IconColor);
@@ -932,7 +982,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 var left = config.HorizontalPadding +
                            (SelectedIcon.Visible ? config.IconSize + IconSpacing : 0);
                 var right = config.HorizontalPadding + config.ChevronSize + IconSpacing;
-                MarqueeLabel.Alignment = Alignment.MidLeft;
+                MarqueeLabel.SetAlignmentIfChanged(Alignment.MidLeft);
                 MarqueeLabel.X = left;
                 var marqueeWidth = Math.Max(1, Width - left - right);
                 if (Math.Abs(LastMarqueeWidth - marqueeWidth) > 0.5f)
@@ -942,7 +992,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 }
 
                 MarqueeLabel.Width = marqueeWidth;
-                Chevron.Alignment = Alignment.MidRight;
+                Chevron.SetAlignmentIfChanged(Alignment.MidRight);
                 Chevron.X = -config.HorizontalPadding;
             }
         }
@@ -1058,7 +1108,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 var left = Config.HorizontalPadding +
                            (OptionIcon.Visible ? Config.IconSize + 8 : 0);
                 var right = Config.HorizontalPadding;
-                MarqueeLabel.Alignment = Alignment.MidLeft;
+                MarqueeLabel.SetAlignmentIfChanged(Alignment.MidLeft);
                 MarqueeLabel.X = left;
                 var marqueeWidth = Math.Max(1, Width - left - right);
                 if (Math.Abs(LastMarqueeWidth - marqueeWidth) > 0.5f)

@@ -40,6 +40,13 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private Sprite BackgroundEffect { get; set; }
 
+        /// <summary>
+        ///     Whether the performance preset left out the background effect when the screen was last built.
+        ///     The preset can change while this screen is open, from the options menu on top of it.
+        ///     See <see cref="SyncBackgroundEffectToPreset"/>.
+        /// </summary>
+        private bool BackgroundEffectSuppressed { get; set; }
+
         private FlexContainer Content { get; set; }
 
         private Sprite Logo { get; set; }
@@ -124,6 +131,7 @@ namespace Quaver.Shared.Screens.V2.Main
                     TextureManager.Load("Quaver.Resources/Textures/UI/Screens/Main/background.jpg"))
             };
 
+            BackgroundEffectSuppressed = !V2PerformanceMode.AmbientEffectsEnabled;
             BackgroundEffect = CreateBackgroundEffect(Config.BackgroundEffects.Effect);
             if (BackgroundEffect != null)
                 BackgroundEffect.Parent = ContentRoot;
@@ -238,8 +246,31 @@ namespace Quaver.Shared.Screens.V2.Main
 
         public override void Update(GameTime gameTime)
         {
+            SyncBackgroundEffectToPreset();
             UpdateResponsiveLayout();
             Container.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Rebuilds the screen when the performance preset was switched since it was built so the
+        ///     background effect turns on or off right away, even behind the open options menu.
+        /// </summary>
+        private void SyncBackgroundEffectToPreset()
+        {
+            if (BackgroundEffectSuppressed == !V2PerformanceMode.AmbientEffectsEnabled)
+                return;
+
+            // Wait while the skin editor is open
+            if (EditorLayoutActive)
+                return;
+
+            BuildContent();
+
+            // The rebuilt content was added after the navigation bar, so it now draws on top of it.
+            // Setting the parent again moves the navigation bar back to the top.
+            if (ScreenManager.TryGetElement<ScreenNavigation>(ScreenNavigation.ElementKey,
+                    out var navigation))
+                navigation.Parent = PreviewRoot;
         }
 
         public override void Draw(GameTime gameTime)
@@ -398,6 +429,9 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private Sprite CreateBackgroundEffect(SkinV2MainBackgroundEffect effect)
         {
+            if (!V2PerformanceMode.AmbientEffectsEnabled)
+                return null;
+
             var primaryColor = SkinV2Color.Parse(Config.BackgroundEffects.PrimaryColor);
             var secondaryColor = SkinV2Color.Parse(Config.BackgroundEffects.SecondaryColor);
 

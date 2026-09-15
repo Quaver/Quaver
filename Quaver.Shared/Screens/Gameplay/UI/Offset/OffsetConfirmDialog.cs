@@ -3,8 +3,9 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.Main;
-using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.Selection;
+using Quaver.Shared.Screens.V2.Options;
+using Wobble;
 using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Screens.Gameplay.UI.Offset
@@ -45,10 +46,9 @@ namespace Quaver.Shared.Screens.Gameplay.UI.Offset
         /// <param name="screen"></param>
         public static void Exit(QuaverScreen screen) => screen.Exit(() =>
         {
-            var options = new OptionsDialog();
-            DialogManager.Show(options);
-
             ModManager.RemoveAllMods();
+
+            GameBase.Game.ScheduleRenderTargetDraw(() => DialogManager.Show(new OptionsDialogV2()));
 
             switch (QuaverScreenManager.LastScreen)
             {
