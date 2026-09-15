@@ -490,7 +490,7 @@
     <value>Input</value>
   </data>
   <data name="Screen_Options_Gamemodespecific" xml:space="preserve">
-    <value>Game mode specific</value>
+    <value>Game Mode Specific</value>
   </data>
   <data name="Screen_Options_Miscellaneous" xml:space="preserve">
     <value>Miscellaneous</value>
@@ -506,6 +506,15 @@
   </data>
   <data name="Screen_Options_FrameRate" xml:space="preserve">
     <value>Frame Rate</value>
+  </data>
+  <data name="Screen_Options_SetCustomFpsButton" xml:space="preserve">
+    <value>Set FPS</value>
+  </data>
+  <data name="Screen_Options_On" xml:space="preserve">
+    <value>ON</value>
+  </data>
+  <data name="Screen_Options_Off" xml:space="preserve">
+    <value>OFF</value>
   </data>
   <data name="Screen_Options_Output" xml:space="preserve">
     <value>Output</value>
@@ -612,8 +621,14 @@
   <data name="Screen_Options_MusicVolume" xml:space="preserve">
     <value>Music Volume</value>
   </data>
+  <data name="Screen_Options_MenuMusicVolume" xml:space="preserve">
+    <value>Menu Music Volume</value>
+  </data>
   <data name="Screen_Options_EffectVolume" xml:space="preserve">
     <value>Effect Volume</value>
+  </data>
+  <data name="Screen_Options_MuteAudioWhenUnfocused" xml:space="preserve">
+    <value>Mute Audio When Unfocused</value>
   </data>
   <data name="Screen_Overlay_VolumeControl_Master" xml:space="preserve">
     <value>Master</value>
@@ -839,6 +854,9 @@ Marvelous instead.</value>
   <data name="Screen_Options_CalibrateOffset" xml:space="preserve">
     <value>Calibrate Offset</value>
   </data>
+  <data name="Screen_Options_CalibrateOffsetButton" xml:space="preserve">
+    <value>Calibrate</value>
+  </data>
   <data name="Screen_Options_PitchAudioWithPlaybackRate" xml:space="preserve">
     <value>Pitch Audio With Playback Rate</value>
   </data>
@@ -917,11 +935,26 @@ Marvelous instead.</value>
   <data name="Screen_Options_OpenSkinFolder" xml:space="preserve">
     <value>Open Skin Folder</value>
   </data>
+  <data name="Screen_Options_OpenSkinFolderButton" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="Screen_Options_GenerateEditableSkinYml" xml:space="preserve">
+    <value>Generate Editable skin.yml</value>
+  </data>
+  <data name="Screen_Options_GenerateEditableSkinYmlButton" xml:space="preserve">
+    <value>Generate</value>
+  </data>
   <data name="Screen_Options_ExportSkin" xml:space="preserve">
     <value>Export Skin</value>
   </data>
+  <data name="Screen_Options_ExportSkinButton" xml:space="preserve">
+    <value>Export</value>
+  </data>
   <data name="Screen_Options_UploadSkinToSteamWorkshop" xml:space="preserve">
     <value>Upload Skin To Steam Workshop</value>
+  </data>
+  <data name="Screen_Options_UploadSkinToSteamWorkshopButton" xml:space="preserve">
+    <value>Upload</value>
   </data>
   <data name="Screen_Options_NoteReceptorSizeScale" xml:space="preserve">
     <value>Note &amp; Receptor Size Scale</value>
@@ -929,11 +962,38 @@ Marvelous instead.</value>
   <data name="Screen_Options_PlayfieldScale" xml:space="preserve">
     <value>Playfield Scale</value>
   </data>
+  <data name="Screen_Options_DisplaySongSelectBanners" xml:space="preserve">
+    <value>Display Song Select Banners</value>
+  </data>
   <data name="Screen_Options_TintHitlightingBasedOnJudgementColor" xml:space="preserve">
     <value>Tint Hitlighting Based On Judgement Color</value>
   </data>
   <data name="Screen_Options_Pause" xml:space="preserve">
     <value>Pause</value>
+  </data>
+  <data name="Screen_Options_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Screen_Options_Mod" xml:space="preserve">
+    <value>Mod</value>
+  </data>
+  <data name="Screen_Options_PressAKey" xml:space="preserve">
+    <value>Press a key...</value>
+  </data>
+  <data name="Screen_Options_PressNKeys" xml:space="preserve">
+    <value>Press {0} keys...</value>
+  </data>
+  <data name="Screen_Options_GameModeSettings" xml:space="preserve">
+    <value>{0} Settings</value>
+  </data>
+  <data name="Screen_Options_ScratchLayout" xml:space="preserve">
+    <value>{0} Scratch Layout</value>
+  </data>
+  <data name="Screen_Options_PlaceScratchLayoutOnLeft" xml:space="preserve">
+    <value>Place {0} Scratch Layout On Left</value>
+  </data>
+  <data name="Screen_Options_CoopLayout" xml:space="preserve">
+    <value>{0} Co-op Layout</value>
   </data>
   <data name="Screen_Options_QuickRestart" xml:space="preserve">
     <value>Quick Restart</value>
@@ -958,6 +1018,111 @@ Marvelous instead.</value>
   </data>
   <data name="Screen_Options_ResetMapOffset" xml:space="preserve">
     <value>Reset Map Offset</value>
+  </data>
+  <data name="Screen_Options_ResetVisualOffset" xml:space="preserve">
+    <value>Reset Visual Offset</value>
+  </data>
+  <data name="Screen_Options_OpenOptions" xml:space="preserve">
+    <value>Open Options</value>
+  </data>
+  <data name="Screen_Options_ToggleFullscreen" xml:space="preserve">
+    <value>Toggle Fullscreen</value>
+  </data>
+  <data name="Screen_Options_ToggleOnlineHub" xml:space="preserve">
+    <value>Toggle Online Hub</value>
+  </data>
+  <data name="Screen_Options_PauseUnpauseMusic" xml:space="preserve">
+    <value>Pause/Unpause Music</value>
+  </data>
+  <data name="Screen_Options_DecreaseGameplayRateHalfStep" xml:space="preserve">
+    <value>Decrease Gameplay Rate (Half Step)</value>
+  </data>
+  <data name="Screen_Options_IncreaseGameplayRateHalfStep" xml:space="preserve">
+    <value>Increase Gameplay Rate (Half Step)</value>
+  </data>
+  <data name="Screen_Options_ToggleModifiersPanel" xml:space="preserve">
+    <value>Toggle Modifiers Panel</value>
+  </data>
+  <data name="Screen_Options_SelectRandomMap" xml:space="preserve">
+    <value>Select Random Map</value>
+  </data>
+  <data name="Screen_Options_ToggleMapPreviewPanel" xml:space="preserve">
+    <value>Toggle Map Preview Panel</value>
+  </data>
+  <data name="Screen_Options_ToggleUserProfilePanel" xml:space="preserve">
+    <value>Toggle User Profile Panel</value>
+  </data>
+  <data name="Screen_Options_RefreshSongs" xml:space="preserve">
+    <value>Refresh Songs</value>
+  </data>
+  <data name="Screen_Options_CycleFPSLimiter" xml:space="preserve">
+    <value>Cycle FPS Limiter</value>
+  </data>
+  <data name="Screen_Options_ReloadSkin" xml:space="preserve">
+    <value>Reload Skin</value>
+  </data>
+  <data name="Screen_Options_OpenGameFolderButton" xml:space="preserve">
+    <value>Open Folder</value>
+  </data>
+  <data name="Screen_Options_UpdateButton" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Screen_Options_DetectButton" xml:space="preserve">
+    <value>Detect</value>
+  </data>
+  <data name="Screen_Options_CalibrateButton" xml:space="preserve">
+    <value>Calibrate</value>
+  </data>
+  <data name="Screen_Options_PrioritizedDifficulty" xml:space="preserve">
+    <value>Prioritized {0} Difficulty</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeed1" xml:space="preserve">
+    <value>Decrease Scroll Speed (-1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeed1" xml:space="preserve">
+    <value>Increase Scroll Speed (+1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeedSmall" xml:space="preserve">
+    <value>Decrease Scroll Speed (-0.1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeedSmall" xml:space="preserve">
+    <value>Increase Scroll Speed (+0.1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseLocalScrollSpeed1" xml:space="preserve">
+    <value>Decrease Local Scroll Speed (-1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseLocalScrollSpeed1" xml:space="preserve">
+    <value>Increase Local Scroll Speed (+1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseLocalScrollSpeedSmall" xml:space="preserve">
+    <value>Decrease Local Scroll Speed (-0.1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseLocalScrollSpeedSmall" xml:space="preserve">
+    <value>Increase Local Scroll Speed (+0.1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset5ms" xml:space="preserve">
+    <value>Decrease Map Offset (-5ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset5ms" xml:space="preserve">
+    <value>Increase Map Offset (+5ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset1ms" xml:space="preserve">
+    <value>Decrease Map Offset (-1ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset1ms" xml:space="preserve">
+    <value>Increase Map Offset (+1ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseVisualOffset5ms" xml:space="preserve">
+    <value>Decrease Visual Offset (-5ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseVisualOffset5ms" xml:space="preserve">
+    <value>Increase Visual Offset (+5ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseVisualOffset1ms" xml:space="preserve">
+    <value>Decrease Visual Offset (-1ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseVisualOffset1ms" xml:space="preserve">
+    <value>Increase Visual Offset (+1ms)</value>
   </data>
   <data name="Screen_Options_ToggleScoreboardVisibility" xml:space="preserve">
     <value>Toggle Scoreboard Visibility</value>
@@ -1118,6 +1283,12 @@ Marvelous instead.</value>
   <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
     <value>Editor ImGui Scale</value>
   </data>
+  <data name="Screen_Options_EditorImGuiFontSize" xml:space="preserve">
+    <value>Editor ImGui Font Size</value>
+  </data>
+  <data name="Screen_Options_DisplayGameplayOverlay" xml:space="preserve">
+    <value>Display Gameplay Overlay (Shift + F6)</value>
+  </data>
   <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
     <value>OPTIONS MENU</value>
   </data>
@@ -1207,6 +1378,12 @@ Marvelous instead.</value>
   </data>
   <data name="Screen_Options_SearchResults" xml:space="preserve">
     <value>{0} Search Results</value>
+  </data>
+  <data name="Screen_Options_SearchResultLabel" xml:space="preserve">
+    <value>Search Result</value>
+  </data>
+  <data name="Screen_Options_RecentlyChanged" xml:space="preserve">
+    <value>Recently Changed</value>
   </data>
   <data name="Screen_Options_AdjustGameSettings" xml:space="preserve">
     <value>Adjust Game Settings</value>
@@ -2438,6 +2615,17 @@ for other players to download?</value>
   <data name="SkinEditor_Component_NavigationButtons" xml:space="preserve"><value>Navigation Buttons</value></data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve"><value>Profile</value></data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve"><value>Screen Title</value></data>
+  <data name="SkinEditor_Component_Toggles" xml:space="preserve"><value>Toggles</value></data>
+  <data name="SkinEditor_Component_Buttons" xml:space="preserve"><value>Buttons</value></data>
+  <data name="SkinEditor_Component_Sliders" xml:space="preserve"><value>Sliders</value></data>
+  <data name="SkinEditor_Component_SearchBar" xml:space="preserve"><value>Search Bar</value></data>
+  <data name="SkinEditor_Component_Backdrop" xml:space="preserve"><value>Backdrop</value></data>
+  <data name="SkinEditor_Component_Header" xml:space="preserve"><value>Header</value></data>
+  <data name="SkinEditor_Component_Panels" xml:space="preserve"><value>Panels</value></data>
+  <data name="SkinEditor_Component_RailToggle" xml:space="preserve"><value>Rail Toggle</value></data>
+  <data name="SkinEditor_Component_Categories" xml:space="preserve"><value>Categories</value></data>
+  <data name="SkinEditor_Component_Preset" xml:space="preserve"><value>Preset Picker</value></data>
+  <data name="SkinEditor_Component_Rows" xml:space="preserve"><value>Option Rows</value></data>
   <data name="SkinEditor_Property_Type" xml:space="preserve"><value>Type</value></data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve"><value>Solid Color</value></data>
   <data name="SkinEditor_Property_Path" xml:space="preserve"><value>Image Path</value></data>
