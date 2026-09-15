@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
@@ -25,7 +24,7 @@ namespace Quaver.Shared.Screens.V2.Options.UI
 
         private Action ResetAction { get; }
 
-        internal OptionsSearchRailButton(Texture2D searchIcon, Texture2D resetIcon, WobbleFontStore font,
+        internal OptionsSearchRailButton(TextureRegion searchIcon, TextureRegion resetIcon, WobbleFontStore font,
             SkinV2OptionsCategoryNavigationConfig config, Action resetAction)
         {
             Config = config;
@@ -53,7 +52,7 @@ namespace Quaver.Shared.Screens.V2.Options.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                Image = resetIcon,
+                Region = resetIcon,
                 Size = new ScalableVector2(config.SearchResetIconSize, config.SearchResetIconSize),
                 Tint = foreground,
                 UsePreviousSpriteBatchOptions = true,

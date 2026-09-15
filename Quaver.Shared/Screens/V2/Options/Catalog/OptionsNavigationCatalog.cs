@@ -19,7 +19,8 @@ namespace Quaver.Shared.Screens.V2.Options.Catalog
         ///     Pinned above the other categories. A search result entry takes its place while searching.
         /// </summary>
         internal static OptionsCategoryDefinition RecentlyChanged { get; } =
-            new OptionsCategoryDefinition(OptionsCategoryId.RecentlyChanged, "Screen_Options_RecentlyChanged", null);
+            new OptionsCategoryDefinition(OptionsCategoryId.RecentlyChanged, "Screen_Options_RecentlyChanged",
+                OptionsIconFrame.RecentlyChanged);
 
         internal static IReadOnlyList<OptionsCategoryDefinition> Categories { get; } = Array.AsReadOnly(new[]
         {

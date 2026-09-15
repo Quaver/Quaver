@@ -22,7 +22,9 @@ namespace Quaver.Shared.Screens.V2.Options.UI
         Miscellaneous,
         Advanced,
         Collapse,
-        Expand
+        Expand,
+        RecentlyChanged,
+        Reset
     }
 
     /// <summary>
@@ -36,7 +38,7 @@ namespace Quaver.Shared.Screens.V2.Options.UI
 
         private const int MinimumWidth = FrameSize;
 
-        private const int MinimumHeight = FrameStride * (int) OptionsIconFrame.Expand + FrameSize;
+        private const int MinimumHeight = FrameStride * (int) OptionsIconFrame.Reset + FrameSize;
 
         /// <summary>
         ///     Loads the skin's atlas or the built-in one when the skin has none or its atlas is too small.

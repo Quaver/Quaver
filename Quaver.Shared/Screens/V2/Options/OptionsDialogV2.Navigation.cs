@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Screens.V2.Options.Catalog;
 using Quaver.Shared.Screens.V2.Options.UI;
 using Quaver.Shared.Skinning.V2;
@@ -19,12 +18,6 @@ namespace Quaver.Shared.Screens.V2.Options
     internal sealed partial class OptionsDialogV2
     {
         private Texture2D OptionsIcons { get; set; }
-
-        private Texture2D SearchRailIcon { get; set; }
-
-        private Texture2D SearchResetIcon { get; set; }
-
-        private Texture2D RecentlyChangedIcon { get; set; }
 
         private ScrollContainer CategoryNavigationScroll { get; set; }
 
@@ -64,15 +57,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private float LastNavigationCategoryWidth { get; set; } = -1;
 
-        private void LoadIcons()
-        {
-            var config = Config.Categories;
-
-            OptionsIcons = OptionsIconAtlas.Load(Skin, config.IconAtlas);
-            SearchRailIcon = Skin.LoadTexture(config.SearchIcon, UserInterface.OptionsV2SearchIcon);
-            SearchResetIcon = Skin.LoadTexture(config.SearchResetIcon, UserInterface.OptionsV2ResetIcon);
-            RecentlyChangedIcon = Skin.LoadTexture(config.RecentlyChangedIcon, UserInterface.OptionsV2RecentlyChangedIcon);
-        }
+        private void LoadIcons() => OptionsIcons = OptionsIconAtlas.Load(Skin, Config.Categories.IconAtlas);
 
         /// <summary>
         ///     Builds the rail's list: a pinned entry, a line, then the categories. The pinned entry is
@@ -93,7 +78,9 @@ namespace Quaver.Shared.Screens.V2.Options
 
             if (SearchActive)
             {
-                SearchRailButton = new OptionsSearchRailButton(SearchRailIcon, SearchResetIcon, font, config,
+                SearchRailButton = new OptionsSearchRailButton(
+                    OptionsIconAtlas.GetRegion(OptionsIcons, OptionsIconFrame.Search),
+                    OptionsIconAtlas.GetRegion(OptionsIcons, OptionsIconFrame.Reset), font, config,
                     () => PendingNavigationAction = () => ClearSearch());
                 AddToList(CategoryNavigationList, SearchRailButton, config.ButtonHeight);
             }
@@ -101,7 +88,7 @@ namespace Quaver.Shared.Screens.V2.Options
             {
                 var recentlyChanged = OptionsNavigationCatalog.RecentlyChanged;
                 var button = new OptionsCategoryButton(recentlyChanged,
-                    new TextureRegion(RecentlyChangedIcon, RecentlyChangedIcon.Bounds), font, config,
+                    OptionsIconAtlas.GetRegion(OptionsIcons, recentlyChanged.Icon), font, config,
                     (sender, args) => PendingNavigationAction = () => SelectCategory(recentlyChanged));
                 AddToList(CategoryNavigationList, button, config.ButtonHeight);
                 CategoryButtons.Add(button);
@@ -112,7 +99,7 @@ namespace Quaver.Shared.Screens.V2.Options
             foreach (var definition in OptionsNavigationCatalog.Categories)
             {
                 var button = new OptionsCategoryButton(definition,
-                    OptionsIconAtlas.GetRegion(OptionsIcons, definition.Icon.Value), font, config,
+                    OptionsIconAtlas.GetRegion(OptionsIcons, definition.Icon), font, config,
                     (sender, args) => PendingNavigationAction = () => SelectCategory(definition));
                 AddToList(CategoryNavigationList, button, config.ButtonHeight);
                 CategoryButtons.Add(button);

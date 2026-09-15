@@ -171,9 +171,6 @@ namespace Quaver.Shared.Assets
         public static Texture2D OptionsInput => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-input.png");
         public static Texture2D OptionsMisc => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-misc.png");
         public static Texture2D OptionsV2Icons => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Options/options-icons.png");
-        public static Texture2D OptionsV2SearchIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-search.png");
-        public static Texture2D OptionsV2ResetIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-reset.png");
-        public static Texture2D OptionsV2RecentlyChangedIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-recently-changed.png");
         public static Texture2D GrayedMapset => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/grayed-mapset.png");
         public static Texture2D DeleteButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/delete-button.png");
         public static Texture2D ViewScoresButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/view-scores-button.png");

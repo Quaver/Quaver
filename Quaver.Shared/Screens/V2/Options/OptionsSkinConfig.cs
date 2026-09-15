@@ -278,26 +278,8 @@ namespace Quaver.Shared.Screens.V2.Options
         [SkinColor]
         public string ScrollbarColor { get; set; } = "#A7A7A7FF";
 
-        /// <summary>
-        ///     The icon of the search entry in the rail. Uses the built-in options-search.png when empty.
-        /// </summary>
-        [SkinAssetPath]
-        public string SearchIcon { get; set; } = "";
-
-        /// <summary>
-        ///     The icon on the search entry that clears the search. Uses the built-in options-reset.png when empty.
-        /// </summary>
-        [SkinAssetPath]
-        public string SearchResetIcon { get; set; } = "";
-
         [Range(1, 8192)]
-        public float SearchResetIconSize { get; set; } = 20;
-
-        /// <summary>
-        ///     The icon of the "Recently Changed" entry. Uses the built-in options-recently-changed.png when empty.
-        /// </summary>
-        [SkinAssetPath]
-        public string RecentlyChangedIcon { get; set; } = "";
+        public float SearchResetIconSize { get; set; } = 30;
 
         /// <summary>
         ///     The color of the category icons and names while a search is running.

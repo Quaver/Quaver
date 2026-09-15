@@ -29,9 +29,9 @@ namespace Quaver.Shared.Screens.V2.Options.Catalog
         /// <summary>
         ///     The category's icon in the icon atlas
         /// </summary>
-        internal OptionsIconFrame? Icon { get; }
+        internal OptionsIconFrame Icon { get; }
 
-        internal OptionsCategoryDefinition(OptionsCategoryId id, string localizationKey, OptionsIconFrame? icon)
+        internal OptionsCategoryDefinition(OptionsCategoryId id, string localizationKey, OptionsIconFrame icon)
         {
             Id = id;
             LocalizationKey = localizationKey;
