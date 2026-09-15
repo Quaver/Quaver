@@ -210,6 +210,11 @@ namespace Quaver.Shared.Screens.Edit
 
         /// <summary>
         /// </summary>
+        public Bindable<bool> ShowBookmarks { get; } =
+            ConfigManager.EditorShowBookmarks ?? new Bindable<bool>(true) { Value = true };
+
+        /// <summary>
+        /// </summary>
         public BindableInt WaveformBrightness { get; } =
             ConfigManager.EditorWaveformBrightness ?? new BindableInt(50, 1, 100);
 
@@ -583,6 +588,9 @@ namespace Quaver.Shared.Screens.Edit
 
             if (ShowSpectrogram != ConfigManager.EditorShowSpectrogram)
                 ShowSpectrogram.Dispose();
+
+            if (ShowBookmarks != ConfigManager.EditorShowBookmarks)
+                ShowBookmarks.Dispose();
 
             if (ConfigManager.Pitched != null)
                 ConfigManager.Pitched.ValueChanged -= OnPitchedChanged;

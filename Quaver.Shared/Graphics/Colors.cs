@@ -69,18 +69,26 @@ namespace Quaver.Shared.Graphics
                 return Swan;
             if (userGroups.HasFlag(UserGroups.Developer))
                 return ColorHelper.HexToColor("#bb79e5");
+            if (userGroups.HasFlag(UserGroups.GraphicDesigner))
+                return ColorHelper.HexToColor("#09d18b");
             if (userGroups.HasFlag(UserGroups.Bot))
                 return ColorHelper.HexToColor($"#f8ff97");
             if (userGroups.HasFlag(UserGroups.Admin))
                 return ColorHelper.HexToColor($"#ef2828");
             if (userGroups.HasFlag(UserGroups.Moderator))
                 return ColorHelper.HexToColor($"#4cb0f7");
+            if (userGroups.HasFlag(UserGroups.TrialRankingSupervisor))
+                return ColorHelper.HexToColor($"#9d66ff");
             if (userGroups.HasFlag(UserGroups.RankingSupervisor))
                 return ColorHelper.HexToColor($"#49e6ef");
+            if (userGroups.HasFlag(UserGroups.HeadRankingSupervisor))
+                return ColorHelper.HexToColor($"#ff7168");
             if (userGroups.HasFlag(UserGroups.Contributor))
                 return ColorHelper.HexToColor($"#75e475");
             if (userGroups.HasFlag(UserGroups.Donator))
-                return ColorHelper.HexToColor($"#f47fff");
+                return ColorHelper.HexToColor($"#ff326c");
+            if (userGroups.HasFlag(UserGroups.CommunityManager))
+                return ColorHelper.HexToColor($"#e9ab55");
             if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 

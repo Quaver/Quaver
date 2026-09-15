@@ -6,7 +6,6 @@ using ImGuiNET;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Interop;
-using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble.Logging;
 
 #pragma warning disable
@@ -17,15 +16,6 @@ namespace Quaver.Shared.Scripting
     [MoonSharpUserData]
     public static class ImGuiRedirect
     {
-        internal static IEditorPlugin CurrentEditorPlugin { get; set; }
-
-        public static bool Begin(string name) => Begin(name, ImGuiWindowFlags.None);
-
-        public static bool Begin(string name, ImGuiWindowFlags flags) =>
-            CurrentEditorPlugin is { } plugin
-                ? EditorImGui.Begin(plugin, name, flags)
-                : ImGui.Begin(name, flags);
-
         public static void BeginPopupContextWindow() => ImGui.BeginPopupContextWindow();
 
         public static void BeginPopupContextWindow(string str_id) => ImGui.BeginPopupContextWindow(str_id);

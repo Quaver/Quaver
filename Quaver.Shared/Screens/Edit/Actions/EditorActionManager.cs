@@ -786,6 +786,16 @@ namespace Quaver.Shared.Screens.Edit.Actions
                 Perform(new EditorActionChangeTimingGroupColor(this, WorkingMap, timingGroup, color), fromLua);
         }
 
+        public void StartPlayback(bool fromLua = false)
+        {
+            EditScreen.Track.Play();
+        }
+
+        public void StopPlayback(bool fromLua = false)
+        {
+            EditScreen.Track.Stop();
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="input"></param>

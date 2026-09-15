@@ -29,7 +29,8 @@ namespace Quaver.Shared.Assets
         HeadRankingSupervisor,
         Contributor,
         Moderator,
-        Donator
+        Donator,
+        CommunityManager
     }
 
     /// <summary>
@@ -47,7 +48,7 @@ namespace Quaver.Shared.Assets
 
         private const int LogicalSheetWidth = 237;
 
-        private const int LogicalSheetHeight = 319;
+        private const int LogicalSheetHeight = 346;
 
         private static Texture2D? Sheet { get; set; }
 
@@ -68,7 +69,8 @@ namespace Quaver.Shared.Assets
                 { GlobalUserGroup.HeadRankingSupervisor, (8, 197) },
                 { GlobalUserGroup.Contributor, (9, 110) },
                 { GlobalUserGroup.Moderator, (10, 106) },
-                { GlobalUserGroup.Donator, (11, 88) }
+                { GlobalUserGroup.Donator, (11, 88) },
+                { GlobalUserGroup.CommunityManager, (12, 169) }
             };
 
         /// <summary>
