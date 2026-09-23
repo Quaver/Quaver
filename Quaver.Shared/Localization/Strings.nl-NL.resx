@@ -3276,103 +3276,103 @@ om andere spelers het te laten downloaden?</value>
     <value>Kopieer naar Lokale Skins</value>
   </data>
   <data name="SkinEditor_CopyTitle" xml:space="preserve">
-    <value>Name the local skin copy</value>
+    <value>Geef de lokale kopie van de skin een naam</value>
   </data>
   <data name="SkinEditor_CopyFailed" xml:space="preserve">
-    <value>Could not copy the Workshop skin: {0}</value>
+    <value>Kon de Workshopskin niet kopiëren: {0}</value>
   </data>
   <data name="SkinEditor_WorkshopReadOnly" xml:space="preserve">
-    <value>Workshop skins are read-only.</value>
+    <value>Workshopskins zijn alleen-lezen.</value>
   </data>
   <data name="SkinEditor_UnsavedTitle" xml:space="preserve">
-    <value>Unsaved skin changes</value>
+    <value>Onopgeslagen skinveranderingen</value>
   </data>
   <data name="SkinEditor_UnsavedMessage" xml:space="preserve">
-    <value>Save your staged skin changes before closing?</value>
+    <value>De aangevoerde veranderingen aan je skin opslaan voor het afsluiten?</value>
   </data>
   <data name="SkinEditor_ConflictTitle" xml:space="preserve">
-    <value>skin.yml changed externally</value>
+    <value>skin.yml is extern gewijzigd</value>
   </data>
   <data name="SkinEditor_ConflictMessage" xml:space="preserve">
-    <value>Reload the external file, overwrite it, or keep editing?</value>
+    <value>Herlaad het externe bestand, schrijf het over of doorgaan met bewerken?</value>
   </data>
   <data name="SkinEditor_SaveSuccess" xml:space="preserve">
-    <value>Skin V2 configuration saved.</value>
+    <value>Skin V2 configuratie opgeslagen.</value>
   </data>
   <data name="SkinEditor_SaveFailed" xml:space="preserve">
-    <value>The Skin V2 configuration could not be saved.</value>
+    <value>De Skin V2 configuratie kon niet worden opgeslagen.</value>
   </data>
   <data name="SkinEditor_OpenFailed" xml:space="preserve">
-    <value>The Skin Editor could not open: {0}</value>
+    <value>De Skin Editor kon niet geopend worden: {0}</value>
   </data>
   <data name="SkinEditor_FileCheckFailed" xml:space="preserve">
-    <value>Could not check skin.yml for external changes: {0}</value>
+    <value>Kon skin.yml niet controleren op externe wijzigingen: {0}</value>
   </data>
   <data name="SkinEditor_ReloadFailed" xml:space="preserve">
-    <value>Could not reload skin.yml: {0}</value>
+    <value>Kon skin.yml niet herladen: {0}</value>
   </data>
   <data name="SkinEditor_SelectComponent" xml:space="preserve">
-    <value>Select a component to edit.</value>
+    <value>Selecteer een component om te wijzigen.</value>
   </data>
   <data name="SkinEditor_NoEditableProperties" xml:space="preserve">
-    <value>This component has no editable properties.</value>
+    <value>Dit component heeft geen bewerkbare eigenschappen.</value>
   </data>
   <data name="SkinEditor_On" xml:space="preserve">
-    <value>On</value>
+    <value>Aan</value>
   </data>
   <data name="SkinEditor_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Uit</value>
   </data>
   <data name="SkinEditor_Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Legen</value>
   </data>
   <data name="SkinEditor_ResetDefault" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>Standaard herstellen</value>
   </data>
   <data name="SkinEditor_AddStop" xml:space="preserve">
-    <value>Add Gradient Stop</value>
+    <value>Stop Van Verloop Toevoegen</value>
   </data>
   <data name="SkinEditor_SearchAssets" xml:space="preserve">
-    <value>Search assets...</value>
+    <value>Zoek assets...</value>
   </data>
   <data name="SkinEditor_LoadingAssets" xml:space="preserve">
-    <value>Loading assets…</value>
+    <value>Assets aan het laden...</value>
   </data>
   <data name="SkinEditor_AssetScanFailed" xml:space="preserve">
-    <value>Could not scan skin assets.</value>
+    <value>Kon de assets van de skin niet scannen.</value>
   </data>
   <data name="SkinEditor_AllFolders" xml:space="preserve">
-    <value>All folders</value>
+    <value>Alle Folders</value>
   </data>
   <data name="SkinEditor_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Herladen</value>
   </data>
   <data name="SkinEditor_OpenFolder" xml:space="preserve">
     <value>Open Folder</value>
   </data>
   <data name="SkinEditor_InvalidValue" xml:space="preserve">
-    <value>Enter a valid value.</value>
+    <value>Voer een geldige waarde in.</value>
   </data>
   <data name="SkinEditor_InvalidRange" xml:space="preserve">
-    <value>Enter a value from {0} to {1}.</value>
+    <value>Voer een waarde in van {0} tot {1}.</value>
   </data>
   <data name="SkinEditor_InvalidColor" xml:space="preserve">
-    <value>Use #RRGGBB or #RRGGBBAA format.</value>
+    <value>Gebruik #RRGGBB of #RRGGBBAA format.</value>
   </data>
   <data name="SkinEditor_InvalidAssetPath" xml:space="preserve">
-    <value>Choose a file inside this skin.</value>
+    <value>Kies een bestand in deze skin.</value>
   </data>
   <data name="SkinEditor_InvalidGradientStop" xml:space="preserve">
-    <value>Use unique positions from 0 to 1 and valid hex colors.</value>
+    <value>Gebruik unieke posities van 0 tot 1 en geldige hex-kleuren</value>
   </data>
   <data name="SkinEditor_SelectorTooltip" xml:space="preserve">
-    <value>Click to select the next option.</value>
+    <value>Klik om de volgende optie te selecteren.</value>
   </data>
   <data name="SkinEditor_Component_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Achtergrond</value>
   </data>
   <data name="SkinEditor_Component_BackgroundEffects" xml:space="preserve">
-    <value>Background Effects</value>
+    <value>Achtergrondeffecten</value>
   </data>
   <data name="SkinEditor_Component_Logo" xml:space="preserve">
     <value>Logo</value>
@@ -3381,49 +3381,49 @@ om andere spelers het te laten downloaden?</value>
     <value>Logo Accent</value>
   </data>
   <data name="SkinEditor_Component_Actions" xml:space="preserve">
-    <value>Action Buttons</value>
+    <value>Actieknoppen</value>
   </data>
   <data name="SkinEditor_Component_News" xml:space="preserve">
-    <value>News Card</value>
+    <value>Nieuws-tab</value>
   </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
-    <value>Top Navigation</value>
+    <value>Top Navigatie</value>
   </data>
   <data name="SkinEditor_Component_BottomNavigation" xml:space="preserve">
-    <value>Bottom Navigation</value>
+    <value>Onderkant Navigatie</value>
   </data>
   <data name="SkinEditor_Component_NavigationButtons" xml:space="preserve">
-    <value>Navigation Buttons</value>
+    <value>Navigatieknoppen</value>
   </data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profiel</value>
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
-    <value>Screen Title</value>
+    <value>Schermtitel</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve">
-    <value>Solid Color</value>
+    <value>Effen Kleur</value>
   </data>
   <data name="SkinEditor_Property_Path" xml:space="preserve">
-    <value>Image Path</value>
+    <value>Pad Afbeelding</value>
   </data>
   <data name="SkinEditor_Property_Fit" xml:space="preserve">
-    <value>Image Fit</value>
+    <value>Afbeelding Passend Maken</value>
   </data>
   <data name="SkinEditor_Property_Stops" xml:space="preserve">
-    <value>Gradient Stops</value>
+    <value>Verloop Stops</value>
   </data>
   <data name="SkinEditor_Property_AngleDegrees" xml:space="preserve">
-    <value>Angle</value>
+    <value>Hoek</value>
   </data>
   <data name="SkinEditor_Property_X" xml:space="preserve">
-    <value>Origin X</value>
+    <value>Begin X</value>
   </data>
   <data name="SkinEditor_Property_Y" xml:space="preserve">
-    <value>Origin Y</value>
+    <value>Begin Y</value>
   </data>
   <data name="SkinEditor_Property_RadialRadius" xml:space="preserve">
     <value>Radius Radiaal</value>
@@ -3450,111 +3450,111 @@ om andere spelers het te laten downloaden?</value>
     <value>Afbeelding</value>
   </data>
   <data name="SkinEditor_Property_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Kleur</value>
   </data>
   <data name="SkinEditor_Property_HoverColor" xml:space="preserve">
-    <value>Hover Color</value>
+    <value>Kleur Wanneer Muis Erover</value>
   </data>
   <data name="SkinEditor_Property_AccentColor" xml:space="preserve">
-    <value>Accent Color</value>
+    <value>Accent Kleur</value>
   </data>
   <data name="SkinEditor_Property_TextColor" xml:space="preserve">
-    <value>Text Color</value>
+    <value>Tekstkleur</value>
   </data>
   <data name="SkinEditor_Property_BottomOffset" xml:space="preserve">
-    <value>Bottom Offset</value>
+    <value>Marge Onderkant</value>
   </data>
   <data name="SkinEditor_Property_Scale" xml:space="preserve">
-    <value>Scale</value>
+    <value>Schaal</value>
   </data>
   <data name="SkinEditor_Property_FallbackImage" xml:space="preserve">
-    <value>Fallback Image</value>
+    <value>Terugval Afbeelding</value>
   </data>
   <data name="SkinEditor_Group_Download" xml:space="preserve">
     <value>Download</value>
   </data>
   <data name="SkinEditor_Component_SearchArea" xml:space="preserve">
-    <value>Search Area</value>
+    <value>Zoekgebied</value>
   </data>
   <data name="SkinEditor_Property_BackgroundColor" xml:space="preserve">
-    <value>Background Color</value>
+    <value>Achtergrondkleur</value>
   </data>
   <data name="SkinEditor_Property_ForegroundColor" xml:space="preserve">
-    <value>Foreground Color</value>
+    <value>Voorgrondkleur</value>
   </data>
   <data name="SkinEditor_Property_OfflineStatusColor" xml:space="preserve">
-    <value>Offline Status Color</value>
+    <value>Offline Status Kleur</value>
   </data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
     <value>Metadata</value>
   </data>
   <data name="SkinEditor_MetadataTitle" xml:space="preserve">
-    <value>Edit Skin Metadata</value>
+    <value>Bewerk Skin Metadata</value>
   </data>
   <data name="SkinEditor_MetadataName" xml:space="preserve">
-    <value>Skin Name</value>
+    <value>Naam Skin</value>
   </data>
   <data name="SkinEditor_MetadataAuthor" xml:space="preserve">
-    <value>Author</value>
+    <value>Maker</value>
   </data>
   <data name="SkinEditor_MetadataVersion" xml:space="preserve">
-    <value>Version</value>
+    <value>Versie</value>
   </data>
   <data name="SkinEditor_MetadataApply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Toepassen</value>
   </data>
   <data name="SkinEditor_MetadataRequired" xml:space="preserve">
-    <value>Name, author, and version are required.</value>
+    <value>Naam, maker en versie zijn vereist.</value>
   </data>
   <data name="SkinEditor_PreviewDrop" xml:space="preserve">
-    <value>Drop an image here for the Workshop preview</value>
+    <value>Sleep een afbeeldilng hier als voorbeeld voor de Workshop</value>
   </data>
   <data name="SkinEditor_PreviewDropHint" xml:space="preserve">
-    <value>PNG, JPG, or JPEG; saved as steam_workshop_preview.png</value>
+    <value>PNG, JPG, of JPEG; Opgeslagen als steam_workshop_preview.png</value>
   </data>
   <data name="SkinEditor_PreviewInvalid" xml:space="preserve">
-    <value>Choose a valid PNG, JPG, or JPEG image.</value>
+    <value>Kies een geldige PNG, JPG of JPEG bestand</value>
   </data>
   <data name="SkinEditor_PreviewFileMissing" xml:space="preserve">
-    <value>The selected preview image no longer exists.</value>
+    <value>De geselecteerde voorbeeldafbeelding bestaat niet meer.</value>
   </data>
   <data name="SkinEditor_PreviewTooLarge" xml:space="preserve">
-    <value>The converted Workshop preview must be smaller than 1 MB.</value>
+    <value>Het omgezette Workshopvoorbeeld moet kleiner zijn dan 1 MB.</value>
   </data>
   <data name="SkinEditor_PreviewSaveFailed" xml:space="preserve">
-    <value>Could not save the Workshop preview: {0}</value>
+    <value>Kon het Workshopvoorbeeld niet opslaan: {0}</value>
   </data>
   <data name="Screen_V2_InitializationScreen" xml:space="preserve">
-    <value>InitializationScreen</value>
+    <value>InitialisatieScherm</value>
   </data>
   <data name="Screen_V2_ImportingScreen" xml:space="preserve">
-    <value>ImportingScreen</value>
+    <value>Importeerscherm</value>
   </data>
   <data name="Screen_V2_MapLoadingScreen" xml:space="preserve">
-    <value>MapLoadingScreen</value>
+    <value>MapLaadscherm</value>
   </data>
   <data name="Screen_V2_SelectionScreen" xml:space="preserve">
-    <value>SelectionScreen</value>
+    <value>SelectieScherm</value>
   </data>
   <data name="Screen_V2_DownloadingScreen" xml:space="preserve">
-    <value>DownloadingScreen</value>
+    <value>Downloadscherm</value>
   </data>
   <data name="Screen_V2_MultiplayerLobbyScreen" xml:space="preserve">
-    <value>MultiplayerLobbyScreen</value>
+    <value>MultiplayerLobbyscherm</value>
   </data>
   <data name="Screen_V2_MultiplayerGameScreen" xml:space="preserve">
-    <value>MultiplayerGameScreen</value>
+    <value>MultiplayerSpelscherm</value>
   </data>
   <data name="Screen_V2_MultiplayerScreen" xml:space="preserve">
-    <value>MultiplayerScreen</value>
+    <value>Multiplayerscherm</value>
   </data>
   <data name="Screen_V2_MusicPlayerScreen" xml:space="preserve">
-    <value>MusicPlayerScreen</value>
+    <value>Muziekspelerscherm</value>
   </data>
   <data name="Screen_V2_TheaterScreen" xml:space="preserve">
-    <value>TheaterScreen</value>
+    <value>Theaterscherm</value>
   </data>
   <data name="Screen_V2_ResultsScreen" xml:space="preserve">
-    <value>ResultsScreen</value>
+    <value>Resultatenscherm</value>
   </data>
 </root>
