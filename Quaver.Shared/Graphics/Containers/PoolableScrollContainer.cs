@@ -233,7 +233,7 @@ namespace Quaver.Shared.Graphics.Containers
 
                 Pool.Insert(index - PoolStartingIndex, drawable);
 
-                for (int i = index; i < Pool.Count; i++)
+                for (int i = index - PoolStartingIndex; i < Pool.Count; i++)
                 {
                     var foo = Pool[i];
                     foo.Y = (PoolStartingIndex + i) * foo.Height + PaddingTop;

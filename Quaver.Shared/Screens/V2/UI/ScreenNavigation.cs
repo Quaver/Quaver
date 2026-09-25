@@ -11,6 +11,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border.Components.Users;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
@@ -754,12 +755,12 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (DialogManager.Dialogs.Count == 0)
             {
-                DialogManager.Show(new OnlineHubDialog());
+                DialogManager.Show(new OverlayDialog());
                 return;
             }
 
             var topDialog = DialogManager.Dialogs[DialogManager.Dialogs.Count - 1];
-            if (topDialog is OnlineHubDialog dialog)
+            if (topDialog is OverlayDialog dialog)
                 dialog.Close();
         }
 

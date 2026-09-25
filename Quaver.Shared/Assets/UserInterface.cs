@@ -116,7 +116,9 @@ namespace Quaver.Shared.Assets
         public static Texture2D HubOnlineUsers => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-users.png");
         public static Texture2D HubSongRequests => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-song-requests.png");
         public static Texture2D HubHeaderBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-header-background.png");
+        public static Texture2D HubOnlineAvatarMask => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-mask.png");
         public static Texture2D HubOnlineIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-icon.png");
+        public static Texture2D HubOnlineIconV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-icon-v2.png");
         public static Texture2D HubNotificationIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/notification.png");
         public static Texture2D HubNotificationIconUnread => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/notification-red.png");
         public static Texture2D HubDownloadContainerBlue => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-container-blue.png");
