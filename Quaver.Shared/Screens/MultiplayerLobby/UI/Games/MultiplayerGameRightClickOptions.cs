@@ -32,9 +32,9 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
                         else
                             DialogManager.Show(new JoinGameDialog(game));
                         break;
-                    case ViewMatchHistory:
-                        BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{game.GameId}");
-                        break;
+                    //case ViewMatchHistory:
+                    //    BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{game.GameId}");
+                    //    break;
                     case SpectateGame:
                         var isContributor = OnlineManager.Self.OnlineUser.UserGroups.HasFlag(UserGroups.Contributor);
                         if (!(OnlineManager.IsDonator || isContributor))
@@ -57,7 +57,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Games
             var options = new Dictionary<string, Color>()
             {
                 {JoinGame, Color.White},
-                {ViewMatchHistory, ColorHelper.HexToColor("#FFE76B")},
+                //{ViewMatchHistory, ColorHelper.HexToColor("#FFE76B")},
                 {SpectateGame, ColorHelper.HexToColor("#9B51E0")}
             };
 

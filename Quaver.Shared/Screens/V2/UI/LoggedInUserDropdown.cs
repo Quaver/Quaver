@@ -700,7 +700,7 @@ namespace Quaver.Shared.Screens.V2.UI
         private void OpenProfile()
         {
             if (User?.OnlineUser != null)
-                BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.OnlineUser.Id}");
+                BrowserHelper.OpenURL($"https://quavergame.com/users/{User.OnlineUser.Id}");
         }
 
         private static void Logout() => ThreadScheduler.Run(() => OnlineManager.Client?.Disconnect());
