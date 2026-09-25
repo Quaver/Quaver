@@ -22,7 +22,7 @@ namespace Quaver.Shared.Online.API.News
 
     public class APIRequestNewsFeed : APIRequest<APIResponseNewsFeed>
     {
-        private const string URL = "hhttps://quavergame.com/feed.json";
+        private const string URL = "https://quavergame.com/feed.json";
 
         private NewsThumbnailType ThumbnailType { get; }
 
