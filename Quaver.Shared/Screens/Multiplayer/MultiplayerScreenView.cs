@@ -199,7 +199,7 @@ namespace Quaver.Shared.Screens.Multiplayer
             {
                 new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("Leave"), 14, (o, e) => MultiplayerScreen.LeaveGame()),
                 new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("Options"), 14, (o, e) => DialogManager.Show(new OptionsDialog())),
-                //new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("MatchHistory"), 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
+                new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("MatchHistory"), 14, (o, e) => BrowserHelper.OpenURL($"https://quavergame.com/multiplayer/game/{OnlineManager.CurrentGame.GameId}")),
                 new ButtonText(FontManager.GetWobbleFont(Fonts.InterSemiBold), MultiplayerLocalization.Get("Commands"), 14, (o, e) => BrowserHelper.OpenURL("https://quavergame.com/docs/Multiplayer/commands"))
             }, new List<ButtonText>
             {
