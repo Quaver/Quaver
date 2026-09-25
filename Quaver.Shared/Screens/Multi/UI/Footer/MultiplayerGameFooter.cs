@@ -37,7 +37,7 @@ namespace Quaver.Shared.Screens.Multi.UI.Footer
             new List<Drawable>()
             {
                 new IconTextButtonMultiplayerReady(game),
-                //new IconTextButtonMultiplayerMatchHistory(game),
+                new IconTextButtonMultiplayerMatchHistory(game),
                 new IconTextButtonMultiplayerCommands(),
             })
         {
