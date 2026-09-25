@@ -2098,7 +2098,7 @@ Bruk filtrene til å begrense søket.</value>
     <value>Vis forhåndsvisning av spillopplevelse</value>
   </data>
   <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
-    <value>Show Bookmarks</value>
+    <value>Vis bokmerker</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Vanskelighetsgrad (Referanse)</value>
@@ -3472,81 +3472,81 @@ Bruk filtrene til å begrense søket.</value>
     <value>Bakgrunnsfarge</value>
   </data>
   <data name="SkinEditor_Property_ForegroundColor" xml:space="preserve">
-    <value>Foreground Color</value>
+    <value>Forgrunnsfarge</value>
   </data>
   <data name="SkinEditor_Property_OfflineStatusColor" xml:space="preserve">
-    <value>Offline Status Color</value>
+    <value>Offline statusfarge</value>
   </data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
     <value>Metadata</value>
   </data>
   <data name="SkinEditor_MetadataTitle" xml:space="preserve">
-    <value>Edit Skin Metadata</value>
+    <value>Redigere stil metadata</value>
   </data>
   <data name="SkinEditor_MetadataName" xml:space="preserve">
-    <value>Skin Name</value>
+    <value>Stil navn</value>
   </data>
   <data name="SkinEditor_MetadataAuthor" xml:space="preserve">
-    <value>Author</value>
+    <value>Laget av</value>
   </data>
   <data name="SkinEditor_MetadataVersion" xml:space="preserve">
-    <value>Version</value>
+    <value>Versjon</value>
   </data>
   <data name="SkinEditor_MetadataApply" xml:space="preserve">
-    <value>Apply</value>
+    <value>Legg til</value>
   </data>
   <data name="SkinEditor_MetadataRequired" xml:space="preserve">
-    <value>Name, author, and version are required.</value>
+    <value>Navn, forfatter og versjon er påkrevd.</value>
   </data>
   <data name="SkinEditor_PreviewDrop" xml:space="preserve">
-    <value>Drop an image here for the Workshop preview</value>
+    <value>Slipp et bilde her for forhåndsvisning av Workshop</value>
   </data>
   <data name="SkinEditor_PreviewDropHint" xml:space="preserve">
-    <value>PNG, JPG, or JPEG; saved as steam_workshop_preview.png</value>
+    <value>PNG, JPG eller JPEG; lagret som steam_workshop_preview.png</value>
   </data>
   <data name="SkinEditor_PreviewInvalid" xml:space="preserve">
-    <value>Choose a valid PNG, JPG, or JPEG image.</value>
+    <value>Velg et valid PNG, JPG eller JPEG-bilde.</value>
   </data>
   <data name="SkinEditor_PreviewFileMissing" xml:space="preserve">
-    <value>The selected preview image no longer exists.</value>
+    <value>Det valgte forhåndsvisningsbildet finnes ikke lenger.</value>
   </data>
   <data name="SkinEditor_PreviewTooLarge" xml:space="preserve">
-    <value>The converted Workshop preview must be smaller than 1 MB.</value>
+    <value>Den konverterte forhåndsvisning av Workshop må være mindre enn 1 MB.</value>
   </data>
   <data name="SkinEditor_PreviewSaveFailed" xml:space="preserve">
-    <value>Could not save the Workshop preview: {0}</value>
+    <value>Kunne ikke lagre forhåndsvisningen av Workshop: {0}</value>
   </data>
   <data name="Screen_V2_InitializationScreen" xml:space="preserve">
-    <value>InitializationScreen</value>
+    <value>Initialiserings-skjerm</value>
   </data>
   <data name="Screen_V2_ImportingScreen" xml:space="preserve">
-    <value>ImportingScreen</value>
+    <value>Importerings-skjerm</value>
   </data>
   <data name="Screen_V2_MapLoadingScreen" xml:space="preserve">
-    <value>MapLoadingScreen</value>
+    <value>Laster-skjerm</value>
   </data>
   <data name="Screen_V2_SelectionScreen" xml:space="preserve">
-    <value>SelectionScreen</value>
+    <value>Seleksjons-skjerm</value>
   </data>
   <data name="Screen_V2_DownloadingScreen" xml:space="preserve">
-    <value>DownloadingScreen</value>
+    <value>Nedlastings-skjerm</value>
   </data>
   <data name="Screen_V2_MultiplayerLobbyScreen" xml:space="preserve">
-    <value>MultiplayerLobbyScreen</value>
+    <value>FlerspillerLobby-skjerm</value>
   </data>
   <data name="Screen_V2_MultiplayerGameScreen" xml:space="preserve">
-    <value>MultiplayerGameScreen</value>
+    <value>FlerspillerSpill-skjerm</value>
   </data>
   <data name="Screen_V2_MultiplayerScreen" xml:space="preserve">
-    <value>MultiplayerScreen</value>
+    <value>Flerspiller-skjerm</value>
   </data>
   <data name="Screen_V2_MusicPlayerScreen" xml:space="preserve">
-    <value>MusicPlayerScreen</value>
+    <value>Musikkspiller-skjerm</value>
   </data>
   <data name="Screen_V2_TheaterScreen" xml:space="preserve">
-    <value>TheaterScreen</value>
+    <value>Teater-skjerm</value>
   </data>
   <data name="Screen_V2_ResultsScreen" xml:space="preserve">
-    <value>ResultsScreen</value>
+    <value>Resultats-skjerm</value>
   </data>
 </root>
