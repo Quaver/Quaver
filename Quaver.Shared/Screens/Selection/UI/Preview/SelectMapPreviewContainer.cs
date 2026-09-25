@@ -276,26 +276,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
                 switch (scroll.Value)
                 {
-                    case ScrollDirection.Down:
-                    case ScrollDirection.Split:
-                        playfield.Container.Alignment = Alignment.BotLeft;
-                        playfield.Container.Y = -MenuBorder.HEIGHT - Y;
-
-                        if (playfield.Stage.HitError.Y < 0)
-                            playfield.Stage.HitError.Y *= previewMultiplier;
-
-                        if (playfield.Stage.HitBubbles.Y < 0)
-                            playfield.Stage.HitBubbles.Y *= previewMultiplier;
-
-                        if (playfield.Stage.JudgementHitBursts[0].OriginalPosY < 0)
-                            for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
-                                playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
-
-                        if (playfield.Stage.ComboDisplay.OriginalPosY < 0)
-                            playfield.Stage.ComboDisplay.OriginalPosY *= previewMultiplier;
-
-                        playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
-                        break;
                     case ScrollDirection.Up:
                         playfield.Container.Alignment = Alignment.TopLeft;
                         playfield.Stage.HitError.Y -= filterPanelHeight + MenuBorder.HEIGHT;
@@ -320,7 +300,24 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                         playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        playfield.Container.Alignment = Alignment.BotLeft;
+                        playfield.Container.Y = -MenuBorder.HEIGHT - Y;
+
+                        if (playfield.Stage.HitError.Y < 0)
+                            playfield.Stage.HitError.Y *= previewMultiplier;
+
+                        if (playfield.Stage.HitBubbles.Y < 0)
+                            playfield.Stage.HitBubbles.Y *= previewMultiplier;
+
+                        if (playfield.Stage.JudgementHitBursts[0].OriginalPosY < 0)
+                            for (var i = 0; i < playfield.Stage.JudgementHitBursts.Count; i++)
+                                playfield.Stage.JudgementHitBursts[i].OriginalPosY *= previewMultiplier;
+
+                        if (playfield.Stage.ComboDisplay.OriginalPosY < 0)
+                            playfield.Stage.ComboDisplay.OriginalPosY *= previewMultiplier;
+
+                        playfield.Stage.ComboDisplay.Y = playfield.Stage.ComboDisplay.OriginalPosY;
+                        break;
                 }
 
                 ShowTestPlayPrompt();

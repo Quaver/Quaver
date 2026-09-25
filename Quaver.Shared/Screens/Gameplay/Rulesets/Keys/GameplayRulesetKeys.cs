@@ -76,19 +76,30 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             if (!ConfigManager.DisplayTimingLines.Value)
                 return;
 
-            var direction = ScrollDirection;
             var playfield = (GameplayPlayfieldKeys)Playfield;
             var keys = MapManager.Selected.Value.Qua?.GetKeyCount() ?? 4;
 
-            if (direction.Equals(ScrollDirection.Split))
+            var lastDir = playfield.ScrollDirections[0];
+            var lastWidth = playfield.Stage.Receptors[0].Width;
+            var lastPosX = playfield.Stage.Receptors[0].X;
+            var lastPosY = playfield.TimingLinePositionY[0];
+            for (var i = 1; i <= keys; i++)
             {
-                var halfIndex = (int)Math.Ceiling(keys / 2.0) - 1;
-                var halfPos = playfield.Stage.Receptors[halfIndex].X + playfield.Stage.Receptors[halfIndex].Width;
-                TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Down, playfield.TimingLinePositionY[0], halfPos, 0));
-                TimingLineManagers.Add(new TimingLineManager(this, ScrollDirection.Up, playfield.TimingLinePositionY[halfIndex + 1], playfield.Width - halfPos, halfPos));
-                return;
+                if (i == keys || playfield.ScrollDirections[i] != lastDir || playfield.TimingLinePositionY[i] != lastPosY)
+                {
+                    TimingLineManagers.Add(new TimingLineManager(this, lastDir, lastPosY, lastWidth, lastPosX));
+
+                    if (i == keys)
+                        break;
+
+                    lastWidth = 0;
+                    lastDir = playfield.ScrollDirections[i];
+                    lastPosX = playfield.Stage.Receptors[i].X;
+                    lastPosY = playfield.TimingLinePositionY[i];
+                }
+
+                lastWidth += playfield.Stage.Receptors[i].Width;
             }
-            TimingLineManagers.Add(new TimingLineManager(this, direction, playfield.TimingLinePositionY[0], playfield.Width, 0));
         }
 
         /// <inheritdoc />
