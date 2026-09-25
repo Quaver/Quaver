@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.Multiplayer.UI.Dialogs
         {
             var options = new List<IMenuDialogOption>
             {
-                new MenuDialogOption(MultiplayerLocalization.Get("ViewProfile"), () => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User.Id}")),
+                new MenuDialogOption(MultiplayerLocalization.Get("ViewProfile"), () => BrowserHelper.OpenURL($"https://quavergame.com/users/{User.Id}")),
                 new MenuDialogOption(MultiplayerLocalization.Get("SteamProfile"), () => BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{User.SteamId}")),
             };
 
