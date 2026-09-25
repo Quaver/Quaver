@@ -158,17 +158,6 @@ public class UserRow : PoolableSprite<User>
             ColumnGap = 10
         };
     }
-
-    private sealed class ViewportRoundedButton : RoundedButton
-    {
-        private ScrollContainer Viewport { get; }
-
-        public ViewportRoundedButton(ScrollContainer viewport) => Viewport = viewport;
-
-        protected override bool IsMouseInClickArea() =>
-            base.IsMouseInClickArea() &&
-            GraphicsHelper.RectangleContains(Viewport.ScreenRectangle, MouseManager.CurrentState.Position);
-    }
     private void CreateAvatar()
     {
         Avatar = new SpriteAlphaMaskBlend
@@ -359,5 +348,16 @@ public class UserRow : PoolableSprite<User>
     {
         SteamManager.SteamUserAvatarLoaded -= OnSteamUserAvatarLoaded;
         base.Destroy();
+    }
+    
+    private sealed class ViewportRoundedButton : RoundedButton
+    {
+        private ScrollContainer Viewport { get; }
+
+        public ViewportRoundedButton(ScrollContainer viewport) => Viewport = viewport;
+
+        protected override bool IsMouseInClickArea() =>
+            base.IsMouseInClickArea() &&
+            GraphicsHelper.RectangleContains(Viewport.ScreenRectangle, MouseManager.CurrentState.Position);
     }
 }

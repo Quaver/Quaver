@@ -135,8 +135,7 @@ public class UserList : PoolableScrollContainer<User>
             if (!row.Item.HasUserInfo || !e.Statuses.TryGetValue(row.Item.OnlineUser.Id, out var status))
                 continue;
 
-            row.OnStatusUpdate(status ??
-                new UserClientStatus(ClientStatus.InMenus, -1, "", 1, "", 0));
+            row.OnStatusUpdate(status ?? new UserClientStatus(ClientStatus.InMenus, -1, "", 1, "", 0));
         }
     });
 

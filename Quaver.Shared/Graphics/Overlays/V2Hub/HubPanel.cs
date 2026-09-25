@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
@@ -25,7 +26,7 @@ public class HubPanel : Container
 
     private Sprite ContentBackground { get; set; }
     
-    private Sprite NotificationsContent { get; set; }
+    private NotificationsSection NotificationsContent { get; set; }
     private UsersSection UserSection { get; set; }
     private Sprite SongRequestContent { get; set; }
 
@@ -136,16 +137,14 @@ public class HubPanel : Container
         BackgroundLayout.RefreshLayout();
 
         
-        NotificationsContent = new Sprite
+        NotificationsContent = new NotificationsSection(ContentBackground.Size)
         {
-            Parent = ContentBackground,
-            Size = ContentBackground.Size,
-            Tint = ColorHelper.FromHex("#673038")
+            Parent = ContentBackground
         };
         
         UserSection = new UsersSection(ContentBackground.Size)
         {
-            Parent = ContentBackground,
+            Parent = ContentBackground
         };
         
         SongRequestContent = new Sprite
