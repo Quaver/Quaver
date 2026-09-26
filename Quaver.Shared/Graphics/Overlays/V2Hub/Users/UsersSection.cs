@@ -161,7 +161,6 @@ public class UsersSection : Container
         UserDropdownMenu?.Destroy();
         UserDropdownMenu = null;
     }
-
     public void Deactivate()
     {
         SearchBox.Focused = false;

@@ -2499,7 +2499,7 @@ for other players to download?</value>
     <data name="Screen_Hub_CannotSpectateNow" xml:space="preserve"><value>Please finish what you're doing before spectating!</value></data>
     <data name="Screen_Hub_PrivateChat" xml:space="preserve"><value>Private Chat</value></data>
     <data name="Screen_Hub_NotificationRecent" xml:space="preserve">
-        <value>New (+{0})</value>
+        <value>New ({0})</value>
     </data>
     <data name="Screen_Hub_NotificationAll" xml:space="preserve">
         <value>History</value>
@@ -2507,4 +2507,14 @@ for other players to download?</value>
     <data name="Screen_Hub_NotificationClearAll" xml:space="preserve">
         <value>Clear All</value>
     </data>
+    <data name="Screen_Hub_NotificationEmpty" xml:space="preserve"><value>All Clear !
+You do not have any missed Notifications.</value></data>
+    <data name="Screen_Hub_NotificationInfo" xml:space="preserve"><value>Information</value></data>
+    <data name="Screen_Hub_NotificationError" xml:space="preserve"><value>Error</value></data>
+    <data name="Screen_Hub_NotificationWarning" xml:space="preserve"><value>Warning</value></data>
+    <data name="Screen_Hub_NotificationSuccess" xml:space="preserve"><value>Success</value></data>
+    <data name="Screen_Hub_NotificationInviteDetails" xml:space="preserve"><value>Invited you to join a multiplayer game.</value></data>
+    <data name="Screen_Hub_NotificationAccept" xml:space="preserve"><value>Accept</value></data>
+    <data name="Screen_Hub_NotificationDeny" xml:space="preserve"><value>Deny</value></data>
+    <data name="Screen_Hub_NotificationOpenChat" xml:space="preserve"><value>Open chat</value></data>
 </root>

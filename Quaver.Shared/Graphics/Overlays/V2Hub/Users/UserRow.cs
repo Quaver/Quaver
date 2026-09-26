@@ -142,7 +142,7 @@ public class UserRow : PoolableSprite<User>
             Tint = ColorHelper.FromHex("#181E25"),
         };
         
-        Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#354451");
+        Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#3D4B64");
         Row.LeftHover += (s, e) => Row.Tint = ColorHelper.FromHex("#181E25");
         
         Row.Clicked += (s, e) => OnClick?.Invoke(Item);

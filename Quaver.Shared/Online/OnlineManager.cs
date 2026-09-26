@@ -51,6 +51,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Logging;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Online
 {
@@ -1020,7 +1021,9 @@ namespace Quaver.Shared.Online
                                 "Finish what you're doing before accepting this game invite.");
                             break;
                     }
-                });
+                }, type: NotificationType.MultiplayerInvite, senderName: e.Sender,
+                    senderSteamId: user?.OnlineUser?.SteamId ?? 0,
+                    detailText: LocalizationManager.Get("Screen_Hub_NotificationInviteDetails"));
         }
 
         /// <summary>

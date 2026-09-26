@@ -1,12 +1,14 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 using Wobble.Window;
 
@@ -20,13 +22,13 @@ public class HubPanel : Container
     private RoundedButton UserButton { get; set; }
     private RoundedButton SongRequestButton { get; set; }
     
-    private HubSection SelectedTab { get; set; }
+    public HubSection? SelectedTab { get; private set; }
     private Color SelectedSectionColor { get; set; } = ColorHelper.FromHex("#6B83B2");
     private Color UnselectedSectionColor { get; set; } = ColorHelper.FromHex("#273038");
 
     private Sprite ContentBackground { get; set; }
     
-    private NotificationsSection NotificationsContent { get; set; }
+    public NotificationsSection NotificationsSection { get; set; }
     private UsersSection UserSection { get; set; }
     private Sprite SongRequestContent { get; set; }
 
@@ -131,47 +133,81 @@ public class HubPanel : Container
         {
             Parent = BackgroundLayout,
             Size = new ScalableVector2(736, 0),
-            Tint = ColorHelper.FromHex("#273038")
+            Tint = ColorHelper.FromHex("#273038"),
+            UpdateWhenInvisible = false
         };
         BackgroundLayout.SetItemOptions(ContentBackground, new FlexItemOptions { Basis = 0, Grow = 1, Shrink = 1 });
         BackgroundLayout.RefreshLayout();
 
         
-        NotificationsContent = new NotificationsSection(ContentBackground.Size)
+        NotificationsSection = new NotificationsSection(ContentBackground.Size)
         {
-            Parent = ContentBackground
+            Parent = ContentBackground,
+            UpdateWhenInvisible = false
         };
         
         UserSection = new UsersSection(ContentBackground.Size)
         {
-            Parent = ContentBackground
+            Parent = ContentBackground,
+            UpdateWhenInvisible = false
         };
         
         SongRequestContent = new Sprite
         {
             Parent = ContentBackground,
             Size = ContentBackground.Size,
-            Tint = ColorHelper.FromHex("#473038")
+            Tint = ColorHelper.FromHex("#473038"),
+            UpdateWhenInvisible = false
         };
     }
 
     private void SelectTab(HubSection section)
     {
+        if (SelectedTab == section)
+            return;
+        
+        if (SelectedTab == HubSection.Notifications && NotificationsSection.CurrentFeed == NotificationsSection.NotificationFeed.Recent)
+        {
+            NotificationsSection.SetNewNotificationToViewed();
+        }
+        
         SelectedTab = section;
 
+        if (section != HubSection.Notifications)
+        {
+            NotificationsSection.Deactivate();
+            ResetButtons(NotificationsSection);
+        }
+
         if (section != HubSection.Users)
+        {
             UserSection.Deactivate();
+            ResetButtons(UserSection);
+        }
         
         NotificationButton.Tint = section == HubSection.Notifications ? SelectedSectionColor : UnselectedSectionColor;
         UserButton.Tint = section == HubSection.Users ? SelectedSectionColor : UnselectedSectionColor;
         SongRequestButton.Tint = section == HubSection.SongRequest ? SelectedSectionColor : UnselectedSectionColor;
         
-        NotificationsContent.Visible = section == HubSection.Notifications;
+        NotificationsSection.Visible = section == HubSection.Notifications;
         UserSection.Visible = section == HubSection.Users;
         SongRequestContent.Visible = section == HubSection.SongRequest;
+
+        
+    }
+    
+    private static void ResetButtons(Drawable parent)
+    {
+        foreach (var child in parent.Children)
+        {
+            if (child is Button button)
+                button.ResetInteractionState();
+
+            ResetButtons(child);
+        }
     }
 
-    private enum HubSection
+    public enum HubSection
     {
         Notifications,
         Users,

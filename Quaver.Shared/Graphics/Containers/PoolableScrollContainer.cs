@@ -58,6 +58,11 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         private int DrawableHeight => Pool.Count > 0 ? Pool.First().HEIGHT : 0;
 
+        protected virtual float GetItemOffset(int index) => index * DrawableHeight;
+
+        protected virtual int GetMiddleObjectIndex() =>
+            (int)((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -169,7 +174,7 @@ namespace Quaver.Shared.Graphics.Containers
                 return;
 
             // Compute the index of the object currently in the middle of the container.
-            var middleObjectIndex = (int)((-ContentContainer.Y + Height / 2 - PaddingTop) / DrawableHeight);
+            var middleObjectIndex = GetMiddleObjectIndex();
 
             // Compute the corresponding PoolStartingIndex.
             var desiredPoolStartingIndex = DesiredPoolStartingIndex(middleObjectIndex);
@@ -191,7 +196,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + Pool.Count - 1 - overlap - i;
 
                     var drawable = Pool.Last();
-                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.Y = GetItemOffset(objectIndex) + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list back one.
@@ -207,7 +212,7 @@ namespace Quaver.Shared.Graphics.Containers
                     var objectIndex = desiredPoolStartingIndex + overlap + i;
 
                     var drawable = Pool.First();
-                    drawable.Y = objectIndex * DrawableHeight + PaddingTop;
+                    drawable.Y = GetItemOffset(objectIndex) + PaddingTop;
                     drawable.UpdateContent(AvailableItems[objectIndex], objectIndex);
 
                     // Circularly shift the list forward one.
@@ -236,7 +241,7 @@ namespace Quaver.Shared.Graphics.Containers
                 for (int i = index - PoolStartingIndex; i < Pool.Count; i++)
                 {
                     var foo = Pool[i];
-                    foo.Y = (PoolStartingIndex + i) * foo.Height + PaddingTop;
+                    foo.Y = GetItemOffset(PoolStartingIndex + i) + PaddingTop;
                 }
 
                 if (updateContent)
@@ -261,7 +266,7 @@ namespace Quaver.Shared.Graphics.Containers
                     RecalculateContainerHeight(usePoolCount);
 
                     if (scrollTo)
-                        ScrollTo(-index * DrawableHeight, 1000);
+                        ScrollTo(-GetItemOffset(index), 1000);
                 }
         }
 
@@ -285,7 +290,7 @@ namespace Quaver.Shared.Graphics.Containers
                     RecalculateContainerHeight(usePoolCount);
 
                     if (scrollTo)
-                        ScrollTo(-(AvailableItems.Count + 1) * DrawableHeight, 1000);
+                        ScrollTo(-GetItemOffset(AvailableItems.Count + 1), 1000);
                 }
         }
 

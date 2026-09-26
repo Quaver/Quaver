@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client.Handlers;
+using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
@@ -73,6 +75,10 @@ public class OverlayDialog : DialogScreen
                 game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode && gameplay.SpectatorClient == null ? 1 : 0;
         }
 
+        if (Hub.SelectedTab == HubPanel.HubSection.Notifications && Hub.NotificationsSection.CurrentFeed == NotificationsSection.NotificationFeed.Recent)
+        {
+            Hub.NotificationsSection.SetNewNotificationToViewed();
+        }
         ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);
     }
     

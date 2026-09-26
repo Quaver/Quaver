@@ -27,6 +27,10 @@ namespace Quaver.Shared.Assets
         public static Texture2D NotificationWarning => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-warning.png");
         public static Texture2D NotificationInfo => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-info.png");
         public static Texture2D NotificationSuccess => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-success.png");
+        public static Texture2D NotificationErrorV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-error-v2.png");
+        public static Texture2D NotificationWarningV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-warning-v2.png");
+        public static Texture2D NotificationInfoV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-info-v2.png");
+        public static Texture2D NotificationSuccessV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-success-v2.png");
         public static Texture2D LoadingWheel => TextureManager.Load("Quaver.Resources/Textures/UI/loading-wheel.png");
         public static Texture2D StatusRanked => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-ranked.png");
         public static Texture2D StatusUnranked => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-unranked.png");
@@ -80,6 +84,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D PersonalBestScorePanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/personal-best-score-panel.png");
         public static Texture2D WarningRed => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/warning-red.png");
         public static Texture2D Clock => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock.png");
+        public static Texture2D ClockV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock-v2.png");
         public static Texture2D Triangles => TextureManager.Load(@"Quaver.Resources/Textures/UI/triangles.png");
         public static Texture2D ModifierSelectorBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/modifier-selector-bg.png");
         public static Texture2D Off => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/off.png");
