@@ -20,15 +20,22 @@ public class OverlayDialog : DialogScreen
     /// <summary>
     /// </summary>
     private HubPanel Hub { get; set; }
+
+    private HubPanel.HubSection InitialSection { get; }
+
+    public HubPanel.HubSection? SelectedTab => Hub?.SelectedTab;
     
     /// <summary>
     /// </summary>
     private bool IsClosing { get; set; }
     
-    public OverlayDialog() : base(0)
+    public OverlayDialog(HubPanel.HubSection initialSection = HubPanel.HubSection.Users) : base(0)
     {
+        InitialSection = initialSection;
         CreateContent();
     }
+
+    public void SelectTab(HubPanel.HubSection section) => Hub.SelectTab(section);
 
 
     /// <inheritdoc />
@@ -49,7 +56,7 @@ public class OverlayDialog : DialogScreen
         Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
         Container.Size = Size;
 
-        Hub = new HubPanel()
+        Hub = new HubPanel(InitialSection)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,

@@ -2,9 +2,12 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Hub.SongRequests;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Skinning.V2;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
@@ -30,9 +33,9 @@ public class HubPanel : Container
     
     public NotificationsSection NotificationsSection { get; set; }
     private UsersSection UserSection { get; set; }
-    private Sprite SongRequestContent { get; set; }
+    private SongRequestsSection SongRequestsSection { get; set; }
 
-    public HubPanel()
+    public HubPanel(HubSection initialSection = HubSection.Users)
     {
         Size = new ScalableVector2(736, WindowManager.Height);
         
@@ -43,7 +46,7 @@ public class HubPanel : Container
         
         BackgroundLayout.RefreshLayout();
         
-        SelectTab(HubSection.Users);
+        SelectTab(initialSection);
     }
 
     private void CreateLayout()
@@ -152,16 +155,14 @@ public class HubPanel : Container
             UpdateWhenInvisible = false
         };
         
-        SongRequestContent = new Sprite
+        SongRequestsSection = new SongRequestsSection(ContentBackground.Size)
         {
             Parent = ContentBackground,
-            Size = ContentBackground.Size,
-            Tint = ColorHelper.FromHex("#473038"),
             UpdateWhenInvisible = false
         };
     }
 
-    private void SelectTab(HubSection section)
+    public void SelectTab(HubSection section)
     {
         if (SelectedTab == section)
             return;
@@ -172,6 +173,9 @@ public class HubPanel : Container
         }
         
         SelectedTab = section;
+
+        if (section == HubSection.SongRequest && GameBase.Game is QuaverGame game)
+            game.OnlineHub?.Sections[OnlineHubSectionType.SongRequests].MarkAsRead();
 
         if (section != HubSection.Notifications)
         {
@@ -184,6 +188,12 @@ public class HubPanel : Container
             UserSection.Deactivate();
             ResetButtons(UserSection);
         }
+
+        if (section != HubSection.SongRequest)
+        {
+            SongRequestsSection.Deactivate();
+            ResetButtons(SongRequestsSection);
+        }
         
         NotificationButton.Tint = section == HubSection.Notifications ? SelectedSectionColor : UnselectedSectionColor;
         UserButton.Tint = section == HubSection.Users ? SelectedSectionColor : UnselectedSectionColor;
@@ -191,7 +201,7 @@ public class HubPanel : Container
         
         NotificationsSection.Visible = section == HubSection.Notifications;
         UserSection.Visible = section == HubSection.Users;
-        SongRequestContent.Visible = section == HubSection.SongRequest;
+        SongRequestsSection.Visible = section == HubSection.SongRequest;
 
         
     }

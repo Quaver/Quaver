@@ -121,6 +121,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D HubNotificationsClearIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-notifications-clear.png");
         public static Texture2D HubOnlineUsers => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-users.png");
         public static Texture2D HubSongRequests => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-song-requests.png");
+        public static Texture2D HubSongRequestsV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-song-requests-v2.png");
         public static Texture2D HubHeaderBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-header-background.png");
         public static Texture2D HubOnlineAvatarMask => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-mask.png");
         public static Texture2D HubOnlineIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/hub-online-icon.png");
@@ -132,6 +133,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D HubDownloadRetry => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-retry.png");
         public static Texture2D HubDownloadRemove => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/download-remove.png");
         public static Texture2D TwitchIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon.png");
+        public static Texture2D TwitchIconV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon-v2.png");
         public static Texture2D TwitchIconWhite => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon-white.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D Emoji => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emoji.png");
@@ -178,6 +180,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D OptionsSkin => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-skin.png");
         public static Texture2D OptionsInput => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-input.png");
         public static Texture2D OptionsMisc => TextureManager.Load(@"Quaver.Resources/Textures/UI/Options/options-misc.png");
+        public static Texture2D DifficultyIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/difficulty-icon.png");
         public static Texture2D GrayedMapset => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/grayed-mapset.png");
         public static Texture2D DeleteButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/delete-button.png");
         public static Texture2D ViewScoresButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/view-scores-button.png");

@@ -36,6 +36,7 @@ using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Dialogs.Online;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Loading;
@@ -1715,6 +1716,15 @@ namespace Quaver.Shared.Online
 
             var game = (QuaverGame)GameBase.Game;
 
+            var v2Hub = DialogManager.Dialogs.OfType<OverlayDialog>().FirstOrDefault();
+            if (v2Hub != null)
+            {
+                if (v2Hub.SelectedTab != HubPanel.HubSection.SongRequest)
+                    game.OnlineHub.MarkSectionAsUnread(OnlineHubSectionType.SongRequests);
+
+                return;
+            }
+
             if (game.OnlineHub.IsOpen)
             {
                 if (game.OnlineHub.Sections[OnlineHubSectionType.SongRequests] != game.OnlineHub.SelectedSection)
@@ -1723,9 +1733,20 @@ namespace Quaver.Shared.Online
                 return;
             }
 
-            NotificationManager.Show(NotificationLevel.Info, $"You have received a new song request. Click here to view it!",
+            NotificationManager.Show(NotificationLevel.Info, LocalizationManager.Get("Screen_Hub_RequestReceivedNotification"),
                 (o, args) =>
                 {
+                    if (ConfigManager.UseNewScreens.Value)
+                    {
+                        var openHub = DialogManager.Dialogs.OfType<OverlayDialog>().FirstOrDefault();
+                        if (openHub != null)
+                            openHub.SelectTab(HubPanel.HubSection.SongRequest);
+                        else
+                            DialogManager.Show(new OverlayDialog(HubPanel.HubSection.SongRequest));
+
+                        return;
+                    }
+
                     game.OnlineHub.SelectSection(OnlineHubSectionType.SongRequests);
 
                     if (game.OnlineHub.IsOpen)
