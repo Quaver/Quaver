@@ -2472,4 +2472,49 @@ for other players to download?</value>
   <data name="Screen_V2_MusicPlayerScreen" xml:space="preserve"><value>MusicPlayerScreen</value></data>
   <data name="Screen_V2_TheaterScreen" xml:space="preserve"><value>TheaterScreen</value></data>
   <data name="Screen_V2_ResultsScreen" xml:space="preserve"><value>ResultsScreen</value></data>
+    <data name="Screen_Hub_NotificationHeader" xml:space="preserve">
+        <value>Notifications</value>
+    </data>
+    <data name="Screen_Hub_UsersHeader" xml:space="preserve">
+        <value>Users</value>
+    </data>
+    <data name="Screen_Hub_SearchUsers" xml:space="preserve">
+        <value>Search users...</value>
+    </data>
+    <data name="Screen_Hub_MapRequestHeader" xml:space="preserve">
+        <value>Map Requests</value>
+    </data>
+    <data name="Screen_Hub_UsersFound" xml:space="preserve">
+        <value>{0} Users</value>
+    </data>
+    <data name="Screen_Hub_ViewClan" xml:space="preserve"><value>View Clan</value></data>
+    <data name="Screen_Hub_AddFriend" xml:space="preserve"><value>Add Friend</value></data>
+    <data name="Screen_Hub_RemoveFriend" xml:space="preserve"><value>Remove Friend</value></data>
+    <data name="Screen_Hub_BlockUser" xml:space="preserve"><value>Block User</value></data>
+    <data name="Screen_Hub_UnblockUser" xml:space="preserve"><value>Unblock User</value></data>
+    <data name="Screen_Hub_InviteToGame" xml:space="preserve"><value>Invite to Game</value></data>
+    <data name="Screen_Hub_Spectate" xml:space="preserve"><value>Spectate</value></data>
+    <data name="Screen_Hub_StopSpectating" xml:space="preserve"><value>Stop Spectating</value></data>
+    <data name="Screen_Hub_InviteSent" xml:space="preserve"><value>Successfully invited {0} to the game!</value></data>
+    <data name="Screen_Hub_CannotSpectateNow" xml:space="preserve"><value>Please finish what you're doing before spectating!</value></data>
+    <data name="Screen_Hub_PrivateChat" xml:space="preserve"><value>Private Chat</value></data>
+    <data name="Screen_Hub_NotificationRecent" xml:space="preserve">
+        <value>New ({0})</value>
+    </data>
+    <data name="Screen_Hub_NotificationAll" xml:space="preserve">
+        <value>History</value>
+    </data>
+    <data name="Screen_Hub_NotificationClearAll" xml:space="preserve">
+        <value>Clear All</value>
+    </data>
+    <data name="Screen_Hub_NotificationEmpty" xml:space="preserve"><value>All Clear !
+You do not have any missed Notifications.</value></data>
+    <data name="Screen_Hub_NotificationInfo" xml:space="preserve"><value>Information</value></data>
+    <data name="Screen_Hub_NotificationError" xml:space="preserve"><value>Error</value></data>
+    <data name="Screen_Hub_NotificationWarning" xml:space="preserve"><value>Warning</value></data>
+    <data name="Screen_Hub_NotificationSuccess" xml:space="preserve"><value>Success</value></data>
+    <data name="Screen_Hub_NotificationInviteDetails" xml:space="preserve"><value>Invited you to join a multiplayer game.</value></data>
+    <data name="Screen_Hub_NotificationAccept" xml:space="preserve"><value>Accept</value></data>
+    <data name="Screen_Hub_NotificationDeny" xml:space="preserve"><value>Deny</value></data>
+    <data name="Screen_Hub_NotificationOpenChat" xml:space="preserve"><value>Open chat</value></data>
 </root>

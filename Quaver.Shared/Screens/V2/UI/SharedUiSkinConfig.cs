@@ -6,6 +6,96 @@ using Wobble.Configuration;
 namespace Quaver.Shared.Screens.V2.UI
 {
     /// <summary>
+    ///     Shared visual and interaction defaults for V2 dropdown selectors.
+    /// </summary>
+    public sealed class SkinV2DropdownConfig
+    {
+        [Range(1, 8192)]
+        public float Height { get; set; } = 34;
+
+        [Range(0, 2048)]
+        public float HorizontalPadding { get; set; } = SkinV2Spacing.SpacingXs;
+
+        [Range(0, 2048)]
+        public float MenuGap { get; set; } = 0;
+
+        [Range(0, 2048)]
+        public float MenuPadding { get; set; } = SkinV2MarginsConfig.Sm;
+
+        [Range(0, 2048)]
+        public float ItemSpacing { get; set; } = 0;
+
+        [Range(1, 8192)]
+        public float ItemHeight { get; set; } = 32;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [Range(1, 8192)]
+        public float IconSize { get; set; } = 17;
+
+        [Range(1, 8192)]
+        public float ChevronSize { get; set; } = 18;
+
+        [Range(0, 2048)]
+        public float DividerInset { get; set; } = 0;
+
+        [Range(0, 64)]
+        public float DividerThickness { get; set; } = 1;
+
+        [Range(1, 256)]
+        public int DefaultMaxVisibleItems { get; set; } = 6;
+
+        [Range(1, 128)]
+        public float ScrollbarWidth { get; set; } = 4;
+
+        [Range(1, 10000)]
+        public int AnimationDurationMilliseconds { get; set; } = 180;
+
+        [SkinFont]
+        public string Font { get; set; } = SkinV2FontWeightsConfig.SemiBold;
+
+        [Range(1, 256)]
+        public int FontSize { get; set; } = SkinV2FontSizesConfig.TextSm;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TriggerColor { get; set; } = "#061019FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ItemColor { get; set; } = "#0F2C44FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string HoverColor { get; set; } = "#174E76FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string SelectedItemColor { get; set; } = "#256EAAFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string SelectedTextColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string IconColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string DividerColor { get; set; } = "#FFFFFF80";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ScrollbarColor { get; set; } = "#FFFFFF80";
+    }
+
+    /// <summary>
     ///     Skin configuration owned by the persistent V2 navigation and account UI.
     /// </summary>
     public sealed class SkinV2NavigationConfig
