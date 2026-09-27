@@ -260,23 +260,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
 
             var direction = ConfigManager.ScrollDirections[Ruleset.Map.Mode].Value;
 
-            // Case: Config = Split Scroll
-            if (direction.Equals(ScrollDirection.Split))
-            {
-                var halfIndex = (int)Math.Ceiling(keys / 2.0);
-                ScrollDirections = new ScrollDirection[keys];
-                for (var i = 0; i < keys; i++)
-                {
-                    if (i >= halfIndex)
-                        ScrollDirections[i] = ScrollDirection.Up;
-                    else
-                        ScrollDirections[i] = ScrollDirection.Down;
-                }
-                return;
-            }
-
-            // Case: Config = Down/Up Scroll
-            ScrollDirections = Enumerable.Repeat(direction, keys).ToArray();
+            ScrollDirections = ScrollDirectionHelper.ExpandScrollDirections(keys, direction);
         }
 
         /// <summary>

@@ -57,10 +57,10 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 switch (args.Text)
                 {
                     case ViewProfile:
-                        BrowserHelper.OpenURL($"https://quavergame.com/profile/{user.OnlineUser.Id}");
+                        BrowserHelper.OpenURL($"https://quavergame.com/users/{user.OnlineUser.Id}");
                         break;
                     case ViewClan:
-                        BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{user.OnlineUser.ClanId}");
+                        BrowserHelper.OpenURL($"https://quavergame.com/clans/{user.OnlineUser.ClanId}");
                         break;
                     case SteamProfile:
                         BrowserHelper.OpenURL($"https://steamcommunity.com/profiles/{user.OnlineUser?.SteamId}");

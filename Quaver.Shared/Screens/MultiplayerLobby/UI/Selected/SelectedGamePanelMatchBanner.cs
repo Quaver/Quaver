@@ -344,7 +344,7 @@ namespace Quaver.Shared.Screens.MultiplayerLobby.UI.Selected
                     game.CurrentScreen.Exit(() => QuaverScreenFactory.CreateSelection());
                 }
                 else if (SelectedGame.Value.MapId != -1)
-                    BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{SelectedGame.Value.MapId}");
+                    BrowserHelper.OpenURL($"https://quavergame.com/mapsets/{SelectedGame.Value.MapsetId}/map/{SelectedGame.Value.MapId}");
                 else if (SelectedGame.Value.MapId == -1)
                     NotificationManager.Show(NotificationLevel.Warning, "Cannot view online listing because this map is not submitted online!");
             };

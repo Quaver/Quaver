@@ -1010,22 +1010,22 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 return;
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_Wiki")))
-                BrowserHelper.OpenURL($"https://wiki.quavergame.com/docs/editor");
+                BrowserHelper.OpenURL($"https://quavergame.com/docs/editor");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_GettingStarted")))
-                BrowserHelper.OpenURL($"https://wiki.quavergame.com/docs/editor/getting_started");
+                BrowserHelper.OpenURL($"https://quavergame.com/docs/editor/getting_started");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_EditorFunctions")))
-                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/editor_functions");
+                BrowserHelper.OpenURL("https://quavergame.com/docs/editor/editor_functions");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_Plugins")))
-                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/editor/plugins");
+                BrowserHelper.OpenURL("https://quavergame.com/docs/editor/plugins");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_RankingCriteria")))
-                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/criteria");
+                BrowserHelper.OpenURL("https://quavergame.com/docs/ranking/criteria");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_RankingProcess")))
-                BrowserHelper.OpenURL("https://wiki.quavergame.com/docs/ranking/process");
+                BrowserHelper.OpenURL("https://quavergame.com/docs/ranking/process");
 
             ImGui.EndMenu();
         }
@@ -1040,10 +1040,10 @@ namespace Quaver.Shared.Screens.Edit.UI.Menu
                 return;
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_ViewOnlineListing"), Screen.WorkingMap.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Screen.WorkingMap.MapId}");
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/{Screen.WorkingMap.MapSetId}/map/{Screen.WorkingMap.MapId}");
 
             if (ImGui.MenuItem(LocalizationManager.Get("Screen_Editor_ModdingDiscussion"), Screen.WorkingMap.MapId != -1))
-                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{Screen.WorkingMap.MapId}/mods");
+                BrowserHelper.OpenURL($"https://quavergame.com/mapsets/{Screen.WorkingMap.MapSetId}/map/{Screen.WorkingMap.MapId}/modding");
 
             ImGui.EndMenu();
         }

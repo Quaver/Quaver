@@ -4,11 +4,11 @@ namespace Quaver.Shared.Online.API.Legal
 {
     public class APIRequestTOS : APIRequest<string>
     {
-        private const string BaseUrl = "https://wiki.quavergame.com";
+        private const string BaseUrl = "https://quavergame.com/docs";
 
         public override string ExecuteRequest()
         {
-            var request = new RestRequest($"{BaseUrl}/md/Legal/Terms/en.md", Method.GET);
+            var request = new RestRequest($"{BaseUrl}/legal/terms.md", Method.GET);
             var client = new RestClient(BaseUrl);
 
             var response = ExecuteApiRequest(client, request);

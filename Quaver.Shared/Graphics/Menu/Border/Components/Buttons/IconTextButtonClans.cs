@@ -9,7 +9,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonClans() : base(FontAwesome.Get(FontAwesomeIcon.fa_group_profile_users),
             FontManager.GetWobbleFont(Fonts.InterSemiBold),"Clans", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://two.quavergame.com/leaderboard/clans");
+                BrowserHelper.OpenURL($"https://quavergame.com/leaderboard?tab=clans");
             }, localizationKey: "Screen_Main_Menu_Clans")
         {
         }
