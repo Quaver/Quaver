@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
@@ -6,6 +7,8 @@ using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.SongRequests;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
+using Quaver.Shared.Screens.V2.UI;
+using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
@@ -20,7 +23,13 @@ namespace Quaver.Shared.Graphics.Overlays.V2Hub;
 public class HubPanel : Container
 {
     private FlexContainer BackgroundLayout { get; set; }
-    
+    private SkinStoreV2Lease Skin { get; }
+    private SkinV2NavigationConfig NavigationConfig => Skin.Config.Shared.Navigation;
+    private HeaderScreenNavigation HeaderControls { get; set; }
+
+    public RoundedButton ProfileButton => HeaderControls.ProfileButton;
+    public float ProfileDropdownGap => NavigationConfig.Profile.DropdownGap;
+
     private RoundedButton NotificationButton { get; set; }
     private RoundedButton UserButton { get; set; }
     private RoundedButton SongRequestButton { get; set; }
@@ -35,12 +44,14 @@ public class HubPanel : Container
     private UsersSection UserSection { get; set; }
     private SongRequestsSection SongRequestsSection { get; set; }
 
-    public HubPanel(HubSection initialSection = HubSection.Users)
+    public HubPanel(HubSection initialSection, Action closeHub, Action openProfile)
     {
+        Skin = SkinManager.AcquireV2();
         Size = new ScalableVector2(736, WindowManager.Height);
         
         CreateLayout();
-        CreatePlayerHeader();
+
+        CreatePlayerHeader(closeHub, openProfile);
         CreateSectionsHeader();
         CreateSectionContent();
         
@@ -60,15 +71,46 @@ public class HubPanel : Container
         };
     }
 
-    private void CreatePlayerHeader()
+    private void CreatePlayerHeader(Action closeHub, Action openProfile)
     {
+        var headerHeight = NavigationConfig.Button.Size + NavigationConfig.EdgePadding * 2;
         var header = new Sprite
         {
             Parent = BackgroundLayout,
-            Size = new ScalableVector2(736, 70),
+            Size = new ScalableVector2(Width, headerHeight),
             Tint = ColorHelper.FromHex("#181E25")
         };
-        BackgroundLayout.SetItemOptions(header, new FlexItemOptions { Basis = 70, Shrink = 0 });
+        BackgroundLayout.SetItemOptions(header, new FlexItemOptions { Basis = headerHeight, Shrink = 0 });
+
+        HeaderControls = new HeaderScreenNavigation(NavigationConfig);
+        HeaderControls.ProfileButton.Clicked += (sender, args) => openProfile();
+
+        var headerLayout = new FlexContainer
+        {
+            Parent = header,
+            Alignment = Alignment.MidRight,
+            X = -NavigationConfig.EdgePadding,
+            Size = new ScalableVector2(header.Width - NavigationConfig.EdgePadding * 2, NavigationConfig.Button.Size),
+            Direction = FlexDirection.Row,
+            AlignItems = FlexAlignItems.Center,
+            ColumnGap = NavigationConfig.ItemSpacing
+        };
+        HeaderControls.Parent = headerLayout;
+        headerLayout.SetItemOptions(HeaderControls, new FlexItemOptions { Basis = HeaderControls.Width, Grow = 1, Shrink = 0 });
+
+        var closeButton = new RoundedButton((sender, args) => closeHub())
+        {
+            Parent = headerLayout,
+            Size = new ScalableVector2(NavigationConfig.Button.Size, NavigationConfig.Button.Size),
+            CornerRadius = NavigationConfig.Button.CornerRadius,
+            Tint = SkinV2Color.Parse(NavigationConfig.Button.BackgroundColor)
+        };
+        closeButton.SetIcon(GlobalIcons.Get(GlobalIcon.Burger), new Vector2(NavigationConfig.Button.IconSize, NavigationConfig.Button.IconSize));
+        closeButton.Icon.Tint = SkinV2Color.Parse(NavigationConfig.Button.ForegroundColor);
+        headerLayout.SetItemOptions(closeButton, new FlexItemOptions { Basis = closeButton.Width, Shrink = 0 });
+
+        headerLayout.RefreshLayout();
+        HeaderControls.RefreshLayout();
         
         var spacer = new Container
         {
@@ -215,6 +257,12 @@ public class HubPanel : Container
 
             ResetButtons(child);
         }
+    }
+
+    public override void Destroy()
+    {
+        base.Destroy();
+        Skin.Dispose();
     }
 
     public enum HubSection

@@ -89,6 +89,7 @@ public class SongRequestsSection : Container
             JustifyContent = FlexJustifyContent.SpaceBetween
         };
 
+        // TODO: Replace by a toggle pill 
         AlertsButton = new RoundedButton((sender, args) => ToggleAlerts())
         {
             Parent = headerLayout,

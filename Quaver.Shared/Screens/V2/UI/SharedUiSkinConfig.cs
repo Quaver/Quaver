@@ -130,6 +130,9 @@ namespace Quaver.Shared.Screens.V2.UI
         public SkinV2ProfileConfig Profile { get; set; } = new SkinV2ProfileConfig();
 
         [Required]
+        public SkinV2NavigationStatsConfig Stats { get; set; } = new SkinV2NavigationStatsConfig();
+
+        [Required]
         public SkinV2AccountDropdownConfig AccountDropdown { get; set; } = new SkinV2AccountDropdownConfig();
     }
 
@@ -215,6 +218,42 @@ namespace Quaver.Shared.Screens.V2.UI
         [SkinColor]
         [ConfigEditable]
         public string OfflineStatusColor { get; set; } = "#828E99FF";
+    }
+
+    public sealed class SkinV2NavigationStatsConfig
+    {
+        [Range(1, 8192)]
+        public float TimeWidth { get; set; } = 94;
+
+        [Range(1, 8192)]
+        public float FriendsWidth { get; set; } = 160;
+
+        [Range(1, 8192)]
+        public float ButtonHeight { get; set; } = 22;
+
+        [Range(0, 2048)]
+        public float RowGap { get; set; } = 6;
+
+        [Range(0, 2048)]
+        public float TextGap { get; set; } = 4;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = 11;
+
+        [SkinFont]
+        public string Font { get; set; } = Fonts.InterBold;
+
+        [Range(1, 256)]
+        public int FontSize { get; set; } = 16;
+
+        [SkinColor]
+        public string BackgroundColor { get; set; } = "#273038FF";
+
+        [SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+
+        [SkinColor]
+        public string CountColor { get; set; } = "#8CAFEAFF";
     }
 
     public sealed class SkinV2AccountDropdownConfig

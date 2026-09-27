@@ -149,7 +149,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private int? RequestedProfileCoverUserId { get; set; }
 
-        public LoggedInUserDropdown()
+        public LoggedInUserDropdown(Container overlayHost = null)
             : base(new ScalableVector2(ContainerSize.X.Value, 0), ContainerSize)
         {
             Skin = SkinManager.AcquireV2();
@@ -167,7 +167,7 @@ namespace Quaver.Shared.Screens.V2.UI
             var game = GameBase.Game as QuaverGame;
             ScreenDarkness = new Sprite
             {
-                Parent = game?.CurrentScreen?.View.Container,
+                Parent = overlayHost ?? game?.CurrentScreen?.View.Container,
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Tint = Color.Black,
                 Alpha = 0

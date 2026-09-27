@@ -6,6 +6,7 @@ using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.V2.UI;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -20,6 +21,7 @@ public class OverlayDialog : DialogScreen
     /// <summary>
     /// </summary>
     private HubPanel Hub { get; set; }
+    private LoggedInUserDropdown ProfileDropdown { get; set; }
 
     private HubPanel.HubSection InitialSection { get; }
 
@@ -45,9 +47,25 @@ public class OverlayDialog : DialogScreen
     public override void HandleInput(GameTime gameTime)
     {
         if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
-            Close();
+        {
+            if (ProfileDropdown != null)
+                DismissProfileDropdown();
+            else
+                Close();
+            return;
+        }
 
-        if (MouseManager.IsUniqueClick(MouseButton.Left) && !Hub.IsHovered())
+        if (!MouseManager.IsUniqueClick(MouseButton.Left))
+            return;
+
+        if (ProfileDropdown != null)
+        {
+            if (!Hub.ProfileButton.IsHovered && !ProfileDropdown.IsHovered())
+                DismissProfileDropdown();
+            return;
+        }
+
+        if (!Hub.IsHovered())
             Close();
     }
     
@@ -56,13 +74,37 @@ public class OverlayDialog : DialogScreen
         Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
         Container.Size = Size;
 
-        Hub = new HubPanel(InitialSection)
+        Hub = new HubPanel(InitialSection, Close, ToggleProfileDropdown)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
             X = 736
         };
         Hub.MoveToX(0, Easing.OutCubic, 200);
+    }
+
+    private void ToggleProfileDropdown()
+    {
+        if (ProfileDropdown != null)
+        {
+            DismissProfileDropdown();
+            return;
+        }
+
+        var profile = Hub.ProfileButton;
+        ProfileDropdown = new LoggedInUserDropdown(Container)
+        {
+            Parent = Container,
+            Position = new ScalableVector2(
+                profile.AbsolutePosition.X + profile.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value - Container.AbsolutePosition.X,
+                profile.AbsolutePosition.Y + profile.AbsoluteSize.Y + Hub.ProfileDropdownGap - Container.AbsolutePosition.Y)
+        };
+    }
+
+    private void DismissProfileDropdown()
+    {
+        ProfileDropdown?.Destroy();
+        ProfileDropdown = null;
     }
     
     /// <summary>
@@ -72,6 +114,7 @@ public class OverlayDialog : DialogScreen
         if(IsClosing) return;
         
         IsClosing = true;
+        DismissProfileDropdown();
 
         ClearAnimations();
         Hub.MoveToX(736, Easing.InCubic, 200);
@@ -87,6 +130,12 @@ public class OverlayDialog : DialogScreen
             Hub.NotificationsSection.SetNewNotificationToViewed();
         }
         ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);
+    }
+
+    public override void Destroy()
+    {
+        DismissProfileDropdown();
+        base.Destroy();
     }
     
     /// <summary>
