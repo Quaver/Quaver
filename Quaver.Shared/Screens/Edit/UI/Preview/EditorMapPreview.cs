@@ -50,8 +50,6 @@ namespace Quaver.Shared.Screens.Edit.UI.Preview
         /// </summary>
         private EditorActionManager ActionManager { get; }
 
-        protected override bool ShowHitBubbles { get; } = false;
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
