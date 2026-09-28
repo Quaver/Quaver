@@ -398,7 +398,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
-            var MIN_TIME = (float)-1e+5;
+            const float minTime = -100_000;
 
             if (SelectedScrollSpeedFactors.Count == 1)
             {
