@@ -125,6 +125,7 @@ using Wobble.Timing;
 using Wobble.Window;
 using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
+using Quaver.Shared.Screens.V2.Options;
 
 namespace Quaver.Shared
 {
@@ -974,7 +975,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
                 case QuaverScreenType.Results:
-                    DialogManager.Show(new OptionsDialog());
+                    var useNewScreen = ConfigManager.UseNewScreens.Value;
+                    DialogManager.Show(useNewScreen ? new OptionsV2Dialog() : new OptionsDialog());
                     break;
             }
         }

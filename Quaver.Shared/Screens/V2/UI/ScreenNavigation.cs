@@ -17,6 +17,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Options;
+using Quaver.Shared.Screens.V2.Options;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
@@ -227,7 +228,7 @@ namespace Quaver.Shared.Screens.V2.UI
                     LocalizationManager.Get("Screen_Options_Volume"), ShowVolume);
                 layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Options),
                     LocalizationManager.Get("Screen_Main_Options"),
-                    () => DialogManager.Show(new OptionsDialog()));
+                    () => DialogManager.Show(new OptionsV2Dialog()));
                 layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Quit),
                     LocalizationManager.Get("Screen_Main_QuitGame"),
                     () => DialogManager.Show(new QuitDialog()));
