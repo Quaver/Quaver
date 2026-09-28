@@ -448,7 +448,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var multiplier = 0f;
             var format = "";
 
-            var MAX_MULTIPLIER = (float)1e10;
+            const float maxMultiplier = 1e10f;
 
             if (SelectedScrollVelocities.Count == 1)
             {
