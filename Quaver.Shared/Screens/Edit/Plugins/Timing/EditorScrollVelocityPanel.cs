@@ -467,7 +467,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Multiplier"));
 
-            if (ImGui.InputFloat("##multiplier", ref multiplier, 1, 0.1f, format,
+            if (ImGui.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(
                     new List<SliderVelocityInfo>(SelectedScrollVelocities), Math.Clamp(multiplier, -MAX_MULTIPLIER, MAX_MULTIPLIER));
