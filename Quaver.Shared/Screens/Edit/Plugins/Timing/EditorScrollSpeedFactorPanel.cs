@@ -441,7 +441,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var multiplier = 0f;
             var format = "";
 
-            var MAX_SSF = 1000;
+            const float maxSsf = 1000;
 
             if (SelectedScrollSpeedFactors.Count == 1)
             {
