@@ -423,7 +423,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
                 var sv = SelectedScrollVelocities.First();
 
                 Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
-                    Math.Max(time - sv.StartTime, MIN_TIME));
+                    Math.Max(time - sv.StartTime, minTime));
             }
         }
 
@@ -470,7 +470,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             if (ImGui.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
                     ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(
-                    new List<SliderVelocityInfo>(SelectedScrollVelocities), Math.Clamp(multiplier, -MAX_MULTIPLIER, MAX_MULTIPLIER));
+                    new List<SliderVelocityInfo>(SelectedScrollVelocities), Math.Clamp(multiplier, -maxMultiplier, maxMultiplier));
         }
 
         /// <summary>
