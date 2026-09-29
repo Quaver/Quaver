@@ -5,10 +5,15 @@ using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
+using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
+using Quaver.Shared.Input.Global;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
@@ -25,6 +30,7 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Form;
 using Wobble.Input;
 using Wobble.Managers;
 using Wobble.Window;
@@ -36,6 +42,9 @@ namespace Quaver.Shared.Screens.V2.Options
     public class OptionsV2Dialog : DialogScreen
     {
         private const float LayoutGap = 10f;
+
+        private bool InputRecorderWasFocused { get; set; }
+        private bool RecentOptionsDirty { get; set; }
 
         /// <summary>
         /// </summary>
@@ -51,6 +60,7 @@ namespace Quaver.Shared.Screens.V2.Options
         /// <summary>
         /// Component that handle the section displayed when the Icon List is shrunk
         /// </summary>
+        private ScrollContainer SectionListScroll;
         private FlexContainer SectionListLayout;
         /// <summary>
         /// Component that will actually grow / shrink when clicking on the IconToggle button
@@ -58,12 +68,16 @@ namespace Quaver.Shared.Screens.V2.Options
         private NineSliceSprite IconList;
         private readonly Dictionary<OptionCategory, RoundedButton> CategoryIcons = new Dictionary<OptionCategory, RoundedButton>();
         private RoundedButton IconRecentSearch;
+        private SpriteTextPlus IconRecentSearchText;
         private RoundedButton IconToggle;
         private bool IsIconListExpanded;
 
         private OptionCategory? CurrentCategory { get; set; } = null;
-        private string SelectedCategorySection { get; set; }
-        private List<RoundedButton> CategorySectionButtons { get; set; } = new List<RoundedButton>();
+        private const string AllSectionsName = "Screen_Options_SectionAll";
+        private static readonly (OptionCategory? Category, string Name) AllSection = (null, AllSectionsName);
+        private (OptionCategory? Category, string Name)? SelectedCategorySection { get; set; }
+        private readonly Dictionary<(OptionCategory? Category, string Name), RoundedButton> CategorySectionButtons = new Dictionary<(OptionCategory?, string), RoundedButton>();
+        private readonly List<(OptionCategory Category, string Name, FlexContainer Header)> SectionStarts = new List<(OptionCategory, string, FlexContainer)>();
 
         private FlexContainer MainMenuLayout { get; set; }
         private FlexContainer HeaderMenuLayout { get; set; }
@@ -73,10 +87,14 @@ namespace Quaver.Shared.Screens.V2.Options
         // Right content
         private V2FilterSearchTextbox SearchBox;
         private Bindable<string> SearchQuery { get; } = new Bindable<string>(string.Empty);
+        private bool IsSearching => !string.IsNullOrWhiteSpace(SearchQuery.Value);
         private V2Dropdown<string> PressetDropdown { get; set; }
         private FlexContainer MainContentLayout { get; set; }
         private FlexContainer HeaderContentLayout { get; set; }
         private FlexContainer ContentLayout { get; set; }
+        private Sprite ContentBackground { get; set; }
+        private ScrollContainer OptionsScroll { get; set; }
+        private FlexContainer OptionsRows { get; set; }
 
         public OptionsV2Dialog() : base(0.75f)
         {
@@ -87,6 +105,8 @@ namespace Quaver.Shared.Screens.V2.Options
             CreateSectionMenu();
             CreateMainContent();
 
+            ConfigManager.RecentlyChangedOptions.ValueChanged += OnRecentlyChangedOptionsChanged;
+            SearchQuery.ValueChanged += OnSearchQueryChanged;
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
             UpdateLayout();
 
@@ -96,28 +116,10 @@ namespace Quaver.Shared.Screens.V2.Options
         public override void CreateContent()
         {
             // Top left content
-            var optionTitle = new Sprite
-            {
-                Parent = HeaderMenuLayout,
-                Size = new ScalableVector2(89, 40),
-                Tint = ColorHelper.FromHex("#4B5973"),
-
-            };
-            CreateSpriteText(optionTitle, LocalizationManager.Get("Screen_Options_Title"), 18, Color.White);
-            optionTitle.Image = RoundedRectTextureCache.Get(optionTitle.Width, optionTitle.Height, new RoundedRectCornerRadii(6, 0, 0, 6));
-            HeaderMenuLayout.SetItemOptions(optionTitle, new FlexItemOptions { Grow = 1 });
-
-
-            var optionDescription = new Sprite
-            {
-                Parent = HeaderMenuLayout,
-                Size = new ScalableVector2(229, 40),
-                Tint = ColorHelper.FromHex("#181E25")
-
-            };
-            CreateSpriteText(optionDescription, LocalizationManager.Get("Screen_Options_TitleDescription"), 18, ColorHelper.FromHex("#D9E3F4"));
-            optionDescription.Image = RoundedRectTextureCache.Get(optionDescription.Width, optionDescription.Height, new RoundedRectCornerRadii(0, 6, 6, 0));
-            HeaderMenuLayout.SetItemOptions(optionDescription, new FlexItemOptions { Grow = 1 });
+            CreateTwoSidedSprite(HeaderMenuLayout, 18,
+                new ScalableVector2(89, 40), ColorHelper.FromHex("#4B5973"), LocalizationManager.Get("Screen_Options_Title"), Color.White,
+                new ScalableVector2(229, 40), ColorHelper.FromHex("#181E25"), LocalizationManager.Get("Screen_Options_TitleDescription"), ColorHelper.FromHex("#D9E3F4")
+            );
 
             // Top right content
             var searchStyle = new V2FilterFieldStyle
@@ -189,15 +191,26 @@ namespace Quaver.Shared.Screens.V2.Options
             };
             MenuColumnsLayout.SetItemOptions(IconListContainer, new FlexItemOptions { Basis = IconListContainer.Width });
 
-            SectionListLayout = new FlexContainer
+            SectionListScroll = new ScrollContainer(new ScalableVector2(1, Math.Max(1f, MenuLayout.Height - 10)), new ScalableVector2(1, 1))
             {
                 Parent = MenuColumnsLayout,
-                Size = new ScalableVector2(0, Math.Max(1f, MenuLayout.Height - 10)),
+                Tint = Color.Transparent,
+                AllowScrollbarDragging = true,
+                AllowMiddleMouseDragging = true,
+                CapturesMouseWheelInput = true,
+                Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
+            };
+            SectionListScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
+            MenuColumnsLayout.SetItemOptions(SectionListScroll, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.FlexEnd });
+
+            SectionListLayout = new FlexContainer
+            {
+                Size = new ScalableVector2(1, 1),
                 Direction = FlexDirection.Column,
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = 10
             };
-            MenuColumnsLayout.SetItemOptions(SectionListLayout, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.FlexEnd });
+            SectionListScroll.AddContainedDrawable(SectionListLayout);
 
             IconList = new NineSliceSprite(RoundedRectTextureCache.Get(20f, 20f, 6f), new SliceMargins(6))
             {
@@ -218,7 +231,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 Tint = ColorHelper.FromHex("#273038"),
                 SetChildrenAlpha = false
             };
-            CreateSpriteText(IconRecentSearch, LocalizationManager.Get("Screen_Options_RecentlyChanged"), 18, ColorHelper.FromHex("#D0DBED"), Alignment.MidLeft, 0, new ScalableVector2(50, 0));
+            IconRecentSearchText = CreateSpriteText(IconRecentSearch, LocalizationManager.Get("Screen_Options_RecentlyChanged"), 18, ColorHelper.FromHex("#D0DBED"), Alignment.MidLeft, 0, new ScalableVector2(50, 0));
             IconRecentSearch.SetIcon(GetOptionsIcon(10), new Vector2(30, 30));
             IconRecentSearch.Icon.Alignment = Alignment.MidLeft;
             IconRecentSearch.Icon.X = 5;
@@ -289,45 +302,156 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private void CreateSectionMenu()
         {
-            CategorySectionButtons.ForEach(sprite => sprite.Destroy());
+            foreach (var button in CategorySectionButtons.Values)
+                button.Destroy();
             CategorySectionButtons.Clear();
 
-            var allSectionName = "Screen_Options_SectionAll";
-            CreateSectionMenuButton(allSectionName, ColorHelper.FromHex("#6B83B2"));
-            SelectedCategorySection = allSectionName;
+            SelectedCategorySection = null;
+            CreateSectionMenuButton(AllSection, LocalizationManager.Get(AllSectionsName));
 
-            var categorySections = OptionsList.All.Where(option => option.Category == (CurrentCategory == null ? OptionCategory.Video : CurrentCategory.Value)).DistinctBy(section => section.SectionName).ToList();
-            categorySections.ForEach(section => CreateSectionMenuButton(section.SectionName, ColorHelper.FromHex("#181E25")));
+            var options = GetVisibleOptions();
+            var sections = options.DistinctBy(option => (option.Category, option.SectionName)).ToList();
+            foreach (var section in sections)
+            {
+                var name = LocalizationManager.Get(section.SectionName);
+                if (!CurrentCategory.HasValue && sections.Count(other => other.SectionName == section.SectionName) > 1)
+                    name = $"{LocalizationManager.Get($"Screen_Options_{section.Category}")} · {name}";
+
+                CreateSectionMenuButton((section.Category, section.SectionName), name);
+            }
+            UpdateSectionListLayout();
+            SectionListScroll.ScrollTo(0, 1);
+            SetSectionHighlight(AllSection);
         }
-        private void CreateSectionMenuButton(string sectionName, Color color)
+        private void CreateSectionMenuButton((OptionCategory? Category, string Name) section, string label)
         {
             var sectionButton = new RoundedButton
             {
                 Parent = SectionListLayout,
                 Size = new ScalableVector2(236, 40),
-                Tint = color,
-                CornerRadii = new RoundedRectCornerRadii(6, 6, 6, 6)
+                Tint = ColorHelper.FromHex("#181E25"),
+                CornerRadii = new RoundedRectCornerRadii(6, 6, 6, 6),
+                UsePreviousSpriteBatchOptions = true
             };
 
-            sectionButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get(sectionName), 18, Color.White);
+            sectionButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), label, 18, Color.White);
             sectionButton.Label.Alignment = Alignment.MidLeft;
             sectionButton.Label.X = 10;
-            SectionListLayout.SetItemOptions(sectionButton, new FlexItemOptions { AlignSelf = FlexAlignSelf.FlexStart });
-            sectionButton.Clicked += (s, e) => OnSectionButtonClicked(sectionButton, sectionName);
+            SectionListLayout.SetItemOptions(sectionButton, new FlexItemOptions { Basis = sectionButton.Height, Shrink = 0, AlignSelf = FlexAlignSelf.FlexStart });
+            sectionButton.Clicked += (s, e) => OnSectionButtonClicked(section);
 
-            CategorySectionButtons.Add(sectionButton);
+            CategorySectionButtons.Add(section, sectionButton);
         }
 
         private void CreateMainContent()
         {
-            var contentBackground = new Sprite
+            ContentBackground = new Sprite
             {
                 Parent = ContentLayout,
                 Size = ContentLayout.Size,
                 Tint = ColorHelper.FromHex("#273038")
             };
-            contentBackground.Image = RoundedRectTextureCache.Get(contentBackground.Width, contentBackground.Height, 6f);
-            ContentLayout.SetItemOptions(contentBackground, new FlexItemOptions { Basis = 0, Grow = 1 });
+            ContentLayout.SetItemOptions(ContentBackground, new FlexItemOptions { Basis = 0, Grow = 1 });
+
+            OptionsScroll = new ScrollContainer(new ScalableVector2(1, 1), new ScalableVector2(1, 1))
+            {
+                Parent = ContentBackground,
+                Position = new ScalableVector2(10, 10),
+                Tint = Color.Transparent,
+                AllowScrollbarDragging = true,
+                AllowMiddleMouseDragging = true,
+                EasingType = Easing.OutQuint,
+                CapturesMouseWheelInput = true,
+                Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
+            };
+            OptionsScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
+            SectionListScroll.ScrollSpeed = OptionsScroll.ScrollSpeed;
+            SectionListScroll.EasingType = OptionsScroll.EasingType;
+            SectionListScroll.TimeToCompleteScroll = OptionsScroll.TimeToCompleteScroll;
+            SectionListScroll.TimeToCompleteMiddleMouseScroll = OptionsScroll.TimeToCompleteMiddleMouseScroll;
+
+            OptionsRows = new FlexContainer
+            {
+                Direction = FlexDirection.Column,
+                AlignItems = FlexAlignItems.Stretch,
+                RowGap = 10
+            };
+            OptionsScroll.AddContainedDrawable(OptionsRows);
+        }
+
+        private void RefreshOptionsRows()
+        {
+            RecentOptionsDirty = false;
+            SectionStarts.Clear();
+            foreach (var child in OptionsRows.Children.ToList())
+                child.Destroy();
+
+            var options = GetVisibleOptions();
+            UpdateSearchPresentation(options.Count);
+
+            foreach (var option in options)
+            {
+                var control = OptionsList.CreateControl(option, Container);
+                if (control == null)
+                    continue;
+
+                if (SectionStarts.Count == 0 || SectionStarts[SectionStarts.Count - 1].Category != option.Category || SectionStarts[SectionStarts.Count - 1].Name != option.SectionName)
+                {
+                    var header = CreateSectionHeader(option.Category, option.SectionName);
+                    SectionStarts.Add((option.Category, option.SectionName, header));
+                }
+
+                var row = new OptionsRow(option)
+                {
+                    Parent = OptionsRows,
+                    Size = new ScalableVector2(1, 54)
+                };
+                OptionsRows.SetItemOptions(row, new FlexItemOptions { Basis = row.Height, Shrink = 0 });
+                row.SetControl(control);
+            }
+
+            UpdateOptionsContentLayout();
+            OptionsScroll.ScrollTo(0, 1);
+            SetSectionHighlight(AllSection);
+        }
+
+        private IReadOnlyList<OptionsDefinition> GetVisibleOptions() => CurrentCategory.HasValue
+            ? OptionsList.All.Where(option => option.Category == CurrentCategory.Value).ToList()
+            : IsSearching ? OptionsList.Search(SearchQuery.Value) : OptionsList.Recent;
+
+        private void UpdateSearchPresentation(int resultCount)
+        {
+            if (IsSearching)
+            {
+                IconRecentSearchText.Text = GetSearchResultsText(resultCount);
+                IconRecentSearch.SetIcon(GetOptionsIcon(0), new Vector2(30, 30));
+                UpdateResultsCount(resultCount);
+            }
+            else
+            {
+                IconRecentSearchText.Text = LocalizationManager.Get("Screen_Options_RecentlyChanged");
+                IconRecentSearch.SetIcon(GetOptionsIcon(10), new Vector2(30, 30));
+                SearchBox.SetResultsText(string.Empty);
+            }
+        }
+
+        private FlexContainer CreateSectionHeader(OptionCategory category, string sectionName)
+        {
+            var header = new FlexContainer
+            {
+                Parent = OptionsRows,
+                Size = new ScalableVector2(1, 40),
+                Direction = FlexDirection.Row,
+                AlignItems = FlexAlignItems.Stretch
+            };
+
+            header.Width = CreateTwoSidedSprite(header, 18,
+                new ScalableVector2(1, header.Height), ColorHelper.FromHex("#4B5973"), LocalizationManager.Get($"Screen_Options_{category}"), Color.White,
+                new ScalableVector2(1, header.Height), ColorHelper.FromHex("#181E25"), LocalizationManager.Get(sectionName), ColorHelper.FromHex("#D9E3F4"),
+                fitToText: true);
+            OptionsRows.SetItemOptions(header, new FlexItemOptions { Basis = header.Height, Shrink = 0, AlignSelf = FlexAlignSelf.FlexStart });
+
+            return header;
         }
 
         private void ExpandIconList(bool expanded)
@@ -362,9 +486,47 @@ namespace Quaver.Shared.Screens.V2.Options
             return new TextureRegion(UserInterface.OptionsIconsSheet, new Rectangle(0, row * 84, 60, 60));
         }
 
-        private void CreateSpriteText(Sprite sprite, string text, int size, Color color, Alignment alignment = Alignment.MidCenter, float alpha = 1f, ScalableVector2? position = null, WobbleFontStore fontUsed = null)
+        private float CreateTwoSidedSprite(FlexContainer parentLayout, int textSize,
+            ScalableVector2 sprite1Size, Color sprite1Color, string sprite1Text, Color sprite1TextColor,
+            ScalableVector2 sprite2Size, Color sprite2Color, string sprite2Text, Color sprite2TextColor,
+            bool fitToText = false)
         {
-            new SpriteTextPlus(fontUsed ?? FontManager.GetWobbleFont(Fonts.InterBold), text, size)
+            var sprite1 = new Sprite
+            {
+                Parent = parentLayout,
+                Size = sprite1Size,
+                Tint = sprite1Color
+            };
+
+            var sprite1Label = CreateSpriteText(sprite1, sprite1Text, textSize, sprite1TextColor,
+                fitToText ? Alignment.MidLeft : Alignment.MidCenter,
+                position: fitToText ? new ScalableVector2(15, 0) : null);
+            if (fitToText)
+                sprite1.Width = sprite1Label.Width + 30f;
+            sprite1.Image = RoundedRectTextureCache.Get(sprite1.Width, sprite1.Height, new RoundedRectCornerRadii(6, 0, 0, 6));
+            parentLayout.SetItemOptions(sprite1, new FlexItemOptions { Basis = sprite1.Width, Grow = fitToText ? 0 : 1, Shrink = fitToText ? 0 : 1 });
+
+            var sprite2 = new Sprite
+            {
+                Parent = parentLayout,
+                Size = sprite2Size,
+                Tint = sprite2Color
+            };
+
+            var sprite2Label = CreateSpriteText(sprite2, sprite2Text, textSize, sprite2TextColor,
+                fitToText ? Alignment.MidLeft : Alignment.MidCenter,
+                position: fitToText ? new ScalableVector2(15, 0) : null);
+            if (fitToText)
+                sprite2.Width = sprite2Label.Width + 30f;
+            sprite2.Image = RoundedRectTextureCache.Get(sprite2.Width, sprite2.Height, new RoundedRectCornerRadii(0, 6, 6, 0));
+            parentLayout.SetItemOptions(sprite2, new FlexItemOptions { Basis = sprite2.Width, Grow = fitToText ? 0 : 1, Shrink = fitToText ? 0 : 1 });
+
+            return sprite1.Width + sprite2.Width;
+        }
+
+        private SpriteTextPlus CreateSpriteText(Sprite sprite, string text, int size, Color color, Alignment alignment = Alignment.MidCenter, float alpha = 1f, ScalableVector2? position = null, WobbleFontStore fontUsed = null)
+        {
+            return new SpriteTextPlus(fontUsed ?? FontManager.GetWobbleFont(Fonts.InterBold), text, size)
             {
                 Parent = sprite,
                 Position = position ?? new ScalableVector2(0, 0),
@@ -459,8 +621,26 @@ namespace Quaver.Shared.Screens.V2.Options
             MainContentLayout.SetItemOptions(ContentLayout, new FlexItemOptions { Basis = 0, Grow = 1 });
         }
 
-        private void UpdateResultsCount(int count) => SearchBox.SetResultsText(LocalizationManager.Get(count > 1 ? "Screen_Options_SearchResults" : "Screen_Options_SearchResult", count));
+        private string GetSearchResultsText(int count) => LocalizationManager.Get(count == 1 ? "Screen_Options_SearchResult" : "Screen_Options_SearchResults", count);
+        private void UpdateResultsCount(int count) => SearchBox.SetResultsText(GetSearchResultsText(count));
         private void OnVirtualScreenSizeChanged(object sender, WindowVirtualScreenSizeChangedEventArgs e) => UpdateLayout();
+
+        private void OnRecentlyChangedOptionsChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            if (!CurrentCategory.HasValue && !IsSearching)
+                RecentOptionsDirty = true;
+        }
+
+        private void OnSearchQueryChanged(object sender, BindableValueChangedEventArgs<string> e)
+        {
+            if (IsSearching && CurrentCategory.HasValue)
+                SelectCategory(null);
+            else if (!CurrentCategory.HasValue)
+            {
+                CreateSectionMenu();
+                RefreshOptionsRows();
+            }
+        }
 
         private void SelectCategory(OptionCategory? category)
         {
@@ -471,19 +651,65 @@ namespace Quaver.Shared.Screens.V2.Options
             SetIconColor(CurrentCategory.HasValue ? CategoryIcons[CurrentCategory.Value] : IconRecentSearch, ColorHelper.FromHex("#273038"), ColorHelper.FromHex("#D0DBED"));
 
             CurrentCategory = category;
+            if (category.HasValue && !string.IsNullOrEmpty(SearchQuery.Value))
+                SearchQuery.Value = string.Empty;
 
             SetIconColor(CurrentCategory.HasValue ? CategoryIcons[CurrentCategory.Value] : IconRecentSearch, ColorHelper.FromHex("#6B83B2"), ColorHelper.FromHex("#FFFFFF"));
 
             // Create buttons for that category
             CreateSectionMenu();
+            RefreshOptionsRows();
 
         }
-        private void OnSectionButtonClicked(RoundedButton sender, string sectionName)
+        private void OnSectionButtonClicked((OptionCategory? Category, string Name) section)
         {
-            CategorySectionButtons.ForEach(button => button.Tint = ColorHelper.FromHex("#181E25"));
-            sender.Tint = ColorHelper.FromHex("#6B83B2");
+            if (section == AllSection)
+            {
+                OptionsScroll.ScrollTo(0, 800);
+                return;
+            }
 
-            SelectedCategorySection = sectionName;
+            var start = SectionStarts.FirstOrDefault(item => item.Category == section.Category && item.Name == section.Name);
+            if (start.Header != null)
+                OptionsScroll.ScrollTo(-start.Header.Y, 800);
+        }
+
+        private void SetSectionHighlight((OptionCategory? Category, string Name) section)
+        {
+            if (SelectedCategorySection == section)
+                return;
+
+            SelectedCategorySection = section;
+            foreach (var button in CategorySectionButtons)
+                button.Value.Tint = ColorHelper.FromHex(button.Key == section ? "#6B83B2" : "#181E25");
+        }
+
+        private void UpdateSectionHighlight()
+        {
+            var scrollableHeight = OptionsScroll.ContentContainer.Height - OptionsScroll.Height;
+            var scrollTop = Math.Max(0, -OptionsScroll.CurrentY);
+            if (SectionStarts.Count == 0 || scrollableHeight <= 1 || scrollTop <= 1)
+            {
+                SetSectionHighlight(AllSection);
+                return;
+            }
+
+            if (scrollTop >= scrollableHeight - 1)
+            {
+                var last = SectionStarts[SectionStarts.Count - 1];
+                SetSectionHighlight((last.Category, last.Name));
+                return;
+            }
+
+            var activeSection = SectionStarts[0];
+            foreach (var section in SectionStarts)
+            {
+                if (section.Header.Y > scrollTop + 10)
+                    break;
+                activeSection = section;
+            }
+
+            SetSectionHighlight((activeSection.Category, activeSection.Name));
         }
 
         private void SetIconColor(RoundedButton button, Color buttonColor, Color textColor)
@@ -498,11 +724,32 @@ namespace Quaver.Shared.Screens.V2.Options
         }
 
         /// <inheritdoc />
+        public override void Update(GameTime gameTime)
+        {
+            if (RecentOptionsDirty && MouseManager.CurrentState.LeftButton == ButtonState.Released && !IsOptionInputFocused(OptionsRows))
+            {
+                CreateSectionMenu();
+                RefreshOptionsRows();
+            }
+
+            InputRecorderWasFocused = IsInputRecorderFocused(ContentLayout);
+            SectionListScroll.InputEnabled = !IsIconListExpanded && SectionListScroll.IsHovered();
+            foreach (var button in CategorySectionButtons.Values)
+                button.IsInteractionEnabled = SectionListScroll.InputEnabled;
+            OptionsScroll.InputEnabled = OptionsScroll.IsHovered();
+            base.Update(gameTime);
+            UpdateSectionHighlight();
+        }
+
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
         {
+            if (InputRecorderWasFocused || IsInputRecorderFocused(ContentLayout))
+                return;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
                 DialogManager.Dismiss(this);
@@ -515,6 +762,11 @@ namespace Quaver.Shared.Screens.V2.Options
             if (!Panel.IsHovered())
                 DialogManager.Dismiss(this);
         }
+
+        private static bool IsInputRecorderFocused(Drawable drawable) => drawable is InputRecorderV2 { Focused: true } || drawable.Children.Any(IsInputRecorderFocused);
+
+        private static bool IsOptionInputFocused(Drawable drawable) =>
+            drawable is InputRecorderV2 { Focused: true } || drawable is Textbox { Focused: true } || drawable.Children.Any(IsOptionInputFocused);
 
         private void UpdateLayout()
         {
@@ -531,12 +783,37 @@ namespace Quaver.Shared.Screens.V2.Options
             MainContentLayout.RefreshLayout();
             HeaderMenuLayout.RefreshLayout();
             MenuLayout.RefreshLayout();
+            SectionListScroll.Height = Math.Max(1f, MenuLayout.Height - 10);
             MenuColumnsLayout.RefreshLayout();
-            SectionListLayout.RefreshLayout();
+            UpdateSectionListLayout();
             HeaderContentLayout.RefreshLayout();
             ContentLayout.RefreshLayout();
+            UpdateOptionsContentLayout();
 
             SyncIconList();
+        }
+        private void UpdateSectionListLayout()
+        {
+            var buttonsHeight = CategorySectionButtons.Count * 40f + Math.Max(0, CategorySectionButtons.Count - 1) * SectionListLayout.RowGap;
+            SectionListLayout.Size = new ScalableVector2(Math.Max(1f, SectionListScroll.Width), Math.Max(SectionListScroll.Height, buttonsHeight));
+            SectionListScroll.ContentContainer.Size = SectionListLayout.Size;
+            SectionListLayout.RefreshLayout();
+        }
+        private void UpdateOptionsContentLayout()
+        {
+            ContentBackground.Image = RoundedRectTextureCache.Get(ContentBackground.Width, ContentBackground.Height, 6f);
+
+
+            OptionsScroll.Size = new ScalableVector2(ContentBackground.Width - 10, ContentBackground.Height - 10 * 2);
+
+            var rowsHeight = OptionsRows.Children.Sum(row => row.Height) + Math.Max(0, OptionsRows.Children.Count - 1) * OptionsRows.RowGap;
+            OptionsRows.Size = new ScalableVector2(ContentBackground.Width - 10 * 2, Math.Max(ContentBackground.Height - 10 * 2, rowsHeight));
+            OptionsScroll.ContentContainer.Size = OptionsRows.Size;
+            OptionsRows.RefreshLayout();
+            foreach (var section in SectionStarts)
+                section.Header.RefreshLayout();
+            foreach (var row in OptionsRows.Children.OfType<OptionsRow>())
+                row.RefreshLayout();
         }
         private void SyncIconList()
         {
@@ -554,6 +831,9 @@ namespace Quaver.Shared.Screens.V2.Options
             SearchBox.Focused = false;
             PressetDropdown.CloseImmediately();
 
+            ConfigManager.RecentlyChangedOptions.ValueChanged -= OnRecentlyChangedOptionsChanged;
+            SearchQuery.ValueChanged -= OnSearchQueryChanged;
+            SearchQuery.Dispose();
             WindowManager.VirtualScreenSizeChanged -= OnVirtualScreenSizeChanged;
 
             base.Destroy();

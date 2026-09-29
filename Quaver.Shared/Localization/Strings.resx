@@ -3050,6 +3050,9 @@ Hotkey: {0}</value>
   <data name="Screen_Editor_EnterNewKeybind" xml:space="preserve">
     <value>Please enter a new keybind...</value>
   </data>
+  <data name="Screen_Options_PressKeys" xml:space="preserve">
+    <value>Press {0} keys...</value>
+  </data>
   <data name="Screen_Editor_Change" xml:space="preserve">
     <value>Change</value>
   </data>

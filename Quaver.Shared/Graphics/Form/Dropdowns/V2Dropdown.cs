@@ -76,9 +76,13 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
     public abstract class V2DropdownBase : Container
     {
+        public event EventHandler ValueEdited;
+
         protected V2DropdownBase()
         {
         }
+
+        protected void NotifyValueEdited() => ValueEdited?.Invoke(this, EventArgs.Empty);
 
         internal abstract void CloseImmediatelyFromRegistry();
 
@@ -583,6 +587,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 RefreshOptionButtons();
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
                 OptionSelected?.Invoke(this, new DropdownOptionEventArgs<T>(option, selected));
+                NotifyValueEdited();
                 return;
             }
 
@@ -594,8 +599,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             }
 
             Close(0);
+            var previousValue = Value.Value;
             Value.Value = option.Value;
             OptionSelected?.Invoke(this, new DropdownOptionEventArgs<T>(option));
+            if (!EqualityComparer<T>.Default.Equals(previousValue, Value.Value))
+                NotifyValueEdited();
         }
 
         private void RefreshTrigger()
