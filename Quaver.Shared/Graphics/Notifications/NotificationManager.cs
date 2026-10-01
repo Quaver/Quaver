@@ -50,9 +50,29 @@ namespace Quaver.Shared.Graphics.Notifications
         private static Dictionary<string, DrawableNotification> KeyedNotifications { get; } = new Dictionary<string, DrawableNotification>();
 
         /// <summary>
+        ///     Notifications list used for the hub's new notification section
+        /// </summary>
+        public static List<NotificationInfo> NewNotificationsFeed { get; } = new List<NotificationInfo>();
+
+        /// <summary>
+        ///     Notifications list used for the hub's history notification section
+        /// </summary>
+        public static List<NotificationInfo> HistoryNotificationsFeed { get; }  = new List<NotificationInfo>();
+
+        /// <summary>
         ///     Event invoked when a notification has been missed by the user
         /// </summary>
         public static event EventHandler<NotificationMissedEventArgs> NotificationMissed;
+
+        /// <summary>
+        ///     Invoked when a queued notification becomes visible.
+        /// </summary>
+        public static event Action<NotificationInfo> NotificationShown;
+
+        /// <summary>
+        ///     Invoked when a shown notification is clicked and removed from the new feed.
+        /// </summary>
+        public static event Action<NotificationInfo> NotificationViewed;
 
         /// <summary>
         ///     The initial/top level position for notifications
@@ -83,15 +103,45 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="text"></param>
         /// <param name="onClick"></param>
         /// <param name="forceShow"></param>
-        internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false)
+        internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false,
+            NotificationType type = NotificationType.General, string senderName = null, long senderSteamId = 0,
+            string detailText = null)
         {
-            var info = new NotificationInfo(level, text, true, onClick, forceShow);
+            var info = new NotificationInfo(level, text, true, onClick, forceShow, type: type, senderName: senderName,
+                senderSteamId: senderSteamId, detailText: detailText);
             var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
 
             lock (QueuedNotifications)
             {
                 QueuedNotifications.Add(notification);
             }
+        }
+
+        internal static bool StoreShownNotification(NotificationInfo info)
+        {
+            if (info.StoredInHub || (info.Level != NotificationLevel.Error && info.ClickAction == null))
+                return false;
+
+            StoreInHub(info, false);
+            return true;
+        }
+
+        internal static void MarkClicked(NotificationInfo info)
+        {
+            info.WasClicked = true;
+
+            if (info.StoredInHub && NewNotificationsFeed.Remove(info))
+                NotificationViewed?.Invoke(info);
+        }
+
+        private static void StoreInHub(NotificationInfo info, bool missed)
+        {
+            info.StoredInHub = true;
+            NewNotificationsFeed.Insert(0, info);
+            HistoryNotificationsFeed.Insert(0, info);
+
+            if (missed)
+                NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
         }
 
         /// <summary>
@@ -169,6 +219,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
                     ActiveNotifications.Add(notification);
                     NotificationsToClear.Add(notification);
+                    NotificationShown?.Invoke(notification.Item);
                 }
 
                 foreach (var notification in NotificationsToClear)
@@ -216,6 +267,9 @@ namespace Quaver.Shared.Graphics.Notifications
                 if (notification.Item.WasClicked)
                     continue;
 
+                if (notification.Item.StoredInHub)
+                    continue;
+
                 // Consider a notification "missed" if it's an error OR it has a click action attached to it
                 if (notification.Item.Level != NotificationLevel.Error && notification.Item.ClickAction == null)
                     continue;
@@ -224,10 +278,11 @@ namespace Quaver.Shared.Graphics.Notifications
                 Logger.Important($"Notification Missed: {notification.Item.Level} | {notification.Item.Text}",
                     LogType.Runtime, false);
 
-                var info = new NotificationInfo(notification.Item.Level, notification.Item.Text, false,
-                    notification.Item.ClickAction);
+                var info = new NotificationInfo(notification.Item.Level, notification.Item.Text, false, notification.Item.ClickAction,
+                    createdAt: notification.Item.CreatedAt, type: notification.Item.Type, senderName: notification.Item.SenderName, 
+                    senderSteamId: notification.Item.SenderSteamId, detailText: notification.Item.DetailText);
 
-                NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
+                StoreInHub(info, true);
             }
         }
 
