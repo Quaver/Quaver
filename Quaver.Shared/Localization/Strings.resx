@@ -3842,6 +3842,9 @@ You might want to back up your keymap first.</value>
   <data name="Screen_Hub_MapRequestHeader" xml:space="preserve">
     <value>Map Requests</value>
   </data>
+  <data name="Screen_Hub_DisplayAlert" xml:space="preserve">
+    <value>Display Alert</value>
+  </data>
   <data name="Screen_Hub_RequestAlertsOn" xml:space="preserve">
     <value>Alerts: On</value>
   </data>

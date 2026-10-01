@@ -9,6 +9,7 @@ using Quaver.Server.Client.Objects.Twitch;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub.SongRequests.Header;
@@ -35,6 +36,7 @@ public class SongRequestsSection : Container
 {
     private FlexContainer Layout { get; set; }
     private RoundedButton AlertsButton { get; set; }
+    private ToggleV2 AlertsToggle { get; set; }
     private RoundedButton TwitchButton { get; set; }
     private RoundedButton ClearButton { get; set; }
     private SongRequestList Scroll { get; set; }
@@ -42,7 +44,6 @@ public class SongRequestsSection : Container
     private SongRequestRightClickOptions RequestMenu { get; set; }
     private SkinV2DropdownConfig DropdownStyle { get; set; }
     private OnlineClient SubscribedClient { get; set; }
-    private bool? PreviousAlertsValue { get; set; }
     private string PreviousTwitchUsername { get; set; }
     private bool TwitchLabelInitialized { get; set; }
 
@@ -89,18 +90,39 @@ public class SongRequestsSection : Container
             JustifyContent = FlexJustifyContent.SpaceBetween
         };
 
-        // TODO: Replace by a toggle pill 
-        AlertsButton = new RoundedButton((sender, args) => ToggleAlerts())
+        var actionsLayout = new FlexContainer
         {
             Parent = headerLayout,
+            Size = new ScalableVector2(234 + 10 + 232, 40),
+            Direction = FlexDirection.Row,
+            AlignItems = FlexAlignItems.Center,
+            ColumnGap = 10
+        };
+        headerLayout.SetItemOptions(actionsLayout, new FlexItemOptions { Basis = actionsLayout.Width, Shrink = 0 });
+
+        AlertsButton = new RoundedButton((sender, args) => ToggleAlerts())
+        {
+            Parent = actionsLayout,
             Size = new ScalableVector2(234, 40),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
+            Tint = ColorHelper.HexToColor("#181E25"),
             PerformHoverFade = false
+        };
+        AlertsButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Hub_DisplayAlert"), 18, Color.White);
+        AlertsButton.Label.Alignment = Alignment.MidLeft;
+        AlertsButton.Label.X = 10;
+
+        AlertsToggle = new ToggleV2(ConfigManager.DisplaySongRequestNotifications)
+        {
+            Parent = AlertsButton,
+            Alignment = Alignment.MidRight,
+            X = -16,
+            Scale = new Vector2(1.2f)
         };
 
         TwitchButton = new RoundedButton((sender, args) => ToggleTwitch())
         {
-            Parent = headerLayout,
+            Parent = actionsLayout,
             Size = new ScalableVector2(232, 40),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.HexToColor("#9146FF"),
@@ -168,14 +190,6 @@ public class SongRequestsSection : Container
 
     private void UpdateHeaderButtons()
     {
-        var alertsEnabled = ConfigManager.DisplaySongRequestNotifications.Value;
-        if (PreviousAlertsValue != alertsEnabled)
-        {
-            PreviousAlertsValue = alertsEnabled;
-            AlertsButton.Tint = ColorHelper.HexToColor(alertsEnabled ? "#6B83B2" : "#181E25");
-            AlertsButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get(alertsEnabled ? "Screen_Hub_RequestAlertsOn" : "Screen_Hub_RequestAlertsOff"), 18, Color.White);
-        }
-
         var username = OnlineManager.TwitchUsername;
         if (!TwitchLabelInitialized || PreviousTwitchUsername != username)
         {
@@ -194,7 +208,6 @@ public class SongRequestsSection : Container
     private void ToggleAlerts()
     {
         ConfigManager.DisplaySongRequestNotifications.Value = !ConfigManager.DisplaySongRequestNotifications.Value;
-        UpdateHeaderButtons();
     }
 
     private void ToggleTwitch()
