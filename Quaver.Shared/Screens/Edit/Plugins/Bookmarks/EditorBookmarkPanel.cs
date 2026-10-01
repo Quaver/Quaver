@@ -91,7 +91,8 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(600, float.MaxValue));
         ImGui.PushFont(Options.Fonts.First().Context);
         ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
-        EditorImGui.Begin(this, Name);
+        var open = IsActive;
+        ImGui.Begin(Name, ref open);
 
         DrawHeaderText();
         ImGui.Dummy(new Vector2(0, 10));
@@ -124,6 +125,7 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         IsWindowHovered = IsWindowHovered || isHovered;
         ImGui.End();
         ((IColoredImGuiTitle)this).ImGuiPopTitleColors();
+        IsActive = open;
     }
 
     private static void DrawHeaderText()
@@ -131,6 +133,8 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         ImGui.TextWrapped("Bookmarks mark important positions in the map and can include a note and a custom color.");
         ImGui.Dummy(new Vector2(0, 5));
         ImGui.TextWrapped("Click a bookmark to select it, or click it again to seek to its position in time.");
+        ImGui.Dummy(new Vector2(0, 5));
+        ImGui.TextWrapped("Click the Time or Color header to order bookmarks. Shift-click the other header to combine both.");
     }
 
     private void DrawAddButton()
@@ -285,7 +289,8 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
     private void DrawTable()
     {
         if (!ImGui.BeginTable("##BookmarkTable", 3,
-                ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchSame | ImGuiTableFlags.Sortable))
+                ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingStretchSame | ImGuiTableFlags.Sortable |
+                ImGuiTableFlags.SortMulti))
         {
             IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
             return;
@@ -303,13 +308,18 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
             NeedsToScrollToLastSelectedBookmark = null;
         }
 
-        foreach (var bookmark in GetSortedBookmarks())
+        var bookmarks = Screen.WorkingMap.Bookmarks.Select((bookmark, originalIndex) =>
+            (Bookmark: bookmark, OriginalIndex: originalIndex)).ToList();
+        SortBookmarks(bookmarks);
+
+        for (var i = 0; i < bookmarks.Count; i++)
         {
+            var (bookmark, originalIndex) = bookmarks[i];
             var isSelected = SelectedBookmarks.Contains(bookmark);
 
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
-            ImGui.PushID(Screen.WorkingMap.Bookmarks.IndexOf(bookmark));
+            ImGui.PushID(originalIndex);
 
             ScrollToSelection(bookmark);
 
@@ -351,33 +361,68 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         ImGui.EndTable();
     }
 
-    private unsafe IEnumerable<BookmarkInfo> GetSortedBookmarks()
+    private unsafe void SortBookmarks(List<(BookmarkInfo Bookmark, int OriginalIndex)> bookmarks)
     {
-        var bookmarks = Screen.WorkingMap.Bookmarks.AsEnumerable();
         var sortSpecs = ImGui.TableGetSortSpecs();
-        if (sortSpecs.NativePtr == null || sortSpecs.SpecsCount == 0)
-            return bookmarks.OrderBy(x => x.StartTime);
+        var nativeSpecs = sortSpecs.Specs.NativePtr;
 
-        var columnSortSpecs = sortSpecs.Specs;
-        var descending = columnSortSpecs.SortDirection == ImGuiSortDirection.Descending;
-        sortSpecs.SpecsDirty = false;
-
-        if (columnSortSpecs.ColumnIndex == (short)BookmarkTableColumn.Color)
+        if (nativeSpecs == null || sortSpecs.SpecsCount == 0)
         {
-            return descending
-                ? bookmarks.OrderByDescending(GetBookmarkColorSortKey).ThenBy(x => x.StartTime)
-                : bookmarks.OrderBy(GetBookmarkColorSortKey).ThenBy(x => x.StartTime);
+            bookmarks.Sort((left, right) =>
+            {
+                var comparison = left.Bookmark.StartTime.CompareTo(right.Bookmark.StartTime);
+                return comparison != 0 ? comparison : left.OriginalIndex.CompareTo(right.OriginalIndex);
+            });
+            return;
         }
 
-        return descending
-            ? bookmarks.OrderByDescending(x => x.StartTime)
-            : bookmarks.OrderBy(x => x.StartTime);
+        bookmarks.Sort((left, right) =>
+        {
+            for (var i = 0; i < sortSpecs.SpecsCount; i++)
+            {
+                var sortSpec = nativeSpecs[i];
+                var comparison = ((BookmarkTableColumn)sortSpec.ColumnIndex) switch
+                {
+                    BookmarkTableColumn.Time => left.Bookmark.StartTime.CompareTo(right.Bookmark.StartTime),
+                    BookmarkTableColumn.Color => CompareBookmarkColors(left.Bookmark, right.Bookmark),
+                    _ => 0
+                };
+
+                if (comparison == 0)
+                    continue;
+
+                return sortSpec.SortDirection == ImGuiSortDirection.Descending ? -comparison : comparison;
+            }
+
+            return left.OriginalIndex.CompareTo(right.OriginalIndex);
+        });
+
+        sortSpecs.SpecsDirty = false;
     }
 
-    private static int GetBookmarkColorSortKey(BookmarkInfo bookmark)
+    private static int CompareBookmarkColors(BookmarkInfo left, BookmarkInfo right)
     {
-        var color = bookmark.GetColor();
-        return color.R << 16 | color.G << 8 | color.B;
+        var leftColor = left.GetColor();
+        var rightColor = right.GetColor();
+
+        var comparison = leftColor.GetHue().CompareTo(rightColor.GetHue());
+        if (comparison != 0)
+            return comparison;
+
+        comparison = leftColor.GetSaturation().CompareTo(rightColor.GetSaturation());
+        if (comparison != 0)
+            return comparison;
+
+        comparison = leftColor.GetBrightness().CompareTo(rightColor.GetBrightness());
+        if (comparison != 0)
+            return comparison;
+
+        comparison = leftColor.R.CompareTo(rightColor.R);
+        if (comparison != 0)
+            return comparison;
+
+        comparison = leftColor.G.CompareTo(rightColor.G);
+        return comparison != 0 ? comparison : leftColor.B.CompareTo(rightColor.B);
     }
 
     private void ScrollToSelection(BookmarkInfo bookmark)

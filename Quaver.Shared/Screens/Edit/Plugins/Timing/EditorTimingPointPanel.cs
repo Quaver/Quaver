@@ -122,7 +122,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
             ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
-            EditorImGui.Begin(this, Name);
+            var open = IsActive;
+            ImGui.Begin(Name, ref open);
 
             DrawHeaderText();
             ImGui.Dummy(new Vector2(0, 10));
@@ -158,6 +159,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             IsWindowHovered = IsWindowHovered || isHovered;
             ImGui.End();
             ((IColoredImGuiTitle)this).ImGuiPopTitleColors();
+            IsActive = open;
         }
 
         /// <summary>

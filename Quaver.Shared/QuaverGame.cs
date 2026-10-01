@@ -120,6 +120,7 @@ using Wobble.IO;
 using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Platform;
+using Wobble.Timing;
 using Wobble.Window;
 using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
@@ -292,6 +293,8 @@ namespace Quaver.Shared
         /// <summary>
         /// </summary>
         private long MacOsCocoaEventLoopLastDrawTicks { get; set; }
+
+        private readonly FramePacer FramePacer = new FramePacer();
 
         /// <summary>
         ///     Sometimes we'd like to perform actions on the first update, such as
@@ -469,6 +472,7 @@ namespace Quaver.Shared
         /// </summary>
         protected override void UnloadContent()
         {
+            FramePacer.Dispose();
             AudioManager.OutputDeviceChanged -= OnAudioOutputDeviceChanged;
             AudioManager.ShouldSkipLostOutputDeviceCheck = null;
             ConfigManager.WriteConfigFileAsync().Wait();
@@ -543,6 +547,13 @@ namespace Quaver.Shared
         ///     Determines whether the game should draw this update.
         /// </summary>
         protected override bool BeginDraw() => base.BeginDraw() && ShouldRunMacOsDraw();
+
+        protected override void EndDraw()
+        {
+            base.EndDraw();
+            // SDL pumps events next, so input and the next variable timestep include this wait.
+            FramePacer.WaitForNextFrame();
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -738,6 +749,7 @@ namespace Quaver.Shared
         public void SetFps(FpsLimitType fpsLimitType, int customFpsLimit)
         {
             MacOsCocoaEventLoopDrawLimiter = false;
+            FramePacer.SetLimit(0);
 
             switch (fpsLimitType)
             {
@@ -752,8 +764,8 @@ namespace Quaver.Shared
                         SetMacOsCocoaEventLoopDrawLimiter(240);
                     else
                     {
-                        IsFixedTimeStep = true;
-                        TargetElapsedTime = TimeSpan.FromSeconds(1d / 240d);
+                        IsFixedTimeStep = false;
+                        FramePacer.SetLimit(240);
                     }
                     WaylandVsync = false;
                     break;
@@ -777,8 +789,8 @@ namespace Quaver.Shared
                         SetMacOsCocoaEventLoopDrawLimiter(customFpsLimit);
                     else
                     {
-                        TargetElapsedTime = TimeSpan.FromSeconds(1d / customFpsLimit);
-                        IsFixedTimeStep = true;
+                        IsFixedTimeStep = false;
+                        FramePacer.SetLimit(customFpsLimit);
                     }
                     WaylandVsync = false;
                     break;

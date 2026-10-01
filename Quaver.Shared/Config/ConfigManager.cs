@@ -697,6 +697,11 @@ namespace Quaver.Shared.Config
         /// </summary>
         internal static Bindable<bool> EditorShowSpectrogram { get; private set; }
 
+        /// <summary>
+        ///     Whether or not bookmarks are displayed in the editor.
+        /// </summary>
+        internal static Bindable<bool> EditorShowBookmarks { get; private set; }
+
         internal static Bindable<int> EditorSpectrogramMaximumFrequency { get; private set; }
 
         internal static Bindable<int> EditorSpectrogramMinimumFrequency { get; private set; }
@@ -1268,6 +1273,7 @@ namespace Quaver.Shared.Config
             EditorAudioFilter = ReadValue(@"EditorAudioFilter", EditorPlayfieldWaveformFilter.None, data);
             EditorShowWaveform = ReadValue(@"EditorShowWaveform", true, data);
             EditorShowSpectrogram = ReadValue(@"EditorShowSpectrogram", false, data);
+            EditorShowBookmarks = ReadValue(@"EditorShowBookmarks", true, data);
             EditorSpectrogramMaximumFrequency = ReadInt(@"EditorSpectrogramMaximumFrequency", 7000, 5000, 10000, data);
             EditorSpectrogramMinimumFrequency = ReadInt("EditorSpectrogramMinimumFrequency", 125, 0, 1500, data);
             EditorSpectrogramCutoffFactor = ReadValue("EditorSpectrogramCutoffFactor", 0.34f, data);

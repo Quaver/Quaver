@@ -630,6 +630,9 @@ namespace Quaver.Shared.Screens.Gameplay
             if (Exiting)
                 return GlobalInputHandleResult.Pass;
 
+            if (OnlineChat.Instance.IsOpen)
+                return GlobalInputHandleResult.Pass;
+
             if (IsSongSelectPreview && !IsSongSelectPreviewDisplayed)
                 return GlobalInputHandleResult.Pass;
 

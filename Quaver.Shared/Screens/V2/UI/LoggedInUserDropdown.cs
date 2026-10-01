@@ -798,6 +798,8 @@ namespace Quaver.Shared.Screens.V2.UI
                 return "Swan";
             if (groups.HasFlag(UserGroups.Developer))
                 return "Developer";
+            if (groups.HasFlag(UserGroups.GraphicDesigner))
+                return "Graphic Designer";
             if (groups.HasFlag(UserGroups.Bot))
                 return "Bot";
             if (groups.HasFlag(UserGroups.Admin))

@@ -12,7 +12,6 @@ using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Database.Scores;
-using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Discord;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Transitions;
@@ -22,7 +21,6 @@ using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens.Edit;
-using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
 using Quaver.Shared.Screens.Multi;
@@ -135,14 +133,6 @@ namespace Quaver.Shared.Screens.Selection
             // The paused modifier is gameplay-only state and should never persist into song select.
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);
-
-            // Go to the import screen if we've imported a map not on the select screen
-            if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0
-                                               || MapDatabaseCache.MapsToUpdate.Count != 0)
-            {
-                Exit(() => QuaverScreenFactory.CreateImporting(null, true));
-                return;
-            }
 
             if (IsMultiplayer)
                 OnlineManager.Client?.SetGameCurrentlySelectingMap(true);

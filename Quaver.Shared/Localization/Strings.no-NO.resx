@@ -1438,22 +1438,22 @@ Bruk filtrene til å begrense søket.</value>
     <value>10 Keys</value>
   </data>
   <data name="Screen_Download_SearchMaps" xml:space="preserve">
-    <value>Search maps...</value>
+    <value>Søk etter maps...</value>
   </data>
   <data name="Screen_Download_SearchPlaylists" xml:space="preserve">
-    <value>Search playlists...</value>
+    <value>Søk etter spillelister...</value>
   </data>
   <data name="Screen_Download_OwnedMaps" xml:space="preserve">
-    <value>Owned Maps</value>
+    <value>Eide maps</value>
   </data>
   <data name="Screen_Download_OwnedPlaylists" xml:space="preserve">
-    <value>Owned Playlists</value>
+    <value>Eide spillelister</value>
   </data>
   <data name="Screen_Download_Mapsets" xml:space="preserve">
-    <value>Mapsets</value>
+    <value>Mapsetter</value>
   </data>
   <data name="Screen_Download_AllKeymodes" xml:space="preserve">
-    <value>All Keymodes</value>
+    <value>Alle </value>
   </data>
   <data name="Screen_Download_NPS" xml:space="preserve">
     <value>NPS</value>
@@ -1462,25 +1462,25 @@ Bruk filtrene til å begrense søket.</value>
     <value>Min%</value>
   </data>
   <data name="Screen_Download_MaxPercent" xml:space="preserve">
-    <value>Max%</value>
+    <value>Maks%</value>
   </data>
   <data name="Screen_Download_Min" xml:space="preserve">
     <value>Min</value>
   </data>
   <data name="Screen_Download_Max" xml:space="preserve">
-    <value>Max</value>
+    <value>Maks</value>
   </data>
   <data name="Screen_Download_AnyLength" xml:space="preserve">
-    <value>Any Length</value>
+    <value>Uansett lengde</value>
   </data>
   <data name="Screen_Download_AnyCombo" xml:space="preserve">
-    <value>Any Combo</value>
+    <value>Uansett Combo</value>
   </data>
   <data name="Screen_Download_Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
   <data name="Screen_Download_AnyMapCount" xml:space="preserve">
-    <value>Any Map Count</value>
+    <value>Uansett Map Antall</value>
   </data>
   <data name="Screen_Multi_ConfirmReadyTitle" xml:space="preserve">
     <value>BEKREFT KLAR</value>
@@ -2096,6 +2096,9 @@ Bruk filtrene til å begrense søket.</value>
   </data>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>Vis forhåndsvisning av spillopplevelse</value>
+  </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Vanskelighetsgrad (Referanse)</value>
@@ -3217,196 +3220,196 @@ Bruk filtrene til å begrense søket.</value>
     <value>Opprettet {0}</value>
   </data>
   <data name="SkinEditor_Title" xml:space="preserve">
-    <value>Skin Editor</value>
+    <value>Tema Editor</value>
   </data>
   <data name="SkinEditor_Components" xml:space="preserve">
-    <value>Components</value>
+    <value>Komponenter</value>
   </data>
   <data name="SkinEditor_Assets" xml:space="preserve">
-    <value>Assets</value>
+    <value>Ressurser</value>
   </data>
   <data name="SkinEditor_AssetBreadcrumb" xml:space="preserve">
-    <value>Assets / {0}</value>
+    <value>Ressurser / {0}</value>
   </data>
   <data name="SkinEditor_Group_MainMenu" xml:space="preserve">
-    <value>Main Menu</value>
+    <value>Hovedmeny</value>
   </data>
   <data name="SkinEditor_Group_SharedNavigation" xml:space="preserve">
-    <value>Shared Navigation</value>
+    <value>Delt navigasjon</value>
   </data>
   <data name="SkinEditor_Group_SharedComponents" xml:space="preserve">
-    <value>Shared Components</value>
+    <value>Delte komponenter</value>
   </data>
   <data name="SkinEditor_Group_Other" xml:space="preserve">
-    <value>Screen Components</value>
+    <value>Skjerm komponenter</value>
   </data>
   <data name="SkinEditor_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Lagre</value>
   </data>
   <data name="SkinEditor_Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Lukk</value>
   </data>
   <data name="SkinEditor_Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Avbryt</value>
   </data>
   <data name="SkinEditor_Discard" xml:space="preserve">
-    <value>Discard</value>
+    <value>Kast</value>
   </data>
   <data name="SkinEditor_Reload" xml:space="preserve">
-    <value>Reload</value>
+    <value>Last på nytt</value>
   </data>
   <data name="SkinEditor_Overwrite" xml:space="preserve">
-    <value>Overwrite</value>
+    <value>Overskriv</value>
   </data>
   <data name="SkinEditor_Copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Kopier</value>
   </data>
   <data name="SkinEditor_CopyToLocal" xml:space="preserve">
-    <value>Copy to Local Skins</value>
+    <value>Kopier til lokale stiler</value>
   </data>
   <data name="SkinEditor_CopyTitle" xml:space="preserve">
-    <value>Name the local skin copy</value>
+    <value>Oppgi navnet på den lokale kopien.</value>
   </data>
   <data name="SkinEditor_CopyFailed" xml:space="preserve">
-    <value>Could not copy the Workshop skin: {0}</value>
+    <value>Kunne ikke kopiere Workshop-stil: {0}</value>
   </data>
   <data name="SkinEditor_WorkshopReadOnly" xml:space="preserve">
-    <value>Workshop skins are read-only.</value>
+    <value>Workshop stiler er skrivebeskyttet.</value>
   </data>
   <data name="SkinEditor_UnsavedTitle" xml:space="preserve">
-    <value>Unsaved skin changes</value>
+    <value>Ulagrede stil endringer</value>
   </data>
   <data name="SkinEditor_UnsavedMessage" xml:space="preserve">
-    <value>Save your staged skin changes before closing?</value>
+    <value>Lagre dine staged stil endringer før du lukker?</value>
   </data>
   <data name="SkinEditor_ConflictTitle" xml:space="preserve">
-    <value>skin.yml changed externally</value>
+    <value>skin.yml endret på seg eksternt</value>
   </data>
   <data name="SkinEditor_ConflictMessage" xml:space="preserve">
-    <value>Reload the external file, overwrite it, or keep editing?</value>
+    <value>Vil du oppdater den eksterne filen, overskriv den eller fortsett å redigere?</value>
   </data>
   <data name="SkinEditor_SaveSuccess" xml:space="preserve">
-    <value>Skin V2 configuration saved.</value>
+    <value>Stil V2-konfigurasjon lagret.</value>
   </data>
   <data name="SkinEditor_SaveFailed" xml:space="preserve">
-    <value>The Skin V2 configuration could not be saved.</value>
+    <value>Stil V2-konfigurasjonen kunne ikke lagres.</value>
   </data>
   <data name="SkinEditor_OpenFailed" xml:space="preserve">
-    <value>The Skin Editor could not open: {0}</value>
+    <value>Stileditoren kan ikke åpne: {0}</value>
   </data>
   <data name="SkinEditor_FileCheckFailed" xml:space="preserve">
-    <value>Could not check skin.yml for external changes: {0}</value>
+    <value>Kunne ikke sjekke skin.yml for eksterne endringer: {0}</value>
   </data>
   <data name="SkinEditor_ReloadFailed" xml:space="preserve">
-    <value>Could not reload skin.yml: {0}</value>
+    <value>Kunne ikke laste inn skin.yml: {0}</value>
   </data>
   <data name="SkinEditor_SelectComponent" xml:space="preserve">
-    <value>Select a component to edit.</value>
+    <value>Velg en komponent til å redigere.</value>
   </data>
   <data name="SkinEditor_NoEditableProperties" xml:space="preserve">
-    <value>This component has no editable properties.</value>
+    <value>Denne komponenten har ingen redigerbare egenskaper.</value>
   </data>
   <data name="SkinEditor_On" xml:space="preserve">
-    <value>On</value>
+    <value>På</value>
   </data>
   <data name="SkinEditor_Off" xml:space="preserve">
-    <value>Off</value>
+    <value>Av</value>
   </data>
   <data name="SkinEditor_Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Tøm</value>
   </data>
   <data name="SkinEditor_ResetDefault" xml:space="preserve">
-    <value>Reset to default</value>
+    <value>Tilbakestill</value>
   </data>
   <data name="SkinEditor_AddStop" xml:space="preserve">
-    <value>Add Gradient Stop</value>
+    <value>Legg til gradientstopp</value>
   </data>
   <data name="SkinEditor_SearchAssets" xml:space="preserve">
-    <value>Search assets...</value>
+    <value>Søk ressurser...</value>
   </data>
   <data name="SkinEditor_LoadingAssets" xml:space="preserve">
-    <value>Loading assets…</value>
+    <value>Laster inn ressurser...</value>
   </data>
   <data name="SkinEditor_AssetScanFailed" xml:space="preserve">
-    <value>Could not scan skin assets.</value>
+    <value>Kunne ikke skanne stilressurser.</value>
   </data>
   <data name="SkinEditor_AllFolders" xml:space="preserve">
-    <value>All folders</value>
+    <value>Alle mapper</value>
   </data>
   <data name="SkinEditor_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Last inn på nytt</value>
   </data>
   <data name="SkinEditor_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>Åpne mappe</value>
   </data>
   <data name="SkinEditor_InvalidValue" xml:space="preserve">
-    <value>Enter a valid value.</value>
+    <value>Angi en gyldig verdi.</value>
   </data>
   <data name="SkinEditor_InvalidRange" xml:space="preserve">
-    <value>Enter a value from {0} to {1}.</value>
+    <value>Angi en verdi fra {0} til {1}.</value>
   </data>
   <data name="SkinEditor_InvalidColor" xml:space="preserve">
-    <value>Use #RRGGBB or #RRGGBBAA format.</value>
+    <value>Bruk #RRGGBB eller #RRGGBBAA format.</value>
   </data>
   <data name="SkinEditor_InvalidAssetPath" xml:space="preserve">
-    <value>Choose a file inside this skin.</value>
+    <value>Velg en fil inni denne stilen.</value>
   </data>
   <data name="SkinEditor_InvalidGradientStop" xml:space="preserve">
-    <value>Use unique positions from 0 to 1 and valid hex colors.</value>
+    <value>Bruk unike posisjoner fra 0 til 1 og gyldig hex-farger.</value>
   </data>
   <data name="SkinEditor_SelectorTooltip" xml:space="preserve">
-    <value>Click to select the next option.</value>
+    <value>Klikk for å velge det neste valget.</value>
   </data>
   <data name="SkinEditor_Component_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>Bakgrunn</value>
   </data>
   <data name="SkinEditor_Component_BackgroundEffects" xml:space="preserve">
-    <value>Background Effects</value>
+    <value>Bakgrunnseffekter</value>
   </data>
   <data name="SkinEditor_Component_Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
   <data name="SkinEditor_Component_LogoAccent" xml:space="preserve">
-    <value>Logo Accent</value>
+    <value>Logo-detalj</value>
   </data>
   <data name="SkinEditor_Component_Actions" xml:space="preserve">
-    <value>Action Buttons</value>
+    <value>Handlingsknapper</value>
   </data>
   <data name="SkinEditor_Component_News" xml:space="preserve">
-    <value>News Card</value>
+    <value>Nyhetskort</value>
   </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
-    <value>Top Navigation</value>
+    <value>Topp-navigasjon</value>
   </data>
   <data name="SkinEditor_Component_BottomNavigation" xml:space="preserve">
-    <value>Bottom Navigation</value>
+    <value>Bunn navigasjon</value>
   </data>
   <data name="SkinEditor_Component_NavigationButtons" xml:space="preserve">
-    <value>Navigation Buttons</value>
+    <value>Navigasjonsknapper</value>
   </data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Profil</value>
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
-    <value>Screen Title</value>
+    <value>Skjermtittel</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve">
-    <value>Solid Color</value>
+    <value>Solid farge</value>
   </data>
   <data name="SkinEditor_Property_Path" xml:space="preserve">
-    <value>Image Path</value>
+    <value>Bildefilbane</value>
   </data>
   <data name="SkinEditor_Property_Fit" xml:space="preserve">
-    <value>Image Fit</value>
+    <value>Bilde Tilpassning</value>
   </data>
   <data name="SkinEditor_Property_Stops" xml:space="preserve">
-    <value>Gradient Stops</value>
+    <value>Gradient stopper</value>
   </data>
   <data name="SkinEditor_Property_AngleDegrees" xml:space="preserve">
-    <value>Angle</value>
+    <value>Vinkel</value>
   </data>
   <data name="SkinEditor_Property_X" xml:space="preserve">
     <value>Origin X</value>
@@ -3418,55 +3421,55 @@ Bruk filtrene til å begrense søket.</value>
     <value>Radial Radius</value>
   </data>
   <data name="SkinEditor_Property_Effect" xml:space="preserve">
-    <value>Effect</value>
+    <value>Effekt</value>
   </data>
   <data name="SkinEditor_Property_PrimaryColor" xml:space="preserve">
-    <value>Primary Color</value>
+    <value>Primærfarge</value>
   </data>
   <data name="SkinEditor_Property_SecondaryColor" xml:space="preserve">
-    <value>Secondary Color</value>
+    <value>Sekundærfarge</value>
   </data>
   <data name="SkinEditor_Property_Primary" xml:space="preserve">
-    <value>Primary Image</value>
+    <value>Primært bilde</value>
   </data>
   <data name="SkinEditor_Property_Secondary" xml:space="preserve">
-    <value>Secondary Image</value>
+    <value>Sekundært bilde</value>
   </data>
   <data name="SkinEditor_Property_Tertiary" xml:space="preserve">
-    <value>Tertiary Image</value>
+    <value>Tertiært bilde</value>
   </data>
   <data name="SkinEditor_Property_Image" xml:space="preserve">
-    <value>Image</value>
+    <value>Bilde</value>
   </data>
   <data name="SkinEditor_Property_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>Farge</value>
   </data>
   <data name="SkinEditor_Property_HoverColor" xml:space="preserve">
-    <value>Hover Color</value>
+    <value>Hover-farge</value>
   </data>
   <data name="SkinEditor_Property_AccentColor" xml:space="preserve">
-    <value>Accent Color</value>
+    <value>Aksentfarge</value>
   </data>
   <data name="SkinEditor_Property_TextColor" xml:space="preserve">
-    <value>Text Color</value>
+    <value>Tekstfarge</value>
   </data>
   <data name="SkinEditor_Property_BottomOffset" xml:space="preserve">
-    <value>Bottom Offset</value>
+    <value>Bunn forskyvning</value>
   </data>
   <data name="SkinEditor_Property_Scale" xml:space="preserve">
-    <value>Scale</value>
+    <value>Skala</value>
   </data>
   <data name="SkinEditor_Property_FallbackImage" xml:space="preserve">
-    <value>Fallback Image</value>
+    <value>Falltilbake bilde</value>
   </data>
   <data name="SkinEditor_Group_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Nedlast</value>
   </data>
   <data name="SkinEditor_Component_SearchArea" xml:space="preserve">
-    <value>Search Area</value>
+    <value>Søkeområde</value>
   </data>
   <data name="SkinEditor_Property_BackgroundColor" xml:space="preserve">
-    <value>Background Color</value>
+    <value>Bakgrunnsfarge</value>
   </data>
   <data name="SkinEditor_Property_ForegroundColor" xml:space="preserve">
     <value>Foreground Color</value>

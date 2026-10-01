@@ -2099,6 +2099,9 @@ hochladen, damit andere Spieler es herunterladen können?</value>
   <data name="Screen_Editor_DisplayGameplayPreview" xml:space="preserve">
     <value>Gameplay Vorschau anzeigen</value>
   </data>
+  <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
+    <value>Show Bookmarks</value>
+  </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Referenz Schwierigkeit</value>
   </data>

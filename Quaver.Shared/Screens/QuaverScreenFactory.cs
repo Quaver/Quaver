@@ -5,6 +5,7 @@ using Quaver.API.Replays;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
+using Quaver.Shared.Database.Settings;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Downloading;
 using Quaver.Shared.Screens.Gameplay;
@@ -69,8 +70,15 @@ namespace Quaver.Shared.Screens
 
         internal static QuaverScreen CreateSelection(
             SelectScrollContainerType? activeScrollContainer = null,
-            SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard) =>
-            Resolve(nameof(ScreenFactorySet.Selection), Legacy.Selection!, NewScreens.Selection)(activeScrollContainer, activeLeftPanel);
+            SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard)
+        {
+            if (MapsetImporter.Queue.Count > 0 || QuaverSettingsDatabaseCache.OutdatedMaps.Count != 0 ||
+                MapDatabaseCache.MapsToUpdate.Count != 0)
+                return CreateImporting(null, true);
+
+            return Resolve(nameof(ScreenFactorySet.Selection), Legacy.Selection!, NewScreens.Selection)(
+                activeScrollContainer, activeLeftPanel);
+        }
 
         internal static QuaverScreen CreateDownloading(QuaverScreenType previousScreen = QuaverScreenType.Menu) =>
             Resolve(nameof(ScreenFactorySet.Downloading), Legacy.Downloading!, NewScreens.Downloading)(previousScreen);
