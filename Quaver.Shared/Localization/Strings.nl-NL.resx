@@ -223,19 +223,19 @@
     <value>Website</value>
   </data>
   <data name="Screen_Main_SinglePlayer" xml:space="preserve">
-    <value>Single Player</value>
+    <value>Enkele Speler</value>
   </data>
   <data name="Screen_Main_Multiplayer" xml:space="preserve">
-    <value>Multiplayer</value>
+    <value>Samen Spelen</value>
   </data>
   <data name="Screen_Main_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>Bewerker</value>
   </data>
   <data name="Screen_Main_Competitive" xml:space="preserve">
     <value>Competitief</value>
   </data>
   <data name="Screen_Main_MapEditor" xml:space="preserve">
-    <value>Map Editor</value>
+    <value>Map Bewerker</value>
   </data>
   <data name="Screen_Main_DownloadMaps" xml:space="preserve">
     <value>Download Mappen</value>
@@ -361,10 +361,10 @@
     <value>Clan</value>
   </data>
   <data name="Screen_Selection_Country" xml:space="preserve">
-    <value>Land</value>
+    <value>Lokaal</value>
   </data>
   <data name="Screen_Selection_CountryRank" xml:space="preserve">
-    <value>Land rang</value>
+    <value>Lokale rang</value>
   </data>
   <data name="Screen_Selection_CreateNew" xml:space="preserve">
     <value>Maak nieuwe</value>
@@ -415,7 +415,7 @@
     <value>Lengte:</value>
   </data>
   <data name="Screen_Selection_Local" xml:space="preserve">
-    <value>Lokaal</value>
+    <value>Apparaat</value>
   </data>
   <data name="Screen_Selection_LocalProfile" xml:space="preserve">
     <value>Lokaal profiel</value>
@@ -442,7 +442,7 @@
     <value>Modificaties</value>
   </data>
   <data name="Screen_Selection_Mods" xml:space="preserve">
-    <value>Aanpassingen</value>
+    <value>Modificaties</value>
   </data>
   <data name="Screen_Selection_NeverPlayed" xml:space="preserve">
     <value>Nooit Gespeeld</value>
@@ -670,7 +670,7 @@
     <value>Nummer Selectie</value>
   </data>
   <data name="Screen_Options_Editor" xml:space="preserve">
-    <value>Editor</value>
+    <value>Bewerker</value>
   </data>
   <data name="Screen_Options_Misc" xml:space="preserve">
     <value>Overig</value>
@@ -1170,7 +1170,7 @@ als Uitstekend werden geraakt.</value>
     <value>Playtest Autoplay In-/uitschakelen</value>
   </data>
   <data name="Screen_Options_InvertEditorScrolling" xml:space="preserve">
-    <value>Scrollen Editor Omkeren</value>
+    <value>Scrollen Van Bewerker Omkeren</value>
   </data>
   <data name="Screen_Options_InvertScrolling" xml:space="preserve">
     <value>Scrollen Omkeren</value>
@@ -1218,7 +1218,7 @@ als Uitstekend werden geraakt.</value>
     <value>Geef Voorkeur Aan macOS Input Handling</value>
   </data>
   <data name="Screen_Options_EditorImGuiScale" xml:space="preserve">
-    <value>Editor ImGui Schaal</value>
+    <value>Bewerker ImGui Schaal</value>
   </data>
   <data name="Screen_Options_OPTIONSMENU" xml:space="preserve">
     <value>OPTIES MENU</value>
