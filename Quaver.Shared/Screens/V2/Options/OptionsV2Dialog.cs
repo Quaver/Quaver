@@ -1,27 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using Quaver.API.Enums;
-using Quaver.API.Helpers;
-using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form;
 using Quaver.Shared.Graphics.Form.Dropdowns;
-using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
-using Quaver.Shared.Input.Global;
-using Quaver.Shared.Scheduling;
-using Quaver.Shared.Screens.Gameplay;
-using Quaver.Shared.Screens.Menu.UI.Jukebox;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Screens.V2.Options.Model;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Screens.V2.UI.Filters;
 using Quaver.Shared.Skinning.V2;
-using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -32,19 +23,22 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Wobble.Input;
+using Wobble.Logging;
 using Wobble.Managers;
 using Wobble.Window;
-using static System.Net.Mime.MediaTypeNames;
-using static Quaver.Shared.Graphics.Overlays.V2Hub.Users.UsersSection;
 
 namespace Quaver.Shared.Screens.V2.Options
 {
     public class OptionsV2Dialog : DialogScreen
     {
         private const float LayoutGap = 10f;
+        private static readonly Guid CreatePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+        private static readonly Guid ManagePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffe");
 
         private bool InputRecorderWasFocused { get; set; }
         private bool RecentOptionsDirty { get; set; }
+        private bool PresetDirtyCheckPending { get; set; }
+        private bool AppliedPresetHasChanges { get; set; }
 
         /// <summary>
         /// </summary>
@@ -73,10 +67,8 @@ namespace Quaver.Shared.Screens.V2.Options
         private bool IsIconListExpanded;
 
         private OptionCategory? CurrentCategory { get; set; } = null;
-        private const string AllSectionsName = "Screen_Options_SectionAll";
-        private static readonly (OptionCategory? Category, string Name) AllSection = (null, AllSectionsName);
-        private (OptionCategory? Category, string Name)? SelectedCategorySection { get; set; }
-        private readonly Dictionary<(OptionCategory? Category, string Name), RoundedButton> CategorySectionButtons = new Dictionary<(OptionCategory?, string), RoundedButton>();
+        private (OptionCategory Category, string Name)? SelectedCategorySection { get; set; }
+        private readonly Dictionary<(OptionCategory Category, string Name), RoundedButton> CategorySectionButtons = new Dictionary<(OptionCategory, string), RoundedButton>();
         private readonly List<(OptionCategory Category, string Name, FlexContainer Header)> SectionStarts = new List<(OptionCategory, string, FlexContainer)>();
 
         private FlexContainer MainMenuLayout { get; set; }
@@ -88,7 +80,10 @@ namespace Quaver.Shared.Screens.V2.Options
         private V2FilterSearchTextbox SearchBox;
         private Bindable<string> SearchQuery { get; } = new Bindable<string>(string.Empty);
         private bool IsSearching => !string.IsNullOrWhiteSpace(SearchQuery.Value);
-        private V2Dropdown<string> PressetDropdown { get; set; }
+        private V2Dropdown<Guid> PressetDropdown { get; set; }
+        private Bindable<Guid> SelectedPresetId { get; } = new Bindable<Guid>(Guid.Empty);
+        private IReadOnlyDictionary<Guid, OptionsPreset> LoadedPresets { get; set; } = new Dictionary<Guid, OptionsPreset>();
+        private Guid AppliedPresetId { get; set; } = Guid.Empty;
         private FlexContainer MainContentLayout { get; set; }
         private FlexContainer HeaderContentLayout { get; set; }
         private FlexContainer ContentLayout { get; set; }
@@ -98,6 +93,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
         public OptionsV2Dialog() : base(0.75f)
         {
+            AppliedPresetId = ConfigManager.SelectedOptionsPresetId.Value;
             CreateLayouts();
 
             CreateContent();
@@ -106,6 +102,7 @@ namespace Quaver.Shared.Screens.V2.Options
             CreateMainContent();
 
             ConfigManager.RecentlyChangedOptions.ValueChanged += OnRecentlyChangedOptionsChanged;
+            OptionsList.OptionEdited += OnOptionEdited;
             SearchQuery.ValueChanged += OnSearchQueryChanged;
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
             UpdateLayout();
@@ -139,6 +136,19 @@ namespace Quaver.Shared.Screens.V2.Options
                 Parent = HeaderContentLayout
             };
 
+            // Presets
+            CreatePresetDropdown(AppliedPresetId);
+        }
+
+        private void CreatePresetDropdown(Guid selectedId = default)
+        {
+            if (PressetDropdown != null)
+            {
+                PressetDropdown.OptionSelected -= OnPresetSelected;
+                PressetDropdown.CloseImmediately();
+                PressetDropdown.Destroy();
+            }
+
             var dropdownStyle = new SkinV2DropdownConfig
             {
                 Height = 40,
@@ -153,15 +163,34 @@ namespace Quaver.Shared.Screens.V2.Options
                 CornerRadius = SkinV2BorderRadiusConfig.Normal
             };
 
-            PressetDropdown = new V2Dropdown<string>(242, new Bindable<string>("test1"), new DropdownEntry<string>[]
+            var presets = OptionsPressetStore.LoadAll();
+            LoadedPresets = presets.ToDictionary(preset => preset.Id);
+            if (selectedId != Guid.Empty && !LoadedPresets.ContainsKey(selectedId))
             {
-                new DropdownOption<string>("test 1", LocalizationManager.Get("Screen_Selection_All")),
-                new DropdownOption<string>("test 2", LocalizationManager.Get("Screen_Selection_Friends")),
-                new DropdownOption<string>("test 3", LocalizationManager.Get("Screen_Selection_Country"))
-            }, FontManager.GetWobbleFont(Fonts.InterBold), dropdownStyle, Container)
+                selectedId = Guid.Empty;
+                SetAppliedPreset(Guid.Empty);
+            }
+
+            AppliedPresetHasChanges = AppliedPresetId != Guid.Empty &&
+                                      LoadedPresets.TryGetValue(AppliedPresetId, out var appliedPreset) &&
+                                      !OptionsList.IsPresetCurrent(appliedPreset);
+            SelectedPresetId.Value = selectedId;
+            var presetEntries = new List<DropdownEntry<Guid>>
+            {
+                new DropdownOption<Guid>(Guid.Empty, LocalizationManager.Get("Screen_Selection_None"))
+            };
+            presetEntries.AddRange(presets.Select(preset => (DropdownEntry<Guid>)new DropdownOption<Guid>(preset.Id, preset.Id == AppliedPresetId && AppliedPresetHasChanges ? $"* {preset.Name}" : preset.Name)));
+            presetEntries.Add(new DropdownDivider<Guid>());
+            presetEntries.Add(new DropdownOption<Guid>(ManagePresetEntryId, LocalizationManager.Get("Screen_Options_ManagePreset")));
+            presetEntries.Add(new DropdownOption<Guid>(CreatePresetEntryId, LocalizationManager.Get("Screen_Options_CreatePreset")));
+
+            PressetDropdown = new V2Dropdown<Guid>(242, SelectedPresetId, presetEntries, FontManager.GetWobbleFont(Fonts.InterBold), dropdownStyle, Container)
             {
                 Parent = HeaderContentLayout
             };
+
+            PressetDropdown.OptionSelected += OnPresetSelected;
+            HeaderContentLayout.RefreshLayout();
         }
 
         private void CreateLeftMenu()
@@ -307,23 +336,24 @@ namespace Quaver.Shared.Screens.V2.Options
             CategorySectionButtons.Clear();
 
             SelectedCategorySection = null;
-            CreateSectionMenuButton(AllSection, LocalizationManager.Get(AllSectionsName));
 
             var options = GetVisibleOptions();
             var sections = options.DistinctBy(option => (option.Category, option.SectionName)).ToList();
             foreach (var section in sections)
             {
                 var name = LocalizationManager.Get(section.SectionName);
+
+                // In the very rare case where search / recently changed would return multiple section with the same name, also display the category it belongs to
                 if (!CurrentCategory.HasValue && sections.Count(other => other.SectionName == section.SectionName) > 1)
-                    name = $"{LocalizationManager.Get($"Screen_Options_{section.Category}")} · {name}";
+                    name = $"{LocalizationManager.Get($"Screen_Options_{section.Category}")} - {name}";
 
                 CreateSectionMenuButton((section.Category, section.SectionName), name);
             }
             UpdateSectionListLayout();
             SectionListScroll.ScrollTo(0, 1);
-            SetSectionHighlight(AllSection);
+            SetSectionHighlight(sections.Count > 0 ? (sections[0].Category, sections[0].SectionName) : null);
         }
-        private void CreateSectionMenuButton((OptionCategory? Category, string Name) section, string label)
+        private void CreateSectionMenuButton((OptionCategory Category, string Name) section, string label)
         {
             var sectionButton = new RoundedButton
             {
@@ -387,7 +417,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 child.Destroy();
 
             var options = GetVisibleOptions();
-            UpdateSearchPresentation(options.Count);
+            UpdateSearchUpdateButton(options.Count);
 
             foreach (var option in options)
             {
@@ -412,14 +442,14 @@ namespace Quaver.Shared.Screens.V2.Options
 
             UpdateOptionsContentLayout();
             OptionsScroll.ScrollTo(0, 1);
-            SetSectionHighlight(AllSection);
+            SetSectionHighlight(SectionStarts.Count > 0 ? (SectionStarts[0].Category, SectionStarts[0].Name) : null);
         }
 
         private IReadOnlyList<OptionsDefinition> GetVisibleOptions() => CurrentCategory.HasValue
             ? OptionsList.All.Where(option => option.Category == CurrentCategory.Value).ToList()
             : IsSearching ? OptionsList.Search(SearchQuery.Value) : OptionsList.Recent;
 
-        private void UpdateSearchPresentation(int resultCount)
+        private void UpdateSearchUpdateButton(int resultCount)
         {
             if (IsSearching)
             {
@@ -661,36 +691,37 @@ namespace Quaver.Shared.Screens.V2.Options
             RefreshOptionsRows();
 
         }
-        private void OnSectionButtonClicked((OptionCategory? Category, string Name) section)
+        private void OnSectionButtonClicked((OptionCategory Category, string Name) section)
         {
-            if (section == AllSection)
-            {
-                OptionsScroll.ScrollTo(0, 800);
-                return;
-            }
-
             var start = SectionStarts.FirstOrDefault(item => item.Category == section.Category && item.Name == section.Name);
             if (start.Header != null)
                 OptionsScroll.ScrollTo(-start.Header.Y, 800);
         }
 
-        private void SetSectionHighlight((OptionCategory? Category, string Name) section)
+        private void SetSectionHighlight((OptionCategory Category, string Name)? section)
         {
             if (SelectedCategorySection == section)
                 return;
 
             SelectedCategorySection = section;
             foreach (var button in CategorySectionButtons)
-                button.Value.Tint = ColorHelper.FromHex(button.Key == section ? "#6B83B2" : "#181E25");
+                button.Value.Tint = ColorHelper.FromHex(section.HasValue && button.Key == section.Value ? "#6B83B2" : "#181E25");
         }
 
         private void UpdateSectionHighlight()
         {
             var scrollableHeight = OptionsScroll.ContentContainer.Height - OptionsScroll.Height;
             var scrollTop = Math.Max(0, -OptionsScroll.CurrentY);
-            if (SectionStarts.Count == 0 || scrollableHeight <= 1 || scrollTop <= 1)
+            if (SectionStarts.Count == 0)
             {
-                SetSectionHighlight(AllSection);
+                SetSectionHighlight(null);
+                return;
+            }
+
+            if (scrollableHeight <= 1 || scrollTop <= 1)
+            {
+                var first = SectionStarts[0];
+                SetSectionHighlight((first.Category, first.Name));
                 return;
             }
 
@@ -723,6 +754,111 @@ namespace Quaver.Shared.Screens.V2.Options
             });
         }
 
+        private void OnPresetSelected(object sender, DropdownOptionEventArgs<Guid> args)
+        {
+            if (args.Option.Value == CreatePresetEntryId)
+            {
+                SelectedPresetId.Value = AppliedPresetId;
+                SearchBox.Focused = false;
+                DialogManager.Show(new OptionsPresetCreateDialog(OnPresetCreated));
+                return;
+            }
+
+            if (args.Option.Value == ManagePresetEntryId)
+            {
+                SelectedPresetId.Value = AppliedPresetId;
+                if (AppliedPresetId == Guid.Empty || !LoadedPresets.TryGetValue(AppliedPresetId, out var selectedPreset))
+                {
+                    NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Options_SelectPresetToManage"));
+                    return;
+                }
+
+                SearchBox.Focused = false;
+                DialogManager.Show(new OptionsPresetManageDialog(selectedPreset, OnPresetSaved, OnPresetDeleted));
+                return;
+            }
+
+            if (args.Option.Value == Guid.Empty)
+            {
+                SetAppliedPreset(Guid.Empty);
+                PresetDirtyCheckPending = true;
+                return;
+            }
+
+            if (!LoadedPresets.TryGetValue(args.Option.Value, out var preset))
+            {
+                SelectedPresetId.Value = AppliedPresetId;
+                return;
+            }
+
+            try
+            {
+                var invalidIds = OptionsList.ApplyPreset(preset);
+                if (invalidIds.Count != 0)
+                {
+                    Logger.Error($"Could not apply options preset {preset.Id}: {string.Join(", ", invalidIds)}", LogType.Runtime);
+                    SelectedPresetId.Value = AppliedPresetId;
+                    NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Options_PresetApplyFailed", preset.Name));
+                    return;
+                }
+
+                SetAppliedPreset(preset.Id);
+                PresetDirtyCheckPending = true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Could not apply options preset {preset.Id}: {e}", LogType.Runtime);
+                SelectedPresetId.Value = AppliedPresetId;
+                NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Options_PresetApplyFailed", preset.Name));
+            }
+        }
+
+        private void OnPresetCreated(OptionsPreset preset)
+        {
+            SetAppliedPreset(preset.Id);
+            AppliedPresetHasChanges = false;
+            CreatePresetDropdown(preset.Id);
+        }
+
+        private void OnPresetSaved(OptionsPreset preset)
+        {
+            SetAppliedPreset(preset.Id);
+            AppliedPresetHasChanges = false;
+            CreatePresetDropdown(preset.Id);
+        }
+
+        private void OnPresetDeleted(Guid id)
+        {
+            if (AppliedPresetId != id)
+                return;
+
+            SetAppliedPreset(Guid.Empty);
+            AppliedPresetHasChanges = false;
+            CreatePresetDropdown();
+        }
+
+        private void SetAppliedPreset(Guid id)
+        {
+            AppliedPresetId = id;
+            ConfigManager.SelectedOptionsPresetId.Value = id;
+        }
+
+        private void OnOptionEdited() => PresetDirtyCheckPending = true;
+
+        private void RefreshPresetDirtyState()
+        {
+            PresetDirtyCheckPending = false;
+            var hasChanges = AppliedPresetId != Guid.Empty &&
+                             LoadedPresets.TryGetValue(AppliedPresetId, out var preset) &&
+                             !OptionsList.IsPresetCurrent(preset);
+
+            if (AppliedPresetHasChanges == hasChanges)
+                return;
+
+            AppliedPresetHasChanges = hasChanges;
+            CreatePresetDropdown(AppliedPresetId);
+        }
+
         /// <inheritdoc />
         public override void Update(GameTime gameTime)
         {
@@ -737,7 +873,10 @@ namespace Quaver.Shared.Screens.V2.Options
             foreach (var button in CategorySectionButtons.Values)
                 button.IsInteractionEnabled = SectionListScroll.InputEnabled;
             OptionsScroll.InputEnabled = OptionsScroll.IsHovered();
+
             base.Update(gameTime);
+            if (PresetDirtyCheckPending)
+                RefreshPresetDirtyState();
             UpdateSectionHighlight();
         }
 
@@ -765,8 +904,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private static bool IsInputRecorderFocused(Drawable drawable) => drawable is InputRecorderV2 { Focused: true } || drawable.Children.Any(IsInputRecorderFocused);
 
-        private static bool IsOptionInputFocused(Drawable drawable) =>
-            drawable is InputRecorderV2 { Focused: true } || drawable is Textbox { Focused: true } || drawable.Children.Any(IsOptionInputFocused);
+        private static bool IsOptionInputFocused(Drawable drawable) => drawable is InputRecorderV2 { Focused: true } || drawable is Textbox { Focused: true } || drawable.Children.Any(IsOptionInputFocused);
 
         private void UpdateLayout()
         {
@@ -829,9 +967,13 @@ namespace Quaver.Shared.Screens.V2.Options
         public override void Destroy()
         {
             SearchBox.Focused = false;
+
             PressetDropdown.CloseImmediately();
+            PressetDropdown.OptionSelected -= OnPresetSelected;
+            SelectedPresetId.Dispose();
 
             ConfigManager.RecentlyChangedOptions.ValueChanged -= OnRecentlyChangedOptionsChanged;
+            OptionsList.OptionEdited -= OnOptionEdited;
             SearchQuery.ValueChanged -= OnSearchQueryChanged;
             SearchQuery.Dispose();
             WindowManager.VirtualScreenSizeChanged -= OnVirtualScreenSizeChanged;

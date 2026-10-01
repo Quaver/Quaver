@@ -603,6 +603,42 @@
   <data name="Screen_Options_Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
+  <data name="Screen_Options_PresetApplyFailed" xml:space="preserve">
+    <value>Could not apply preset '{0}'.</value>
+  </data>
+  <data name="Screen_Options_CreatePreset" xml:space="preserve">
+    <value>Create Preset</value>
+  </data>
+  <data name="Screen_Options_ManagePreset" xml:space="preserve">
+    <value>Manage Preset</value>
+  </data>
+  <data name="Screen_Options_SavePreset" xml:space="preserve">
+    <value>Save Preset</value>
+  </data>
+  <data name="Screen_Options_DeletePreset" xml:space="preserve">
+    <value>Delete Preset</value>
+  </data>
+  <data name="Screen_Options_PresetManageDescription" xml:space="preserve">
+    <value>Save your current options to this preset, or delete it.</value>
+  </data>
+  <data name="Screen_Options_PresetDeleteFailed" xml:space="preserve">
+    <value>Could not delete the preset.</value>
+  </data>
+  <data name="Screen_Options_SelectPresetToManage" xml:space="preserve">
+    <value>Select a preset to manage.</value>
+  </data>
+  <data name="Screen_Options_PresetName" xml:space="preserve">
+    <value>Preset Name</value>
+  </data>
+  <data name="Screen_Options_PresetDescription" xml:space="preserve">
+    <value>Presets allows you to quickly changes between sets of options</value>
+  </data>
+  <data name="Screen_Options_PresetNameTaken" xml:space="preserve">
+    <value>A preset with that name already exists.</value>
+  </data>
+  <data name="Screen_Options_PresetSaveFailed" xml:space="preserve">
+    <value>Could not save the preset.</value>
+  </data>
   <data name="Screen_Options_Window" xml:space="preserve">
     <value>Window</value>
   </data>
@@ -3921,8 +3957,5 @@ You do not have any missed Notifications.</value>
   </data>
   <data name="Screen_Options_RecentlyChanged" xml:space="preserve">
     <value>Recently Changed</value>
-  </data>
-  <data name="Screen_Options_SectionAll" xml:space="preserve">
-    <value>All</value>
   </data>
 </root>

@@ -60,6 +60,7 @@ namespace Quaver.Shared.Screens.V2.Options
             if (control is V2DropdownBase)
             {
                 Control.Parent = this;
+                Control.Height = Height;
                 SetItemOptions(Control, new FlexItemOptions { Shrink = 0 });
             }
             else
