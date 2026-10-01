@@ -7,6 +7,7 @@ using Hexa.NET.ImGui;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
 using MoonSharp.Interpreter.Interop;
+using Quaver.Shared.Screens.Edit.Plugins;
 using Wobble.Logging;
 
 #pragma warning disable

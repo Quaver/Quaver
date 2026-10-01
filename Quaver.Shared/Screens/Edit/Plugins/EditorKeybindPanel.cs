@@ -82,7 +82,7 @@ public class EditorKeybindPanel : SpriteImGui, IEditorPlugin
     protected override void RenderImguiLayout()
     {
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
-        ImGui.PushFont(Options.Fonts.First().Context);
+        ImGui.PushFont(Options.Fonts.First().Context, 20f);
         var open = IsActive;
         ImGui.Begin(Name, ref open);
         IsWindowHovered = ImGui.IsWindowHovered() || ImGui.IsAnyItemFocused();
