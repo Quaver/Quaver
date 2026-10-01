@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -1211,7 +1316,7 @@ Si la map n'a pas été terminée, le graphique affiche également la performanc
     <value>La collection de map est déjà en cours de téléchargement !</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTE RECOMMANDÉE</value>
+    <value>Difficulté Recommandée</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
     <value>Souhaitez-vous trouver des maps recommandées correspondant
@@ -1242,7 +1347,7 @@ Si la map n'a pas été terminée, le graphique affiche également la performanc
     <value>Classé de Clan</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>DIFFICULTE: </value>
+    <value>Difficulté</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>Aucun</value>
@@ -1279,9 +1384,6 @@ Si la map n'a pas été terminée, le graphique affiche également la performanc
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>Durée</value>
-  </data>
-  <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>Difficulté</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
     <value>Combo Max</value>
@@ -1389,9 +1491,6 @@ Utilisez les filtres pour affiner votre recherche.</value>
   </data>
   <data name="Screen_Download_MinBPM" xml:space="preserve">
     <value>BPM Min</value>
-  </data>
-  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
-    <value>Difficulté Recommandée</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
     <value>Difficulté recommandée</value>
@@ -2336,7 +2435,8 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>Pour Créer une Nouvelle Collection, Glissez un Fichier .mp3 dans la Fenêtre du Jeu</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
-    <value>Entrez une valeur pour appliquer un décalage à tous les objets, les points de timing,&#xA; et les vélocités de défilement de votre map...</value>
+    <value>Entrez une valeur pour appliquer un décalage à tous les objets, les points de timing,
+ et les vélocités de défilement de votre map...</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
     <value>Entrez un décalage à appliquer à votre carte...</value>
@@ -2348,13 +2448,16 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>CHANGEMENTS NON ENREGISTRES</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>Cette map n'a pas été enregistrée.&#xA;Rafraîchir depuis un fichier .qua supprimera les changements non enregistrés. Continuer ?</value>
+    <value>Cette map n'a pas été enregistrée.
+Rafraîchir depuis un fichier .qua supprimera les changements non enregistrés. Continuer ?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
-    <value>Vous avez des Modifications non Enregistrées. Voulez-vous Sauvegarder&#xA;avant de Créer une Nouvelle Difficulté ?</value>
+    <value>Vous avez des Modifications non Enregistrées. Voulez-vous Sauvegarder
+avant de Créer une Nouvelle Difficulté ?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeSwitchingDifficulty" xml:space="preserve">
-    <value>Vous avez des Modifications non Enregistrées. Voulez-vous Sauvegarder&#xA;avant de Changer de Difficulté ?</value>
+    <value>Vous avez des Modifications non Enregistrées. Voulez-vous Sauvegarder
+avant de Changer de Difficulté ?</value>
   </data>
   <data name="Screen_Editor_MapSavedSuccessfully" xml:space="preserve">
     <value>Votre Map a Été Enregistrée avec Succès</value>
@@ -2369,7 +2472,8 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>NON</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Soumettez cette collection de map pour le classement?&#xA;Elle doit remplir les critères de classement.</value>
+    <value>Soumettez cette collection de map pour le classement?
+Elle doit remplir les critères de classement.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>CALAGE RYTHMIQUE PERSONNALISÉ</value>
@@ -2423,7 +2527,8 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>PUBLIER LA COLLECTION DE MAP</value>
   </data>
   <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir publier votre collection de map sur le serveur?&#xA;Note : Vous devez posséder les droits sur tous les fichiers que vous publiez.</value>
+    <value>Êtes-vous sûr de vouloir publier votre collection de map sur le serveur?
+Note : Vous devez posséder les droits sur tous les fichiers que vous publiez.</value>
   </data>
   <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
     <value>Vous ne pouvez pas soumettre une collection de maps qui est déjà classée !</value>
@@ -2435,7 +2540,9 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>APPLIQUER LES MODIFICATEURS</value>
   </data>
   <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
-    <value>Voulez-vous appliquer le modificateur: "{0}" sur votre map?&#xA;&#xA;Cette action n'est PAS réversible! Choisissez judicieusement.</value>
+    <value>Voulez-vous appliquer le modificateur: "{0}" sur votre map?
+
+Cette action n'est PAS réversible! Choisissez judicieusement.</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
     <value>CHANGER L'ARRIERE-PLAN / LA BANNIERE</value>
@@ -2639,22 +2746,29 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>Coloration {0} désactivée</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Ajoute un signet à la position actuelle de la timeline.&#xA;- Survolez un signet pour voir la note qui lui est associée. #xA;- Clic gauche sur un signet pour l'éditer.&#xA;- Clic droit sur un signet pour le supprimer.&#xA;Raccourci : {0}</value>
+    <value>Ajoute un signet à la position actuelle de la timeline.
+- Survolez un signet pour voir la note qui lui est associée. #xA;- Clic gauche sur un signet pour l'éditer.
+- Clic droit sur un signet pour le supprimer.
+Raccourci : {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Calage Rythmique</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change le diviseur de calage rythmique actuel.&#xA;Raccourcis : {0} / {1}</value>
+    <value>Change le diviseur de calage rythmique actuel.
+Raccourcis : {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Changer la vitesse de lecture audio.&#xA;Raccourcis clés : {0} / {1}</value>
+    <value>Changer la vitesse de lecture audio.
+Raccourcis clés : {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Essai</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Enregistrer et tester la map.&#xA;Faire un clic droit vous permettra de sélectionner les modificateurs à utiliser lors du test.&#xA;Raccourci : {0}</value>
+    <value>Enregistrer et tester la map.
+Faire un clic droit vous permettra de sélectionner les modificateurs à utiliser lors du test.
+Raccourci : {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Éditeur de Point de Timing</value>
@@ -3047,10 +3161,12 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>Chargement du Spectrogramme...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Rechercher le prochain signet dans la timeline.&#xA;Raccourci : {0}</value>
+    <value>Rechercher le prochain signet dans la timeline.
+Raccourci : {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Chercher le signet précédent dans la timeline.&#xA;Raccourci : {0}</value>
+    <value>Chercher le signet précédent dans la timeline.
+Raccourci : {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} points de timing sélectionnés</value>
@@ -3083,7 +3199,8 @@ Utilisez les filtres pour affiner votre recherche.</value>
     <value>APPLIQUER RACCOURCIS</value>
   </data>
   <data name="Screen_Editor_ApplyKeymapConfirmation" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir écraser vos raccourcis?&#xA;Vous devriez d'abord sauvegarder vos raccourcis.</value>
+    <value>Êtes-vous sûr de vouloir écraser vos raccourcis?
+Vous devriez d'abord sauvegarder vos raccourcis.</value>
   </data>
   <data name="Screen_Editor_IssueCountLabel" xml:space="preserve">
     <value>Nombre de Problèmes:</value>

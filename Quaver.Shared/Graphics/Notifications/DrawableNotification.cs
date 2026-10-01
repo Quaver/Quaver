@@ -5,7 +5,9 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -31,6 +33,8 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <summary>
         /// </summary>
         private ImageButton Button { get; set; }
+
+        private NotificationRow Card { get; set; }
 
         /// <summary>
         /// </summary>
@@ -62,13 +66,25 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="index"></param>
         public DrawableNotification(PoolableScrollContainer<NotificationInfo> container, NotificationInfo item, int index) : base(container, item, index)
         {
-            Size = new ScalableVector2(408, 86);
-            Tint = ColorHelper.HexToColor("#242424");
-            AddBorder(Color.White, 2);
+            var useV2Style = container == null && GameBase.Game is QuaverGame game && game.CurrentScreen is SkinV2Screen;
 
-            CreateButton();
-            CreateIcon();
-            CreateText();
+            if (useV2Style)
+            {
+                Size = new ScalableVector2(716, 88);
+                Alpha = 0;
+                Card = new NotificationRow(null, item, index) { Parent = this };
+                Card.OnClick += clickedItem => NotificationManager.MarkClicked(clickedItem);
+            }
+            else
+            {
+                Size = new ScalableVector2(408, 86);
+                Tint = ColorHelper.HexToColor("#242424");
+                AddBorder(Color.White, 2);
+
+                CreateButton();
+                CreateIcon();
+                CreateText();
+            }
 
             // ReSharper disable once VirtualMemberCallInConstructor
             UpdateContent(Item, Index);
@@ -80,15 +96,18 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            Button.Size = new ScalableVector2(Width - Border.Thickness * 2, Height - Border.Thickness * 2);
-            Button.Alpha = Button.IsHovered ? 0.35f : 0;
+            if (Button != null)
+            {
+                Button.Size = new ScalableVector2(Width - Border.Thickness * 2, Height - Border.Thickness * 2);
+                Button.Alpha = Button.IsHovered ? 0.35f : 0;
+            }
 
             var game = (QuaverGame)GameBase.Game;
 
             if (Container != null)
                 Button.IsClickable = game.OnlineHub.SelectedSection == game.OnlineHub.Sections[OnlineHubSectionType.Notifications];
 
-            if (Button.IsHovered)
+            if (Card?.IsCardHovered == true || Button?.IsHovered == true)
                 TimeInactive = 0;
             else
                 TimeInactive += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -148,6 +167,13 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private void ApplyContent()
         {
+            if (Card != null)
+            {
+                Card.UpdateContent(Item, Index);
+                Height = 88;
+                return;
+            }
+
             Border.Tint = GetColor();
             Icon.Image = GetIconTexture();
 
@@ -168,7 +194,7 @@ namespace Quaver.Shared.Graphics.Notifications
                     return;
 
                 Item.ClickAction?.Invoke(sender, args);
-                Item.WasClicked = true;
+                NotificationManager.MarkClicked(Item);
 
                 if (Container != null)
                 {
