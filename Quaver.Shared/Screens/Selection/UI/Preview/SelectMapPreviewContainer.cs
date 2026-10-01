@@ -93,11 +93,6 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         protected bool HasSeekBar { get; set; } = true;
 
         /// <summary>
-        ///     If true, hit bubbles will be displayed in the preview's playfield
-        /// </summary>
-        protected virtual bool ShowHitBubbles { get; } = true;
-
-        /// <summary>
         ///     The amount of delay before the task will run
         /// </summary>
         protected int DelayTime { get; set; } = 350;
@@ -251,7 +246,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 var playfield = (GameplayPlayfieldKeys)screen.Ruleset.Playfield;
 
                 playfield.Stage.HealthBar.Visible = false;
-                playfield.Stage.HitBubbles.Visible = ShowHitBubbles;
+                playfield.Stage.HitBubbles.Visible = false;
 
                 Wheel.ClearAnimations();
                 Wheel.FadeTo(0, Easing.Linear, 250);
