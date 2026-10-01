@@ -10,6 +10,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.V2.UI;
 using Wobble;
@@ -149,10 +150,10 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
 
     private static void OpenChat(User user)
     {
-        var channel = OnlineChat.JoinedChatChannels.Find(x => x.Name == user.OnlineUser.Username);
+        var channel = ChatSession.JoinedChannels.Value.Find(x => x.Name == user.OnlineUser.Username);
         if (channel != null)
         {
-            OnlineChat.Instance.ActiveChannel.Value = channel;
+            ChatSession.ActiveChannel.Value = channel;
             return;
         }
 
@@ -162,9 +163,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
             AllowedUserGroups = UserGroups.Normal,
             Description = LocalizationManager.Get("Screen_Hub_PrivateChat")
         };
-        OnlineChat.Instance.ChannelList.ChannelContainer.Add(privateChat);
-        OnlineChat.Instance.MessageContainer.AddChannel(privateChat);
-        OnlineChat.Instance.ActiveChannel.Value = privateChat;
+        ChatSession.AddChannel(privateChat);
     }
 
     private static void Spectate(User user)
