@@ -41,16 +41,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
 
         /// <summary>
         /// </summary>
-        public MapsetRightClickOptions(DrawableMapset drawableMapset) : base(new Dictionary<string, Color>()
-        {
-            {Play, Color.White},
-            {Edit, ColorHelper.HexToColor("#F2994A")},
-            {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
-            {Delete, ColorHelper.HexToColor($"#FF6868")},
-            {Export, ColorHelper.HexToColor("#0787E3")},
-            {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
-            {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
-        }, new ScalableVector2(200, 40), 18)
+        public MapsetRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(drawableMapset.Item.Maps.Contains(MapManager.Selected.Value)), new ScalableVector2(200, 40), 18)
         {
             DrawableMapset = drawableMapset;
             Mapset = DrawableMapset.Item;
@@ -113,6 +104,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Mapsets
                         break;
                 }
             };
+        }
+        
+        private static Dictionary<string, Color> GetOptions(bool includeExport)
+        {
+            var options = new Dictionary<string, Color>()
+            {
+                {Play, Color.White},
+                {Edit, ColorHelper.HexToColor("#F2994A")},
+                {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
+                {Delete, ColorHelper.HexToColor($"#FF6868")},
+            };
+
+            if (includeExport)
+                options.Add(Export, ColorHelper.HexToColor("#0787E3"));
+
+            options.Add(OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0"));
+            options.Add(ViewOnlineListing, ColorHelper.HexToColor("#FFE76B"));
+
+            return options;
         }
 
         /// <summary>

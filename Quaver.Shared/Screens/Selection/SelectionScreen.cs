@@ -154,6 +154,8 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapUpdated += OnMapUpdated;
             MapManager.SongRequestPlayed += OnSongRequestPlayed;
             MapManager.Selected.ValueChanged += OnSelectedMapChangedForStreamerFiles;
+            MapManager.Selected.ValueChanged += OnSelectedMapChangedCloseRightClickOptions;
+            ActiveScrollContainer.ValueChanged += OnActiveScrollContainerChangedCloseRightClickOptions;
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
 
             MapLoadingScreen.QueueStreamerFilesWrite();
@@ -207,6 +209,8 @@ namespace Quaver.Shared.Screens.Selection
             MapManager.MapUpdated -= OnMapUpdated;
             MapManager.SongRequestPlayed -= OnSongRequestPlayed;
             MapManager.Selected.ValueChanged -= OnSelectedMapChangedForStreamerFiles;
+            MapManager.Selected.ValueChanged -= OnSelectedMapChangedCloseRightClickOptions;
+            ActiveScrollContainer.ValueChanged -= OnActiveScrollContainerChangedCloseRightClickOptions;
             SkinManager.StopWatching();
 
             // ReSharper disable once DelegateSubtraction
@@ -986,6 +990,24 @@ namespace Quaver.Shared.Screens.Selection
         /// <param name="e"></param>
         private void OnSelectedMapChangedForStreamerFiles(object sender, BindableValueChangedEventArgs<Map> e)
             => MapLoadingScreen.QueueStreamerFilesWrite(250);
+
+        /// <summary>
+        ///     Closes the right-click menu on keyboard map navigation
+        /// </summary>
+        private void OnSelectedMapChangedCloseRightClickOptions(object sender, BindableValueChangedEventArgs<Map> e)
+        {
+            if (ActiveRightClickOptions != null && ActiveRightClickOptions.Opened)
+                ActiveRightClickOptions.Close();
+        }
+
+        /// <summary>
+        ///     Closes the right-click menu on keyboard scroll container navigation
+        /// </summary>
+        private void OnActiveScrollContainerChangedCloseRightClickOptions(object sender,BindableValueChangedEventArgs<SelectScrollContainerType> e)
+        {
+            if (ActiveRightClickOptions != null && ActiveRightClickOptions.Opened)
+                ActiveRightClickOptions.Close();
+        }
 
         /// <summary>
         /// </summary>
