@@ -237,7 +237,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield.Lines
                 graphicsDevice.SetRenderTarget(_renderTarget);
                 graphicsDevice.Clear(Color.Transparent);
 
-                GameBase.Game.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
+                GameBase.Game.BeginBatch(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
                     SamplerState.PointClamp, null, RasterizerState.CullNone);
 
                 DrawLines(lines, cacheEnd, trackSpeed, cacheHeight);
