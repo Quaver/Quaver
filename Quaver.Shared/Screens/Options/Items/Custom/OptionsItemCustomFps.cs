@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Dialogs;
 using Quaver.Shared.Graphics.Notifications;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
 using Quaver.Shared.Modifiers;
+using Quaver.Shared.Options;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.Gameplay.UI.Offset;
 using Quaver.Shared.Screens.Selection.UI.Profile;
@@ -59,25 +60,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "SET FPS", 18, Color.White);
 
-            Button.Clicked += (sender, args) =>
-            {
-                Focused = true;
-                DialogManager.Show(new YesNoTextDialog("Custom FPS", "Enter a custom FPS value.", ConfigManager.CustomFpsLimit.Value.ToString(), "", (s) =>
-                {
-                    if (!int.TryParse(s, out var fps))
-                    {
-                        NotificationManager.Show(NotificationLevel.Error, "Please enter a valid FPS value.");
-                        return;
-                    }
-                    ConfigManager.CustomFpsLimit.Value = fps;
-                    NotificationManager.Show(NotificationLevel.Success, $"Custom FPS set to {ConfigManager.CustomFpsLimit.Value}.");
-
-                    Focused = false;
-                }, () =>
-                {
-                    Focused = false;
-                }));
-            };
+            Button.Clicked += (sender, args) => OptionsActions.SetCustomFps(focused => Focused = focused);
         }
     }
 }

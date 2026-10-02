@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Overlays.Chatting.Channels;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Join;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -26,6 +27,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Logging;
 using Wobble.Platform;
@@ -38,17 +40,17 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
     {
         /// <summary>
         /// </summary>
-        public Bindable<ChatChannel> ActiveChannel { get; } = new Bindable<ChatChannel>(null);
+        public Bindable<ChatChannel> ActiveChannel => ChatSession.ActiveChannel;
 
         /// <summary>
         ///     List of chat channels that are available to join
         /// </summary>
-        public static List<ChatChannel> AvailableChatChannels { get; } = new List<ChatChannel>();
+        public static List<ChatChannel> AvailableChatChannels => ChatSession.AvailableChannels.Value;
 
         /// <summary>
         ///     The list of chat channels that the user has joined
         /// </summary>
-        public static List<ChatChannel> JoinedChatChannels { get; } = new List<ChatChannel>();
+        public static List<ChatChannel> JoinedChatChannels => ChatSession.JoinedChannels.Value;
 
         /// <summary>
         /// </summary>
@@ -101,8 +103,14 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             ChannelList.Parent = this;
             DestroyIfParentIsNull = false;
 
-            OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+            ChatSession.DirectMessageReceived += OnDirectMessageReceived;
             ApplyClosedVisibility();
+        }
+
+        public override void Destroy()
+        {
+            ChatSession.DirectMessageReceived -= OnDirectMessageReceived;
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -365,79 +373,28 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
             ActiveJoinChatChannelContainer.X = ActiveJoinChatChannelContainer.Width + 24;
         }
 
-        /// <summary>
-        ///     Subscribes to online events when logging online
-        /// </summary>
-        private void SubscribeToOnlineEvents()
+        private void OnDirectMessageReceived(ChatChannel channel, ChatMessage message)
         {
-            OnlineManager.Client.OnAvailableChatChannel += OnAvailableChatchannel;
-            OnlineManager.Client.OnFailedToJoinChatChannel += OnFailedToJoinChatChannel;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void UnsubscribeFromEvents()
-        {
-            if (OnlineManager.Client == null)
+            var v2ChatOpen = DialogManager.Dialogs.OfType<ChatV2Dialog>().Any();
+            if (ConfigManager.UseNewScreens.Value ? v2ChatOpen : IsOpen)
                 return;
 
-            OnlineManager.Client.OnAvailableChatChannel -= OnAvailableChatchannel;
-            OnlineManager.Client.OnFailedToJoinChatChannel -= OnFailedToJoinChatChannel;
-        }
+            NotificationManager.Show(NotificationLevel.Info,
+                $"{message.SenderName} has sent you a message. Click here to read it!", (sender, args) =>
+                {
+                    if (ChatSession.JoinedChannels.Value.Contains(channel))
+                        ChatSession.ActiveChannel.Value = channel;
 
-        /// <summary>
-        ///     When successfully connecting, subscribe to online chat related events
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
-        {
-            if (e.Value != ConnectionStatus.Connected)
-            {
-                UnsubscribeFromEvents();
-                return;
-            }
-
-            SubscribeToOnlineEvents();
-
-            AvailableChatChannels.Clear();
-            Logger.Important("Cleared previously available chat channels", LogType.Runtime);
-
-            foreach (var chan in JoinedChatChannels)
-            {
-                if (chan.IsPrivate)
-                    continue;
-
-                OnlineManager.Client?.JoinChatChannel(chan.Name);
-                Logger.Important($"Requested to rejoin chat channel: {chan.Name}", LogType.Runtime);
-            }
-        }
-
-        /// <summary>
-        ///     Called when receiving a new available chat channel
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnAvailableChatchannel(object sender, AvailableChatChannelEventArgs e)
-        {
-            if (AvailableChatChannels.Contains(e.Channel))
-                return;
-
-            AvailableChatChannels.Add(e.Channel);
-            Logger.Important($"Received available chat channel: {e.Channel.Name}", LogType.Runtime);
-        }
-
-        /// <summary>
-        ///     Called when failing to join a chat channel
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnFailedToJoinChatChannel(object sender, FailedToJoinChatChannelEventArgs e)
-        {
-            var log = $"Failed to join channel: {e.Channel}";
-
-            NotificationManager.Show(NotificationLevel.Error, log);
-            Logger.Important(log, LogType.Runtime);
+                    if (ConfigManager.UseNewScreens.Value)
+                    {
+                        if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
+                            DialogManager.Show(new ChatV2Dialog());
+                    }
+                    else if (!DialogManager.Dialogs.OfType<OnlineHubDialog>().Any())
+                        DialogManager.Show(new OnlineHubDialog());
+                }, type: NotificationType.DirectMessage, senderName: message.SenderName,
+                senderSteamId: message.Sender?.OnlineUser?.SteamId ?? 0,
+                detailText: message.Message);
         }
 
         /// <summary>

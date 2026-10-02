@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -1215,7 +1320,7 @@ Marvelous instead.</value>
     <value>Ten mapset jest już pobierany!</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
-    <value>ZALECANY POZIOM TRUDNOŚCI</value>
+    <value>Zalecany poziom trudności</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
     <value>Czy chcesz znaleźć polecane mapy dopasowane do Twojego poziomu umiejętności w wybranym trybie gry?</value>
@@ -1245,7 +1350,7 @@ Marvelous instead.</value>
     <value>Clan Ranked</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>POZIOM TRUDNOŚCI:</value>
+    <value>Trudność</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>Brak</value>
@@ -1282,9 +1387,6 @@ Marvelous instead.</value>
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>Długość</value>
-  </data>
-  <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>Trudność</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
     <value>Maksymalne Combo</value>
@@ -1392,9 +1494,6 @@ Use the filters to narrow your search.</value>
   </data>
   <data name="Screen_Download_MinBPM" xml:space="preserve">
     <value>Min. BPM</value>
-  </data>
-  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
-    <value>Zalecany poziom trudności</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
     <value>Zalecany poziom trudności</value>
@@ -2341,7 +2440,8 @@ dla innych graczy do pobrania?</value>
     <value>To create a new mapset, drag a .mp3 file into the game window...</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
-    <value>Enter a value to apply an offset to all of your map's objects, timing points,&#xA; and scroll velocities...</value>
+    <value>Enter a value to apply an offset to all of your map's objects, timing points,
+ and scroll velocities...</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
     <value>Enter an offset to apply to your map...</value>
@@ -2353,13 +2453,16 @@ dla innych graczy do pobrania?</value>
     <value>UNSAVED CHANGES</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>This map hasn't been saved.&#xA;Refreshing from .qua will discard unsaved changes. Continue?</value>
+    <value>This map hasn't been saved.
+Refreshing from .qua will discard unsaved changes. Continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
-    <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
+    <value>You have unsaved changes. Would you like to save
+before creating a new difficulty?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeSwitchingDifficulty" xml:space="preserve">
-    <value>You have unsaved changes. Would you like to save&#xA;before switching to another difficulty?</value>
+    <value>You have unsaved changes. Would you like to save
+before switching to another difficulty?</value>
   </data>
   <data name="Screen_Editor_MapSavedSuccessfully" xml:space="preserve">
     <value>Your map has been successfully saved!</value>
@@ -2374,7 +2477,8 @@ dla innych graczy do pobrania?</value>
     <value>NO</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Submit this mapset for rank?&#xA;It must meet the ranking criteria.</value>
+    <value>Submit this mapset for rank?
+It must meet the ranking criteria.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>CUSTOM BEAT SNAP</value>
@@ -2428,7 +2532,8 @@ dla innych graczy do pobrania?</value>
     <value>UPLOAD MAPSET</value>
   </data>
   <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
-    <value>Are you sure you would like to upload your mapset to the server?&#xA;Note: You must own the rights to all files you upload.</value>
+    <value>Are you sure you would like to upload your mapset to the server?
+Note: You must own the rights to all files you upload.</value>
   </data>
   <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
     <value>You cannot submit a mapset that is already ranked!</value>
@@ -2440,7 +2545,9 @@ dla innych graczy do pobrania?</value>
     <value>APPLY MODIFIER</value>
   </data>
   <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
-    <value>Would like to apply the modifier: "{0}" to your map?&#xA;&#xA;This action is NOT reversible! Choose wisely.</value>
+    <value>Would like to apply the modifier: "{0}" to your map?
+
+This action is NOT reversible! Choose wisely.</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
     <value>CHANGE BACKGROUND / BANNER</value>
@@ -2485,10 +2592,16 @@ dla innych graczy do pobrania?</value>
     <value>An error occurred while submitting your mapset for rank.</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
-    <value>When set to ON, A BPM change will also change the Scroll Velocity.&#xA;For instance, going from 120BPM to 240BPM effectively creates&#xA;an implicit 2x Scroll Velocity multiplier starting from the beginning&#xA;of that BPM change until the next. Scroll Velocity is still applied.</value>
+    <value>When set to ON, A BPM change will also change the Scroll Velocity.
+For instance, going from 120BPM to 240BPM effectively creates
+an implicit 2x Scroll Velocity multiplier starting from the beginning
+of that BPM change until the next. Scroll Velocity is still applied.</value>
   </data>
   <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
-    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll&#xA;Velocity changes, you can safely ignore this option. The current LN renderer places&#xA;the head and tail to the earliest and latest positions reached, respectively. The old LN&#xA;renderer instead places them both wherever the playfield happens to be at the time.</value>
+    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll
+Velocity changes, you can safely ignore this option. The current LN renderer places
+the head and tail to the earliest and latest positions reached, respectively. The old LN
+renderer instead places them both wherever the playfield happens to be at the time.</value>
   </data>
   <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
     <value>Copy all of the metadata from this difficulty to all of the difficulties from this mapset</value>
@@ -2644,22 +2757,30 @@ dla innych graczy do pobrania?</value>
     <value>Disabled {0} coloring</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>Adds a bookmark at the current position the timeline.&#xA;- Hover over a bookmark tick to view the note associated with it.&#xA;- Left click a bookmark tick to edit it.&#xA;- Right click a bookmark tick to delete it.&#xA;Hotkey: {0}</value>
+    <value>Adds a bookmark at the current position the timeline.
+- Hover over a bookmark tick to view the note associated with it.
+- Left click a bookmark tick to edit it.
+- Right click a bookmark tick to delete it.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>Beat Snap</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>Change the current beat snap divisor.&#xA;Hotkeys: {0} / {1}</value>
+    <value>Change the current beat snap divisor.
+Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>Change the audio playback rate.&#xA;Hotkeys: {0} / {1}</value>
+    <value>Change the audio playback rate.
+Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>Test Play</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>Save and test play your map.&#xA;Right-clicking will allow you to select modifers to use while test playing.&#xA;Hotkey: {0}</value>
+    <value>Save and test play your map.
+Right-clicking will allow you to select modifers to use while test playing.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>Timing Point Editor</value>
@@ -3052,10 +3173,12 @@ dla innych graczy do pobrania?</value>
     <value>Loading Spectrogram...</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the next bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>Seek to the next bookmark in the timeline.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>Seek to the previous bookmark in the timeline.&#xA;Hotkey: {0}</value>
+    <value>Seek to the previous bookmark in the timeline.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>{0} timing points selected</value>
@@ -3088,7 +3211,8 @@ dla innych graczy do pobrania?</value>
     <value>APPLY KEYMAP</value>
   </data>
   <data name="Screen_Editor_ApplyKeymapConfirmation" xml:space="preserve">
-    <value>Are you sure you want to overwrite your keymap?&#xA;You might want to back up your keymap first.</value>
+    <value>Are you sure you want to overwrite your keymap?
+You might want to back up your keymap first.</value>
   </data>
   <data name="Screen_Editor_IssueCountLabel" xml:space="preserve">
     <value>Issue Count:</value>
