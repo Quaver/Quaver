@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
@@ -55,6 +56,7 @@ namespace Quaver.Shared.Screens.V2.Options
         /// <summary>
         /// Component that handle the section displayed when the Icon List is shrunk
         /// </summary>
+        private HorizontalClippingContainer SectionListClip;
         private ScrollContainer SectionListScroll;
         private FlexContainer SectionListLayout;
         /// <summary>
@@ -89,6 +91,7 @@ namespace Quaver.Shared.Screens.V2.Options
         private FlexContainer HeaderContentLayout { get; set; }
         private FlexContainer ContentLayout { get; set; }
         private Sprite ContentBackground { get; set; }
+        private HorizontalClippingContainer OptionsScrollClip { get; set; }
         private ScrollContainer OptionsScroll { get; set; }
         private FlexContainer OptionsRows { get; set; }
 
@@ -221,17 +224,25 @@ namespace Quaver.Shared.Screens.V2.Options
             };
             MenuColumnsLayout.SetItemOptions(IconListContainer, new FlexItemOptions { Basis = IconListContainer.Width });
 
-            SectionListScroll = new ScrollContainer(new ScalableVector2(1, Math.Max(1f, MenuLayout.Height - 10)), new ScalableVector2(1, 1))
+            SectionListClip = new HorizontalClippingContainer
             {
                 Parent = MenuColumnsLayout,
+                Size = new ScalableVector2(1, Math.Max(1f, MenuLayout.Height - 10))
+            };
+            MenuColumnsLayout.SetItemOptions(SectionListClip, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.FlexEnd });
+
+            SectionListScroll = new ScrollContainer(SectionListClip.Size, new ScalableVector2(1, 1))
+            {
+                Parent = SectionListClip,
                 Tint = Color.Transparent,
                 AllowScrollbarDragging = true,
                 AllowMiddleMouseDragging = true,
                 CapturesMouseWheelInput = true,
+                UsePreviousSpriteBatchOptions = true,
                 Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
             };
+            SectionListScroll.SpriteBatchOptions.SortMode = SpriteSortMode.Immediate;
             SectionListScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
-            MenuColumnsLayout.SetItemOptions(SectionListScroll, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.FlexEnd });
 
             SectionListLayout = new FlexContainer
             {
@@ -384,17 +395,25 @@ namespace Quaver.Shared.Screens.V2.Options
             };
             ContentLayout.SetItemOptions(ContentBackground, new FlexItemOptions { Basis = 0, Grow = 1 });
 
-            OptionsScroll = new ScrollContainer(new ScalableVector2(1, 1), new ScalableVector2(1, 1))
+            OptionsScrollClip = new HorizontalClippingContainer
             {
                 Parent = ContentBackground,
                 Position = new ScalableVector2(10, 10),
+                Size = new ScalableVector2(1, 1)
+            };
+
+            OptionsScroll = new ScrollContainer(new ScalableVector2(1, 1), new ScalableVector2(1, 1))
+            {
+                Parent = OptionsScrollClip,
                 Tint = Color.Transparent,
                 AllowScrollbarDragging = true,
                 AllowMiddleMouseDragging = true,
                 EasingType = Easing.OutQuint,
                 CapturesMouseWheelInput = true,
+                UsePreviousSpriteBatchOptions = true,
                 Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
             };
+            OptionsScroll.SpriteBatchOptions.SortMode = SpriteSortMode.Immediate;
             OptionsScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
             SectionListScroll.ScrollSpeed = OptionsScroll.ScrollSpeed;
             SectionListScroll.EasingType = OptionsScroll.EasingType;
@@ -439,6 +458,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 };
                 OptionsRows.SetItemOptions(row, new FlexItemOptions { Basis = row.Height, Shrink = 0 });
                 row.SetControl(control);
+                UseScrollSpriteBatch(row);
             }
 
             UpdateOptionsContentLayout();
@@ -473,9 +493,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 Parent = OptionsRows,
                 Size = new ScalableVector2(1, 40),
                 Direction = FlexDirection.Row,
-                AlignItems = FlexAlignItems.Stretch,
-                UpdateWhenInvisible = false,
-                DeferChildRectangleRecalculationWhileHidden = true
+                AlignItems = FlexAlignItems.Stretch
             };
 
             header.Width = CreateTwoSidedSprite(header, 18,
@@ -483,6 +501,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 new ScalableVector2(1, header.Height), ColorHelper.FromHex("#181E25"), LocalizationManager.Get(sectionName), ColorHelper.FromHex("#D9E3F4"),
                 fitToText: true);
             OptionsRows.SetItemOptions(header, new FlexItemOptions { Basis = header.Height, Shrink = 0, AlignSelf = FlexAlignSelf.FlexStart });
+            UseScrollSpriteBatch(header);
 
             return header;
         }
@@ -879,6 +898,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
             base.Update(gameTime);
 
+            UpdateVisibleSectionButtons();
             UpdateVisibleOptionRows();
 
             if (PresetDirtyCheckPending)
@@ -889,14 +909,55 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private void UpdateVisibleOptionRows()
         {
-            var scrollTop = -OptionsScroll.ContentContainer.Y - OptionsRows.Y;
-            var visibleTop = scrollTop - 40;
-            var visibleBottom = scrollTop + OptionsScroll.Height + 40;
+            var visibleTop = -OptionsScroll.ContentContainer.Y - OptionsRows.Y;
+            var visibleBottom = visibleTop + OptionsScroll.Height;
 
             foreach (var child in OptionsRows.Children)
-            {
-                child.Visible = child.Y + child.Height >= visibleTop && child.Y <= visibleBottom;
-            }
+                SetScrollableItemVisible(child, child.Y + child.Height >= visibleTop && child.Y <= visibleBottom);
+        }
+
+        private void UpdateVisibleSectionButtons()
+        {
+            var visibleTop = -SectionListScroll.ContentContainer.Y - SectionListLayout.Y;
+            var visibleBottom = visibleTop + SectionListScroll.Height;
+
+            foreach (var button in CategorySectionButtons.Values)
+                button.Visible = button.Y + button.Height >= visibleTop && button.Y <= visibleBottom;
+        }
+
+        private static void SetScrollableItemVisible(Drawable drawable, bool visible)
+        {
+            if (drawable.Visible == visible)
+                return;
+
+            drawable.Visible = visible;
+
+            if (!visible)
+                CloseDropdowns(drawable);
+        }
+
+        private static void CloseDropdowns(Drawable drawable)
+        {
+            if (drawable is V2DropdownBase dropdown)
+                dropdown.CloseImmediatelyFromRegistry();
+
+            foreach (var child in drawable.Children)
+                CloseDropdowns(child);
+        }
+
+        private static void UseScrollSpriteBatch(Drawable drawable)
+        {
+            drawable.UsePreviousSpriteBatchOptions = true;
+
+            // Nested scroll controls (such as SliderV2's value picker textbox) change the
+            // graphics-device scissor rectangle before starting their own deferred batch.
+            // Reuse the options list's immediate scissor batch so previously drawn rows
+            // cannot be flushed against the nested control's much smaller clip rectangle.
+            if (drawable is ScrollContainer scrollContainer)
+                scrollContainer.SpriteBatchOptions = null;
+
+            foreach (var child in drawable.Children)
+                UseScrollSpriteBatch(child);
         }
 
         /// <inheritdoc />
@@ -940,8 +1001,9 @@ namespace Quaver.Shared.Screens.V2.Options
             MainContentLayout.RefreshLayout();
             HeaderMenuLayout.RefreshLayout();
             MenuLayout.RefreshLayout();
-            SectionListScroll.Height = Math.Max(1f, MenuLayout.Height - 10);
+            SectionListClip.Height = Math.Max(1f, MenuLayout.Height - 10);
             MenuColumnsLayout.RefreshLayout();
+            SectionListScroll.Size = SectionListClip.Size;
             UpdateSectionListLayout();
             HeaderContentLayout.RefreshLayout();
             ContentLayout.RefreshLayout();
@@ -961,7 +1023,8 @@ namespace Quaver.Shared.Screens.V2.Options
             ContentBackground.Image = RoundedRectTextureCache.Get(ContentBackground.Width, ContentBackground.Height, 6f);
 
 
-            OptionsScroll.Size = new ScalableVector2(ContentBackground.Width - 10, ContentBackground.Height - 10 * 2);
+            OptionsScrollClip.Size = new ScalableVector2(ContentBackground.Width - 10, ContentBackground.Height - 10 * 2);
+            OptionsScroll.Size = OptionsScrollClip.Size;
 
             var rowsHeight = OptionsRows.Children.Sum(row => row.Height) + Math.Max(0, OptionsRows.Children.Count - 1) * OptionsRows.RowGap;
             OptionsRows.Size = new ScalableVector2(ContentBackground.Width - 10 * 2, Math.Max(ContentBackground.Height - 10 * 2, rowsHeight));

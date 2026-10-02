@@ -45,6 +45,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public ChatMessage Item { get; private set; }
 
+        public event Action<User> SenderMenuRequested;
+
         public ChatMessageRow(ChatMessage item, float width, ScrollContainer viewport)
         {
             Size = new ScalableVector2(width, 40);
@@ -118,6 +120,11 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             };
             SenderButton.Hovered += (sender, args) => ApplySenderHover(true);
             SenderButton.LeftHover += (sender, args) => ApplySenderHover(false);
+            SenderButton.RightClicked += (sender, args) =>
+            {
+                if (Item?.Sender != null)
+                    SenderMenuRequested?.Invoke(Item.Sender);
+            };
 
             UpdateContent(item, width);
         }
@@ -218,6 +225,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public override void Destroy()
         {
+            SenderMenuRequested = null;
             TimestampTooltipRegistration.Dispose();
             base.Destroy();
         }

@@ -16,6 +16,7 @@ using Quaver.Shared.Graphics.Overlays.Chatting.Channels;
 using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Join;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -374,17 +375,23 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
         private void OnDirectMessageReceived(ChatChannel channel, ChatMessage message)
         {
-            if (IsOpen)
+            var v2ChatOpen = DialogManager.Dialogs.OfType<ChatV2Dialog>().Any();
+            if (ConfigManager.UseNewScreens.Value ? v2ChatOpen : IsOpen)
                 return;
 
             NotificationManager.Show(NotificationLevel.Info,
                 $"{message.SenderName} has sent you a message. Click here to read it!", (sender, args) =>
                 {
-                    if (!DialogManager.Dialogs.OfType<OnlineHubDialog>().Any())
-                        DialogManager.Show(new OnlineHubDialog());
-
                     if (ChatSession.JoinedChannels.Value.Contains(channel))
                         ChatSession.ActiveChannel.Value = channel;
+
+                    if (ConfigManager.UseNewScreens.Value)
+                    {
+                        if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
+                            DialogManager.Show(new ChatV2Dialog());
+                    }
+                    else if (!DialogManager.Dialogs.OfType<OnlineHubDialog>().Any())
+                        DialogManager.Show(new OnlineHubDialog());
                 }, type: NotificationType.DirectMessage, senderName: message.SenderName,
                 senderSteamId: message.Sender?.OnlineUser?.SteamId ?? 0,
                 detailText: message.Message);

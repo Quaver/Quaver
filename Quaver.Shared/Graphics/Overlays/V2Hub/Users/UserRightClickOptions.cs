@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Objects.Multiplayer;
@@ -7,6 +8,8 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.BlockedUsers;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -15,6 +18,7 @@ using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.V2.UI;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
@@ -152,18 +156,23 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
     {
         var channel = ChatSession.JoinedChannels.Value.Find(x => x.Name == user.OnlineUser.Username);
         if (channel != null)
-        {
             ChatSession.ActiveChannel.Value = channel;
-            return;
+        else
+        {
+            var privateChat = new ChatChannel
+            {
+                Name = user.OnlineUser.Username,
+                AllowedUserGroups = UserGroups.Normal,
+                Description = LocalizationManager.Get("Screen_Hub_PrivateChat")
+            };
+            ChatSession.AddChannel(privateChat);
         }
 
-        var privateChat = new ChatChannel
-        {
-            Name = user.OnlineUser.Username,
-            AllowedUserGroups = UserGroups.Normal,
-            Description = LocalizationManager.Get("Screen_Hub_PrivateChat")
-        };
-        ChatSession.AddChannel(privateChat);
+        if (DialogManager.Dialogs.LastOrDefault() is OverlayDialog hubDialog)
+            DialogManager.Dismiss(hubDialog);
+
+        if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
+            DialogManager.Show(new ChatV2Dialog());
     }
 
     private static void Spectate(User user)

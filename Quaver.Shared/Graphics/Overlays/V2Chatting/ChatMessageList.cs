@@ -29,6 +29,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private float PreviousHeight { get; set; } = -1;
 
+        public event Action<User> SenderMenuRequested;
+
         public ChatMessageList(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, size)
         {
             ActiveChannel = activeChannel;
@@ -194,7 +196,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         {
             var row = new ChatMessageRow(message, GetRowWidth(), this);
             row.UpdateWhenInvisible = false;
-            row.DeferChildRectangleRecalculationWhileHidden = true;
+            row.SenderMenuRequested += OnSenderMenuRequested;
 
             AddContainedDrawable(row);
 
@@ -205,7 +207,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private void ClearRows()
         {
             foreach (var row in Rows)
+            {
+                row.SenderMenuRequested -= OnSenderMenuRequested;
                 row.Destroy();
+            }
 
             Rows.Clear();
             Messages.Clear();
@@ -235,12 +240,15 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ReferenceEquals(first, second) || first.SenderId == second.SenderId &&
             first.Channel == second.Channel && first.Message == second.Message && first.Time == second.Time;
 
+        private void OnSenderMenuRequested(User user) => SenderMenuRequested?.Invoke(user);
+
         private void OnActiveChannelChanged(object sender, BindableValueChangedEventArgs<ChatChannel> e) => ChangeChannel(e.Value);
 
         public override void Destroy()
         {
             ActiveChannel.ValueChanged -= OnActiveChannelChanged;
             ClearRows();
+            SenderMenuRequested = null;
             base.Destroy();
         }
     }

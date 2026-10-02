@@ -29,9 +29,6 @@ namespace Quaver.Shared.Screens.V2.Options
             AlignItems = FlexAlignItems.Center;
             ColumnGap = 10;
 
-            UpdateWhenInvisible = false;
-            DeferChildRectangleRecalculationWhileHidden = true;
-
             Label = new RoundedButton
             {
                 Parent = this,

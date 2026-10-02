@@ -165,8 +165,13 @@ namespace Quaver.Shared.Online.Chat
                 channel = AddChannel(new ChatChannel
                 {
                     Name = e.Message.SenderName,
-                    Description = "Private Chat"
+                    Description = "Private Chat",
+                    DirectMessageUser = onlineUser
                 }, false);
+            } 
+            else if(isDirectMessage)
+            {
+                channel.DirectMessageUser ??= onlineUser;
             }
 
             if (channel == null)
