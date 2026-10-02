@@ -4,6 +4,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.V2.Options.Model;
+using SQLitePCL;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Managers;
@@ -27,6 +28,9 @@ namespace Quaver.Shared.Screens.V2.Options
             Direction = FlexDirection.Row;
             AlignItems = FlexAlignItems.Center;
             ColumnGap = 10;
+
+            UpdateWhenInvisible = false;
+            DeferChildRectangleRecalculationWhileHidden = true;
 
             Label = new RoundedButton
             {

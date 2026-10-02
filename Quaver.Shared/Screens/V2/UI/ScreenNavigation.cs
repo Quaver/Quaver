@@ -12,6 +12,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border.Components.Users;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
 using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
@@ -769,13 +770,31 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private static void ToggleChat()
         {
-            if (!(GameBase.Game is QuaverGame game) || game.OnlineChat == null)
+            if (!(GameBase.Game is QuaverGame game))
                 return;
+            
+            if(!ConfigManager.UseNewScreens.Value)
+            {
+                if (game.OnlineChat == null)
+                    return;
 
-            if (game.OnlineChat.IsOpen)
-                game.OnlineChat.Close();
+                if (game.OnlineChat.IsOpen)
+                    game.OnlineChat.Close();
+                else
+                    game.OnlineChat.Open();
+            } 
             else
-                game.OnlineChat.Open();
+            {
+                var chatDialog = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+                if(chatDialog == null)
+                {
+                    DialogManager.Show(new ChatV2Dialog());
+                }
+                else
+                {
+                    chatDialog.Close();
+                }
+            }
         }
 
         private static void ShowDonateMessage() => NotificationManager.Show(NotificationLevel.Info,

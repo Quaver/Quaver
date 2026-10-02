@@ -13,6 +13,7 @@ using Quaver.Shared.Screens.V2.Options.Model;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Screens.V2.UI.Filters;
 using Quaver.Shared.Skinning.V2;
+using SkiaSharp;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -472,7 +473,9 @@ namespace Quaver.Shared.Screens.V2.Options
                 Parent = OptionsRows,
                 Size = new ScalableVector2(1, 40),
                 Direction = FlexDirection.Row,
-                AlignItems = FlexAlignItems.Stretch
+                AlignItems = FlexAlignItems.Stretch,
+                UpdateWhenInvisible = false,
+                DeferChildRectangleRecalculationWhileHidden = true
             };
 
             header.Width = CreateTwoSidedSprite(header, 18,
@@ -875,9 +878,25 @@ namespace Quaver.Shared.Screens.V2.Options
             OptionsScroll.InputEnabled = OptionsScroll.IsHovered();
 
             base.Update(gameTime);
+
+            UpdateVisibleOptionRows();
+
             if (PresetDirtyCheckPending)
                 RefreshPresetDirtyState();
+
             UpdateSectionHighlight();
+        }
+
+        private void UpdateVisibleOptionRows()
+        {
+            var scrollTop = -OptionsScroll.ContentContainer.Y - OptionsRows.Y;
+            var visibleTop = scrollTop - 40;
+            var visibleBottom = scrollTop + OptionsScroll.Height + 40;
+
+            foreach (var child in OptionsRows.Children)
+            {
+                child.Visible = child.Y + child.Height >= visibleTop && child.Y <= visibleBottom;
+            }
         }
 
         /// <inheritdoc />
@@ -962,7 +981,6 @@ namespace Quaver.Shared.Screens.V2.Options
             IconList.Position = new ScalableVector2(offset.X, offset.Y);
             IconList.Size = new ScalableVector2(Math.Max(1f, width), Math.Max(1f, MenuLayout.Height));
         }
-
 
         public override void Destroy()
         {
