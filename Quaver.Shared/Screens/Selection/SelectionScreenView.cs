@@ -140,6 +140,9 @@ namespace Quaver.Shared.Screens.Selection
 
             // Trigger a scroll container change, to bring in the correct container
             SelectScreen.ActiveScrollContainer.TriggerChange();
+
+            if (SelectScreen.ActiveLeftPanel.Value != SelectContainerPanel.Leaderboard)
+                SelectScreen.ActiveLeftPanel.TriggerChange();
         }
 
         /// <inheritdoc />
