@@ -28,6 +28,10 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
         private HitDifferenceGraph HitDifferenceGraph { get; set; }
 
         /// <summary>
+        /// </summary>
+        private Bindable<DevianceHighlight> HighlightState { get; }
+
+        /// <summary>
         ///     Displays the cached version of <see cref="ResultHitDifferenceGraph"/>
         /// </summary>
         public Sprite CachedSprite { get; }
@@ -41,11 +45,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
         /// </summary>
         /// <param name="map"></param>
         /// <param name="processor"></param>
+        /// <param name="highlightState"></param>
         /// <param name="size"></param>
-        public CachedHitDifferenceGraph(Map map, Bindable<ScoreProcessor> processor, ScalableVector2 size)
+        public CachedHitDifferenceGraph(Map map, Bindable<ScoreProcessor> processor,
+            Bindable<DevianceHighlight> highlightState, ScalableVector2 size)
         {
             Map = map;
             Processor = processor;
+            HighlightState = highlightState;
             Size = size;
 
             CreateHitDifferenceGraph();
@@ -69,6 +76,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
                 GameBase.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
 
             NeedsToCache = true;
+
+            HighlightState.ValueChanged += OnHighlightStateChanged;
         }
 
         /// <inheritdoc />
@@ -76,8 +85,17 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
         /// </summary>
         public override void Destroy()
         {
+            HighlightState.ValueChanged -= OnHighlightStateChanged;
             RenderTarget?.Dispose();
             base.Destroy();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void OnHighlightStateChanged(object sender, BindableValueChangedEventArgs<DevianceHighlight> e)
+        {
+            HitDifferenceGraph.ApplyHighlight(e.Value);
+            NeedsToCache = true;
         }
 
         /// <inheritdoc />
