@@ -253,6 +253,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
             var privateChat = new ChatChannel()
             {
                 Name = user.OnlineUser.Username,
+                DirectMessageUser = user,
                 AllowedUserGroups = UserGroups.Normal,
                 Description = "Private Chat"
             };

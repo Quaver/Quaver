@@ -55,11 +55,11 @@ public class UserRow : PoolableSprite<User>
 
     public event Action<User> OnClick;
     
-    public UserRow(PoolableScrollContainer<User> container, User item, int index) : base(container, item, index)
+    public UserRow(PoolableScrollContainer<User> container, User item, int index, float rightPadding = 20) : base(container, item, index)
     {
         Size = new ScalableVector2(container.Width, HEIGHT);
         
-        CreateRow();
+        CreateRow(rightPadding);
         
         CreateAvatar();
         CreateDetailsLayout();
@@ -124,7 +124,7 @@ public class UserRow : PoolableSprite<User>
                 Username.Text = item.OnlineUser.Username;
                 Username.Tint = Colors.GetUserChatColor(item.OnlineUser.UserGroups);
                 Flag.Region = Flags.GetRegion(item.OnlineUser.CountryFlag);
-                UpdateUserStatus();
+                UpdatePresence();
                 
                 DetailsLayout.RefreshLayout();
                 NameLayout.RefreshLayout();
@@ -132,12 +132,12 @@ public class UserRow : PoolableSprite<User>
         });
     }
 
-    private void CreateRow()
+    private void CreateRow(float rightPadding)
     {
         Row = new ViewportRoundedButton(Container)
         {
             Parent = this,
-            Size = new ScalableVector2(716, 70),
+            Size = new ScalableVector2(Math.Max(1, Width - rightPadding), 70),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.FromHex("#181E25"),
         };
@@ -272,10 +272,21 @@ public class UserRow : PoolableSprite<User>
         OnlineStatusIcon.SpriteBatchOptions = RoundedRectShader.CreateScissorSafeOptions();
     }
 
+    private void UpdatePresence()
+    {
+        var online = Item?.OnlineUser != null && OnlineManager.Connected && OnlineManager.OnlineUsers.ContainsKey(Item.OnlineUser.Id);
+        OnlineStatusIcon.Tint = online ? Color.White : ColorHelper.FromHex("#828E99");
+
+        if (online)
+            UpdateUserStatus();
+        else
+            SetStatusText("Offline");
+    }
+
     public void OnStatusUpdate(UserClientStatus status)
     {
         Item.CurrentStatus = status;
-        UpdateUserStatus();
+        UpdatePresence();
         DetailsLayout.RefreshLayout();
     }
     private void UpdateUserStatus()

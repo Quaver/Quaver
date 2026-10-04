@@ -183,6 +183,15 @@
   <data name="Chat_SendAMessage" xml:space="preserve">
     <value>Send a message...</value>
   </data>
+  <data name="Chat_Settings" xml:space="preserve">
+    <value>Chat Settings</value>
+  </data>
+  <data name="Chat_SettingsDescription" xml:space="preserve">
+    <value>Change Chat Display Options</value>
+  </data>
+  <data name="Chat_CensorMessages" xml:space="preserve">
+    <value>Censor Chat Messages</value>
+  </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>Home</value>
   </data>

@@ -4,6 +4,8 @@ using MonoGame.Extended;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
+using Quaver.Shared.Online.Chat;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
@@ -168,7 +170,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             Message.Position = new ScalableVector2(messageX, VerticalPadding);
             Message.MaxWidth = messageWidth;
-            Message.Text = item.Message ?? string.Empty;
+            Message.Text = ConfigManager.ChatCensorEnabled.Value ? ChatCensor.Censor(item.Message) : item.Message ?? string.Empty; 
 
             Height = Math.Max(40, Message.Height + VerticalPadding * 2);
         }

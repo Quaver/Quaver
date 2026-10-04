@@ -124,6 +124,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<Guid> SelectedOptionsPresetId { get; private set; }
 
         /// <summary>
+        ///     Whether chat messages should be censored on the client.
+        /// </summary>
+        internal static Bindable<bool> ChatCensorEnabled { get; private set; }
+
+        /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
         internal static Bindable<string> Skin { get; private set; }
@@ -1134,6 +1139,7 @@ namespace Quaver.Shared.Config
             Language = ReadValue(@"Language", "en", data);
             RecentlyChangedOptions = ReadValue(@"RecentlyChangedOptions", "", data);
             SelectedOptionsPresetId = ReadValue(@"SelectedOptionsPresetId", Guid.Empty, data);
+            ChatCensorEnabled = ReadValue(@"ChatCensorEnabled", false, data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 20, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);

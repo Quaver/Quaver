@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.Chat;
 using Wobble.Bindables;
@@ -45,6 +46,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Scrollbar.Tint = ColorHelper.HexToColor("#D9E3F4");
 
             ActiveChannel.ValueChanged += OnActiveChannelChanged;
+            ConfigManager.ChatCensorEnabled.ValueChanged += OnChatCensorToggled;
             ChangeChannel(ActiveChannel.Value);
         }
 
@@ -243,10 +245,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private void OnSenderMenuRequested(User user) => SenderMenuRequested?.Invoke(user);
 
         private void OnActiveChannelChanged(object sender, BindableValueChangedEventArgs<ChatChannel> e) => ChangeChannel(e.Value);
+        private void OnChatCensorToggled(object sender, BindableValueChangedEventArgs<bool> e) => RebuildRows();
 
         public override void Destroy()
         {
             ActiveChannel.ValueChanged -= OnActiveChannelChanged;
+            ConfigManager.ChatCensorEnabled.ValueChanged -= OnChatCensorToggled;
             ClearRows();
             SenderMenuRequested = null;
             base.Destroy();

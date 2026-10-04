@@ -162,6 +162,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
             var privateChat = new ChatChannel
             {
                 Name = user.OnlineUser.Username,
+                DirectMessageUser = user,
                 AllowedUserGroups = UserGroups.Normal,
                 Description = LocalizationManager.Get("Screen_Hub_PrivateChat")
             };
