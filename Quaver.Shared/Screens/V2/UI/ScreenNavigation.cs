@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -11,6 +12,7 @@ using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Menu.Border.Components.Users;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
@@ -66,7 +68,11 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private NavigationBar BottomBar { get; }
 
-        private ProfileControl ProfileButton { get; }
+        private HeaderScreenNavigation HeaderControls { get; }
+
+        private ProfileSummary ProfileButton => HeaderControls.ProfileButton;
+
+        private bool AccountDropdownOpen { get; set; }
 
         private RoundedButton DonateButton { get; }
 
@@ -117,10 +123,9 @@ namespace Quaver.Shared.Screens.V2.UI
             TopBar = CreateBar(Alignment.TopLeft, Config.Bar);
             BottomBar = CreateBar(Alignment.BotLeft, Config.Footer);
 
-            ProfileButton = new ProfileControl(Config.Profile,
-                SkinV2Color.Parse(Config.Button.BackgroundColor),
-                UserInterface.OfflineAvatar,
-                Config.Button.Size);
+            HeaderControls = new HeaderScreenNavigation(Config);
+            ProfileButton.Clicked += OnProfileClicked;
+
             HubListIcon = GlobalIcons.Get(GlobalIcon.BurgerRedDot);
             HubMenuIcon = GlobalIcons.Get(GlobalIcon.Burger);
             DonateButton = AddIconButton(TopBar, NavigationBarRegion.Right,
@@ -340,6 +345,14 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             ResizeToWindow();
             EnsureOnlineHubSubscription();
+            if (AccountDropdownOpen && MouseManager.IsUniqueClick(MouseButton.Left) && !ProfileButton.IsHovered &&
+                GameBase.Game is QuaverGame game &&
+                game.CurrentScreen?.ActiveLoggedInUserDropdown?.IsHovered() != true)
+                ToggleAccountDropdown();
+
+            if (DialogManager.Dialogs.Count == 0 && KeyboardManager.IsUniqueKeyPress(Keys.F10))
+                ToggleAccountDropdown();
+
             base.Update(gameTime);
             UpdateOutgoingApplicationLogo(gameTime);
             UpdateDelayedButtonReveals(gameTime);
@@ -349,6 +362,8 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (SubscribedOnlineHub != null)
                 SubscribedOnlineHub.UnreadStateChanged -= OnHubUnreadStateChanged;
+
+            ProfileButton.Clicked -= OnProfileClicked;
 
             base.Destroy();
 
@@ -590,9 +605,35 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void AddSharedRightControls()
         {
-            TopBar.Add(NavigationBarRegion.Right, ProfileButton);
+            TopBar.Add(NavigationBarRegion.Right, HeaderControls);
             TopBar.Add(NavigationBarRegion.Right, DonateButton);
             TopBar.Add(NavigationBarRegion.Right, HubButton);
+        }
+
+        private void OnProfileClicked(object sender, EventArgs args) => ToggleAccountDropdown();
+
+        private void ToggleAccountDropdown()
+        {
+            if (GameBase.Game is not QuaverGame game || game.CurrentScreen == null)
+                return;
+
+            AccountDropdownOpen = !AccountDropdownOpen;
+            if (!AccountDropdownOpen)
+            {
+                game.CurrentScreen.ActiveLoggedInUserDropdown?.Close();
+                return;
+            }
+
+            if (game.CurrentScreen.ActiveLoggedInUserDropdown == null)
+            {
+                game.CurrentScreen.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
+                    new ScalableVector2(
+                        ProfileButton.AbsolutePosition.X + ProfileButton.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
+                        ProfileButton.AbsolutePosition.Y + ProfileButton.AbsoluteSize.Y + Config.Profile.DropdownGap));
+                return;
+            }
+
+            game.CurrentScreen.ActiveLoggedInUserDropdown.Open();
         }
 
         private void ClearTopLayout()
@@ -662,7 +703,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void ResetTransientState()
         {
-            ProfileButton.ResetTransientState();
+            AccountDropdownOpen = false;
         }
 
         private static void OpenMusicPlayer()
@@ -754,12 +795,12 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (DialogManager.Dialogs.Count == 0)
             {
-                DialogManager.Show(new OnlineHubDialog());
+                DialogManager.Show(new OverlayDialog());
                 return;
             }
 
             var topDialog = DialogManager.Dialogs[DialogManager.Dialogs.Count - 1];
-            if (topDialog is OnlineHubDialog dialog)
+            if (topDialog is OverlayDialog dialog)
                 dialog.Close();
         }
 
@@ -854,240 +895,5 @@ namespace Quaver.Shared.Screens.V2.UI
         ///     Replacement-screen account control. This deliberately avoids the legacy menu-border drawable,
         ///     whose transparent root sprite is styled by the legacy header.
         /// </summary>
-        private sealed class ProfileControl : RoundedButton
-        {
-            private SkinV2ProfileConfig Config { get; }
-
-            private Texture2D OfflineAvatar { get; }
-
-            private RoundedAvatar Avatar { get; }
-
-            private Sprite Flag { get; }
-
-            private ClanTag Clan { get; }
-
-            private SpriteTextPlus Username { get; }
-
-            private RoundedButton StatusBorder { get; }
-
-            private RoundedButton StatusDot { get; }
-
-            private bool IsOpen { get; set; }
-
-            private bool LastConnected { get; set; }
-
-            private object LastUser { get; set; }
-
-            private string LastUsername { get; set; }
-
-            public ProfileControl(SkinV2ProfileConfig config, Color backgroundColor, Texture2D offlineAvatar,
-                float buttonSize)
-            {
-                Config = config;
-                OfflineAvatar = offlineAvatar;
-                Size = new ScalableVector2(Config.Width, buttonSize);
-                Tint = backgroundColor;
-                CornerRadius = Config.CornerRadius;
-                PerformHoverFade = true;
-
-                Avatar = new RoundedAvatar(buttonSize, Config.CornerRadius, GetAvatar())
-                {
-                    Parent = this,
-                    Alignment = Alignment.MidLeft,
-                    X = 0
-                };
-
-                StatusBorder = new RoundedButton
-                {
-                    Parent = Avatar,
-                    Alignment = Alignment.BotRight,
-                    Position = new ScalableVector2(0, 0),
-                    Size = new ScalableVector2(Config.StatusBorderSize, Config.StatusBorderSize),
-                    Tint = backgroundColor,
-                    IsClickable = false,
-                    PerformHoverFade = false
-                };
-
-                StatusDot = new RoundedButton
-                {
-                    Parent = StatusBorder,
-                    Alignment = Alignment.MidCenter,
-                    Size = new ScalableVector2(Config.StatusDotSize, Config.StatusDotSize),
-                    IsClickable = false,
-                    PerformHoverFade = false
-                };
-
-                Flag = new Sprite
-                {
-                    Parent = this,
-                    Alignment = Alignment.MidLeft,
-                    X = Config.FlagX,
-                    Size = new ScalableVector2(Config.FlagSize, Config.FlagSize),
-                    Region = Flags.GetRegion("XX"),
-                    Visible = false
-                };
-
-                Clan = new ClanTag(Config.UsernameFontSize)
-                {
-                    Parent = this,
-                    Alignment = Alignment.MidLeft,
-                    X = Flag.X + Flag.Width + Config.TextSpacing
-                };
-
-                Username = new SpriteTextPlus(FontManager.GetWobbleFont(Config.UsernameFont), string.Empty,
-                    Config.UsernameFontSize)
-                {
-                    Parent = this,
-                    Alignment = Alignment.MidLeft,
-                    Tint = SkinV2Color.Parse(Config.TextColor)
-                };
-
-                Clicked += (sender, args) => ToggleAccountDropdown();
-                ConfigManager.Username.ValueChanged += OnUsernameChanged;
-                OnlineManager.Status.ValueChanged += OnOnlineStatusChanged;
-                SteamManager.SteamUserAvatarLoaded += OnSteamAvatarLoaded;
-
-                UpdateProfile();
-            }
-
-            public override void Update(GameTime gameTime)
-            {
-                var connected = OnlineManager.Connected;
-                var username = GetDisplayUsername(connected);
-                if (connected != LastConnected || !ReferenceEquals(LastUser, OnlineManager.Self) ||
-                    LastUsername != username)
-                    UpdateProfile();
-
-                if (IsOpen && MouseManager.IsUniqueClick(MouseButton.Left) && !IsHovered &&
-                    GameBase.Game is QuaverGame game &&
-                    game.CurrentScreen?.ActiveLoggedInUserDropdown?.IsHovered() != true)
-                    ToggleAccountDropdown();
-
-                if (DialogManager.Dialogs.Count == 0 && KeyboardManager.IsUniqueKeyPress(Keys.F10))
-                    ToggleAccountDropdown();
-
-                base.Update(gameTime);
-            }
-
-            public override void Destroy()
-            {
-                ConfigManager.Username.ValueChanged -= OnUsernameChanged;
-                OnlineManager.Status.ValueChanged -= OnOnlineStatusChanged;
-                SteamManager.SteamUserAvatarLoaded -= OnSteamAvatarLoaded;
-                base.Destroy();
-            }
-
-            public void ResetTransientState() => IsOpen = false;
-
-            private void ToggleAccountDropdown()
-            {
-                if (!(GameBase.Game is QuaverGame game) || game.CurrentScreen == null)
-                    return;
-
-                IsOpen = !IsOpen;
-
-                if (!IsOpen)
-                {
-                    game.CurrentScreen.ActiveLoggedInUserDropdown?.Close();
-                    return;
-                }
-
-                if (game.CurrentScreen.ActiveLoggedInUserDropdown == null)
-                {
-                    game.CurrentScreen.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
-                        new ScalableVector2(
-                            AbsolutePosition.X + AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
-                            AbsolutePosition.Y + AbsoluteSize.Y + Config.DropdownGap));
-                    return;
-                }
-
-                game.CurrentScreen.ActiveLoggedInUserDropdown.Open();
-            }
-
-            private void UpdateProfile()
-            {
-                var connected = OnlineManager.Connected;
-                var user = OnlineManager.Self;
-                var username = GetDisplayUsername(connected);
-
-                Avatar.AvatarSprite.Image = GetAvatar();
-                StatusDot.Tint = connected
-                    ? Color.White
-                    : SkinV2Color.Parse(Config.OfflineStatusColor);
-
-                if (connected)
-                {
-                    Flag.Region = Flags.GetRegion(user?.OnlineUser?.CountryFlag ?? "XX");
-                    Flag.Visible = true;
-                    Clan.UpdateFromUser(user?.OnlineUser, SkinV2Color.Parse(Config.TextColor));
-                }
-                else
-                {
-                    Flag.Visible = false;
-                    Clan.Clear();
-                }
-
-                Clan.X = Flag.Visible ? Flag.X + Flag.Width + Config.TextSpacing : Config.FlagX - 1;
-                var usernameX = Clan.Visible ? Clan.X + Clan.Width + Config.TextSpacing - 1 : Clan.X;
-                Username.X = usernameX;
-                Username.Text = username;
-                Username.TruncateWithEllipsis((int) Math.Max(40,
-                    Config.Width - usernameX - Config.UsernameRightPadding));
-
-                LastConnected = connected;
-                LastUser = user;
-                LastUsername = username;
-            }
-
-            private static string GetDisplayUsername(bool connected) => connected
-                ? OnlineManager.Self?.OnlineUser?.Username ?? ConfigManager.Username.Value ?? "Player"
-                : "Login";
-
-            private Texture2D GetAvatar()
-            {
-                var image = OfflineAvatar;
-
-                if (OnlineManager.Status.Value == ConnectionStatus.Connected && SteamManager.UserAvatars != null)
-                {
-                    var id = SteamUser.GetSteamID().m_SteamID;
-                    if (SteamManager.UserAvatars.TryGetValue(id, out var avatar))
-                        image = avatar;
-                }
-
-                return image;
-            }
-
-            private void OnUsernameChanged(object sender, BindableValueChangedEventArgs<string> args) =>
-                UpdateProfile();
-
-            private void OnOnlineStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> args) =>
-                UpdateProfile();
-
-            private void OnSteamAvatarLoaded(object sender, SteamAvatarLoadedEventArgs args)
-            {
-                if (SteamUser.GetSteamID().m_SteamID == args.SteamId)
-                    Avatar.AvatarSprite.Image = args.Texture;
-            }
-        }
-
-        private sealed class RoundedAvatar : SpriteMaskContainer
-        {
-            public Sprite AvatarSprite { get; }
-
-            public RoundedAvatar(float size, float cornerRadius, Texture2D image)
-            {
-                Size = new ScalableVector2(size, size);
-                Image = RoundedRectTextureCache.Get(size, size, cornerRadius);
-
-                AvatarSprite = new Sprite
-                {
-                    Alignment = Alignment.TopLeft,
-                    Size = Size,
-                    Image = image
-                };
-
-                AddContainedSprite(AvatarSprite);
-            }
-        }
     }
 }
