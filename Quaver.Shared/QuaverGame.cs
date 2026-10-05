@@ -38,6 +38,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
@@ -124,6 +125,7 @@ using Wobble.Timing;
 using Wobble.Window;
 using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
+using Quaver.Shared.Screens.V2.Options;
 
 namespace Quaver.Shared
 {
@@ -973,7 +975,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
                 case QuaverScreenType.Results:
-                    DialogManager.Show(new OptionsDialog());
+                    var useNewScreen = ConfigManager.UseNewScreens.Value;
+                    DialogManager.Show(useNewScreen ? new OptionsV2Dialog() : new OptionsDialog());
                     break;
             }
         }
@@ -1198,7 +1201,8 @@ namespace Quaver.Shared
             if (CloseOnlineHubDialog())
                 return;
 
-            DialogManager.Show(new OnlineHubDialog());
+            var useNewScreen = ConfigManager.UseNewScreens.Value;
+            DialogManager.Show(useNewScreen ? new OverlayDialog() : new OnlineHubDialog());
         }
 
         /// <summary>
@@ -1209,11 +1213,12 @@ namespace Quaver.Shared
             if (DialogManager.Dialogs.Count == 0)
                 return false;
 
-            if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
-                return true;
+            var dialog = DialogManager.Dialogs.Last();
 
-            var dialog = (OnlineHubDialog)DialogManager.Dialogs.Last();
-            dialog?.Close();
+            if (dialog is OverlayDialog hub)
+                hub.Close();
+            else if (dialog is OnlineHubDialog legacyHub)
+                legacyHub.Close();
 
             return true;
         }
