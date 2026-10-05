@@ -55,7 +55,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private V2FilterSearchTextbox UserSearchBox { get; set; }
         private Bindable<string> UserSearchQuery { get; } = new Bindable<string>(string.Empty);
         private ChatUserSearchList UserSearchList { get; set; }
-        private RoundedButton OptionsButton { get; set; }
         private RoundedButton OverflowTabsButton { get; set; }
         private SpriteTextPlus OverflowTabsCount { get; set; }
         private RoundedButton ToggleSearchSectionButton { get; set; }
@@ -160,7 +159,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Size = new ScalableVector2(1, 1),
                 Direction = FlexDirection.Column,
                 AlignItems = FlexAlignItems.Stretch,
-                RowGap = SectionGap
+                RowGap = SectionGap * 2
             };
 
             HiddenTabsContainer = new Container
@@ -263,22 +262,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 PlaceholderColor = ColorHelper.FromHex("#8CAFEA80"),
                 CursorColor = Color.White
             };
-            UserSearchBox = new V2FilterSearchTextbox(UserSearchQuery, LocalizationManager.Get("Screen_Hub_SearchUsers"), FontManager.GetWobbleFont(Fonts.InterBold), 18, searchStyle, SearchSectionWidth - SectionPadding * 2 - SectionGap - HeaderButtonSize)
+            UserSearchBox = new V2FilterSearchTextbox(UserSearchQuery, LocalizationManager.Get("Screen_Hub_SearchUsers"), FontManager.GetWobbleFont(Fonts.InterBold), 18, searchStyle, SearchSectionWidth - SectionPadding * 2)
             {
                 Parent = SearchHeaderLayout
             };
             UserSearchBox.SetResultsText(string.Empty);
             SearchHeaderLayout.SetItemOptions(UserSearchBox, new FlexItemOptions { Basis = 0, Grow = 1 });
-
-            OptionsButton = new RoundedButton((sender, args) => DialogManager.Show(new ChatSettingsDialog()))
-            {
-                Parent = SearchHeaderLayout,
-                Size = new ScalableVector2(HeaderButtonSize, HeaderButtonSize),
-                CornerRadius = SkinV2BorderRadiusConfig.Normal,
-                Tint = ColorHelper.FromHex("#273038")
-            };
-            OptionsButton.SetIcon(GlobalIcons.Get(GlobalIcon.Options), new Vector2(30, 30));
-            SearchHeaderLayout.SetItemOptions(OptionsButton, new FlexItemOptions { Basis = HeaderButtonSize, Shrink = 0 });
 
             ChatSession.JoinedChannels.Value.ForEach(CreateTabButton);
         }
@@ -577,7 +566,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             UserSearchList.Scrollbar.Tint = ColorHelper.FromHex("#D9E3F4");
             UserSearchList.OnRowClicked += ShowUserMenu;
             SearchLayout.SetItemOptions(UserSearchList, new FlexItemOptions { Basis = 0, Grow = 1 });
-
         }
 
         private void UpdateChannelButtonTints()
@@ -629,7 +617,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+            {
                 Close();
+                return;
+            }
 
             if (MouseManager.IsUniqueClick(MouseButton.Left))
             {
@@ -663,7 +654,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             {
                 IsResizing = false;
                 ResizedDuringHeaderPress = false;
-                UserSearchList?.RefreshViewport();
+                UserSearchList?.RefreshViewport(true);
                 return true;
             }
 

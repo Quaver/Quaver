@@ -183,13 +183,13 @@
   <data name="Chat_SendAMessage" xml:space="preserve">
     <value>Send a message...</value>
   </data>
-  <data name="Chat_Settings" xml:space="preserve">
-    <value>Chat Settings</value>
+  <data name="Chat_CannotWriteInChannel" xml:space="preserve">
+    <value>You cannot write in this channel</value>
   </data>
-  <data name="Chat_SettingsDescription" xml:space="preserve">
-    <value>Change Chat Display Options</value>
+  <data name="Screen_Options_Chat" xml:space="preserve">
+    <value>Chat</value>
   </data>
-  <data name="Chat_CensorMessages" xml:space="preserve">
+  <data name="Screen_Options_CensorMessages" xml:space="preserve">
     <value>Censor Chat Messages</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">

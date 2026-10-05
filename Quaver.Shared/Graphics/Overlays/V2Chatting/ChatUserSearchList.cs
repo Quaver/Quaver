@@ -16,6 +16,7 @@ using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Logging;
 using Wobble.Scheduling;
+using Wobble.Window;
 
 namespace Quaver.Shared.Graphics.Overlays.V2Chatting;
 
@@ -43,7 +44,6 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         SubscribedClient = OnlineManager.Client;
         SearchTask = new TaskHandler<string, List<User>>(SearchUsers);
         ClanMembersTask = new TaskHandler<int, List<User>>(GetClanMembers);
-
         SearchQuery.ValueChanged += OnSearchChanged;
         SearchTask.OnCompleted += OnSearchCompleted;
         ClanMembersTask.OnCompleted += OnClanMembersCompleted;
@@ -72,7 +72,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         return row;
     }
 
-    public void RefreshViewport()
+    public void RefreshViewport(bool hideUntilRebuilt = false)
     {
         var widthChanged = Math.Abs(PreviousViewportWidth - Width) > 0.001f;
         var heightChanged = Math.Abs(PreviousViewportHeight - Height) > 0.001f;
@@ -82,13 +82,25 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         PreviousViewportWidth = Width;
         PreviousViewportHeight = Height;
 
-        var desiredPoolSize = Math.Min(50, Math.Max(1, (int)Math.Ceiling(Height / 80f) + 3));
+        var desiredPoolSize = Math.Min(50, Math.Max(1, (int)Math.Ceiling(WindowManager.Height / 80f) + 3));
+        if (!widthChanged && Pool != null && PoolSize == desiredPoolSize)
+        {
+            RecalculateContainerHeight();
+            return;
+        }
+
+        if (hideUntilRebuilt)
+            Visible = false;
+
         if (Pool != null)
             DestroyPool();
 
         PoolSize = desiredPoolSize;
         PoolStartingIndex = Math.Clamp(PoolStartingIndex, 0, Math.Max(0, AvailableItems.Count - PoolSize));
         CreatePool();
+
+        if (hideUntilRebuilt)
+            AddScheduledUpdate(() => Visible = true);
     }
 
     public override void Update(GameTime gameTime)
@@ -291,6 +303,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
         var users = AvailableItems
             .Select(GetOnlineUserIfAvailable)
+            .Where(CanAccessActiveChannel)
             .OrderByDescending(GetLastSeen)
             .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
             .ToList();
@@ -300,6 +313,8 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     private void RefreshDefaultUsers(bool resetScroll = true)
     {
+        SearchTask.Cancel();
+
         if (!TryGetClanIdFromSelectedChannel(out var clanId))
         {
             ClanMembersTask.Cancel();
@@ -329,6 +344,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         var users = members
             .Where(user => user?.OnlineUser != null && !IsSelf(user))
             .Where(user => string.IsNullOrWhiteSpace(query) || user.OnlineUser.Username.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .Where(CanAccessActiveChannel)
             .OrderByDescending(GetLastSeen)
             .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
             .Select(GetOnlineUserIfAvailable)

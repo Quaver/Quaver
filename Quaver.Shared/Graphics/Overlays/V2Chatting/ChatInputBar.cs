@@ -18,8 +18,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 {
     internal sealed class ChatInputBar : Textbox
     {
-
-        private static string DefaultPlaceholderText => LocalizationManager.Get("Chat_SendAMessage");
+        private const UserGroups ChatModeratorGroups = UserGroups.Swan | UserGroups.Developer | UserGroups.Admin |
+                                                      UserGroups.Moderator | UserGroups.Bot;
 
         private Bindable<ChatChannel> ActiveChannel { get; }
 
@@ -27,7 +27,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private int LastDisplayedMuteSecondsLeft { get; set; } = -1;
 
-        public ChatInputBar(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.InterSemiBold), 18, string.Empty, DefaultPlaceholderText)
+        public ChatInputBar(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.InterSemiBold), 18, string.Empty, LocalizationManager.Get("Chat_SendAMessage"))
         {
             ActiveChannel = activeChannel;
 
@@ -43,9 +43,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         public override void Update(GameTime gameTime)
         {
             var muted = IsMuted();
-            UpdateMutedState(muted);
+            var limitedChat = IsWriteRestricted(ActiveChannel.Value);
+            UpdateInputState(muted, limitedChat);
 
-            var canType = ActiveChannel.Value != null && !muted;
+            var canType = ActiveChannel.Value != null && !muted && !limitedChat;
             InputEnabled = canType;
             AllowSubmission = canType;
             Button.IsInteractionEnabled = canType;
@@ -55,7 +56,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             base.Update(gameTime);
 
-            if (muted)
+            if (!canType)
                 Cursor.Visible = false;
         }
 
@@ -101,7 +102,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 return;
             }
 
-            if (IsMuted())
+            if (IsMuted() || IsWriteRestricted(channel))
                 return;
 
             channel.QueueMessage(message);
@@ -110,17 +111,23 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private static bool IsMuted() => OnlineManager.Self != null && OnlineManager.Self.IsMuted;
 
-        private void UpdateMutedState(bool muted)
+        private static bool IsWriteRestricted(ChatChannel channel)
         {
-            if (!muted)
-            {
-                if (PlaceholderText != DefaultPlaceholderText)
-                {
-                    PlaceholderText = DefaultPlaceholderText;
+            if (channel?.LimitedChat != true)
+                return false;
 
-                    if (string.IsNullOrEmpty(RawText))
-                        RawText = string.Empty;
-                }
+            var userGroups = OnlineManager.Self?.OnlineUser?.UserGroups ?? 0;
+            return (userGroups & ChatModeratorGroups) == 0;
+        }
+
+        private void UpdateInputState(bool muted, bool limitedChat)
+        {
+            if (!muted && !limitedChat)
+            {
+                PlaceholderText = LocalizationManager.Get("Chat_SendAMessage");
+
+                if (string.IsNullOrEmpty(RawText))
+                    RawText = string.Empty;
 
                 LastDisplayedMuteEndTime = 0;
                 LastDisplayedMuteSecondsLeft = -1;
@@ -129,6 +136,16 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             if (!string.IsNullOrEmpty(RawText))
                 RawText = string.Empty;
+
+            if (limitedChat && !muted)
+            {
+                PlaceholderText = LocalizationManager.Get("Chat_CannotWriteInChannel");
+                RawText = string.Empty;
+
+                LastDisplayedMuteEndTime = 0;
+                LastDisplayedMuteSecondsLeft = -1;
+                return;
+            }
 
             var muteEndTime = OnlineManager.Self.OnlineUser.MuteEndTime;
             var secondsLeft = Math.Max(0,

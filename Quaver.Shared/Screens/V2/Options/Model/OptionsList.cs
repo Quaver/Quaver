@@ -539,6 +539,9 @@ namespace Quaver.Shared.Screens.V2.Options.Model
                 ("advanced.input.invert-editor-scrolling", "InvertEditorScrolling", Toggle(() => ConfigManager.InvertEditorScrolling)),
                 ("advanced.input.invert-scrolling", "InvertScrolling", Toggle(() => ConfigManager.InvertScrolling)));
 
+            AddSection(options, OptionCategory.Advanced, "Chat",
+                ("advanced.chat.censor-messages", "CensorMessages", Toggle(() => ConfigManager.ChatCensorEnabled)));
+
             AddSection(options, OptionCategory.Advanced, "Miscellaneous",
                 ("advanced.misc.auto-login", "AutomaticallyLogIntoTheServer", Toggle(() => ConfigManager.AutoLoginToServer)),
                 ("advanced.misc.song-request-notifications", "DisplaySongRequestNotifications", Toggle(() => ConfigManager.DisplaySongRequestNotifications)),
