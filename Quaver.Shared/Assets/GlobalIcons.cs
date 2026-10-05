@@ -69,7 +69,9 @@ namespace Quaver.Shared.Assets
         Clear,
         SelectAll,
         Random,
-        Clan
+        Clan,
+        ChatPanel,
+        ChannelList
     }
 
     /// <summary>
@@ -140,7 +142,9 @@ namespace Quaver.Shared.Assets
                 { GlobalIcon.Clear, new Point(2, 16) },
                 { GlobalIcon.SelectAll, new Point(2, 17) },
                 { GlobalIcon.Random, new Point(2, 18) },
-                { GlobalIcon.Clan, new Point(2, 19) }
+                { GlobalIcon.Clan, new Point(2, 19) },
+                { GlobalIcon.ChatPanel, new Point(2, 20) },
+                { GlobalIcon.ChannelList, new Point(2, 21) }
             };
 
         /// <summary>

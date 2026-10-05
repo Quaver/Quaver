@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Options;
 using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -34,7 +35,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "EXPORT SKIN", 18, Color.White);
 
-            Button.Clicked += (sender, args) => SkinManager.Export();
+            Button.Clicked += (sender, args) => OptionsActions.ExportSkin();
         }
     }
 }

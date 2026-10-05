@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -1241,7 +1346,7 @@
     <value>战队记分</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>难度：</value>
+    <value>难度</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>无</value>
@@ -1278,9 +1383,6 @@
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>长度</value>
-  </data>
-  <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>难度</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
     <value>最大连击</value>
@@ -1388,9 +1490,6 @@
   </data>
   <data name="Screen_Download_MinBPM" xml:space="preserve">
     <value>最低BPM</value>
-  </data>
-  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
-    <value>推荐难度</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
     <value>推荐难度</value>
@@ -2369,7 +2468,8 @@
     <value>否</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>要提交歌曲至审核吗？&#xA;谱面必须符合上架规范。</value>
+    <value>要提交歌曲至审核吗？
+谱面必须符合上架规范。</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>自定义吸附分度</value>
@@ -2435,7 +2535,9 @@
     <value>应用模组</value>
   </data>
   <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
-    <value>确认对该难度应用“{0}”模组吗？&#xA;&#xA;此操作不可逆！请慎重操作。</value>
+    <value>确认对该难度应用“{0}”模组吗？
+
+此操作不可逆！请慎重操作。</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
     <value>变更背景/横幅</value>
@@ -2480,10 +2582,13 @@
     <value>提交谱面至审核时出现了一个错误。</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
-    <value>开启时，BPM 变化将同时改变SV。&#xA;例如，从120BPM变为240BPM时，SV将变为初始时的两倍。SV列表仍然生效。</value>
+    <value>开启时，BPM 变化将同时改变SV。
+例如，从120BPM变为240BPM时，SV将变为初始时的两倍。SV列表仍然生效。</value>
   </data>
   <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
-    <value>开启时，强制使用旧长条渲染方式。如果谱面没有 SV 变化，此选项可忽略。&#xA;当前渲染方式将长条头尾分别置于能经过的最早于最晚的位置，而旧&#xA;方式对两者均使用正常物件位置计算。</value>
+    <value>开启时，强制使用旧长条渲染方式。如果谱面没有 SV 变化，此选项可忽略。
+当前渲染方式将长条头尾分别置于能经过的最早于最晚的位置，而旧
+方式对两者均使用正常物件位置计算。</value>
   </data>
   <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
     <value>将此难度的全部元信息拷贝至该谱面所有难度。</value>
@@ -2645,16 +2750,20 @@
     <value>吸附分度</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>更改当前吸附分度。&#xA;快捷键：{0} / {1}</value>
+    <value>更改当前吸附分度。
+快捷键：{0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>更改播放速度。&#xA;快捷键：{0} / {1}</value>
+    <value>更改播放速度。
+快捷键：{0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>试玩</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>保存并试玩谱面。&#xA;右键以选择试玩使用的模组。&#xA;快捷键：{0}</value>
+    <value>保存并试玩谱面。
+右键以选择试玩使用的模组。
+快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>BPM 编辑器</value>
@@ -3047,10 +3156,12 @@
     <value>正在加载频谱图......</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>跳转至时间线里下一个书签。&#xA;快捷键：{0}</value>
+    <value>跳转至时间线里下一个书签。
+快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>跳转至时间线里上一个书签。&#xA;快捷键：{0}</value>
+    <value>跳转至时间线里上一个书签。
+快捷键：{0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>已选择 {0} 个 BPM 节点</value>
@@ -3083,7 +3194,8 @@
     <value>应用键位配置</value>
   </data>
   <data name="Screen_Editor_ApplyKeymapConfirmation" xml:space="preserve">
-    <value>您确定要覆盖您的键位配置吗？&#xA;您可以先备份一下当前配置文件。 </value>
+    <value>您确定要覆盖您的键位配置吗？
+您可以先备份一下当前配置文件。 </value>
   </data>
   <data name="Screen_Editor_IssueCountLabel" xml:space="preserve">
     <value>问题数量：</value>
