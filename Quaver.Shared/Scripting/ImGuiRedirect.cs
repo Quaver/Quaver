@@ -69,6 +69,40 @@ namespace Quaver.Shared.Scripting
 
         public static void Text(string text) => ImGui.Text(text ?? string.Empty);
 
+        public static bool SliderInt(string label, ref int value, int min, int max) =>
+            ImGui.SliderInt(label, ref value, min, max);
+
+        public static bool SliderInt(string label, ref int value, int min, int max, object formatOrFlags) =>
+            formatOrFlags switch
+            {
+                string text when Enum.TryParse<ImGuiSliderFlags>(text, out var flags) =>
+                    ImGui.SliderInt(label, ref value, min, max, flags),
+                string format => ImGui.SliderInt(label, ref value, min, max, format),
+                ImGuiSliderFlags flags => ImGui.SliderInt(label, ref value, min, max, flags),
+                double flags => ImGui.SliderInt(label, ref value, min, max, (ImGuiSliderFlags)(int)flags),
+                _ => throw new ArgumentException("Expected a slider format or flags.", nameof(formatOrFlags))
+            };
+
+        public static bool SliderInt(string label, ref int value, int min, int max, string format, ImGuiSliderFlags flags) =>
+            ImGui.SliderInt(label, ref value, min, max, format, flags);
+
+        public static bool SliderFloat(string label, ref float value, float min, float max) =>
+            ImGui.SliderFloat(label, ref value, min, max);
+
+        public static bool SliderFloat(string label, ref float value, float min, float max, object formatOrFlags) =>
+            formatOrFlags switch
+            {
+                string text when Enum.TryParse<ImGuiSliderFlags>(text, out var flags) =>
+                    ImGui.SliderFloat(label, ref value, min, max, flags),
+                string format => ImGui.SliderFloat(label, ref value, min, max, format),
+                ImGuiSliderFlags flags => ImGui.SliderFloat(label, ref value, min, max, flags),
+                double flags => ImGui.SliderFloat(label, ref value, min, max, (ImGuiSliderFlags)(int)flags),
+                _ => throw new ArgumentException("Expected a slider format or flags.", nameof(formatOrFlags))
+            };
+
+        public static bool SliderFloat(string label, ref float value, float min, float max, string format, ImGuiSliderFlags flags) =>
+            ImGui.SliderFloat(label, ref value, min, max, format, flags);
+
         public static bool InputText(string label, ref string input, uint maxLength) =>
             ImGui.InputText(label, ref input, maxLength);
 
