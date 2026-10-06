@@ -29,7 +29,7 @@ namespace Quaver.Shared.Screens.Music.UI.ListenerList
                 switch (args.Text)
                 {
                     case ViewProfile:
-                        BrowserHelper.OpenURL($"https://quavergame.com/profile/{user.Id}");
+                        BrowserHelper.OpenURL($"https://quavergame.com/users/{user.Id}");
                         break;
                     case SteamProfile:
                         BrowserHelper.OpenURL($"http://steamcommunity.com/profiles/{user.SteamId}");

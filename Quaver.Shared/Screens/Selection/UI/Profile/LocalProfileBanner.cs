@@ -267,7 +267,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Profile
                     return;
                 }
 
-                BrowserHelper.OpenURL($"https://quavergame.com/profile/{OnlineManager.Self.OnlineUser.Id}" +
+                BrowserHelper.OpenURL($"https://quavergame.com/users/{OnlineManager.Self.OnlineUser.Id}" +
                                       $"?mode={(int) ConfigManager.SelectedGameMode.Value}");
             };
         }

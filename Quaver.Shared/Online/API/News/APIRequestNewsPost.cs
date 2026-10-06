@@ -22,7 +22,7 @@ namespace Quaver.Shared.Online.API.News
 
     public class APIRequestNewsFeed : APIRequest<APIResponseNewsFeed>
     {
-        private const string URL = "https://blog.quavergame.com/feed.json";
+        private const string URL = "https://quavergame.com/feed.json";
 
         private NewsThumbnailType ThumbnailType { get; }
 
@@ -34,7 +34,7 @@ namespace Quaver.Shared.Online.API.News
             try
             {
                 var request = new RestRequest(URL, Method.GET);
-                var client = new RestClient("https://blog.quavergame.com") { UserAgent = "Quaver" };
+                var client = new RestClient("https://quavergame.com") { UserAgent = "Quaver" };
 
                 var response = ExecuteApiRequest(client, request);
 

@@ -296,7 +296,7 @@ namespace Quaver.Shared.Database.Maps
                 return;
             }
 
-            BrowserHelper.OpenURL($"https://quavergame.com/mapsets/map/{map.MapId}");
+            BrowserHelper.OpenURL($"https://quavergame.com/mapsets/{map.MapSetId}/maps/{map.MapId}");
         }
 
         /// <summary>

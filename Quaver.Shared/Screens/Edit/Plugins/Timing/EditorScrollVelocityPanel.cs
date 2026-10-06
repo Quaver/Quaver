@@ -406,6 +406,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             var time = 0f;
             var format = "";
 
+            const float minTime = -100_000;
+
             if (SelectedScrollVelocities.Count == 1)
             {
                 var point = SelectedScrollVelocities.First();
@@ -416,16 +418,13 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Time"));
 
-            if (ImGuiFix.InputFloat("##scroll_velocity_time", ref time, 1, 0.1f, format,
-                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+            if (ImGuiFix.InputFloat("##Time", ref time, 1, 0.1f, format,
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
             {
-                if (SelectedScrollVelocities.Count == 1)
-                {
-                    var sv = SelectedScrollVelocities.First();
+                var sv = SelectedScrollVelocities.First();
 
-                    Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
-                        time - sv.StartTime);
-                }
+                Screen.ActionManager.ChangeScrollVelocityOffsetBatch(new List<SliderVelocityInfo> { sv },
+                    Math.Max(time - sv.StartTime, minTime));
             }
         }
 
@@ -438,7 +437,7 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_MoveTimesBy"));
 
-            if (ImGuiFix.InputFloat("   ", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGuiFix.InputFloat("##MoveTimesBy", ref time, 1, 0.1f, format, ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollVelocityOffsetBatch(
                     new List<SliderVelocityInfo>(SelectedScrollVelocities), time);
         }
@@ -449,6 +448,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
         {
             var multiplier = 0f;
             var format = "";
+
+            const float maxMultiplier = 1e10f;
 
             if (SelectedScrollVelocities.Count == 1)
             {
@@ -467,10 +468,10 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
 
             ImGui.TextWrapped(LocalizationManager.Get("Screen_Editor_Multiplier"));
 
-            if (ImGuiFix.InputFloat(" ", ref multiplier, 1, 0.1f, format,
-                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll))
+            if (ImGuiFix.InputFloat("##Multiplier", ref multiplier, 1, 0.1f, format,
+                    ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.CharsDecimal))
                 Screen.ActionManager.ChangeScrollVelocityMultiplierBatch(
-                    new List<SliderVelocityInfo>(SelectedScrollVelocities), multiplier);
+                    new List<SliderVelocityInfo>(SelectedScrollVelocities), Math.Clamp(multiplier, -maxMultiplier, maxMultiplier));
         }
 
         /// <summary>
@@ -694,7 +695,8 @@ namespace Quaver.Shared.Screens.Edit.Plugins.Timing
             {
                 var point = new SliderVelocityInfo()
                 {
-                    StartTime = obj.StartTime + difference, Multiplier = obj.Multiplier
+                    StartTime = obj.StartTime + difference,
+                    Multiplier = obj.Multiplier
                 };
 
                 clonedObjects.Add(point);

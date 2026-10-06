@@ -1455,7 +1455,7 @@ Use the filters to narrow your search.</value>
     <value>Owned Playlists</value>
   </data>
   <data name="Screen_Download_Mapsets" xml:space="preserve">
-    <value>Mapsets</value>
+    <value>맵셋</value>
   </data>
   <data name="Screen_Download_AllKeymodes" xml:space="preserve">
     <value>All Keymodes</value>
@@ -1473,7 +1473,7 @@ Use the filters to narrow your search.</value>
     <value>Min</value>
   </data>
   <data name="Screen_Download_Max" xml:space="preserve">
-    <value>Max</value>
+    <value>최대</value>
   </data>
   <data name="Screen_Download_AnyLength" xml:space="preserve">
     <value>Any Length</value>
@@ -3323,7 +3323,7 @@ for other players to download?</value>
     <value>끄기</value>
   </data>
   <data name="SkinEditor_Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>clear</value>
   </data>
   <data name="SkinEditor_ResetDefault" xml:space="preserve">
     <value>기본값으로 초기화</value>
@@ -3347,7 +3347,7 @@ for other players to download?</value>
     <value>Refresh</value>
   </data>
   <data name="SkinEditor_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>폴더 열기</value>
   </data>
   <data name="SkinEditor_InvalidValue" xml:space="preserve">
     <value>Enter a valid value.</value>
@@ -3368,10 +3368,10 @@ for other players to download?</value>
     <value>Click to select the next option.</value>
   </data>
   <data name="SkinEditor_Component_Background" xml:space="preserve">
-    <value>Background</value>
+    <value>배경</value>
   </data>
   <data name="SkinEditor_Component_BackgroundEffects" xml:space="preserve">
-    <value>Background Effects</value>
+    <value>배경 효과</value>
   </data>
   <data name="SkinEditor_Component_Logo" xml:space="preserve">
     <value>Logo</value>
@@ -3395,13 +3395,13 @@ for other players to download?</value>
     <value>Navigation Buttons</value>
   </data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve">
-    <value>Profile</value>
+    <value>프로필</value>
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
     <value>Screen Title</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
-    <value>Type</value>
+    <value>타입</value>
   </data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve">
     <value>Solid Color</value>
@@ -3470,7 +3470,7 @@ for other players to download?</value>
     <value>Fallback Image</value>
   </data>
   <data name="SkinEditor_Group_Download" xml:space="preserve">
-    <value>Download</value>
+    <value>다운로드</value>
   </data>
   <data name="SkinEditor_Component_SearchArea" xml:space="preserve">
     <value>Search Area</value>
@@ -3491,16 +3491,16 @@ for other players to download?</value>
     <value>Edit Skin Metadata</value>
   </data>
   <data name="SkinEditor_MetadataName" xml:space="preserve">
-    <value>Skin Name</value>
+    <value>스킨 이름</value>
   </data>
   <data name="SkinEditor_MetadataAuthor" xml:space="preserve">
     <value>Author</value>
   </data>
   <data name="SkinEditor_MetadataVersion" xml:space="preserve">
-    <value>Version</value>
+    <value>버전</value>
   </data>
   <data name="SkinEditor_MetadataApply" xml:space="preserve">
-    <value>Apply</value>
+    <value>적용</value>
   </data>
   <data name="SkinEditor_MetadataRequired" xml:space="preserve">
     <value>Name, author, and version are required.</value>

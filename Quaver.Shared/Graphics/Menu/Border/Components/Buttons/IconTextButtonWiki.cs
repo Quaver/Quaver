@@ -9,7 +9,7 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         public IconTextButtonWiki() : base(FontAwesome.Get(FontAwesomeIcon.fa_information_button),
             FontManager.GetWobbleFont(Fonts.InterSemiBold),"Wiki", (sender, args) =>
             {
-                BrowserHelper.OpenURL($"https://quavergame.com/wiki/");
+                BrowserHelper.OpenURL($"https://quavergame.com/docs/");
             }, localizationKey: "Screen_Main_Menu_Wiki")
         {
         }

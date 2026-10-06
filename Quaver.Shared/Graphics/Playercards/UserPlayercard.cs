@@ -289,7 +289,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
             ViewProfileButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterMedium), "VIEW PROFILE", 13, Color.White);
 
-            ViewProfileButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/profile/{User?.OnlineUser?.Id}");
+            ViewProfileButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/users/{User?.OnlineUser?.Id}");
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace Quaver.Shared.Graphics.Playercards
 
             ViewClanButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterMedium), "VIEW CLAN", 13, Color.White);
 
-            ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://two.quavergame.com/clans/{User?.OnlineUser?.ClanId}");
+            ViewClanButton.Clicked += (sender, args) => BrowserHelper.OpenURL($"https://quavergame.com/clans/{User?.OnlineUser?.ClanId}");
         }
 
         /// <summary>
