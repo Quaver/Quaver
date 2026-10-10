@@ -1528,6 +1528,8 @@ namespace Quaver.Shared.Screens.Edit
                 if (ActionManager.UndoStack.Count != 0)
                     ActionManager.LastSaveAction = ActionManager.UndoStack.Peek();
 
+                ActionManager.HasSilentChanges = false;
+
                 Map.DifficultyProcessorVersion = "Needs Update";
                 Map.DateAdded = DateTime.Now;
                 MapDatabaseCache.UpdateMap(Map);

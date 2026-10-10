@@ -96,9 +96,14 @@ namespace Quaver.Shared.Screens.Edit.Actions
         public IEditorAction LastSaveAction { get; set; }
 
         /// <summary>
+        ///     Whether actions performed silently have changed the map since it was last saved.
+        /// </summary>
+        public bool HasSilentChanges { get; set; }
+
+        /// <summary>
         ///    Detects if the user has made changes to the map before saving.
         /// </summary>
-        public bool HasUnsavedChanges => UndoStack.Count != 0 && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
+        public bool HasUnsavedChanges => HasSilentChanges || UndoStack.Count != 0 && UndoStack.Peek() != LastSaveAction || UndoStack.Count == 0 && LastSaveAction != null;
 
         /// <summary>
         ///     An action manager dedicated for lua plugins
@@ -395,9 +400,13 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="action"></param>
         /// <param name="fromLua"></param>
-        public void PerformSilently(IEditorAction action, bool fromLua = false)
+        /// <param name="markUnsaved">Whether the change should count as an unsaved change to the map.</param>
+        public void PerformSilently(IEditorAction action, bool fromLua = false, bool markUnsaved = true)
         {
             action.Perform();
+
+            if (markUnsaved)
+                HasSilentChanges = true;
 
             LuaImGui.Inform(action, HistoryType.Silent, fromLua);
         }
@@ -414,8 +423,9 @@ namespace Quaver.Shared.Screens.Edit.Actions
         /// </summary>
         /// <param name="actions"></param>
         /// <param name="fromLua"></param>
-        public void PerformBatchSilently(List<IEditorAction> actions, bool fromLua = false) =>
-            PerformSilently(new EditorActionBatch(this, actions), fromLua);
+        /// <param name="markUnsaved">Whether the change should count as an unsaved change to the map.</param>
+        public void PerformBatchSilently(List<IEditorAction> actions, bool fromLua = false, bool markUnsaved = true) =>
+            PerformSilently(new EditorActionBatch(this, actions), fromLua, markUnsaved);
 
         /// <summary>
         ///     Undoes the first action in the stack
