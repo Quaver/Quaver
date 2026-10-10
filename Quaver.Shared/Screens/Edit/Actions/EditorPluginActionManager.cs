@@ -38,13 +38,17 @@ namespace Quaver.Shared.Screens.Edit.Actions
         ///     Performs an action from Lua without adding it to the action history.
         /// </summary>
         /// <param name="action"></param>
-        public void PerformSilently(IEditorAction action) => ActionManager.PerformSilently(action, true);
+        /// <param name="markUnsaved">Whether the change should count as an unsaved change to the map.</param>
+        public void PerformSilently(IEditorAction action, bool markUnsaved = true) =>
+            ActionManager.PerformSilently(action, true, markUnsaved);
 
         /// <summary>
         ///     Performs a batch of actions from Lua without adding them to the action history.
         /// </summary>
         /// <param name="actions"></param>
-        public void PerformBatchSilently(List<IEditorAction> actions) => ActionManager.PerformBatchSilently(actions, true);
+        /// <param name="markUnsaved">Whether the change should count as an unsaved change to the map.</param>
+        public void PerformBatchSilently(List<IEditorAction> actions, bool markUnsaved = true) =>
+            ActionManager.PerformBatchSilently(actions, true, markUnsaved);
 
         public void Redo() => ActionManager.Redo(true);
 
