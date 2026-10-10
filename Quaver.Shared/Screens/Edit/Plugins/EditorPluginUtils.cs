@@ -31,6 +31,7 @@ using Quaver.Shared.Screens.Edit.Actions.Hitsounds.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Colors;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Create;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Move;
+using Quaver.Shared.Screens.Edit.Actions.Layers.MoveLayer;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Remove;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Rename;
 using Quaver.Shared.Screens.Edit.Actions.Layers.Visibility;
@@ -283,7 +284,12 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                     EditScreen.WorkingMap,
                     EditScreen.ActionManager,
                     EditScreen.SelectedHitObjects,
-                    args[0].ToObject<EditorLayerInfo>()
+                    args[0].ToObject<EditorLayerInfo>(),
+                    args.Length > 1 ? args[1].ToObject<int>() : -1
+                ),
+                EditorActionType.MoveLayer => CreateMoveLayerAction(
+                    args[0].ToObject<EditorLayerInfo>(),
+                    args[1].ToObject<int>()
                 ),
                 EditorActionType.RemoveLayer => new EditorActionRemoveLayer(
                     EditScreen.ActionManager,
@@ -555,6 +561,24 @@ namespace Quaver.Shared.Screens.Edit.Plugins
                 EditorActionType.None => null,
                 _ => null,
             };
+
+        /// <summary>
+        ///     Creates an action to move a layer to a new position
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="toIndex"></param>
+        /// <returns></returns>
+        private static IEditorAction CreateMoveLayerAction(EditorLayerInfo layer, int toIndex)
+        {
+            var layers = EditScreen.WorkingMap.EditorLayers;
+            var originalIndex = layers.IndexOf(layer) + 1;
+
+            if (originalIndex < 1 || toIndex < 1 || toIndex > layers.Count)
+                return null;
+
+            return new EditorActionMoveLayer(EditScreen.ActionManager, EditScreen.WorkingMap, layer,
+                originalIndex - 1, toIndex - 1);
+        }
 
         /// <summary>
         ///     Converts milliseconds to the appropriate mm:ss:ms time
