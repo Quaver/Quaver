@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Assets;
@@ -15,6 +16,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
+using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Managers;
 
@@ -28,15 +30,22 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
-        private List<Drawable> Bars { get; } = new List<Drawable>();
+        private Bindable<DevianceHighlight> HighlightState { get; }
+
+        /// <summary>
+        /// </summary>
+        private List<ResultsJudgementGraphJudgementBar> Bars { get; } = new List<ResultsJudgementGraphJudgementBar>();
 
         /// <summary>
         /// </summary>
         /// <param name="processor"></param>
+        /// <param name="highlightState"></param>
         /// <param name="size"></param>
-        public ResultsJudgementGraph(Bindable<ScoreProcessor> processor, ScalableVector2 size)
+        public ResultsJudgementGraph(Bindable<ScoreProcessor> processor, Bindable<DevianceHighlight> highlightState,
+            ScalableVector2 size)
         {
             Processor = processor;
+            HighlightState = highlightState;
             Size = size;
             Alpha = 0f;
 
@@ -55,7 +64,7 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
                 if (judgement >= Judgement.Ghost)
                     continue;
 
-                Bars.Add(new ResultsJudgementGraphJudgementBar(judgement, Processor,
+                Bars.Add(new ResultsJudgementGraphJudgementBar(judgement, Processor, HighlightState,
                     new ScalableVector2(Width, 50)));
             }
 
@@ -253,14 +262,51 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs
 
         /// <summary>
         /// </summary>
+        public Judgement Judgement { get; }
+
+        /// <summary>
+        /// </summary>
+        private Bindable<DevianceHighlight> HighlightState { get; }
+
+        /// <summary>
+        ///     The number of hits with this judgement
+        /// </summary>
+        private int Count { get; }
+
+        /// <summary>
+        /// </summary>
         /// <param name="judgement"></param>
         /// <param name="processor"></param>
+        /// <param name="highlightState"></param>
         /// <param name="size"></param>
         public ResultsJudgementGraphJudgementBar(Judgement judgement, Bindable<ScoreProcessor> processor,
-            ScalableVector2 size)
+            Bindable<DevianceHighlight> highlightState, ScalableVector2 size)
             : base(GetCount(judgement, processor), GetFraction(judgement, processor), GetJudgementTexture(judgement), size, GetColor(judgement))
         {
-            
+            Judgement = judgement;
+            HighlightState = highlightState;
+            Count = GetCount(judgement, processor);
+
+            CreateHoverArea();
+        }
+
+        /// <summary>
+        ///     Invisible overlay used purely to detect hovering over this bar. Skipped entirely when this judgement has no hits
+        /// </summary>
+        private void CreateHoverArea()
+        {
+            if (Count <= 0)
+                return;
+
+            var hoverArea = new ImageButton(UserInterface.BlankBox)
+            {
+                Parent = this,
+                Size = Size,
+                Alpha = 0f
+            };
+
+            hoverArea.Hovered += (o, e) => HighlightState.Value = DevianceHighlight.ForJudgement(Judgement);
+            hoverArea.LeftHover += (o, e) => HighlightState.Value = DevianceHighlight.None;
         }
 
         private static int GetCount(Judgement judgement, Bindable<ScoreProcessor> processor) =>
