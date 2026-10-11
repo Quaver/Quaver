@@ -871,6 +871,7 @@ namespace Quaver.Shared.Scripting
                     ["listen"] = Listen,
                     [nameof(BasicModule.print)] = Print,
                     ["read"] = Read,
+                    ["read_text"] = ReadText,
                     ["state"] = State = State.Clone(Warn),
                     [nameof(BasicModule.tonumber)] = ToNumber,
                     ["vector"] = typeof(LuaVectorWrapper),
@@ -878,6 +879,7 @@ namespace Quaver.Shared.Scripting
                     ["vector3"] = typeof(Vector3),
                     ["vector4"] = typeof(Vector4),
                     ["write"] = Write,
+                    ["write_text"] = WriteText,
                 },
             };
 
@@ -1095,6 +1097,45 @@ namespace Quaver.Shared.Scripting
             catch (Exception)
             {
                 return DynValue.Nil;
+            }
+        }
+
+        /// <summary>
+        ///     Reads the config file as text, leaving the format to the plugin.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments. This parameter is unused.</param>
+        /// <returns>The contents of the config file.</returns>
+        private DynValue ReadText(ScriptExecutionContext _, CallbackArguments args)
+        {
+            try
+            {
+                using FileStream file = new(ConfigFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                using StreamReader fileReader = new(file);
+                return DynValue.NewString(fileReader.ReadToEnd());
+            }
+            catch (Exception)
+            {
+                return DynValue.Nil;
+            }
+        }
+
+        /// <summary>
+        ///     Writes the config file as text, leaving the format to the plugin.
+        /// </summary>
+        /// <param name="_">The script execution context. This parameter is unused.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The value indicating whether the writing was successful.</returns>
+        private DynValue WriteText(ScriptExecutionContext _, CallbackArguments args)
+        {
+            try
+            {
+                File.WriteAllText(ConfigFilePath, args.AsType(0, "write_text", DataType.String).String);
+                return DynValue.True;
+            }
+            catch (Exception)
+            {
+                return DynValue.False;
             }
         }
 
