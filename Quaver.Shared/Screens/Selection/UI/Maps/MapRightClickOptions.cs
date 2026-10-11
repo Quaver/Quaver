@@ -65,7 +65,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         private const string DeleteMapset = "Delete Mapset";
         /// <summary>
         /// </summary>
-        public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(), OptionsSize, FontSize)
+        public MapRightClickOptions(DrawableMap drawableMap) : base(GetOptions(drawableMap.Item == MapManager.Selected.Value), OptionsSize, FontSize)
         {
             DrawableMap = drawableMap;
             Map = DrawableMap.Item;
@@ -76,7 +76,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         /// <summary>
         /// </summary>
         /// <param name="drawableMapset"></param>
-        public MapRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(), OptionsSize, FontSize)
+        public MapRightClickOptions(DrawableMapset drawableMapset) : base(GetOptions(drawableMapset.Item.Maps.First() == MapManager.Selected.Value), OptionsSize, FontSize)
         {
             DrawableMapset = drawableMapset;
             Map = DrawableMapset.Item.Maps.First();
@@ -178,17 +178,25 @@ namespace Quaver.Shared.Screens.Selection.UI.Maps
         ///     Returns the options to select
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string, Color> GetOptions() => new Dictionary<string, Color>()
+        private static Dictionary<string, Color> GetOptions(bool includeExport)
         {
-            {Play, Color.White},
-            {Edit, ColorHelper.HexToColor("#F2994A")},
-            {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
-            {Delete, ColorHelper.HexToColor($"#FF6868")},
-            {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},
-            {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
-            {Export, ColorHelper.HexToColor("#0787E3")},
-            {OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0")},
-            {ViewOnlineListing, ColorHelper.HexToColor("#FFE76B")},
-        };
+            var options = new Dictionary<string, Color>()
+            {
+                {Play, Color.White},
+                {Edit, ColorHelper.HexToColor("#F2994A")},
+                {AddToPlaylist, ColorHelper.HexToColor("#27B06E")},
+                {Delete, ColorHelper.HexToColor($"#FF6868")},
+                {DeleteMapset, ColorHelper.HexToColor($"#FF6868")},
+                {DeleteLocalScores, ColorHelper.HexToColor($"#FF6868")},
+            };
+            
+            if (includeExport)
+                options.Add(Export, ColorHelper.HexToColor("#0787E3"));
+
+            options.Add(OpenMapsetFolder, ColorHelper.HexToColor("#9B51E0"));
+            options.Add(ViewOnlineListing, ColorHelper.HexToColor("#FFE76B"));
+
+            return options;
+        }
     }
 }
