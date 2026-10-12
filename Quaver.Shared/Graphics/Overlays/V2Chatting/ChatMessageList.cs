@@ -207,7 +207,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             row.UpdateWhenInvisible = false;
             row.SenderMenuRequested += OnSenderMenuRequested;
 
-            AddContainedDrawable(row, true);
+            AddContainedDrawable(row, true, minimumRightPadding: 10);
 
             Messages.Add(message);
             Rows.Add(row);

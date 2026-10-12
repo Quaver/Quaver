@@ -44,6 +44,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     {
         V2Scrollbar.Apply(this);
         FillPooledItemsToContentWidth = true;
+        PooledItemMinimumRightPadding = 10;
 
         SelectedChannel = activeChannel.Value;
         SearchQuery = searchQuery;
