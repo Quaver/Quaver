@@ -177,7 +177,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         {
             base.OnRectangleRecalculated();
 
-            if (Button != null)
+            if (!IsDisposed && Button != null)
                 ApplySize();
         }
         private void ApplySize()

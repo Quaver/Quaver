@@ -90,7 +90,8 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
-        if (UpdatingSize || Layout == null || Row == null || Bar == null)
+        if (IsDisposed || UpdatingSize || Layout == null || Layout.Parent != this ||
+            Row == null || Bar == null || Row.Parent != Layout)
             return;
 
         Layout.Width = Width;

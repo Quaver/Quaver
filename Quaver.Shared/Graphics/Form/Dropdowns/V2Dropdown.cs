@@ -487,8 +487,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 AllowMiddleMouseDragging = false,
                 Alpha = 0
             };
-            V2Scrollbar.Apply(MenuScroll, Config.ScrollbarWidth, SkinV2Color.Parse(Config.ScrollbarColor),
-                SkinV2Color.Parse(Config.ScrollbarTrackColor));
+            MenuScroll.Scrollbar.Width = Config.ScrollbarWidth;
+            MenuScroll.Scrollbar.Tint = SkinV2Color.Parse(Config.ScrollbarColor);
             MenuScroll.Scrollbar.Visible = false;
 
             var y = 0f;

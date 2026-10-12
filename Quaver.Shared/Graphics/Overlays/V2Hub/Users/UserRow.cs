@@ -83,7 +83,7 @@ public class UserRow : PoolableSprite<User>
     protected override void OnRectangleRecalculated()
     {
         base.OnRectangleRecalculated();
-        if (Row == null)
+        if (IsDisposed || Row == null || Row.Parent != this || Layout?.Parent != Row)
             return;
 
         Row.Width = Width;

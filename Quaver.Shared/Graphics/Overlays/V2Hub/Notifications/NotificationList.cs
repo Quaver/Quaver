@@ -15,6 +15,7 @@ public class NotificationList : PoolableScrollContainer<NotificationInfo>
     public NotificationList(List<NotificationInfo> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize, bool startFromBottom = false) : base(availableItems, poolSize, poolStartingIndex, size, contentSize, startFromBottom)
     {
         FillPooledItemsToContentWidth = true;
+        PooledItemMinimumRightPadding = 10;
 
         RebuildItemOffsets();
         CreatePool();

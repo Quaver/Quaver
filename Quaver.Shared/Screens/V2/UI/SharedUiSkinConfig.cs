@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.V2.UI
         public int DefaultMaxVisibleItems { get; set; } = 6;
 
         [Range(1, 128)]
-        public float ScrollbarWidth { get; set; } = 15;
+        public float ScrollbarWidth { get; set; } = 4;
 
         [Range(1, 10000)]
         public int AnimationDurationMilliseconds { get; set; } = 180;

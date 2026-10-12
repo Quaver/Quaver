@@ -188,7 +188,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         protected override void OnRectangleRecalculated()
         {
             base.OnRectangleRecalculated();
-            if (!UpdatingContent && Item != null && Message != null)
+            if (!IsDisposed && !UpdatingContent && Item != null && Message != null &&
+                SenderContainer?.Parent == this && SenderBadgeContainer?.Parent == SenderContainer)
                 UpdateContent(Item, Width);
         }
 
