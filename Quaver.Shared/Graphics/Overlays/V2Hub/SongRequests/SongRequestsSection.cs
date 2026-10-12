@@ -171,8 +171,7 @@ public class SongRequestsSection : Container
             ScrollSpeed = 220,
             InputEnabled = true
         };
-        Scroll.Scrollbar.Width = 4;
-        Scroll.Scrollbar.Tint = ColorHelper.HexToColor("#D9E3F4");
+        V2Scrollbar.Apply(Scroll);
         Layout.SetItemOptions(Scroll, new FlexItemOptions { Basis = 0, Grow = 1 });
         Scroll.OnRowClicked += ShowRequestMenu;
 

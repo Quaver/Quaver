@@ -29,6 +29,8 @@ public class UserList : PoolableScrollContainer<User>
     
     public UserList(List<User> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize, Bindable<string> searchQuery, Bindable<UsersSection.UserFilter> filter, bool startFromBottom = false) : base(availableItems, poolSize, poolStartingIndex, size, contentSize, startFromBottom)
     {
+        FillPooledItemsToContentWidth = true;
+
         SearchQuery = searchQuery;
         SearchQuery.ValueChanged += OnSearchChanged;
 

@@ -21,7 +21,9 @@ public class OverlayDialog : DialogScreen
     /// <summary>
     /// </summary>
     private HubPanel Hub { get; set; }
+    private FlexContainer NavigationHeaderLayout { get; set; }
     private LoggedInUserDropdown ProfileDropdown { get; set; }
+    private Drawable ProfileDropdownTrigger { get; set; }
 
     private HubPanel.HubSection InitialSection { get; }
 
@@ -58,9 +60,12 @@ public class OverlayDialog : DialogScreen
         if (!MouseManager.IsUniqueClick(MouseButton.Left))
             return;
 
+        if (NotificationManager.IsPointerOverActiveNotification)
+            return;
+
         if (ProfileDropdown != null)
         {
-            if (!Hub.ProfileButton.IsHovered && !ProfileDropdown.IsHovered())
+            if (!ProfileDropdownTrigger.IsHovered() && !ProfileDropdown.IsHovered())
                 DismissProfileDropdown();
             return;
         }
@@ -74,16 +79,22 @@ public class OverlayDialog : DialogScreen
         Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
         Container.Size = Size;
 
-        Hub = new HubPanel(InitialSection, Close, ToggleProfileDropdown)
+        Hub = new HubPanel(InitialSection)
         {
             Parent = Container,
             Alignment = Alignment.TopRight,
             X = 736
         };
+
+        NavigationHeaderLayout = new FlexContainer
+        {
+            Parent = Container
+        };
+        ScreenNavigation.SetHubOverlayState(true, NavigationHeaderLayout);
         Hub.MoveToX(0, Easing.OutCubic, 200);
     }
 
-    private void ToggleProfileDropdown()
+    internal void ToggleProfileDropdown(Drawable trigger, float dropdownGap)
     {
         if (ProfileDropdown != null)
         {
@@ -91,13 +102,13 @@ public class OverlayDialog : DialogScreen
             return;
         }
 
-        var profile = Hub.ProfileButton;
+        ProfileDropdownTrigger = trigger;
         ProfileDropdown = new LoggedInUserDropdown(Container)
         {
             Parent = Container,
             Position = new ScalableVector2(
-                profile.AbsolutePosition.X + profile.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value - Container.AbsolutePosition.X,
-                profile.AbsolutePosition.Y + profile.AbsoluteSize.Y + Hub.ProfileDropdownGap - Container.AbsolutePosition.Y)
+                trigger.AbsolutePosition.X + trigger.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value - Container.AbsolutePosition.X,
+                trigger.AbsolutePosition.Y + trigger.AbsoluteSize.Y + dropdownGap - Container.AbsolutePosition.Y)
         };
     }
 
@@ -105,6 +116,7 @@ public class OverlayDialog : DialogScreen
     {
         ProfileDropdown?.Destroy();
         ProfileDropdown = null;
+        ProfileDropdownTrigger = null;
     }
     
     /// <summary>
@@ -134,6 +146,7 @@ public class OverlayDialog : DialogScreen
 
     public override void Destroy()
     {
+        ScreenNavigation.SetHubOverlayState(false);
         DismissProfileDropdown();
         base.Destroy();
     }

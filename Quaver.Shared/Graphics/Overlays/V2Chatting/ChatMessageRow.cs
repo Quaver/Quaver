@@ -45,6 +45,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private Color SenderClanColor { get; set; }
 
+        private bool UpdatingContent { get; set; }
+
         public ChatMessage Item { get; private set; }
 
         public event Action<User> SenderMenuRequested;
@@ -133,46 +135,61 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public void UpdateContent(ChatMessage item, float width)
         {
-            Item = item;
-            Width = width;
+            UpdatingContent = true;
+            try
+            {
+                Item = item;
+                Width = width;
 
-            var time = DateTimeOffset.FromUnixTimeMilliseconds((long)item.Time).ToLocalTime();
-            Timestamp.Text = $"{time.Hour:00}:{time.Minute:00}:{time.Second:00}";
-            TimestampTooltipOptions.Text = time.ToString("dddd dd MMMM yyyy HH:mm", LocalizationManager.CurrentCulture);
+                var time = DateTimeOffset.FromUnixTimeMilliseconds((long)item.Time).ToLocalTime();
+                Timestamp.Text = $"{time.Hour:00}:{time.Minute:00}:{time.Second:00}";
+                TimestampTooltipOptions.Text = time.ToString("dddd dd MMMM yyyy HH:mm", LocalizationManager.CurrentCulture);
 
-            var senderGroups = item.Sender.OnlineUser.UserGroups;
-            var badge = GetBadge(senderGroups);
-            SenderBadgeContainer.Visible = badge != null;
-            SenderBadge.Visible = badge != null;
-            SenderBadgeLayoutOptions.Basis = badge == null ? 0 : UserGroupAssets.SmallBadgeWidth + 5;
-            if (badge != null)
-                SenderBadge.Region = badge.Value;
+                var senderGroups = item.Sender.OnlineUser.UserGroups;
+                var badge = GetBadge(senderGroups);
+                SenderBadgeContainer.Visible = badge != null;
+                SenderBadge.Visible = badge != null;
+                SenderBadgeLayoutOptions.Basis = badge == null ? 0 : UserGroupAssets.SmallBadgeWidth + 5;
+                if (badge != null)
+                    SenderBadge.Region = badge.Value;
 
-            var clanTag = !string.IsNullOrEmpty(item.SenderClanTag) ? item.SenderClanTag : item.Sender.OnlineUser.ClanTag;
-            var hasClan = !string.IsNullOrEmpty(clanTag);
+                var clanTag = !string.IsNullOrEmpty(item.SenderClanTag) ? item.SenderClanTag : item.Sender.OnlineUser.ClanTag;
+                var hasClan = !string.IsNullOrEmpty(clanTag);
 
-            SenderClan.Visible = hasClan;
-            SenderClan.Text = hasClan ? $"[{clanTag}] " : "";
-            var clanColor = !string.IsNullOrEmpty(item.SenderClanAccentColor) ? item.SenderClanAccentColor : item.Sender.OnlineUser.ClanAccentColor;
-            SenderColor = Colors.GetUserChatColor(senderGroups);
-            SenderClanColor = clanColor != null ? ColorHelper.FromHex(clanColor) : SenderColor;
+                SenderClan.Visible = hasClan;
+                SenderClan.Text = hasClan ? $"[{clanTag}] " : "";
+                var clanColor = !string.IsNullOrEmpty(item.SenderClanAccentColor) ? item.SenderClanAccentColor : item.Sender.OnlineUser.ClanAccentColor;
+                SenderColor = Colors.GetUserChatColor(senderGroups);
+                SenderClanColor = clanColor != null ? ColorHelper.FromHex(clanColor) : SenderColor;
 
-            Sender.Text = $"{item.SenderName}:";
+                Sender.Text = $"{item.SenderName}:";
 
-            SenderContainer.Width = (SenderBadgeLayoutOptions.Basis ?? 0) + SenderClan.Width + Sender.Width;
-            SenderContainer.RefreshLayout();
-            SenderButton.Position = SenderContainer.Position;
-            SenderButton.Size = SenderContainer.Size;
-            ApplySenderHover(SenderButton.IsHovered);
+                SenderContainer.Width = (SenderBadgeLayoutOptions.Basis ?? 0) + SenderClan.Width + Sender.Width;
+                SenderContainer.RefreshLayout();
+                SenderButton.Position = SenderContainer.Position;
+                SenderButton.Size = SenderContainer.Size;
+                ApplySenderHover(SenderButton.IsHovered);
 
-            var messageX = SenderContainer.X + SenderContainer.Width + 10;
-            var messageWidth = Math.Max(1, width - messageX - 10);
+                var messageX = SenderContainer.X + SenderContainer.Width + 10;
+                var messageWidth = Math.Max(1, width - messageX - 10);
 
-            Message.Position = new ScalableVector2(messageX, VerticalPadding);
-            Message.MaxWidth = messageWidth;
-            Message.Text = ConfigManager.ChatCensorEnabled.Value ? ChatCensor.Censor(item.Message) : item.Message ?? string.Empty; 
+                Message.Position = new ScalableVector2(messageX, VerticalPadding);
+                Message.MaxWidth = messageWidth;
+                Message.Text = ConfigManager.ChatCensorEnabled.Value ? ChatCensor.Censor(item.Message) : item.Message ?? string.Empty;
 
-            Height = Math.Max(40, Message.Height + VerticalPadding * 2);
+                Height = Math.Max(40, Message.Height + VerticalPadding * 2);
+            }
+            finally
+            {
+                UpdatingContent = false;
+            }
+        }
+
+        protected override void OnRectangleRecalculated()
+        {
+            base.OnRectangleRecalculated();
+            if (!UpdatingContent && Item != null && Message != null)
+                UpdateContent(Item, Width);
         }
 
         private void ApplySenderHover(bool hovered)

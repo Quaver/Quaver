@@ -22,10 +22,13 @@ namespace Quaver.Shared.Online.API.User
             var response = ExecuteApiRequest(client, request);
 
             if (response.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(response.Content))
-                return new List<OnlineUserModel>();
+                return null;
 
             var result = JsonConvert.DeserializeObject<APIResponseClanMembers>(response.Content);
-            return (result?.ClanMembers ?? new List<APIResponseUserSearchUser>())
+            if (result?.ClanMembers == null)
+                return null;
+
+            return result.ClanMembers
                 .Select(user => user.ToUser())
                 .ToList();
         }

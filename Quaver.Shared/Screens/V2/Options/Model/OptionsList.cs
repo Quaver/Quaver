@@ -134,8 +134,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
                 return false;
 
             var values = CapturePresetValues();
-            if (values.Count != preset.Values.Count ||
-                values.Any(entry => !preset.Values.TryGetValue(entry.Key, out var saved) ||
+            if (values.Any(entry => !preset.Values.TryGetValue(entry.Key, out var saved) ||
                                     !string.Equals(entry.Value, saved, StringComparison.Ordinal)))
                 return false;
 
@@ -296,8 +295,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
 
             // Video
             AddSection(options, OptionCategory.Video, "Window",
-                ("video.window.screen-resolution", "ScreenResolution", PresetDropdown(OptionsV2Dropdowns.ScreenResolution,
-                    OptionsV2Dropdowns.CaptureScreenResolution, OptionsV2Dropdowns.IsAvailableScreenResolution, OptionsV2Dropdowns.TryApplyScreenResolution)),
+                ("video.window.screen-resolution", "ScreenResolution", (OptionsV2Dropdowns.ScreenResolution, null)),
                 ("video.window.fullscreen", "EnableFullscreen", Toggle(() => ConfigManager.WindowFullScreen)),
                 ("video.window.borderless", "EnableBorderlessWindow", Toggle(() => ConfigManager.WindowBorderless)));
 
@@ -308,8 +306,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
 
             // Audio
             AddSection(options, OptionCategory.Audio, "Output",
-                ("audio.output.device", "AudioOutputDevice", PresetDropdown(OptionsV2Dropdowns.AudioOutputDevice,
-                    () => ConfigManager.AudioOutputDevice.Value, OptionsV2Dropdowns.IsAvailableAudioOutputDevice, OptionsV2Dropdowns.TryApplyAudioOutputDevice)));
+                ("audio.output.device", "AudioOutputDevice", (OptionsV2Dropdowns.AudioOutputDevice, null)));
 
             AddSection(options, OptionCategory.Audio, "Volume",
                 ("audio.volume.master", "MasterVolume", Slider(() => ConfigManager.VolumeGlobal)),
@@ -460,16 +457,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
 
             // Miscellaneous
             AddSection(options, OptionCategory.Miscellaneous, "Localization",
-                ("misc.localization.language", "Language", PresetDropdown(OptionsV2Dropdowns.Language,
-                    () => ConfigManager.Language.Value, IsAvailableLanguage,
-                    text =>
-                    {
-                        if (!IsAvailableLanguage(text))
-                            return false;
-
-                        ConfigManager.Language.Value = text;
-                        return true;
-                    })));
+                ("misc.localization.language", "Language", (OptionsV2Dropdowns.Language, null)));
 
             AddSection(options, OptionCategory.Miscellaneous, "NavigationMaintenance",
                 ("misc.navigation.open-game-folder", "OpenGameFolder", ActionButton("OPEN FOLDER", OptionsActions.OpenGameFolder)),
@@ -644,9 +632,6 @@ namespace Quaver.Shared.Screens.V2.Options.Model
             Enum.TryParse(text, out parsed) &&
             (Enum.IsDefined(parsed) || allowDefaultValue && EqualityComparer<T>.Default.Equals(parsed, default)) &&
             (isAvailable?.Invoke(parsed) ?? true);
-
-        private static bool IsAvailableLanguage(string text) =>
-            QuaverLocalization.AvailableLanguages.Any(language => string.Equals(language.CultureName, text, StringComparison.Ordinal));
 
         private static (Func<Container, Drawable>, Action<OptionsDefinition>) ActionButton(string label, Action action, string tint = "#0FBAE5")
         {

@@ -12,6 +12,7 @@ using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.User;
+using Quaver.Shared.Screens.V2.UI;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Logging;
@@ -27,7 +28,9 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     private OnlineClient SubscribedClient { get; }
     private TaskHandler<string, List<User>> SearchTask { get; }
     private TaskHandler<int, List<User>> ClanMembersTask { get; }
+    private TaskHandler<bool, List<User>> FriendsTask { get; }
     private Dictionary<int, List<User>> ClanMembersCache { get; } = new Dictionary<int, List<User>>();
+    private List<User> FriendsCache { get; set; }
     private int? LoadingClanId { get; set; }
 
     private double TimeSinceLastInfoRequest { get; set; }
@@ -39,14 +42,19 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(), 1, 0, size, size)
     {
+        V2Scrollbar.Apply(this);
+        FillPooledItemsToContentWidth = true;
+
         SelectedChannel = activeChannel.Value;
         SearchQuery = searchQuery;
         SubscribedClient = OnlineManager.Client;
         SearchTask = new TaskHandler<string, List<User>>(SearchUsers);
         ClanMembersTask = new TaskHandler<int, List<User>>(GetClanMembers);
+        FriendsTask = new TaskHandler<bool, List<User>>(GetFriends);
         SearchQuery.ValueChanged += OnSearchChanged;
         SearchTask.OnCompleted += OnSearchCompleted;
         ClanMembersTask.OnCompleted += OnClanMembersCompleted;
+        FriendsTask.OnCompleted += OnFriendsCompleted;
         OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
 
         if (SubscribedClient != null)
@@ -64,7 +72,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     protected override PoolableSprite<User> CreateObject(User item, int index)
     {
-        var row = new UserRow(this, item, index, 0)
+        var row = new UserRow(this, item, index)
         {
             Alpha = 0
         };
@@ -175,7 +183,27 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         catch (Exception e)
         {
             Logger.Error(e, LogType.Network);
-            return new List<User>();
+            return null;
+        }
+    }
+
+    private List<User> GetFriends(bool _, CancellationToken token)
+    {
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            var users = SubscribedClient?.RetrieveFriendsList();
+            token.ThrowIfCancellationRequested();
+            return users;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Network);
+            return null;
         }
     }
 
@@ -246,13 +274,44 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         if (IsDisposed)
             return;
 
-        ClanMembersCache[e.Input] = e.Result;
-        LoadingClanId = null;
+        if (LoadingClanId == e.Input)
+            LoadingClanId = null;
+
+        if (e.Result != null)
+            ClanMembersCache[e.Input] = e.Result;
 
         if (!TryGetClanIdFromSelectedChannel(out var selectedClanId) || selectedClanId != e.Input)
             return;
 
+        if (e.Result == null)
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery.Value))
+                RefreshOnlineUsers(false);
+
+            return;
+        }
+
         ApplyClanMembers(e.Result, SearchQuery.Value?.Trim());
+    });
+
+    private void OnFriendsCompleted(object sender, TaskCompleteEventArgs<bool, List<User>> e) => AddScheduledUpdate(() =>
+    {
+        if (IsDisposed)
+            return;
+
+        if (e.Result != null)
+            FriendsCache = e.Result;
+
+        if (SelectedChannel?.IsPrivate != true || !string.IsNullOrWhiteSpace(SearchQuery.Value))
+            return;
+
+        if (e.Result == null)
+        {
+            RefreshOnlineUsers(false);
+            return;
+        }
+
+        ApplyFriends(e.Result, false);
     });
 
     public void RefreshResult(ChatChannel channel)
@@ -315,6 +374,27 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     {
         SearchTask.Cancel();
 
+        if (SelectedChannel?.IsPrivate == true)
+        {
+            ClanMembersTask.Cancel();
+            LoadingClanId = null;
+
+            if (FriendsCache != null)
+            {
+                ApplyFriends(FriendsCache, resetScroll);
+                return;
+            }
+
+            RefreshOnlineUsers(resetScroll);
+
+            if (!FriendsTask.IsRunning)
+                FriendsTask.Run(true);
+
+            return;
+        }
+
+        FriendsTask.Cancel();
+
         if (!TryGetClanIdFromSelectedChannel(out var clanId))
         {
             ClanMembersTask.Cancel();
@@ -334,7 +414,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
         ClanMembersTask.Cancel();
         LoadingClanId = clanId;
-        ReplaceUsers(new List<User>());
+        RefreshOnlineUsers(resetScroll);
 
         ClanMembersTask.Run(clanId);
     }
@@ -345,6 +425,19 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             .Where(user => user?.OnlineUser != null && !IsSelf(user))
             .Where(user => string.IsNullOrWhiteSpace(query) || user.OnlineUser.Username.Contains(query, StringComparison.OrdinalIgnoreCase))
             .Where(CanAccessActiveChannel)
+            .OrderByDescending(GetLastSeen)
+            .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
+            .Select(GetOnlineUserIfAvailable)
+            .Take(50)
+            .ToList();
+
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private void ApplyFriends(IEnumerable<User> friends, bool resetScroll = true)
+    {
+        var users = friends
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
             .OrderByDescending(GetLastSeen)
             .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
             .Select(GetOnlineUserIfAvailable)
@@ -376,10 +469,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             return false;
 
         if (channel.IsPrivate)
-        {
-            var directMessageUser = channel.DirectMessageUser?.OnlineUser;
-            return string.Equals(channel.Name, user.OnlineUser.Username, StringComparison.OrdinalIgnoreCase);
-        }
+            return OnlineManager.FriendsList?.Contains(user.OnlineUser.Id) == true;
 
         if (!user.HasUserInfo)
             return HasAccessByDefault(channel);
@@ -427,7 +517,12 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         if (OnlineManager.OnlineUsers?.ContainsKey(user.OnlineUser.Id) == true)
             return DateTime.MaxValue;
 
-        return user is APIUserSearchResult result ? result.LatestActivity : DateTime.MinValue;
+        return user switch
+        {
+            APIUserSearchResult result => result.LatestActivity,
+            UserFriend friend => friend.LatestActivity,
+            _ => DateTime.MinValue
+        };
     }
 
     private void ReplaceUsers(List<User> users, bool resetScroll = true)
@@ -469,6 +564,8 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         SearchTask.Dispose();
         ClanMembersTask.OnCompleted -= OnClanMembersCompleted;
         ClanMembersTask.Dispose();
+        FriendsTask.OnCompleted -= OnFriendsCompleted;
+        FriendsTask.Dispose();
         OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
 
         if (SubscribedClient != null)

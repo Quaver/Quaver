@@ -227,9 +227,9 @@ namespace Quaver.Shared.Screens.V2.Options
             SectionListClip = new HorizontalClippingContainer
             {
                 Parent = MenuColumnsLayout,
-                Size = new ScalableVector2(1, Math.Max(1f, MenuLayout.Height - 10))
+                Size = new ScalableVector2(1, Math.Max(1f, MenuLayout.Height - LayoutGap * 2))
             };
-            MenuColumnsLayout.SetItemOptions(SectionListClip, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.FlexEnd });
+            MenuColumnsLayout.SetItemOptions(SectionListClip, new FlexItemOptions { Basis = 0, Grow = 1, AlignSelf = FlexAlignSelf.Center });
 
             SectionListScroll = new ScrollContainer(SectionListClip.Size, new ScalableVector2(1, 1))
             {
@@ -238,11 +238,12 @@ namespace Quaver.Shared.Screens.V2.Options
                 AllowScrollbarDragging = true,
                 AllowMiddleMouseDragging = true,
                 CapturesMouseWheelInput = true,
-                UsePreviousSpriteBatchOptions = true,
-                Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
+                UsePreviousSpriteBatchOptions = true
             };
             SectionListScroll.SpriteBatchOptions.SortMode = SpriteSortMode.Immediate;
             SectionListScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
+
+            V2Scrollbar.Apply(SectionListScroll);
 
             SectionListLayout = new FlexContainer
             {
@@ -251,7 +252,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = 10
             };
-            SectionListScroll.AddContainedDrawable(SectionListLayout);
+            SectionListScroll.AddContainedDrawable(SectionListLayout, true, minimumRightPadding: 10);
 
             IconList = new NineSliceSprite(RoundedRectTextureCache.Get(20f, 20f, 6f), new SliceMargins(6))
             {
@@ -335,9 +336,13 @@ namespace Quaver.Shared.Screens.V2.Options
                 Position = new ScalableVector2(10, -10),
                 Size = new ScalableVector2(40, 40),
                 CornerRadius = 6f,
-                Tint = ColorHelper.FromHex("#4B5973"),
+                Tint = ColorHelper.FromHex("#273038"),
+                SetChildrenAlpha = false
             };
+            CreateSpriteText(IconToggle, LocalizationManager.Get("Screen_Multiplayer_Close"), 18, ColorHelper.FromHex("#D0DBED"), Alignment.MidLeft, 0, new ScalableVector2(50, 0));
             IconToggle.SetIcon(GetOptionsIcon(9), new Vector2(30, 30));
+            IconToggle.Icon.Alignment = Alignment.MidLeft;
+            IconToggle.Icon.X = 5;
             IconToggle.Clicked += (s, e) => ExpandIconList(!IsIconListExpanded);
         }
 
@@ -376,10 +381,18 @@ namespace Quaver.Shared.Screens.V2.Options
                 UsePreviousSpriteBatchOptions = true
             };
 
-            sectionButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), label, 18, Color.White);
-            sectionButton.Label.Alignment = Alignment.MidLeft;
-            sectionButton.Label.X = 10;
-            SectionListLayout.SetItemOptions(sectionButton, new FlexItemOptions { Basis = sectionButton.Height, Shrink = 0, AlignSelf = FlexAlignSelf.FlexStart });
+            var sectionLabel = new MarqueeSpriteText(FontManager.GetWobbleFont(Fonts.InterBold), label, 18, sectionButton.Width - 20)
+            {
+                Parent = sectionButton,
+                Alignment = Alignment.MidLeft,
+                X = 10,
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            sectionLabel.TextSprite.Tint = Color.White;
+            sectionButton.Hovered += (s, e) => sectionLabel.IsActive = true;
+            sectionButton.LeftHover += (s, e) => sectionLabel.IsActive = false;
+            SectionListLayout.SetItemOptions(sectionButton, new FlexItemOptions { Basis = sectionButton.Height, Shrink = 0 });
             sectionButton.Clicked += (s, e) => OnSectionButtonClicked(section);
 
             CategorySectionButtons.Add(section, sectionButton);
@@ -410,11 +423,11 @@ namespace Quaver.Shared.Screens.V2.Options
                 AllowMiddleMouseDragging = true,
                 EasingType = Easing.OutQuint,
                 CapturesMouseWheelInput = true,
-                UsePreviousSpriteBatchOptions = true,
-                Scrollbar = { Width = 4, Tint = ColorHelper.FromHex("#6B83B2") }
+                UsePreviousSpriteBatchOptions = true
             };
             OptionsScroll.SpriteBatchOptions.SortMode = SpriteSortMode.Immediate;
             OptionsScroll.Scrollbar.UsePreviousSpriteBatchOptions = true;
+            V2Scrollbar.Apply(OptionsScroll);
             SectionListScroll.ScrollSpeed = OptionsScroll.ScrollSpeed;
             SectionListScroll.EasingType = OptionsScroll.EasingType;
             SectionListScroll.TimeToCompleteScroll = OptionsScroll.TimeToCompleteScroll;
@@ -426,7 +439,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = 10
             };
-            OptionsScroll.AddContainedDrawable(OptionsRows);
+            OptionsScroll.AddContainedDrawable(OptionsRows, true, minimumRightPadding: 10);
         }
 
         private void RefreshOptionsRows()
@@ -978,6 +991,9 @@ namespace Quaver.Shared.Screens.V2.Options
             if (!MouseManager.IsUniqueClick(MouseButton.Left))
                 return;
 
+            if (NotificationManager.IsPointerOverActiveNotification)
+                return;
+
             if (!Panel.IsHovered())
                 DialogManager.Dismiss(this);
         }
@@ -1001,7 +1017,7 @@ namespace Quaver.Shared.Screens.V2.Options
             MainContentLayout.RefreshLayout();
             HeaderMenuLayout.RefreshLayout();
             MenuLayout.RefreshLayout();
-            SectionListClip.Height = Math.Max(1f, MenuLayout.Height - 10);
+            SectionListClip.Height = Math.Max(1f, MenuLayout.Height - LayoutGap * 2);
             MenuColumnsLayout.RefreshLayout();
             SectionListScroll.Size = SectionListClip.Size;
             UpdateSectionListLayout();
@@ -1014,9 +1030,24 @@ namespace Quaver.Shared.Screens.V2.Options
         private void UpdateSectionListLayout()
         {
             var buttonsHeight = CategorySectionButtons.Count * 40f + Math.Max(0, CategorySectionButtons.Count - 1) * SectionListLayout.RowGap;
-            SectionListLayout.Size = new ScalableVector2(Math.Max(1f, SectionListScroll.Width), Math.Max(SectionListScroll.Height, buttonsHeight));
-            SectionListScroll.ContentContainer.Size = SectionListLayout.Size;
+            SectionListLayout.Height = Math.Max(1, buttonsHeight);
+            SectionListScroll.ContentContainer.Height = SectionListLayout.Height;
+            SectionListScroll.RefreshContentLayout();
             SectionListLayout.RefreshLayout();
+
+            foreach (var button in CategorySectionButtons.Values)
+            {
+                var label = button.Children.OfType<MarqueeSpriteText>().FirstOrDefault();
+                if (label == null)
+                    continue;
+
+                var labelWidth = Math.Max(1, button.Width - 20);
+                if (Math.Abs(label.Width - labelWidth) < 0.001f)
+                    continue;
+
+                label.Width = labelWidth;
+                label.ResetPosition();
+            }
         }
         private void UpdateOptionsContentLayout()
         {
@@ -1027,8 +1058,9 @@ namespace Quaver.Shared.Screens.V2.Options
             OptionsScroll.Size = OptionsScrollClip.Size;
 
             var rowsHeight = OptionsRows.Children.Sum(row => row.Height) + Math.Max(0, OptionsRows.Children.Count - 1) * OptionsRows.RowGap;
-            OptionsRows.Size = new ScalableVector2(ContentBackground.Width - 10 * 2, Math.Max(ContentBackground.Height - 10 * 2, rowsHeight));
-            OptionsScroll.ContentContainer.Size = OptionsRows.Size;
+            OptionsRows.Height = Math.Max(ContentBackground.Height - 10 * 2, rowsHeight);
+            OptionsScroll.ContentContainer.Height = OptionsRows.Height;
+            OptionsScroll.RefreshContentLayout();
             OptionsRows.RefreshLayout();
             foreach (var section in SectionStarts)
                 section.Header.RefreshLayout();

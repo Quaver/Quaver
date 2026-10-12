@@ -34,7 +34,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// </summary>
         private ImageButton Button { get; set; }
 
-        private NotificationRow Card { get; set; }
+        private OnScreenNotificationV2 Card { get; set; }
 
         /// <summary>
         /// </summary>
@@ -70,9 +70,9 @@ namespace Quaver.Shared.Graphics.Notifications
 
             if (useV2Style)
             {
-                Size = new ScalableVector2(716, 88);
+                Size = new ScalableVector2(OnScreenNotificationV2.NotificationWidth, 0);
                 Alpha = 0;
-                Card = new NotificationRow(null, item, index) { Parent = this };
+                Card = new OnScreenNotificationV2(item) { Parent = this };
                 Card.OnClick += clickedItem => NotificationManager.MarkClicked(clickedItem);
             }
             else
@@ -169,8 +169,8 @@ namespace Quaver.Shared.Graphics.Notifications
         {
             if (Card != null)
             {
-                Card.UpdateContent(Item, Index);
-                Height = 88;
+                Card.UpdateContent(Item);
+                Size = Card.Size;
                 return;
             }
 

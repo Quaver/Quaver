@@ -134,7 +134,7 @@ namespace Quaver.Shared.Graphics.Form
             ModLayout.SetItemOptions(modToggle, new FlexItemOptions { Basis = modToggle.Width, Shrink = 0 });
 
             ModLayout.Width = modLabel.Width + ModLayout.ColumnGap + modToggle.Width;
-            Layout.SetItemOptions(ModLayout, new FlexItemOptions { Basis = ModLayout.Width, Shrink = 0, Order = -1 });
+            Layout.SetItemOptions(ModLayout, new FlexItemOptions { Basis = ModLayout.Width, Shrink = 0 });
 
             ModLayout.RefreshLayout();
         }

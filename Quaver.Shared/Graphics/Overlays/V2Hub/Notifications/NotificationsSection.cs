@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
-using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
+using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
@@ -125,8 +127,7 @@ public class NotificationsSection : Container
             ScrollSpeed = 220,
             InputEnabled = true
         };
-        Scroll.Scrollbar.Width = 4;
-        Scroll.Scrollbar.Tint = ColorHelper.FromHex("#D9E3F4");
+        V2Scrollbar.Apply(Scroll);
         Layout.SetItemOptions(Scroll, new FlexItemOptions { Basis = 0, Grow = 1 });
         Scroll.OnRowClicked += OnNotificationRowClicked;
 
@@ -152,7 +153,13 @@ public class NotificationsSection : Container
         EmptyMessage.Visible = Scroll.AvailableItems.Count == 0;
     }
 
-    private void OnNotificationMissed(object sender, NotificationMissedEventArgs e) => ScheduleFeedRefresh();
+    private void OnNotificationMissed(object sender, NotificationMissedEventArgs e)
+    {
+        if (Visible && GameBase.Game is QuaverGame game)
+            game.OnlineHub?.MarkSectionAsRead(OnlineHubSectionType.Notifications);
+
+        ScheduleFeedRefresh();
+    }
 
     private void OnNotificationShown(NotificationInfo info)
     {
@@ -237,6 +244,9 @@ public class NotificationsSection : Container
     {
         NotificationManager.NewNotificationsFeed.Clear();
         NotificationManager.HistoryNotificationsFeed.Clear();
+
+        if (GameBase.Game is QuaverGame game)
+            game.OnlineHub?.MarkSectionAsRead(OnlineHubSectionType.Notifications);
 
         Scroll.ChangeFeed(new List<NotificationInfo>());
         UpdateEmptyMessage();

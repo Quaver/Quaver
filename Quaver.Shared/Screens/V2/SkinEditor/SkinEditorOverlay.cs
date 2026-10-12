@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Form;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
@@ -1032,7 +1033,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 X = 365,
                 Y = 10
             };
-            folderDropdown.ItemContainer.Scrollbar.Tint = Color.White;
+            V2Scrollbar.Apply(folderDropdown.ItemContainer);
             folderDropdown.ItemSelected += (sender, args) =>
             {
                 selectedFolder = folderValues[args.Index];
@@ -1137,9 +1138,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 X = 12,
                 Y = 54,
                 InputEnabled = true,
-                Tint = Color.Transparent,
-                Scrollbar = { Tint = AccentColor, Width = 3 }
+                Tint = Color.Transparent
             };
+            V2Scrollbar.Apply(assetScroll, thumbColor: AccentColor);
 
             pendingAssetButtons = assets.Where(x =>
                     (string.IsNullOrEmpty(selectedFolder) ||

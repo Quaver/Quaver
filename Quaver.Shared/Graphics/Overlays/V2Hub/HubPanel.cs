@@ -25,10 +25,6 @@ public class HubPanel : Container
     private FlexContainer BackgroundLayout { get; set; }
     private SkinStoreV2Lease Skin { get; }
     private SkinV2NavigationConfig NavigationConfig => Skin.Config.Shared.Navigation;
-    private HeaderScreenNavigation HeaderControls { get; set; }
-
-    public RoundedButton ProfileButton => HeaderControls.ProfileButton;
-    public float ProfileDropdownGap => NavigationConfig.Profile.DropdownGap;
 
     private RoundedButton NotificationButton { get; set; }
     private RoundedButton UserButton { get; set; }
@@ -44,14 +40,14 @@ public class HubPanel : Container
     private UsersSection UserSection { get; set; }
     private SongRequestsSection SongRequestsSection { get; set; }
 
-    public HubPanel(HubSection initialSection, Action closeHub, Action openProfile)
+    public HubPanel(HubSection initialSection)
     {
         Skin = SkinManager.AcquireV2();
         Size = new ScalableVector2(736, WindowManager.Height);
         
         CreateLayout();
 
-        CreatePlayerHeader(closeHub, openProfile);
+        CreateNavigationHeader();
         CreateSectionsHeader();
         CreateSectionContent();
         
@@ -71,7 +67,7 @@ public class HubPanel : Container
         };
     }
 
-    private void CreatePlayerHeader(Action closeHub, Action openProfile)
+    private void CreateNavigationHeader()
     {
         var headerHeight = NavigationConfig.Button.Size + NavigationConfig.EdgePadding * 2;
         var header = new Sprite
@@ -82,36 +78,6 @@ public class HubPanel : Container
         };
         BackgroundLayout.SetItemOptions(header, new FlexItemOptions { Basis = headerHeight, Shrink = 0 });
 
-        HeaderControls = new HeaderScreenNavigation(NavigationConfig);
-        HeaderControls.ProfileButton.Clicked += (sender, args) => openProfile();
-
-        var headerLayout = new FlexContainer
-        {
-            Parent = header,
-            Alignment = Alignment.MidRight,
-            X = -NavigationConfig.EdgePadding,
-            Size = new ScalableVector2(header.Width - NavigationConfig.EdgePadding * 2, NavigationConfig.Button.Size),
-            Direction = FlexDirection.Row,
-            AlignItems = FlexAlignItems.Center,
-            ColumnGap = NavigationConfig.ItemSpacing
-        };
-        HeaderControls.Parent = headerLayout;
-        headerLayout.SetItemOptions(HeaderControls, new FlexItemOptions { Basis = HeaderControls.Width, Grow = 1, Shrink = 0 });
-
-        var closeButton = new RoundedButton((sender, args) => closeHub())
-        {
-            Parent = headerLayout,
-            Size = new ScalableVector2(NavigationConfig.Button.Size, NavigationConfig.Button.Size),
-            CornerRadius = NavigationConfig.Button.CornerRadius,
-            Tint = SkinV2Color.Parse(NavigationConfig.Button.BackgroundColor)
-        };
-        closeButton.SetIcon(GlobalIcons.Get(GlobalIcon.Burger), new Vector2(NavigationConfig.Button.IconSize, NavigationConfig.Button.IconSize));
-        closeButton.Icon.Tint = SkinV2Color.Parse(NavigationConfig.Button.ForegroundColor);
-        headerLayout.SetItemOptions(closeButton, new FlexItemOptions { Basis = closeButton.Width, Shrink = 0 });
-
-        headerLayout.RefreshLayout();
-        HeaderControls.RefreshLayout();
-        
         var spacer = new Container
         {
             Parent = BackgroundLayout,
@@ -215,6 +181,9 @@ public class HubPanel : Container
         }
         
         SelectedTab = section;
+
+        if (section == HubSection.Notifications && GameBase.Game is QuaverGame notificationGame)
+            notificationGame.OnlineHub?.MarkSectionAsRead(OnlineHubSectionType.Notifications);
 
         if (section == HubSection.SongRequest && GameBase.Game is QuaverGame game)
             game.OnlineHub?.Sections[OnlineHubSectionType.SongRequests].MarkAsRead();

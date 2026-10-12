@@ -103,6 +103,7 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
         private SpriteTextPlus ResultsText { get; }
 
         private float ResultsTextInset { get; }
+        private float IconSize { get; }
 
         public V2FilterSearchTextbox(Bindable<string> query, string placeholder,
             WobbleFontStore font, int fontSize, V2FilterFieldStyle style, float width)
@@ -111,7 +112,8 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
         {
             Query = query;
             ResultsTextInset = style.SearchIconInset;
-            InputText.X = style.SearchIconInset * 2 + style.SearchIconSize;
+            IconSize = style.SearchIconInset * 2 + style.SearchIconSize;
+            InputText.X = 0;
             new Sprite
             {
                 Parent = this,
@@ -126,6 +128,7 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
             InputClip = new HorizontalClippingContainer
             {
                 Parent = this,
+                Position = new ScalableVector2(IconSize, 0),
                 Size = Size
             };
             ContentContainer.Parent = InputClip;
@@ -172,7 +175,10 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
         private void UpdateInputClip()
         {
             var reservedWidth = ResultsText.Width + ResultsTextInset * 2;
-            InputClip.Size = new ScalableVector2(Math.Max(1, Width - reservedWidth), Height);
+
+            InputClip.Position = new ScalableVector2(IconSize, 0);
+            InputClip.Size = new ScalableVector2(Math.Max(1, Width - IconSize - reservedWidth), Height);
+
             CalculateContainerX();
         }
 

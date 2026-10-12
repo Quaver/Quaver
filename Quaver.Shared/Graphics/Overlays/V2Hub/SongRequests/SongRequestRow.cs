@@ -51,6 +51,28 @@ public class SongRequestRow : PoolableSprite<SongRequest>
         DifficultyLayout.RefreshLayout();
     }
 
+    protected override void OnRectangleRecalculated()
+    {
+        base.OnRectangleRecalculated();
+        if (Row == null)
+            return;
+
+        Row.Width = Width;
+        Layout.Width = Math.Max(1, Row.Width - 32);
+        DetailsLayout.Width = Math.Max(1, Layout.Width - Icon.Width - 16);
+
+        RequestBy.Width = DetailsLayout.Width;
+        Details.Width = DetailsLayout.Width;
+        CreatorDetails.Width = DetailsLayout.Width;
+        RequestBy.ResetPosition();
+        Details.ResetPosition();
+        CreatorDetails.ResetPosition();
+
+        Layout.RefreshLayout();
+        DetailsLayout.RefreshLayout();
+        DifficultyLayout.RefreshLayout();
+    }
+
     public override void UpdateContent(SongRequest item, int index)
     {
         Item = item;
@@ -81,7 +103,7 @@ public class SongRequestRow : PoolableSprite<SongRequest>
         Row = new ViewportRoundedButton(Container)
         {
             Parent = this,
-            Size = new ScalableVector2(716, 136),
+            Size = new ScalableVector2(Width, 136),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.HexToColor("#181E25"),
             PerformHoverFade = false

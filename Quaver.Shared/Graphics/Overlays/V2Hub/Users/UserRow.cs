@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Objects;
@@ -55,11 +56,11 @@ public class UserRow : PoolableSprite<User>
 
     public event Action<User> OnClick;
     
-    public UserRow(PoolableScrollContainer<User> container, User item, int index, float rightPadding = 20) : base(container, item, index)
+    public UserRow(PoolableScrollContainer<User> container, User item, int index) : base(container, item, index)
     {
         Size = new ScalableVector2(container.Width, HEIGHT);
         
-        CreateRow(rightPadding);
+        CreateRow();
         
         CreateAvatar();
         CreateDetailsLayout();
@@ -79,6 +80,24 @@ public class UserRow : PoolableSprite<User>
         SteamManager.SteamUserAvatarLoaded += OnSteamUserAvatarLoaded;
     }
 
+    protected override void OnRectangleRecalculated()
+    {
+        base.OnRectangleRecalculated();
+        if (Row == null)
+            return;
+
+        Row.Width = Width;
+        Layout.Width = Row.Width;
+
+        Layout.RefreshLayout();
+        DetailsLayout.RefreshLayout();
+        UserInfoLayout.RefreshLayout();
+        NameLayout.RefreshLayout();
+
+        Status.Width = Math.Max(1, DetailsLayout.Width - 50);
+        Status.ResetPosition();
+    }
+
     public override void UpdateContent(User item, int index)
     {
         Item = item;
@@ -91,9 +110,10 @@ public class UserRow : PoolableSprite<User>
             Status.ResetPosition();
             Avatar.ClearAnimations();
 
-            if (SteamManager.UserAvatars.ContainsKey(steamId))
+            var avatarTexture = TryGetAvatar(steamId);
+            if (avatarTexture != null)
             {
-                Avatar.Image = Avatar.PerformBlend(SteamManager.UserAvatars[steamId], UserInterface.HubOnlineAvatarMask);
+                Avatar.Image = Avatar.PerformBlend(avatarTexture, UserInterface.HubOnlineAvatarMask);
                 Avatar.Alpha = 1;
             }
             else
@@ -132,22 +152,41 @@ public class UserRow : PoolableSprite<User>
         });
     }
 
-    private void CreateRow(float rightPadding)
+    private void CreateRow()
     {
         Row = new ViewportRoundedButton(Container)
         {
             Parent = this,
-            Size = new ScalableVector2(Math.Max(1, Width - rightPadding), 70),
+            Size = new ScalableVector2(Width, 70),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.FromHex("#181E25"),
+            PerformHoverFade = false
         };
-        
+
+        /// Background hover fix
+        /*
+        var background = new Sprite
+        {
+            Parent = Row,
+            Position = new ScalableVector2(70, 0),
+            Size = new ScalableVector2(Row.Width - 70, Row.Height),
+            Image = RoundedRectTextureCache.Get(
+            Row.Width - 70,
+            Row.Height,
+            new RoundedRectCornerRadii(0, SkinV2BorderRadiusConfig.Normal, SkinV2BorderRadiusConfig.Normal, 0)),
+            Tint = ColorHelper.FromHex("#181E25"),
+            UsePreviousSpriteBatchOptions = true
+        };
+
+        Row.Hovered += (s, e) => background.Tint = ColorHelper.FromHex("#3D4B64");
+        Row.LeftHover += (s, e) => background.Tint = ColorHelper.FromHex("#181E25");
+        */
         Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#3D4B64");
         Row.LeftHover += (s, e) => Row.Tint = ColorHelper.FromHex("#181E25");
-        
+
         Row.Clicked += (s, e) => OnClick?.Invoke(Item);
         Row.RightClicked += (s, e) => OnClick?.Invoke(Item);
-        
+
         Layout = new FlexContainer
         {
             Parent = Row,
@@ -337,6 +376,16 @@ public class UserRow : PoolableSprite<User>
         Status.ResetPosition();
     }
 
+    private Texture2D TryGetAvatar(ulong steamId)
+    {
+        if (SteamManager.UserAvatarsLarge.TryGetValue(steamId, out var texture) && texture != UserInterface.UnknownAvatar)
+            return texture;
+
+        if (SteamManager.UserAvatars.TryGetValue(steamId, out texture))
+            return texture;
+
+        return null;
+    }
     private void OnSteamUserAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
     {
         AddScheduledUpdate(() =>
@@ -348,8 +397,12 @@ public class UserRow : PoolableSprite<User>
             {
                 if (IsDisposed || e.SteamId != (ulong)Item.OnlineUser.SteamId)
                     return;
-                
-                Avatar.Image = Avatar.PerformBlend(e.Texture, UserInterface.HubOnlineAvatarMask);
+
+                var texture = TryGetAvatar(e.SteamId);
+                if (texture == null)
+                    return;
+
+                Avatar.Image = Avatar.PerformBlend(texture, UserInterface.HubOnlineAvatarMask);
                 Avatar.Alpha = 1;
             });
         });

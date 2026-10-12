@@ -50,7 +50,7 @@ public class UsersSection : Container
         {
             Parent = this,
             Position = new ScalableVector2(10, 10),
-            Size = new ScalableVector2(Width - 20 + 10, Height - 20), // +14 is for scroll thumb spacing
+            Size = new ScalableVector2(Width - 20 + 10, Height - 20),
             Direction = FlexDirection.Column,
             AlignItems = FlexAlignItems.Stretch
         };
@@ -130,8 +130,7 @@ public class UsersSection : Container
             ScrollSpeed = 220,
             InputEnabled = true
         };
-        Scroll.Scrollbar.Width = 4;
-        Scroll.Scrollbar.Tint = ColorHelper.FromHex("#D9E3F4");
+        V2Scrollbar.Apply(Scroll);
         Layout.SetItemOptions(Scroll, new FlexItemOptions { Basis = 0, Grow = 1 });
 
         Scroll.OnRowClicked += ShowUserMenu;

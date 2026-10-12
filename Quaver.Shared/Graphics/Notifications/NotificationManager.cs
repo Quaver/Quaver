@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -33,6 +34,11 @@ namespace Quaver.Shared.Graphics.Notifications
         ///     Notifications that are queued to be displayed
         /// </summary>
         public static List<DrawableNotification> QueuedNotifications { get; set; } = new List<DrawableNotification>();
+
+        /// <summary>
+        ///     Notification data waiting to be turned into drawables on the main thread.
+        /// </summary>
+        private static ConcurrentQueue<NotificationInfo> PendingNotifications { get; } = new ConcurrentQueue<NotificationInfo>();
 
         /// <summary>
         ///     Notifications that are currently active
@@ -75,6 +81,11 @@ namespace Quaver.Shared.Graphics.Notifications
         public static event Action<NotificationInfo> NotificationViewed;
 
         /// <summary>
+        ///     Whether the pointer is currently over an on-screen notification.
+        /// </summary>
+        public static bool IsPointerOverActiveNotification => ActiveNotifications.Any(notification => notification.Visible && notification.IsHovered());
+
+        /// <summary>
         ///     The initial/top level position for notifications
         /// </summary>
         private static float InitialY { get; } = 130;
@@ -87,6 +98,7 @@ namespace Quaver.Shared.Graphics.Notifications
             Container.Width = WindowManager.Width;
             Container.Height = WindowManager.Height;
 
+            CreatePendingNotifications();
             FlushNotificationQueue();
             PerformAnimations(gameTime);
             Container.Update(gameTime);
@@ -104,16 +116,23 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="onClick"></param>
         /// <param name="forceShow"></param>
         internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false,
-            NotificationType type = NotificationType.General, string senderName = null, long senderSteamId = 0,
-            string detailText = null)
+            NotificationType type = NotificationType.General, string senderName = null, long senderSteamId = 0, string detailText = null)
         {
-            var info = new NotificationInfo(level, text, true, onClick, forceShow, type: type, senderName: senderName,
-                senderSteamId: senderSteamId, detailText: detailText);
-            var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
+            var info = new NotificationInfo(level, text, true, onClick, forceShow, type: type, senderName: senderName, senderSteamId: senderSteamId, detailText: detailText);
+            PendingNotifications.Enqueue(info);
+        }
 
-            lock (QueuedNotifications)
+        /// <summary>
+        ///     Creates notification drawables on the main update thread.
+        /// </summary>
+        private static void CreatePendingNotifications()
+        {
+            while (PendingNotifications.TryDequeue(out var info))
             {
-                QueuedNotifications.Add(notification);
+                var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
+
+                lock (QueuedNotifications)
+                    QueuedNotifications.Add(notification);
             }
         }
 
@@ -238,24 +257,24 @@ namespace Quaver.Shared.Graphics.Notifications
                 return;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var targetOffset = InitialY;
 
             for (var i = ActiveNotifications.Count - 1; i >= 0; i--)
             {
                 var notification = ActiveNotifications[i];
 
-                // Get the current iteration
-                var iteration = ActiveNotifications.Count - 1 - i;
-
                 // Calculate the new target y position
                 if (!notification.IsSlidingOut)
                 {
-                    var targetY = InitialY + (ActiveNotifications.Last().Height + 20) * iteration;
+                    var targetY = targetOffset;
 
                     if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
                         targetY = -targetY;
 
                     notification.Y = MathHelper.Lerp(notification.Y, targetY, (float)Math.Min(dt / 60, 1));
                 }
+
+                targetOffset += notification.Height + 20;
 
                 if (!notification.Item.WasClicked && !notification.HasSlidOut)
                     continue;

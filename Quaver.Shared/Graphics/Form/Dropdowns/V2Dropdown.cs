@@ -135,8 +135,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
         private Container Menu { get; set; }
 
-        private Sprite MenuDivider { get; set; }
-
         private HorizontalClippingContainer MenuClip { get; set; }
 
         private ScrollContainer MenuScroll { get; set; }
@@ -332,6 +330,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             CreateMenu();
             if (Trigger != null)
             {
+                Trigger.SetOpened(true, Config.AnimationDurationMilliseconds);
                 Trigger.IsClickable = true;
                 Trigger.IsInteractionEnabled = true;
             }
@@ -354,6 +353,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             if (Menu == null)
             {
                 Opened = false;
+                if (Trigger != null)
+                {
+                    Trigger.SetOpened(false, time);
+                }
+
                 V2DropdownRegistry.Deactivate(this);
                 RefreshTrigger();
                 return;
@@ -363,6 +367,11 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 time = Config.AnimationDurationMilliseconds;
 
             Opened = false;
+            if (Trigger != null)
+            {
+                Trigger.SetOpened(false, time);
+            }
+
             V2DropdownRegistry.Deactivate(this);
             if (Trigger != null)
             {
@@ -459,16 +468,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 DrawOrder = 1000
             };
 
-            MenuDivider = new Sprite
-            {
-                Parent = Menu,
-                Alignment = Alignment.TopLeft,
-                Image = WobbleAssets.WhiteBox,
-                Tint = SkinV2Color.Parse(Config.DividerColor),
-                Alpha = 0,
-                Visible = SelectionMode != DropdownSelectionMode.Action
-            };
-
             var contentWidth = Math.Max(1, Width);
             MenuClip = new HorizontalClippingContainer
             {
@@ -488,8 +487,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 AllowMiddleMouseDragging = false,
                 Alpha = 0
             };
-            MenuScroll.Scrollbar.Width = Config.ScrollbarWidth;
-            MenuScroll.Scrollbar.Tint = SkinV2Color.Parse(Config.ScrollbarColor);
+            V2Scrollbar.Apply(MenuScroll, Config.ScrollbarWidth, SkinV2Color.Parse(Config.ScrollbarColor),
+                SkinV2Color.Parse(Config.ScrollbarTrackColor));
             MenuScroll.Scrollbar.Visible = false;
 
             var y = 0f;
@@ -502,7 +501,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                     var button = CreateOptionButton(option);
                     button.Position = new ScalableVector2(0, y);
                     button.Size = new ScalableVector2(contentWidth, Config.ItemHeight);
-                    MenuScroll.AddContainedDrawable(button);
+                    MenuScroll.AddContainedDrawable(button, true);
                     OptionButtons.Add(button);
                     y += Config.ItemHeight;
                     optionCount++;
@@ -519,6 +518,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                         Tint = SkinV2Color.Parse(Config.DividerColor),
                         Alpha = 0
                     };
+                    MenuScroll.AddContainedDrawable(divider, true, Config.DividerInset,
+                        contentRightPadding: Config.DividerInset);
                     EntryDividers.Add(divider);
                     y += Config.DividerThickness;
                 }
@@ -648,9 +649,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             if (MenuScroll == null)
                 return false;
 
-            var targetViewportHeight = Math.Max(MinimumMenuHeight,
-                TargetMenuHeight - (MenuDivider.Visible ? Config.DividerThickness : 0) -
-                Config.MenuPadding * 2);
+            var targetViewportHeight = Math.Max(MinimumMenuHeight, TargetMenuHeight);
             return MenuScroll.ContentContainer.Height > targetViewportHeight + 0.5f;
         }
 
@@ -692,22 +691,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             Menu.Position = new ScalableVector2(hostX, hostY);
             Menu.Width = Width;
 
-            if (MenuDivider.Visible)
-            {
-                MenuDivider.Position = new ScalableVector2(Config.DividerInset,
-                    OpensDown ? 0 : Math.Max(0, currentHeight - Config.DividerThickness));
-                MenuDivider.Size = new ScalableVector2(Math.Max(1, Width - Config.DividerInset * 2),
-                    Config.DividerThickness);
-            }
+            var viewportHeight = Math.Max(MinimumMenuHeight, currentHeight);
+            var viewportPosition = new ScalableVector2(0, 0);
+            var viewportSize = new ScalableVector2(Math.Max(1, Width), viewportHeight);
 
-            var dividerSpace = MenuDivider.Visible ? Config.DividerThickness : 0;
-            var menuPadding = Config.MenuPadding;
-            var viewportHeight = Math.Max(MinimumMenuHeight,
-                currentHeight - dividerSpace - menuPadding * 2);
-            var viewportPosition = new ScalableVector2(0,
-                OpensDown ? dividerSpace + menuPadding : menuPadding);
-            var viewportSize = new ScalableVector2(Math.Max(1, Width),
-                viewportHeight);
             MenuClip.Position = viewportPosition;
             MenuClip.Size = viewportSize;
             MenuScroll.Position = new ScalableVector2(0, 0);
@@ -718,6 +705,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             var itemLimitRequiresScroll = MaxVisibleItems > 0 && MaxVisibleItems < OptionCount;
             var viewportRequiresScroll = available < desiredHeight - 0.5f;
             MenuScroll.Scrollbar.Visible = itemLimitRequiresScroll || viewportRequiresScroll;
+            MenuScroll.RefreshContentLayout();
             MenuScroll.InputEnabled = IsMenuScrollInputAllowed();
 
             if (applyMenuHeight && Math.Abs(Menu.Height - menuHeight) > 0.5f &&
@@ -732,9 +720,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         {
             var visibleItems = MaxVisibleItems <= 0 ? optionCount : MaxVisibleItems;
             if (visibleItems >= optionCount)
-                return (float) Math.Ceiling(contentHeight +
-                                            Config.MenuPadding * 2 +
-                                            (SelectionMode == DropdownSelectionMode.Action ? 0 : Config.DividerThickness));
+                return (float) Math.Ceiling(contentHeight + (SelectionMode == DropdownSelectionMode.Action ? 0 : Config.DividerThickness));
 
             var visibleHeight = 0f;
             var shown = 0;
@@ -749,9 +735,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                     visibleHeight += Config.ItemSpacing;
             }
 
-            return (float) Math.Ceiling(visibleHeight +
-                                        Config.MenuPadding * 2 +
-                                        (SelectionMode == DropdownSelectionMode.Action ? 0 : Config.DividerThickness));
+            return (float) Math.Ceiling(visibleHeight + (SelectionMode == DropdownSelectionMode.Action ? 0 : Config.DividerThickness));
         }
 
         private RoundedRectCornerRadii GetTriggerRadii()
@@ -766,7 +750,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
         private void FadeMenuTo(float alpha, int time)
         {
-            MenuDivider?.FadeTo(alpha, Easing.OutQuint, time);
             MenuScroll?.FadeTo(alpha, Easing.OutQuint, time);
         }
 
@@ -853,7 +836,6 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 Menu.Destroy();
 
             Menu = null;
-            MenuDivider = null;
             MenuClip = null;
             MenuScroll = null;
             OptionButtons.Clear();
@@ -929,7 +911,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 {
                     Parent = this,
                     Alignment = Alignment.MidRight,
-                    Region = GlobalIcons.Get(GlobalIcon.MoreOptions),
+                    Region = UserInterface.DropdownIcon,
                     UsePreviousSpriteBatchOptions = true
                 };
             }
@@ -948,10 +930,25 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                 };
                 MarqueeLabel.StartDelayMilliseconds = 450;
                 MarqueeLabel.TextSprite.Tint = SkinV2Color.Parse(config.TextColor);
-                Chevron.Size = new ScalableVector2(config.ChevronSize, config.ChevronSize);
+                Chevron.Size = new ScalableVector2(config.ChevronWidth, config.ChevronHeight);
                 Chevron.X = -config.HorizontalPadding;
                 Chevron.Tint = SkinV2Color.Parse(config.IconColor);
                 SelectedIcon.Tint = SkinV2Color.Parse(config.IconColor);
+            }
+
+            public void SetOpened(bool opened, int duration)
+            {
+                Chevron.ClearAnimations();
+
+                var rotationAngle = opened ? MathF.PI : 0;
+
+                if (duration <= 0)
+                {
+                    Chevron.Rotation = rotationAngle;
+                    return;
+                }
+
+                Chevron.Animations.Add(new Animation(AnimationProperty.Rotation, Easing.OutQuint, Chevron.Rotation, rotationAngle, duration));
             }
 
             public void SetContent(string label, TextureRegion? icon,
@@ -991,7 +988,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
                 var left = config.HorizontalPadding +
                            (SelectedIcon.Visible ? config.IconSize + IconSpacing : 0);
-                var right = config.HorizontalPadding + config.ChevronSize + IconSpacing;
+                var right = config.HorizontalPadding + config.ChevronWidth + IconSpacing;
                 MarqueeLabel.Alignment = Alignment.MidLeft;
                 MarqueeLabel.X = left;
                 var marqueeWidth = Math.Max(1, Width - left - right);

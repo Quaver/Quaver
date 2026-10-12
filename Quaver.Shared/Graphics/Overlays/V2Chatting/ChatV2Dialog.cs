@@ -7,6 +7,7 @@ using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -335,6 +336,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             SearchHeaderLayout.RefreshLayout();
             ContentLayout?.RefreshLayout();
 
+            // The section layouts provide the left inset. Let the scrolling lists extend through the
+            // matching right inset because ScrollContainer already owns the scrollbar's right gap.
+            if (MessageList != null)
+                MessageList.Width = Math.Max(1, ContentLayout.Width + SectionPadding);
+
+            if (UserSearchList != null)
+                UserSearchList.Width = Math.Max(1, SearchLayout.Width + SectionPadding);
+
             if (!IsResizing && SearchSectionAnimationProgress >= 0.999f)
                 UserSearchList?.RefreshViewport();
 
@@ -543,7 +552,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Tint = ColorHelper.FromHex("#273038")
             };
             MessageList.SenderMenuRequested += ShowUserMenu;
-            ContentLayout.SetItemOptions(MessageList, new FlexItemOptions { Basis = 0, Grow = 1 });
+            ContentLayout.SetItemOptions(MessageList, new FlexItemOptions
+            {
+                Basis = 0,
+                Grow = 1,
+                AlignSelf = FlexAlignSelf.FlexStart
+            });
 
             InputBar = new ChatInputBar(ChatSession.ActiveChannel,
                 new ScalableVector2(ContentLayout.Width, 40))
@@ -562,10 +576,13 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 ScrollSpeed = 220,
                 InputEnabled = true
             };
-            UserSearchList.Scrollbar.Width = 4;
-            UserSearchList.Scrollbar.Tint = ColorHelper.FromHex("#D9E3F4");
             UserSearchList.OnRowClicked += ShowUserMenu;
-            SearchLayout.SetItemOptions(UserSearchList, new FlexItemOptions { Basis = 0, Grow = 1 });
+            SearchLayout.SetItemOptions(UserSearchList, new FlexItemOptions
+            {
+                Basis = 0,
+                Grow = 1,
+                AlignSelf = FlexAlignSelf.FlexStart
+            });
         }
 
         private void UpdateChannelButtonTints()
@@ -624,6 +641,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             if (MouseManager.IsUniqueClick(MouseButton.Left))
             {
+                if (NotificationManager.IsPointerOverActiveNotification)
+                    return;
+
                 if (SuppressNextOutsideClick)
                 {
                     SuppressNextOutsideClick = false;
@@ -654,6 +674,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             {
                 IsResizing = false;
                 ResizedDuringHeaderPress = false;
+
+                MessageList?.ScrollToBottom(200);
                 UserSearchList?.RefreshViewport(true);
                 return true;
             }
@@ -668,7 +690,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void SetPanelHeight(float height)
         {
-            var maximumHeight = Math.Max(1, WindowManager.Height - 10);
+            var maximumHeight = GetMaximumPanelHeight(WindowManager.Height);
             var minimumHeight = Math.Min(240, maximumHeight);
             var clampedHeight = MathHelper.Clamp(height, minimumHeight, maximumHeight);
 
@@ -679,6 +701,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             RefreshDialogLayout();
         }
 
+        private static float GetMaximumPanelHeight(float windowHeight) =>
+            Math.Max(1, windowHeight - ScreenNavigation.TopSafetyGap + SectionPadding);
+
         private void OnVirtualScreenSizeChanged(object sender, WindowVirtualScreenSizeChangedEventArgs e) => AddScheduledUpdate(() =>
         {
             if (IsDisposed)
@@ -687,7 +712,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Size = new ScalableVector2(e.Size.X, e.Size.Y);
             Container.Size = Size;
             Panel.Width = e.Size.X;
-            Panel.Height = Math.Min(Panel.Height, Math.Max(1, e.Size.Y - SectionGap));
+            Panel.Height = Math.Min(Panel.Height, GetMaximumPanelHeight(e.Size.Y));
             RefreshDialogLayout();
         });
 

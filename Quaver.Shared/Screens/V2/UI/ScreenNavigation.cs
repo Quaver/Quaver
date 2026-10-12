@@ -48,6 +48,17 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         public const string ElementKey = "quaver-screen-navigation";
 
+        public static float TopSafetyGap
+        {
+            get
+            {
+                if (ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
+                    return navigation.Config.EdgePadding;
+
+                return SkinV2Spacing.SpacingXs;
+            }
+        }
+
         private const int LogoEnterAnimationDuration = 220;
 
         private const int LogoExitAnimationDuration = 180;
@@ -612,7 +623,16 @@ namespace Quaver.Shared.Screens.V2.UI
             TopBar.Add(NavigationBarRegion.Right, HubButton);
         }
 
-        private void OnProfileClicked(object sender, EventArgs args) => ToggleAccountDropdown();
+        private void OnProfileClicked(object sender, EventArgs args)
+        {
+            if (DialogManager.Dialogs.Count > 0 && DialogManager.Dialogs[DialogManager.Dialogs.Count - 1] is OverlayDialog hubDialog)
+            {
+                hubDialog.ToggleProfileDropdown(ProfileButton, Config.Profile.DropdownGap);
+                return;
+            }
+
+            ToggleAccountDropdown();
+        }
 
         private void ToggleAccountDropdown()
         {
@@ -795,6 +815,49 @@ namespace Quaver.Shared.Screens.V2.UI
                     chatDialog.Close();
                 }
             }
+        }
+
+        public static void SetHubOverlayState(bool opened, FlexContainer controlsHost = null)
+        {
+            if (ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
+                navigation.ApplyHubOverlayState(opened, controlsHost);
+        }
+
+        private void ApplyHubOverlayState(bool opened, FlexContainer controlsHost)
+        {
+            if (opened)
+            {
+                if (controlsHost == null)
+                    throw new ArgumentNullException(nameof(controlsHost));
+
+                controlsHost.Position = new ScalableVector2(0, Config.EdgePadding);
+                controlsHost.Size = new ScalableVector2(WindowManager.Width - Config.EdgePadding, Config.Button.Size);
+                controlsHost.Direction = FlexDirection.Row;
+                controlsHost.JustifyContent = FlexJustifyContent.FlexEnd;
+                controlsHost.AlignItems = FlexAlignItems.Center;
+                controlsHost.ColumnGap = Config.ItemSpacing;
+
+                TopBar.Remove(HeaderControls, false);
+                TopBar.Remove(DonateButton, false);
+                TopBar.Remove(HubButton, false);
+
+                AddHubControl(controlsHost, HeaderControls);
+                AddHubControl(controlsHost, DonateButton);
+                AddHubControl(controlsHost, HubButton);
+                controlsHost.RefreshLayout();
+                HeaderControls.RefreshLayout();
+                return;
+            }
+
+            TopBar.Add(NavigationBarRegion.Right, HeaderControls);
+            TopBar.Add(NavigationBarRegion.Right, DonateButton);
+            TopBar.Add(NavigationBarRegion.Right, HubButton);
+        }
+
+        private static void AddHubControl(FlexContainer controlsHost, Drawable control)
+        {
+            control.Parent = controlsHost;
+            controlsHost.SetItemOptions(control, new FlexItemOptions { Basis = control.Width, Shrink = 0 });
         }
 
         private static void ShowDonateMessage() => NotificationManager.Show(NotificationLevel.Info,

@@ -51,6 +51,8 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
     private FlexItemOptions DetailsLayoutOptions { get; set; }
     private FlexItemOptions TextLayoutOptions { get; set; }
     private FlexItemOptions ActionsLayoutOptions { get; set; }
+
+    private bool UpdatingSize { get; set; }
     
     public event Action<NotificationInfo> OnClick;
 
@@ -85,6 +87,20 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
             SteamManager.SteamUserAvatarLoaded += OnSteamUserAvatarLoaded;
     }
 
+    protected override void OnRectangleRecalculated()
+    {
+        base.OnRectangleRecalculated();
+        if (UpdatingSize || Layout == null || Row == null || Bar == null)
+            return;
+
+        Layout.Width = Width;
+        Row.Width = Math.Max(1, Layout.Width - Bar.Width - Layout.ColumnGap);
+        Layout.SetItemOptions(Row, new FlexItemOptions { Basis = Row.Width, Shrink = 0 });
+
+        if (ActionsLayout != null && Item != null)
+            UpdateContent(Item, Index);
+    }
+
     public override void UpdateContent(NotificationInfo item, int index)
     {
         Item = item;
@@ -97,7 +113,9 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
 
         // Recalc components size based on notification type (pain)
         var totalHeight = isInviteNotification ? GetHeight(item) : 88;
+        UpdatingSize = true;
         Size = new ScalableVector2(Width, totalHeight);
+        UpdatingSize = false;
 
         var rowHeight = Container == null ? totalHeight : totalHeight - 10;
         Layout.Height = rowHeight;
@@ -166,7 +184,7 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
         Layout = new FlexContainer
         {
             Parent = this,
-            Size = new ScalableVector2(716, 78),
+            Size = new ScalableVector2(Width, 78),
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
             ColumnGap = 10
@@ -184,7 +202,7 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
         Row = new ViewportRoundedButton(Container)
         {
             Parent = Layout,
-            Size = new ScalableVector2(694, 78),
+            Size = new ScalableVector2(Math.Max(1, Layout.Width - Bar.Width - Layout.ColumnGap), 78),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.FromHex("#181E25"),
             PerformHoverFade = false,

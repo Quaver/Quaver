@@ -380,7 +380,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
                 return;
 
             NotificationManager.Show(NotificationLevel.Info,
-                $"{message.SenderName} has sent you a message. Click here to read it!", (sender, args) =>
+                $"{message.SenderName} has sent you a message.", (sender, args) =>
                 {
                     if (ChatSession.JoinedChannels.Value.Contains(channel))
                         ChatSession.ActiveChannel.Value = channel;
