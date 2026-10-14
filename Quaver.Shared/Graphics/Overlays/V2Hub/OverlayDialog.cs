@@ -7,6 +7,8 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
 using Quaver.Shared.Screens.V2.UI;
+using Quaver.Shared.Skinning;
+using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -24,6 +26,9 @@ public class OverlayDialog : DialogScreen
     private FlexContainer NavigationHeaderLayout { get; set; }
     private LoggedInUserDropdown ProfileDropdown { get; set; }
     private Drawable ProfileDropdownTrigger { get; set; }
+    private SkinStoreV2Lease Skin { get; }
+    private SkinV2Config RootConfig { get; set; }
+    private SkinV2HubConfig Config => RootConfig.Screens.Hub;
 
     private HubPanel.HubSection InitialSection { get; }
 
@@ -36,6 +41,8 @@ public class OverlayDialog : DialogScreen
     public OverlayDialog(HubPanel.HubSection initialSection = HubPanel.HubSection.Users) : base(0)
     {
         InitialSection = initialSection;
+        Skin = SkinManager.AcquireV2();
+        RootConfig = Skin.Config;
         CreateContent();
     }
 
@@ -79,19 +86,30 @@ public class OverlayDialog : DialogScreen
         Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
         Container.Size = Size;
 
-        Hub = new HubPanel(InitialSection)
-        {
-            Parent = Container,
-            Alignment = Alignment.TopRight,
-            X = 736
-        };
-
+        BuildHub(true);
         NavigationHeaderLayout = new FlexContainer
         {
             Parent = Container
         };
         ScreenNavigation.SetHubOverlayState(true, NavigationHeaderLayout);
-        Hub.MoveToX(0, Easing.OutCubic, 200);
+    }
+
+    private void BuildHub(bool animate)
+    {
+        var selectedSection = Hub?.SelectedTab ?? InitialSection;
+        Hub?.Destroy();
+        DismissProfileDropdown();
+
+        Hub = new HubPanel(selectedSection, Skin, RootConfig)
+        {
+            Parent = Container,
+            Alignment = Alignment.TopRight,
+            X = animate ? Config.Layout.Width : 0
+        };
+
+        if (animate)
+            Hub.MoveToX(0, Easing.OutCubic, Config.Layout.AnimationDurationMilliseconds);
+
     }
 
     internal void ToggleProfileDropdown(Drawable trigger, float dropdownGap)
@@ -124,12 +142,12 @@ public class OverlayDialog : DialogScreen
     public void Close()
     {
         if(IsClosing) return;
-        
+
         IsClosing = true;
         DismissProfileDropdown();
 
         ClearAnimations();
-        Hub.MoveToX(736, Easing.InCubic, 200);
+        Hub.MoveToX(Config.Layout.Width, Easing.InCubic, Config.Layout.AnimationDurationMilliseconds);
 
         if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)
         {
@@ -141,7 +159,24 @@ public class OverlayDialog : DialogScreen
         {
             Hub.NotificationsSection.SetNewNotificationToViewed();
         }
-        ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);
+        ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this),
+            Config.Layout.AnimationDurationMilliseconds + 100);
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        var width = WindowManager.Width;
+        var height = WindowManager.Height;
+        if (Container.Width != width || Container.Height != height)
+        {
+            Size = new ScalableVector2(width, height);
+            Container.Size = Size;
+            Hub.ResizeHeight(height);
+            NavigationHeaderLayout.Size = new ScalableVector2(width - RootConfig.Shared.Navigation.EdgePadding, RootConfig.Shared.Navigation.Button.Size);
+            NavigationHeaderLayout.RefreshLayout();
+        }
+
+        base.Update(gameTime);
     }
 
     public override void Destroy()
@@ -149,6 +184,7 @@ public class OverlayDialog : DialogScreen
         ScreenNavigation.SetHubOverlayState(false);
         DismissProfileDropdown();
         base.Destroy();
+        Skin.Dispose();
     }
     
     /// <summary>

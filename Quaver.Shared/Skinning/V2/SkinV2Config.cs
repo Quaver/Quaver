@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Screens.V2.Downloading;
 using Quaver.Shared.Screens.V2.Importing;
 using Quaver.Shared.Screens.V2.Initialization;
@@ -9,6 +11,7 @@ using Quaver.Shared.Screens.V2.Multi;
 using Quaver.Shared.Screens.V2.Multiplayer;
 using Quaver.Shared.Screens.V2.MultiplayerLobby;
 using Quaver.Shared.Screens.V2.Music;
+using Quaver.Shared.Screens.V2.Options;
 using Quaver.Shared.Screens.V2.Results;
 using Quaver.Shared.Screens.V2.Selection;
 using Quaver.Shared.Screens.V2.Theater;
@@ -63,6 +66,9 @@ namespace Quaver.Shared.Skinning.V2
         [Required]
         [ConfigEditable]
         public SkinV2DropdownConfig Dropdown { get; set; } = new SkinV2DropdownConfig();
+
+        [Required]
+        public SkinV2ModalConfig Modal { get; set; } = new SkinV2ModalConfig();
     }
 
     public sealed class SkinV2BrandConfig
@@ -120,7 +126,16 @@ namespace Quaver.Shared.Skinning.V2
     public sealed class SkinV2ScreensConfig
     {
         [Required]
+        public SkinV2ChatConfig Chat { get; set; } = new SkinV2ChatConfig();
+
+        [Required]
+        public SkinV2HubConfig Hub { get; set; } = new SkinV2HubConfig();
+
+        [Required]
         public SkinV2MainConfig Main { get; set; } = new SkinV2MainConfig();
+
+        [Required]
+        public SkinV2OptionsConfig Options { get; set; } = new SkinV2OptionsConfig();
 
         [Required]
         public SkinV2InitializationConfig Initialization { get; set; } =

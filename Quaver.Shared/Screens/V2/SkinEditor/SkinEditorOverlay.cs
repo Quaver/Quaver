@@ -45,7 +45,16 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 "RadialRadius", "Effect", "PrimaryColor", "SecondaryColor", "Primary", "Secondary",
                 "Tertiary", "Image", "Color", "HoverColor", "AccentColor", "TextColor",
                 "BottomOffset", "FallbackImage", "BackgroundColor", "ForegroundColor",
-                "OfflineStatusColor", "Scale"
+                "OfflineStatusColor", "Scale", "Width", "NavigationHeaderGap",
+                "AnimationDurationMilliseconds", "HeaderColor", "ContentColor", "NotificationsIcon",
+                "UsersIcon", "SongRequestsIcon", "HeaderHeight",
+                "Padding", "Gap", "ButtonWidth", "ButtonHeight", "CornerRadius", "IconSize",
+                "Font", "FontSize", "SelectedColor", "UnselectedColor", "ClearIcon", "ContentPadding",
+                "ControlHeight", "ClearButtonWidth", "EmptyMessageFontSize", "ControlColor",
+                "ControlHoverColor", "SelectedControlColor", "AccentTextColor", "SearchWidth",
+                "FilterWidth", "SearchIconSize", "SearchIconInset", "FeedButtonWidth",
+                "TwitchIcon", "AlertsButtonWidth", "TwitchButtonWidth", "ActionGap", "TwitchIconWidth",
+                "TwitchIconHeight", "TwitchColor"
             }, StringComparer.Ordinal);
 
         private readonly ISkinV2EditorHost host;
@@ -82,6 +91,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private IReadOnlyList<SkinEditorProperty> inspectorProperties = Array.Empty<SkinEditorProperty>();
         private Container selectionRoot;
         private ScrollContainer assetScroll;
+        private Dropdown surfaceDropdown;
         private Dropdown folderDropdown;
         private Textbox searchTextbox;
         private SpriteTextPlus assetBreadcrumb;
@@ -114,6 +124,11 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private bool previewPending;
         private double previewDelay;
         private bool? clickabilityBeforeColorPicker;
+        private IReadOnlyList<SkinEditorSurface> editorSurfaces;
+
+        private bool HasMultipleSurfaces => editorSurfaces.Count > 1;
+
+        private float TargetListTop => HasMultipleSurfaces ? 130 : 58;
 
         public SkinEditorOverlay(ISkinV2EditorHost host, SkinEditorSession session,
             Func<bool> save, Action close, Action editMetadata, Action copyWorkshop, bool readOnly)
@@ -125,6 +140,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             this.editMetadata = editMetadata;
             this.copyWorkshop = copyWorkshop;
             this.readOnly = readOnly;
+            editorSurfaces = GetEditorSurfaces();
             skin = SkinManager.AcquireV2();
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
             assets = Array.Empty<SkinEditorAsset>();
@@ -142,13 +158,18 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             BuildNextAssetButtons();
             UpdateInspectorScrolling();
             var folderMenuOpen = folderDropdown?.Opened == true;
+            var surfaceMenuOpen = surfaceDropdown?.Opened == true;
             if (folderDropdown?.ItemContainer != null)
             {
                 folderDropdown.ItemContainer.InputEnabled =
                     folderMenuOpen && folderDropdown.ItemContainer.IsHovered();
             }
+            if (surfaceDropdown?.ItemContainer != null)
+            {
+                surfaceDropdown.ItemContainer.InputEnabled = surfaceMenuOpen && surfaceDropdown.ItemContainer.IsHovered();
+            }
             if (assetScroll != null)
-                assetScroll.InputEnabled = !folderMenuOpen && assetScroll.IsHovered();
+                assetScroll.InputEnabled = !folderMenuOpen && !surfaceMenuOpen && assetScroll.IsHovered();
             UpdateSelectionHitAreas();
             base.Update(gameTime);
 
@@ -245,7 +266,14 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             inspectorRoot = new Container { Parent = rightPanel };
             selectionRoot = new Container { Parent = this };
 
-            CreateHeader(leftPanel, LocalizationManager.Get("SkinEditor_Components"), 18, 18);
+            if (HasMultipleSurfaces)
+            {
+                CreateHeader(leftPanel, LocalizationManager.Get("SkinEditor_Surface"), 18, 14);
+                BuildSurfaceSelector();
+                CreateHeader(leftPanel, LocalizationManager.Get("SkinEditor_Components"), 18, 94);
+            }
+            else
+                CreateHeader(leftPanel, LocalizationManager.Get("SkinEditor_Components"), 18, 18);
             CreateHeader(rightPanel, LocalizationManager.Get("SkinEditor_Title"), 18, 18);
             assetBreadcrumb = CreateHeader(assetPanel, LocalizationManager.Get("SkinEditor_Assets"), 18, 14);
 
@@ -284,9 +312,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             targetRoot = new FlexContainer
             {
                 Parent = leftPanel,
-                Position = new ScalableVector2(12, 58),
+                Position = new ScalableVector2(12, TargetListTop),
                 Size = new ScalableVector2(SkinEditorController.LeftPanelWidth - 24,
-                    Math.Max(1, WindowManager.Height - SkinEditorController.AssetPanelHeight - 70)),
+                    Math.Max(1, WindowManager.Height - SkinEditorController.AssetPanelHeight - TargetListTop - 12)),
                 Direction = FlexDirection.Column,
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = 6
@@ -300,6 +328,57 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 editableTargets.Where(x =>
                     x.ConfigPath.StartsWith("Shared.", StringComparison.Ordinal)));
             targetRoot.RefreshLayout();
+            BringSurfaceSelectorToFront();
+        }
+
+        private IReadOnlyList<SkinEditorSurface> GetEditorSurfaces()
+        {
+            if (host is ISkinV2MultiSurfaceEditorHost multiSurfaceHost && multiSurfaceHost.EditorSurfaces.Count > 0)
+                return multiSurfaceHost.EditorSurfaces;
+
+            return new[] { new SkinEditorSurface("current", host.EditorGroupLabel) };
+        }
+
+        private void BuildSurfaceSelector()
+        {
+            if (!HasMultipleSurfaces || host is not ISkinV2MultiSurfaceEditorHost multiSurfaceHost)
+                return;
+
+            var selectedIndex = Math.Max(0, editorSurfaces.ToList().FindIndex(x => x.Id == multiSurfaceHost.ActiveEditorSurfaceId));
+            surfaceDropdown = new Dropdown(editorSurfaces.Select(x => x.Label).ToList(), new ScalableVector2(SkinEditorController.LeftPanelWidth - 36, 34), 13, AccentColor, selectedIndex, 190, 160)
+            {
+                Parent = leftPanel,
+                X = 18,
+                Y = 44,
+                Depth = -10
+            };
+            surfaceDropdown.ItemSelected += (sender, args) => SelectSurface(editorSurfaces[args.Index]);
+            foreach (var item in surfaceDropdown.Items)
+                item.Depth = -10;
+
+            BringSurfaceSelectorToFront();
+        }
+
+        private void BringSurfaceSelectorToFront()
+        {
+            if (surfaceDropdown?.Parent != leftPanel)
+                return;
+
+            surfaceDropdown.Parent = leftPanel;
+        }
+
+        private void SelectSurface(SkinEditorSurface surface)
+        {
+            if (host is not ISkinV2MultiSurfaceEditorHost multiSurfaceHost || surface.Id == multiSurfaceHost.ActiveEditorSurfaceId)
+                return;
+
+            colorPicker.Close();
+            session.FocusedAssetProperty = null;
+            multiSurfaceHost.SelectEditorSurface(surface.Id, session.Working);
+            selectedTarget = GetEditableTargets().FirstOrDefault();
+            BuildTargetList();
+            BuildInspector();
+            BuildSelectionButtons();
         }
 
         private IReadOnlyList<SkinEditorTarget> GetEditableTargets() => host.EditorTargets
@@ -339,6 +418,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
         private void SelectTarget(SkinEditorTarget target)
         {
+            target?.Activate();
             selectedTarget = target;
             session.FocusedAssetProperty = null;
             BuildTargetList();
@@ -1353,14 +1433,11 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             lastWidth = WindowManager.Width;
             lastHeight = WindowManager.Height;
             Size = new ScalableVector2(lastWidth, lastHeight);
-            leftPanel.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth,
-                lastHeight - SkinEditorController.AssetPanelHeight);
-            targetRoot.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth - 24,
-                Math.Max(1, lastHeight - SkinEditorController.AssetPanelHeight - 70));
+            leftPanel.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth, lastHeight - SkinEditorController.AssetPanelHeight);
+            targetRoot.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth - 24, Math.Max(1, lastHeight - SkinEditorController.AssetPanelHeight - TargetListTop - 12));
             targetRoot.RefreshLayout();
             rightPanel.Alignment = Alignment.TopRight;
-            rightPanel.Size = new ScalableVector2(SkinEditorController.RightPanelWidth,
-                lastHeight - SkinEditorController.AssetPanelHeight);
+            rightPanel.Size = new ScalableVector2(SkinEditorController.RightPanelWidth, lastHeight - SkinEditorController.AssetPanelHeight);
             assetPanel.Alignment = Alignment.BotLeft;
             assetPanel.Size = new ScalableVector2(lastWidth, SkinEditorController.AssetPanelHeight);
             BuildInspector();

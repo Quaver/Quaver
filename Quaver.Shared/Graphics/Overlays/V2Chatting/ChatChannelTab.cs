@@ -29,10 +29,10 @@ public sealed class ChatChannelTab : RoundedButton
     private Sprite OnlineStatusIcon { get; set; }
     private RoundedButton CloseButton { get; set; }
 
-    public ChatChannelTab(ChatChannel channel, User privateUser, EventHandler clickAction)
+    public ChatChannelTab(ChatChannel channel, User privateUser, SkinV2ChatTabsConfig config, float cornerRadius, EventHandler clickAction)
     {
-        CornerRadius = SkinV2BorderRadiusConfig.Normal;
-        SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), channel.GetDisplayedName(), 18, Color.White);
+        CornerRadius = cornerRadius;
+        SetLabel(FontManager.GetWobbleFont(config.Font), channel.GetDisplayedName(), config.FontSize, SkinV2Color.Parse(config.TextColor));
         Label.Alignment = Alignment.MidLeft;
         Label.X = 10;
         Clicked += (sender, args) =>

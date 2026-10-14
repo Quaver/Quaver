@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Screens.V2.UI.Filters;
-using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -23,6 +20,11 @@ namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 
 public class UsersSection : Container
 {
+    private SkinV2HubConfig HubConfig { get; }
+    private SkinV2HubSectionConfig SectionConfig => HubConfig.Sections;
+    private SkinV2HubUsersConfig Config => HubConfig.Users;
+    private bool PreviewMode { get; }
+
     private V2FilterSearchTextbox SearchBox { get; set; }
     private Bindable<string> SearchQuery { get; } = new Bindable<string>(string.Empty);
     
@@ -33,9 +35,12 @@ public class UsersSection : Container
     
     private FlexContainer Layout { get; set; }
     private UserList Scroll { get; set; }
+    internal Sprite Header { get; private set; }
 
-    public UsersSection(ScalableVector2 size)
+    public UsersSection(ScalableVector2 size, SkinV2Config rootConfig, bool previewMode = false)
     {
+        HubConfig = rootConfig.Screens.Hub;
+        PreviewMode = previewMode;
         Size = size;
         CreateLayout();
         CreateHeader();
@@ -46,11 +51,12 @@ public class UsersSection : Container
 
     private void CreateLayout()
     {
+        var padding = SectionConfig.ContentPadding;
         Layout = new FlexContainer
         {
             Parent = this,
-            Position = new ScalableVector2(10, 10),
-            Size = new ScalableVector2(Width - 20 + 10, Height - 20),
+            Position = new ScalableVector2(padding, padding),
+            Size = new ScalableVector2(Width - padding, Height - padding * 2),
             Direction = FlexDirection.Column,
             AlignItems = FlexAlignItems.Stretch
         };
@@ -58,18 +64,19 @@ public class UsersSection : Container
 
     private void CreateHeader()
     {
-        var header = new Sprite
+        var section = SectionConfig;
+        Header = new Sprite
         {
             Parent = Layout,
-            Size = new ScalableVector2(736, 60),
-            Tint = ColorHelper.FromHex("#273038")
+            Size = new ScalableVector2(Layout.Width, section.HeaderHeight),
+            Tint = SkinV2Color.Parse(section.BackgroundColor)
         };
-        Layout.SetItemOptions(header, new FlexItemOptions { Basis = 60, Shrink = 0 });
-        
+        Layout.SetItemOptions(Header, new FlexItemOptions { Basis = section.HeaderHeight, Shrink = 0 });
+
         var headerLayout = new FlexContainer
         {
-            Parent = header,
-            Size = new ScalableVector2(header.Width - 20, header.Height - 20),
+            Parent = Header,
+            Size = new ScalableVector2(Header.Width - section.ContentPadding, Header.Height - section.ContentPadding * 2),
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
             JustifyContent = FlexJustifyContent.SpaceBetween
@@ -77,42 +84,44 @@ public class UsersSection : Container
         
         var searchStyle = new V2FilterFieldStyle
         {
-            Height = 40,
-            SearchIconSize = 18,
-            SearchIconInset = 10,
-            CornerRadius = SkinV2BorderRadiusConfig.Normal,
-            BackgroundColor = ColorHelper.FromHex("#181E25"),
-            TextColor = Color.White,
-            PlaceholderColor = ColorHelper.FromHex("#8CAFEA80"),
-            CursorColor = Color.White
+            Height = section.ControlHeight,
+            SearchIconSize = Config.SearchIconSize,
+            SearchIconInset = Config.SearchIconInset,
+            CornerRadius = section.CornerRadius,
+            BackgroundColor = SkinV2Color.Parse(section.ControlColor),
+            TextColor = SkinV2Color.Parse(section.TextColor),
+            PlaceholderColor = SkinV2Color.Parse(section.AccentTextColor),
+            CursorColor = SkinV2Color.Parse(section.TextColor)
         };
 
-        SearchBox = new V2FilterSearchTextbox(SearchQuery, LocalizationManager.Get("Screen_Hub_SearchUsers"), FontManager.GetWobbleFont(Fonts.InterBold), 18, searchStyle, 464)
+        SearchBox = new V2FilterSearchTextbox(SearchQuery, LocalizationManager.Get("Screen_Hub_SearchUsers"), FontManager.GetWobbleFont(section.Font), section.FontSize, searchStyle, Config.SearchWidth)
         {
             Parent = headerLayout
         };
 
         DropdownStyle = new SkinV2DropdownConfig
         {
-            Height = 40,
-            ItemHeight = 40,
-            FontSize = 18,
-            TriggerColor = "#181E25FF",
-            ItemColor = "#181E25FF",
-            HoverColor = "#354451FF",
-            SelectedItemColor = "#6B83B2FF",
-            TextColor = "#8CAFEAFF",
-            IconColor = "#8CAFEAFF",
-            CornerRadius = SkinV2BorderRadiusConfig.Normal
+            Height = section.ControlHeight,
+            ItemHeight = section.ControlHeight,
+            Font = section.Font,
+            FontSize = section.FontSize,
+            TriggerColor = section.ControlColor,
+            ItemColor = section.ControlColor,
+            HoverColor = section.ControlHoverColor,
+            SelectedItemColor = section.SelectedControlColor,
+            TextColor = section.AccentTextColor,
+            IconColor = section.AccentTextColor,
+            CornerRadius = section.CornerRadius
         };
-        
-        FilterDropdown = new V2Dropdown<UserFilter>(242, Filter, new DropdownEntry<UserFilter>[] 
+
+        FilterDropdown = new V2Dropdown<UserFilter>(Config.FilterWidth, Filter,
+            new DropdownEntry<UserFilter>[]
             {
                 new DropdownOption<UserFilter>(UserFilter.All, LocalizationManager.Get("Screen_Selection_All")),
                 new DropdownOption<UserFilter>(UserFilter.Friends, LocalizationManager.Get("Screen_Selection_Friends")),
                 new DropdownOption<UserFilter>(UserFilter.Country, LocalizationManager.Get("Screen_Selection_Country"))
             },
-            FontManager.GetWobbleFont(Fonts.InterBold), DropdownStyle, this)
+            FontManager.GetWobbleFont(section.Font), DropdownStyle, this)
         {
             Parent = headerLayout
         };
@@ -121,10 +130,11 @@ public class UsersSection : Container
     private void CreateContent()
     {
         var userList = OnlineManager.OnlineUsers == null ? new List<User>() : OnlineManager.OnlineUsers.Values.ToList();
-        Scroll = new UserList(userList, ((int)Math.Ceiling(Height)-80)/80 +3, 0, new ScalableVector2(736, 1), new ScalableVector2(736, 1), SearchQuery, Filter)
+        var availableHeight = Height - SectionConfig.HeaderHeight - SectionConfig.ContentPadding * 2;
+        Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Width, 1), new ScalableVector2(Width, 1), SearchQuery, Filter)
         {
             Parent = Layout,
-            Tint = ColorHelper.FromHex("#273038"),
+            Tint = SkinV2Color.Parse(SectionConfig.BackgroundColor),
             EasingType = Easing.OutQuint,
             TimeToCompleteScroll = 1200,
             ScrollSpeed = 220,
@@ -142,6 +152,9 @@ public class UsersSection : Container
 
     private void ShowUserMenu(User user)
     {
+        if (PreviewMode)
+            return;
+
         FilterDropdown.CloseImmediately();
         DismissUserMenu();
 
@@ -165,6 +178,16 @@ public class UsersSection : Container
         SearchBox.Focused = false;
         FilterDropdown.CloseImmediately();
         DismissUserMenu();
+    }
+
+    internal void ResizeHeight(float height)
+    {
+        if (Math.Abs(Height - height) < 0.01f)
+            return;
+
+        Height = height;
+        Layout.Height = Math.Max(1, height - SectionConfig.ContentPadding * 2);
+        Layout.RefreshLayout();
     }
 
     public override void Destroy()

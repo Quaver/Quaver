@@ -4,8 +4,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Backgrounds;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.V2.Main.UI;
+using Quaver.Shared.Screens.V2.Options;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning;
@@ -24,8 +27,13 @@ namespace Quaver.Shared.Screens.V2.Main
     /// <summary>
     ///     View for the rewritten main menu.
     /// </summary>
-    internal sealed class MainMenuScreenView : ScreenView, ISkinV2EditorHost
+    internal sealed class MainMenuScreenView : ScreenView, ISkinV2MultiSurfaceEditorHost
     {
+        private const string MainEditorSurfaceId = "main";
+        private const string HubEditorSurfaceId = "hub";
+        private const string ChatEditorSurfaceId = "chat";
+        private const string OptionsEditorSurfaceId = "options";
+
         private SkinStoreV2Lease Skin { get; }
 
         private SkinV2Config RootConfig { get; set; }
@@ -58,15 +66,35 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private Container ContentRoot { get; set; }
 
+        private HubPanel HubPreview { get; set; }
+
+        private FlexContainer HubNavigationHeaderLayout { get; set; }
+
+        private ChatV2Dialog ChatPreview { get; set; }
+
+        private OptionsV2Dialog OptionsPreview { get; set; }
+
         public Container PreviewRoot { get; }
 
         public Container EditorRoot { get; }
 
-        public string EditorGroupLabel => LocalizationManager.Get("SkinEditor_Group_MainMenu");
+        public string EditorGroupLabel => ActiveEditorSurfaceId switch
+        {
+            HubEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Hub"),
+            ChatEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Chat"),
+            OptionsEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Options"),
+            _ => LocalizationManager.Get("SkinEditor_Group_MainMenu")
+        };
 
         public IReadOnlyList<SkinEditorTarget> EditorTargets => editorTargets;
 
         private List<SkinEditorTarget> editorTargets = new List<SkinEditorTarget>();
+
+        public IReadOnlyList<SkinEditorSurface> EditorSurfaces => editorSurfaces;
+
+        public string ActiveEditorSurfaceId { get; private set; } = MainEditorSurfaceId;
+
+        private IReadOnlyList<SkinEditorSurface> editorSurfaces;
 
         private bool EditorLayoutActive { get; set; }
 
@@ -99,6 +127,14 @@ namespace Quaver.Shared.Screens.V2.Main
                 Parent = Container,
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Visible = false
+            };
+
+            editorSurfaces = new[]
+            {
+                new SkinEditorSurface(MainEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_MainMenu")),
+                new SkinEditorSurface(HubEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Hub")),
+                new SkinEditorSurface(ChatEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Chat")),
+                new SkinEditorSurface(OptionsEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Options"))
             };
 
             BuildContent();
@@ -250,6 +286,7 @@ namespace Quaver.Shared.Screens.V2.Main
 
         public override void Destroy()
         {
+            DestroySurfacePreviews();
             Container.Destroy();
             Skin.Dispose();
         }
@@ -265,15 +302,66 @@ namespace Quaver.Shared.Screens.V2.Main
         public void ApplySkinEditorPreview(SkinV2Config config)
         {
             RootConfig = config;
-            BuildContent();
-            var navigation = ScreenNavigation.ReplaceAttached(PreviewRoot, RootConfig);
-            AddNavigationTargets(navigation);
+
+            switch (ActiveEditorSurfaceId)
+            {
+                case HubEditorSurfaceId:
+                    BuildHubPreview();
+                    break;
+                case ChatEditorSurfaceId:
+                    BuildChatPreview();
+                    break;
+                case OptionsEditorSurfaceId:
+                    BuildOptionsPreview();
+                    break;
+                default:
+                    BuildContent();
+                    var navigation = ScreenNavigation.ReplaceAttached(PreviewRoot, RootConfig);
+                    AddNavigationTargets(navigation);
+                    break;
+            }
+
+            UpdateEditorLayout();
+        }
+
+        public void SelectEditorSurface(string surfaceId, SkinV2Config config)
+        {
+            if (surfaceId != MainEditorSurfaceId && surfaceId != HubEditorSurfaceId &&
+                surfaceId != ChatEditorSurfaceId && surfaceId != OptionsEditorSurfaceId)
+                throw new ArgumentOutOfRangeException(nameof(surfaceId), surfaceId,
+                    "Unknown skin editor surface.");
+
+            RootConfig = config;
+            ActiveEditorSurfaceId = surfaceId;
+
+            switch (surfaceId)
+            {
+                case HubEditorSurfaceId:
+                    BuildHubPreview();
+                    break;
+                case ChatEditorSurfaceId:
+                    BuildChatPreview();
+                    break;
+                case OptionsEditorSurfaceId:
+                    BuildOptionsPreview();
+                    break;
+                default:
+                    DestroySurfacePreviews();
+                    BuildContent();
+                    var navigation = ScreenNavigation.ReplaceAttached(PreviewRoot, RootConfig);
+                    AddNavigationTargets(navigation);
+                    break;
+            }
+
             UpdateEditorLayout();
         }
 
         public void SetSkinEditorLayout(bool active, float leftPanelWidth = 0, float rightPanelWidth = 0,
             float assetPanelHeight = 0)
         {
+            if (!active && ActiveEditorSurfaceId != MainEditorSurfaceId)
+                SelectEditorSurface(MainEditorSurfaceId, RootConfig);
+
             EditorLayoutActive = active;
             EditorLeftWidth = leftPanelWidth;
             EditorRightWidth = rightPanelWidth;
@@ -285,6 +373,91 @@ namespace Quaver.Shared.Screens.V2.Main
         private void AddNavigationTargets(ScreenNavigation navigation)
         {
             editorTargets.AddRange(navigation.GetSkinEditorTargets());
+        }
+
+        private void BuildHubPreview()
+        {
+            var selectedSection = HubPreview?.SelectedTab ?? HubPanel.HubSection.Users;
+            DestroySurfacePreviews();
+
+            HubPreview = new HubPanel(selectedSection, Skin, RootConfig, true)
+            {
+                Parent = PreviewRoot,
+                Alignment = Alignment.TopRight
+            };
+            HubNavigationHeaderLayout = new FlexContainer
+            {
+                Parent = PreviewRoot
+            };
+            ScreenNavigation.SetHubOverlayState(true, HubNavigationHeaderLayout);
+
+            editorTargets = new List<SkinEditorTarget>
+            {
+                new SkinEditorTarget("hub-layout", LocalizationManager.Get("SkinEditor_Component_HubLayout"), "Screens.Hub.Layout", HubPreview),
+                new SkinEditorTarget("hub-panel", LocalizationManager.Get("SkinEditor_Component_HubPanel"), "Screens.Hub.Panel", HubPreview.NavigationHeader, HubPreview.SectionsHeader, HubPreview.ContentBackground),
+                new SkinEditorTarget("hub-tabs", LocalizationManager.Get("SkinEditor_Component_HubTabs"), "Screens.Hub.Tabs", HubPreview.TabButtons[0], HubPreview.TabButtons[1], HubPreview.TabButtons[2]),
+                new SkinEditorTarget("hub-sections", LocalizationManager.Get("SkinEditor_Component_HubSections"), "Screens.Hub.Sections", HubPreview.NotificationsSection.Header, HubPreview.UserSection.Header, HubPreview.SongRequestsSection.Header),
+                new SkinEditorTarget("hub-users", LocalizationManager.Get("SkinEditor_Component_HubUsers"), "Screens.Hub.Users",
+                    () => HubPreview?.SelectTab(HubPanel.HubSection.Users), HubPreview.UserSection.Header),
+                new SkinEditorTarget("hub-notifications", LocalizationManager.Get("SkinEditor_Component_HubNotifications"), "Screens.Hub.Notifications",
+                    () => HubPreview?.SelectTab(HubPanel.HubSection.Notifications), HubPreview.NotificationsSection.Header),
+                new SkinEditorTarget("hub-song-requests", LocalizationManager.Get("SkinEditor_Component_HubSongRequests"), "Screens.Hub.SongRequests",
+                    () => HubPreview?.SelectTab(HubPanel.HubSection.SongRequest), HubPreview.SongRequestsSection.Header)
+            };
+
+            LastWindowWidth = -1;
+            LastWindowHeight = -1;
+            UpdateResponsiveLayout(true);
+        }
+
+        private void BuildChatPreview()
+        {
+            DestroySurfacePreviews();
+            ChatPreview = new ChatV2Dialog(Skin, RootConfig, true)
+            {
+                Parent = PreviewRoot,
+                IsInteractionEnabled = false
+            };
+            editorTargets = new List<SkinEditorTarget>(ChatPreview.GetSkinEditorTargets());
+
+            LastWindowWidth = -1;
+            LastWindowHeight = -1;
+            UpdateResponsiveLayout(true);
+        }
+
+        private void BuildOptionsPreview()
+        {
+            DestroySurfacePreviews();
+            OptionsPreview = new OptionsV2Dialog(Skin, RootConfig, true)
+            {
+                Parent = PreviewRoot,
+                IsInteractionEnabled = false
+            };
+            editorTargets = new List<SkinEditorTarget>(OptionsPreview.GetSkinEditorTargets());
+
+            LastWindowWidth = -1;
+            LastWindowHeight = -1;
+            UpdateResponsiveLayout(true);
+        }
+
+        private void DestroySurfacePreviews()
+        {
+            DestroyHubPreview();
+            ChatPreview?.Destroy();
+            ChatPreview = null;
+            OptionsPreview?.Destroy();
+            OptionsPreview = null;
+        }
+
+        private void DestroyHubPreview()
+        {
+            if (HubNavigationHeaderLayout != null)
+                ScreenNavigation.SetHubOverlayState(false);
+
+            HubPreview?.Destroy();
+            HubPreview = null;
+            HubNavigationHeaderLayout?.Destroy();
+            HubNavigationHeaderLayout = null;
         }
 
         private void UpdateEditorLayout()
@@ -356,6 +529,19 @@ namespace Quaver.Shared.Screens.V2.Main
             Background.Size = new ScalableVector2(width, height);
             if (BackgroundEffect != null)
                 BackgroundEffect.Size = new ScalableVector2(width, height);
+
+            if (HubPreview != null)
+                HubPreview.ResizeHeight(height);
+
+            ChatPreview?.RefreshPreviewLayout();
+            OptionsPreview?.RefreshPreviewLayout();
+            if (HubNavigationHeaderLayout != null)
+            {
+                HubNavigationHeaderLayout.Position = new ScalableVector2(0, NavigationConfig.EdgePadding);
+                HubNavigationHeaderLayout.Size = new ScalableVector2(
+                    width - NavigationConfig.EdgePadding, NavigationConfig.Button.Size);
+                HubNavigationHeaderLayout.RefreshLayout();
+            }
 
             var contentWidth = Math.Max(Config.Layout.MinimumContentWidth,
                 width - Config.Layout.HorizontalPadding * 2);

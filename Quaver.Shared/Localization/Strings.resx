@@ -723,6 +723,9 @@
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
     <value>Navigation &amp; Maintenance</value>
   </data>
+  <data name="Screen_Options_UseNewScreens" xml:space="preserve">
+    <value>Use New Screens (Requires Restart)</value>
+  </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
     <value>Installed Games</value>
   </data>
@@ -746,6 +749,24 @@
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
     <value>Set Custom FPS</value>
+  </data>
+  <data name="Screen_Options_CustomFpsDescription" xml:space="preserve">
+    <value>Enter a custom FPS value.</value>
+  </data>
+  <data name="Screen_Options_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Screen_Options_InvalidFps" xml:space="preserve">
+    <value>Please enter a valid FPS value.</value>
+  </data>
+  <data name="Screen_Options_CustomFpsSet" xml:space="preserve">
+    <value>Custom FPS set to {0}.</value>
+  </data>
+  <data name="Screen_Options_OverwriteSkinConfig" xml:space="preserve">
+    <value>Overwrite skin.yml?</value>
+  </data>
+  <data name="Screen_Options_OverwriteSkinConfigDescription" xml:space="preserve">
+    <value>This will keep only required metadata and properties marked ConfigEditable.</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
     <value>Display FPS Counter</value>
@@ -3512,6 +3533,9 @@ You might want to back up your keymap first.</value>
   <data name="SkinEditor_Components" xml:space="preserve">
     <value>Components</value>
   </data>
+  <data name="SkinEditor_Surface" xml:space="preserve">
+    <value>Screen</value>
+  </data>
   <data name="SkinEditor_Assets" xml:space="preserve">
     <value>Assets</value>
   </data>
@@ -3520,6 +3544,15 @@ You might want to back up your keymap first.</value>
   </data>
   <data name="SkinEditor_Group_MainMenu" xml:space="preserve">
     <value>Main Menu</value>
+  </data>
+  <data name="SkinEditor_Group_Hub" xml:space="preserve">
+    <value>Online Hub</value>
+  </data>
+  <data name="SkinEditor_Group_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="SkinEditor_Group_Options" xml:space="preserve">
+    <value>Options</value>
   </data>
   <data name="SkinEditor_Group_SharedNavigation" xml:space="preserve">
     <value>Shared Navigation</value>
@@ -3680,6 +3713,57 @@ You might want to back up your keymap first.</value>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
     <value>Screen Title</value>
   </data>
+  <data name="SkinEditor_Component_HubLayout" xml:space="preserve">
+    <value>Hub Layout</value>
+  </data>
+  <data name="SkinEditor_Component_HubPanel" xml:space="preserve">
+    <value>Hub Panel</value>
+  </data>
+  <data name="SkinEditor_Component_HubTabs" xml:space="preserve">
+    <value>Section Tabs</value>
+  </data>
+  <data name="SkinEditor_Component_HubSections" xml:space="preserve">
+    <value>Section Headers</value>
+  </data>
+  <data name="SkinEditor_Component_HubUsers" xml:space="preserve">
+    <value>Users Section</value>
+  </data>
+  <data name="SkinEditor_Component_HubNotifications" xml:space="preserve">
+    <value>Notifications Section</value>
+  </data>
+  <data name="SkinEditor_Component_HubSongRequests" xml:space="preserve">
+    <value>Song Requests Section</value>
+  </data>
+  <data name="SkinEditor_Component_ChatLayout" xml:space="preserve">
+    <value>Chat Layout</value>
+  </data>
+  <data name="SkinEditor_Component_ChatPanels" xml:space="preserve">
+    <value>Chat Panels</value>
+  </data>
+  <data name="SkinEditor_Component_ChatTabs" xml:space="preserve">
+    <value>Channel Tabs</value>
+  </data>
+  <data name="SkinEditor_Component_ChatSearch" xml:space="preserve">
+    <value>User Search</value>
+  </data>
+  <data name="SkinEditor_Component_ChatInput" xml:space="preserve">
+    <value>Message Input</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsLayout" xml:space="preserve">
+    <value>Options Layout</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsPanel" xml:space="preserve">
+    <value>Options Panel</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsHeader" xml:space="preserve">
+    <value>Options Header</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsSidebar" xml:space="preserve">
+    <value>Category Sidebar</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsContent" xml:space="preserve">
+    <value>Options Content</value>
+  </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -3763,6 +3847,126 @@ You might want to back up your keymap first.</value>
   </data>
   <data name="SkinEditor_Property_OfflineStatusColor" xml:space="preserve">
     <value>Offline Status Color</value>
+  </data>
+  <data name="SkinEditor_Property_Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="SkinEditor_Property_NavigationHeaderGap" xml:space="preserve">
+    <value>Navigation Header Gap</value>
+  </data>
+  <data name="SkinEditor_Property_AnimationDurationMilliseconds" xml:space="preserve">
+    <value>Animation Duration</value>
+  </data>
+  <data name="SkinEditor_Property_HeaderColor" xml:space="preserve">
+    <value>Header Color</value>
+  </data>
+  <data name="SkinEditor_Property_ContentColor" xml:space="preserve">
+    <value>Content Color</value>
+  </data>
+  <data name="SkinEditor_Property_NotificationsIcon" xml:space="preserve">
+    <value>Notifications Icon</value>
+  </data>
+  <data name="SkinEditor_Property_UsersIcon" xml:space="preserve">
+    <value>Users Icon</value>
+  </data>
+  <data name="SkinEditor_Property_SongRequestsIcon" xml:space="preserve">
+    <value>Song Requests Icon</value>
+  </data>
+  <data name="SkinEditor_Property_HeaderHeight" xml:space="preserve">
+    <value>Header Height</value>
+  </data>
+  <data name="SkinEditor_Property_Padding" xml:space="preserve">
+    <value>Padding</value>
+  </data>
+  <data name="SkinEditor_Property_Gap" xml:space="preserve">
+    <value>Gap</value>
+  </data>
+  <data name="SkinEditor_Property_ButtonWidth" xml:space="preserve">
+    <value>Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_ButtonHeight" xml:space="preserve">
+    <value>Button Height</value>
+  </data>
+  <data name="SkinEditor_Property_CornerRadius" xml:space="preserve">
+    <value>Corner Radius</value>
+  </data>
+  <data name="SkinEditor_Property_IconSize" xml:space="preserve">
+    <value>Icon Size</value>
+  </data>
+  <data name="SkinEditor_Property_Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SkinEditor_Property_FontSize" xml:space="preserve">
+    <value>Font Size</value>
+  </data>
+  <data name="SkinEditor_Property_SelectedColor" xml:space="preserve">
+    <value>Selected Color</value>
+  </data>
+  <data name="SkinEditor_Property_UnselectedColor" xml:space="preserve">
+    <value>Unselected Color</value>
+  </data>
+  <data name="SkinEditor_Property_ClearIcon" xml:space="preserve">
+    <value>Clear Icon</value>
+  </data>
+  <data name="SkinEditor_Property_ContentPadding" xml:space="preserve">
+    <value>Content Padding</value>
+  </data>
+  <data name="SkinEditor_Property_ControlHeight" xml:space="preserve">
+    <value>Control Height</value>
+  </data>
+  <data name="SkinEditor_Property_ClearButtonWidth" xml:space="preserve">
+    <value>Clear Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_EmptyMessageFontSize" xml:space="preserve">
+    <value>Empty Message Font Size</value>
+  </data>
+  <data name="SkinEditor_Property_ControlColor" xml:space="preserve">
+    <value>Control Color</value>
+  </data>
+  <data name="SkinEditor_Property_ControlHoverColor" xml:space="preserve">
+    <value>Control Hover Color</value>
+  </data>
+  <data name="SkinEditor_Property_SelectedControlColor" xml:space="preserve">
+    <value>Selected Control Color</value>
+  </data>
+  <data name="SkinEditor_Property_AccentTextColor" xml:space="preserve">
+    <value>Accent Text Color</value>
+  </data>
+  <data name="SkinEditor_Property_SearchWidth" xml:space="preserve">
+    <value>Search Width</value>
+  </data>
+  <data name="SkinEditor_Property_FilterWidth" xml:space="preserve">
+    <value>Filter Width</value>
+  </data>
+  <data name="SkinEditor_Property_SearchIconSize" xml:space="preserve">
+    <value>Search Icon Size</value>
+  </data>
+  <data name="SkinEditor_Property_SearchIconInset" xml:space="preserve">
+    <value>Search Icon Inset</value>
+  </data>
+  <data name="SkinEditor_Property_FeedButtonWidth" xml:space="preserve">
+    <value>Feed Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIcon" xml:space="preserve">
+    <value>Twitch Icon</value>
+  </data>
+  <data name="SkinEditor_Property_AlertsButtonWidth" xml:space="preserve">
+    <value>Alerts Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchButtonWidth" xml:space="preserve">
+    <value>Twitch Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_ActionGap" xml:space="preserve">
+    <value>Action Gap</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIconWidth" xml:space="preserve">
+    <value>Twitch Icon Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIconHeight" xml:space="preserve">
+    <value>Twitch Icon Height</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchColor" xml:space="preserve">
+    <value>Twitch Color</value>
   </data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
     <value>Metadata</value>

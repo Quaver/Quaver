@@ -22,6 +22,7 @@ using Quaver.Shared.Online.API.Ranked;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Gameplay;
+using Quaver.Shared.Screens.V2.Options.Modal;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics.UI.Dialogs;
@@ -38,8 +39,17 @@ namespace Quaver.Shared.Options
         private static bool RankedUpdateRunning { get; set; }
         private static bool OffsetUpdateRunning { get; set; }
 
-        public static void SetCustomFps(Action<bool> setDialogFocused = null, Action onChanged = null)
+        public static void SetCustomFps(Action<bool> setDialogFocused = null, Action onChanged = null,
+            bool useV2Dialog = false)
         {
+            if (useV2Dialog)
+            {
+                setDialogFocused?.Invoke(true);
+                DialogManager.Show(new OptionsCustomFpsDialog(onChanged,
+                    () => setDialogFocused?.Invoke(false)));
+                return;
+            }
+
             setDialogFocused?.Invoke(true);
             DialogManager.Show(new YesNoTextDialog("Custom FPS", "Enter a custom FPS value.", ConfigManager.CustomFpsLimit.Value.ToString(), "", text =>
                 {
@@ -109,7 +119,8 @@ namespace Quaver.Shared.Options
             Utils.NativeUtils.OpenNatively(dir);
         }
 
-        public static void GenerateSkinConfig(Action<bool> setDialogFocused = null)
+        public static void GenerateSkinConfig(Action<bool> setDialogFocused = null,
+            bool useV2Dialog = false)
         {
             var store = SkinManager.SkinV2;
             if (store == null)
@@ -124,6 +135,14 @@ namespace Quaver.Shared.Options
             }
 
             setDialogFocused?.Invoke(true);
+
+            if (useV2Dialog)
+            {
+                DialogManager.Show(new OptionsSkinConfigOverwriteDialog(
+                    GenerateSkinConfigFile, () => setDialogFocused?.Invoke(false)));
+                return;
+            }
+
             DialogManager.Show(new YesNoDialog("Overwrite skin.yml?", "This will keep only required metadata and properties marked ConfigEditable.", () =>
                 {
                     setDialogFocused?.Invoke(false);

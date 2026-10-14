@@ -1,13 +1,12 @@
 using System;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Structures;
-using Quaver.Shared.Assets;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Skinning.V2;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Shaders;
@@ -27,13 +26,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private int LastDisplayedMuteSecondsLeft { get; set; } = -1;
 
-        public ChatInputBar(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, FontManager.GetWobbleFont(Fonts.InterSemiBold), 18, string.Empty, LocalizationManager.Get("Chat_SendAMessage"))
+        public ChatInputBar(Bindable<ChatChannel> activeChannel, ScalableVector2 size, SkinV2ChatInputConfig config) 
+            : base(size, FontManager.GetWobbleFont(config.Font), config.FontSize, string.Empty, LocalizationManager.Get("Chat_SendAMessage"))
         {
             ActiveChannel = activeChannel;
 
-            Tint = MonoGame.Extended.ColorHelper.FromHex("#181E25");
-            InputText.Tint = MonoGame.Extended.ColorHelper.FromHex("#FFFFFF");
-            Cursor.Tint = Color.White;
+            Tint = SkinV2Color.Parse(config.BackgroundColor);
+            InputText.Tint = SkinV2Color.Parse(config.TextColor);
+            Cursor.Tint = SkinV2Color.Parse(config.TextColor);
             InputText.X = 15;
 
             OnSubmit += SubmitMessage;

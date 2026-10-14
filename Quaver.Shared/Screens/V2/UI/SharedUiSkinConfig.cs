@@ -6,6 +6,105 @@ using Wobble.Configuration;
 namespace Quaver.Shared.Screens.V2.UI
 {
     /// <summary>
+    ///     Shared visual and layout defaults for V2 modal dialogs.
+    /// </summary>
+    public sealed class SkinV2ModalConfig
+    {
+        [Range(1, 8192)]
+        public float Width { get; set; } = 660;
+
+        [Range(1, 8192)]
+        public float TitleHeight { get; set; } = 36;
+
+        [Range(0, 2048)]
+        public float TitleHorizontalPadding { get; set; } = 40;
+
+        [Range(1, 8192)]
+        public float BannerHeight { get; set; } = 128;
+
+        [Range(0, 2048)]
+        public float SectionGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        public float FormInset { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(1, 8192)]
+        public float FormWidth { get; set; } = 620;
+
+        [Range(0, 2048)]
+        public float FormItemGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(1, 8192)]
+        public float FieldLabelHeight { get; set; } = 34;
+
+        [Range(0, 2048)]
+        public float FieldLabelHorizontalPadding { get; set; } = 32;
+
+        [Range(1, 8192)]
+        public float InputHeight { get; set; } = 40;
+
+        [Range(1, 8192)]
+        public float ButtonWidth { get; set; } = 180;
+
+        [Range(1, 8192)]
+        public float ButtonHeight { get; set; } = 40;
+
+        [Range(0, 2048)]
+        public float ButtonGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        public float ButtonBottomInset { get; set; } = SkinV2Spacing.SpacingXl;
+
+        [Range(0, 2048)]
+        public float FormToButtonsGap { get; set; } = 31;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [Range(1, 10000)]
+        public int AnimationDurationMilliseconds { get; set; } = 150;
+
+        [SkinFont]
+        public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+
+        [Range(1, 256)]
+        public int TitleFontSize { get; set; } = SkinV2FontSizesConfig.TextXl;
+
+        [Range(1, 256)]
+        public int DescriptionFontSize { get; set; } = SkinV2FontSizesConfig.TextBase;
+
+        [Range(1, 256)]
+        public int ControlFontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
+
+        [ConfigEditable, SkinColor]
+        public string TitleColor { get; set; } = "#4B5973FF";
+
+        [ConfigEditable, SkinColor]
+        public string PanelColor { get; set; } = "#273038FF";
+
+        [ConfigEditable, SkinColor]
+        public string InputColor { get; set; } = "#181E25FF";
+
+        [ConfigEditable, SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable, SkinColor]
+        public string BannerShadeColor { get; set; } = "#00000073";
+
+        [ConfigEditable, SkinColor]
+        public string ConfirmButtonColor { get; set; } = "#27B06EFF";
+
+        [ConfigEditable, SkinColor]
+        public string CancelButtonColor { get; set; } = "#F9645DFF";
+
+        [ConfigEditable, SkinColor]
+        public string NeutralButtonColor { get; set; } = "#4B5973FF";
+
+        [SkinAssetPath]
+        public string BannerImage { get; set; } = "";
+    }
+
+    /// <summary>
     ///     Shared visual and interaction defaults for V2 dropdown selectors.
     /// </summary>
     public sealed class SkinV2DropdownConfig

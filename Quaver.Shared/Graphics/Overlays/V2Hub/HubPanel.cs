@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
@@ -24,27 +23,36 @@ public class HubPanel : Container
 {
     private FlexContainer BackgroundLayout { get; set; }
     private SkinStoreV2Lease Skin { get; }
-    private SkinV2NavigationConfig NavigationConfig => Skin.Config.Shared.Navigation;
+    private SkinV2Config RootConfig { get; }
+    private bool PreviewMode { get; }
+    private SkinV2HubConfig Config => RootConfig.Screens.Hub;
+    private SkinV2NavigationConfig NavigationConfig => RootConfig.Shared.Navigation;
 
     private RoundedButton NotificationButton { get; set; }
     private RoundedButton UserButton { get; set; }
     private RoundedButton SongRequestButton { get; set; }
-    
+
     public HubSection? SelectedTab { get; private set; }
-    private Color SelectedSectionColor { get; set; } = ColorHelper.FromHex("#6B83B2");
-    private Color UnselectedSectionColor { get; set; } = ColorHelper.FromHex("#273038");
+    private Color SelectedSectionColor => SkinV2Color.Parse(Config.Tabs.SelectedColor);
+    private Color UnselectedSectionColor => SkinV2Color.Parse(Config.Tabs.UnselectedColor);
 
-    private Sprite ContentBackground { get; set; }
-    
+    internal Sprite NavigationHeader { get; private set; }
+    internal Sprite SectionsHeader { get; private set; }
+    internal Sprite ContentBackground { get; private set; }
+    internal Drawable[] TabButtons => new Drawable[] { NotificationButton, UserButton, SongRequestButton };
+
     public NotificationsSection NotificationsSection { get; set; }
-    private UsersSection UserSection { get; set; }
-    private SongRequestsSection SongRequestsSection { get; set; }
+    internal UsersSection UserSection { get; private set; }
+    internal SongRequestsSection SongRequestsSection { get; private set; }
 
-    public HubPanel(HubSection initialSection)
+    public HubPanel(HubSection initialSection, SkinStoreV2Lease skin, SkinV2Config rootConfig,
+        bool previewMode = false)
     {
-        Skin = SkinManager.AcquireV2();
-        Size = new ScalableVector2(736, WindowManager.Height);
-        
+        Skin = skin;
+        RootConfig = rootConfig;
+        PreviewMode = previewMode;
+        Size = new ScalableVector2(Config.Layout.Width, WindowManager.Height);
+
         CreateLayout();
 
         CreateNavigationHeader();
@@ -70,72 +78,73 @@ public class HubPanel : Container
     private void CreateNavigationHeader()
     {
         var headerHeight = NavigationConfig.Button.Size + NavigationConfig.EdgePadding * 2;
-        var header = new Sprite
+        NavigationHeader = new Sprite
         {
             Parent = BackgroundLayout,
             Size = new ScalableVector2(Width, headerHeight),
-            Tint = ColorHelper.FromHex("#181E25")
+            Tint = SkinV2Color.Parse(Config.Panel.HeaderColor)
         };
-        BackgroundLayout.SetItemOptions(header, new FlexItemOptions { Basis = headerHeight, Shrink = 0 });
+        BackgroundLayout.SetItemOptions(NavigationHeader, new FlexItemOptions { Basis = headerHeight, Shrink = 0 });
 
         var spacer = new Container
         {
             Parent = BackgroundLayout,
-            Size = new ScalableVector2(0, 10)
+            Size = new ScalableVector2(0, Config.Layout.NavigationHeaderGap)
         };
-        BackgroundLayout.SetItemOptions(spacer, new FlexItemOptions { Basis = 10, Shrink = 0 });
+        BackgroundLayout.SetItemOptions(spacer, new FlexItemOptions { Basis = Config.Layout.NavigationHeaderGap, Shrink = 0 });
     }
 
     private void CreateSectionsHeader()
     {
-        var header = new Sprite
+        var tabs = Config.Tabs;
+        SectionsHeader = new Sprite
         {
             Parent = BackgroundLayout,
-            Size = new ScalableVector2(736, 60),
-            Tint = ColorHelper.FromHex("#181E25")
+            Size = new ScalableVector2(Width, tabs.HeaderHeight),
+            Tint = SkinV2Color.Parse(Config.Panel.HeaderColor)
         };
-        BackgroundLayout.SetItemOptions(header, new FlexItemOptions { Basis = 60, Shrink = 0 });
-        
+        BackgroundLayout.SetItemOptions(SectionsHeader, new FlexItemOptions { Basis = tabs.HeaderHeight, Shrink = 0 });
+
         var headerLayout = new FlexContainer
         {
-            Parent = header,
-            Position = new ScalableVector2(10, 10),
-            Size = new ScalableVector2(header.Width - 20, header.Height - 20),
-            ColumnGap = 10,
+            Parent = SectionsHeader,
+            Position = new ScalableVector2(tabs.Padding, tabs.Padding),
+            Size = new ScalableVector2(SectionsHeader.Width - tabs.Padding * 2, SectionsHeader.Height - tabs.Padding * 2),
+            ColumnGap = tabs.Gap,
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
             JustifyContent = FlexJustifyContent.Center
         };
-        
+
         NotificationButton = new RoundedButton((sender, args) => SelectTab(HubSection.Notifications))
         {
             Parent = headerLayout,
-            Size = new ScalableVector2(232, 40),
-            CornerRadius = SkinV2BorderRadiusConfig.Normal,
+            Size = new ScalableVector2(tabs.ButtonWidth, tabs.ButtonHeight),
+            CornerRadius = tabs.CornerRadius,
             Tint = UnselectedSectionColor
         };
-        NotificationButton.SetIcon(UserInterface.HubNotifications, new Vector2(20, 20));
-        NotificationButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Hub_NotificationHeader"), 18, Color.White);
-        
+        NotificationButton.SetIcon(Skin.LoadTexture(tabs.NotificationsIcon, UserInterface.HubNotifications), new Vector2(tabs.IconSize, tabs.IconSize));
+        NotificationButton.SetLabel(FontManager.GetWobbleFont(tabs.Font), LocalizationManager.Get("Screen_Hub_NotificationHeader"), tabs.FontSize, SkinV2Color.Parse(tabs.TextColor));
+
         UserButton = new RoundedButton((sender, args) => SelectTab(HubSection.Users))
         {
             Parent = headerLayout,
-            Size = new ScalableVector2(232, 40),
-            CornerRadius = SkinV2BorderRadiusConfig.Normal,
+            Size = new ScalableVector2(tabs.ButtonWidth, tabs.ButtonHeight),
+            CornerRadius = tabs.CornerRadius,
             Tint = UnselectedSectionColor
         };
-        UserButton.SetIcon(UserInterface.HubOnlineUsers, new Vector2(20, 20));
-        UserButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Hub_UsersHeader"), 18, Color.White);
-        
+        UserButton.SetIcon(Skin.LoadTexture(tabs.UsersIcon, UserInterface.HubOnlineUsers), new Vector2(tabs.IconSize, tabs.IconSize));
+        UserButton.SetLabel(FontManager.GetWobbleFont(tabs.Font), LocalizationManager.Get("Screen_Hub_UsersHeader"), tabs.FontSize, SkinV2Color.Parse(tabs.TextColor));
+
         SongRequestButton = new RoundedButton((sender, args) => SelectTab(HubSection.SongRequest))
         {
             Parent = headerLayout,
-            Size = new ScalableVector2(232, 40),
-            CornerRadius = SkinV2BorderRadiusConfig.Normal,
+            Size = new ScalableVector2(tabs.ButtonWidth, tabs.ButtonHeight),
+            CornerRadius = tabs.CornerRadius,
             Tint = UnselectedSectionColor
         };
-        SongRequestButton.SetIcon(UserInterface.HubSongRequests, new Vector2(20, 20));
-        SongRequestButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Hub_MapRequestHeader"), 18, Color.White);
+        SongRequestButton.SetIcon(Skin.LoadTexture(tabs.SongRequestsIcon, UserInterface.HubSongRequests), new Vector2(tabs.IconSize, tabs.IconSize));
+        SongRequestButton.SetLabel(FontManager.GetWobbleFont(tabs.Font), LocalizationManager.Get("Screen_Hub_MapRequestHeader"), tabs.FontSize, SkinV2Color.Parse(tabs.TextColor));
     }
 
     private void CreateSectionContent()
@@ -143,27 +152,27 @@ public class HubPanel : Container
         ContentBackground = new Sprite
         {
             Parent = BackgroundLayout,
-            Size = new ScalableVector2(736, 0),
-            Tint = ColorHelper.FromHex("#273038"),
+            Size = new ScalableVector2(Width, 0),
+            Tint = SkinV2Color.Parse(Config.Panel.ContentColor),
             UpdateWhenInvisible = false
         };
         BackgroundLayout.SetItemOptions(ContentBackground, new FlexItemOptions { Basis = 0, Grow = 1, Shrink = 1 });
         BackgroundLayout.RefreshLayout();
 
         
-        NotificationsSection = new NotificationsSection(ContentBackground.Size)
+        NotificationsSection = new NotificationsSection(ContentBackground.Size, Skin, RootConfig, PreviewMode)
         {
             Parent = ContentBackground,
             UpdateWhenInvisible = false
         };
         
-        UserSection = new UsersSection(ContentBackground.Size)
+        UserSection = new UsersSection(ContentBackground.Size, RootConfig, PreviewMode)
         {
             Parent = ContentBackground,
             UpdateWhenInvisible = false
         };
         
-        SongRequestsSection = new SongRequestsSection(ContentBackground.Size)
+        SongRequestsSection = new SongRequestsSection(ContentBackground.Size, Skin, RootConfig, PreviewMode)
         {
             Parent = ContentBackground,
             UpdateWhenInvisible = false
@@ -175,17 +184,17 @@ public class HubPanel : Container
         if (SelectedTab == section)
             return;
         
-        if (SelectedTab == HubSection.Notifications && NotificationsSection.CurrentFeed == NotificationsSection.NotificationFeed.Recent)
+        if (!PreviewMode && SelectedTab == HubSection.Notifications && NotificationsSection.CurrentFeed == NotificationsSection.NotificationFeed.Recent)
         {
             NotificationsSection.SetNewNotificationToViewed();
         }
         
         SelectedTab = section;
 
-        if (section == HubSection.Notifications && GameBase.Game is QuaverGame notificationGame)
+        if (!PreviewMode && section == HubSection.Notifications && GameBase.Game is QuaverGame notificationGame)
             notificationGame.OnlineHub?.MarkSectionAsRead(OnlineHubSectionType.Notifications);
 
-        if (section == HubSection.SongRequest && GameBase.Game is QuaverGame game)
+        if (!PreviewMode && section == HubSection.SongRequest && GameBase.Game is QuaverGame game)
             game.OnlineHub?.Sections[OnlineHubSectionType.SongRequests].MarkAsRead();
 
         if (section != HubSection.Notifications)
@@ -216,6 +225,19 @@ public class HubPanel : Container
 
         
     }
+
+    internal void ResizeHeight(float height)
+    {
+        if (Math.Abs(Height - height) < 0.01f)
+            return;
+
+        Height = height;
+        BackgroundLayout.Height = height;
+        BackgroundLayout.RefreshLayout();
+        NotificationsSection.ResizeHeight(ContentBackground.Height);
+        UserSection.ResizeHeight(ContentBackground.Height);
+        SongRequestsSection.ResizeHeight(ContentBackground.Height);
+    }
     
     private static void ResetButtons(Drawable parent)
     {
@@ -226,12 +248,6 @@ public class HubPanel : Container
 
             ResetButtons(child);
         }
-    }
-
-    public override void Destroy()
-    {
-        base.Destroy();
-        Skin.Dispose();
     }
 
     public enum HubSection

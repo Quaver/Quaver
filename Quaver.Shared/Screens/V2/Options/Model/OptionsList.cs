@@ -301,7 +301,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
 
             AddSection(options, OptionCategory.Video, "FrameTime",
                 ("video.frame-time.limiter", "FrameLimiter", EnumDropdown(OptionsV2Dropdowns.FrameLimiter, () => ConfigManager.FpsLimiterType, limit => limit != FpsLimitType.WaylandVsync || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))),
-                ("video.frame-time.custom-fps", "SetCustomFPS", ActionButton("SET FPS", () => OptionsActions.SetCustomFps(onChanged: () => RecordChanged("video.frame-time.custom-fps")))),
+                ("video.frame-time.custom-fps", "SetCustomFPS", ActionButton("SET FPS", () => OptionsActions.SetCustomFps(onChanged: () => RecordChanged("video.frame-time.custom-fps"), useV2Dialog: true))),
                 ("video.frame-time.fps-counter", "DisplayFPSCounter", Toggle(() => ConfigManager.FpsCounter)));
 
             // Audio
@@ -375,7 +375,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
 
             AddSection(options, OptionCategory.Skin, "Navigation",
                 ("skin.navigation.open-folder", "OpenSkinFolder", ActionButton("OPEN FOLDER", OptionsActions.OpenSkinFolder)),
-                ("skin.navigation.generate-v2-config", "GenerateEditableskinyml", ActionButton("GENERATE", () => OptionsActions.GenerateSkinConfig())));
+                ("skin.navigation.generate-v2-config", "GenerateEditableskinyml", ActionButton("GENERATE", () => OptionsActions.GenerateSkinConfig(useV2Dialog: true))));
 
             AddSection(options, OptionCategory.Skin, "Sharing",
                 ("skin.sharing.export", "ExportSkin", ActionButton("EXPORT SKIN", OptionsActions.ExportSkin)),
@@ -460,6 +460,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
                 ("misc.localization.language", "Language", (OptionsV2Dropdowns.Language, null)));
 
             AddSection(options, OptionCategory.Miscellaneous, "NavigationMaintenance",
+                ("misc.navigation.use-new-screens", "UseNewScreens", (_ => new ToggleV2(ConfigManager.UseNewScreens), null)),
                 ("misc.navigation.open-game-folder", "OpenGameFolder", ActionButton("OPEN FOLDER", OptionsActions.OpenGameFolder)),
                 ("misc.navigation.update-ranked-statuses", "UpdateMapRankedStatuses", ActionButton("UPDATE", () => OptionsActions.UpdateRankedStatuses(), "#F2994A")),
                 ("misc.navigation.update-online-offsets", "UpdateMapOnlineOffsets", ActionButton("UPDATE", OptionsActions.UpdateOnlineOffsets, "#F2994A")));
