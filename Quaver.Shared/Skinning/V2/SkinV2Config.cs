@@ -65,6 +65,10 @@ namespace Quaver.Shared.Skinning.V2
 
         [Required]
         [ConfigEditable]
+        public SkinV2FooterMusicPlayerConfig MusicPlayer { get; set; } = new SkinV2FooterMusicPlayerConfig();
+
+        [Required]
+        [ConfigEditable]
         public SkinV2DropdownConfig Dropdown { get; set; } = new SkinV2DropdownConfig();
 
         [Required]

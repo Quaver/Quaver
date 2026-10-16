@@ -27,15 +27,24 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
         public string ConfigPath { get; }
 
+        public IReadOnlyList<string> ExcludedConfigPaths { get; }
+
         public IReadOnlyList<Drawable> Drawables { get; }
 
         private Action Selected { get; }
 
         public SkinEditorTarget(string id, string label, string configPath, params Drawable[] drawables)
+            : this(id, label, configPath, Array.Empty<string>(), drawables)
+        {
+        }
+
+        public SkinEditorTarget(string id, string label, string configPath,
+            IReadOnlyList<string> excludedConfigPaths, params Drawable[] drawables)
         {
             Id = id;
             Label = label;
             ConfigPath = configPath;
+            ExcludedConfigPaths = excludedConfigPaths ?? Array.Empty<string>();
             Drawables = drawables.Where(x => x != null).ToArray();
         }
 
@@ -46,6 +55,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         }
 
         public void Activate() => Selected?.Invoke();
+
+        public bool IncludesConfigPath(string path) => ExcludedConfigPaths.All(excluded =>
+            path != excluded && !path.StartsWith(excluded + ".", StringComparison.Ordinal));
     }
 
     internal interface ISkinV2EditorHost

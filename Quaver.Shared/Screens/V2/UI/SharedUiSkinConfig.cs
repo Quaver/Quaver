@@ -6,6 +6,268 @@ using Wobble.Configuration;
 namespace Quaver.Shared.Screens.V2.UI
 {
     /// <summary>
+    ///     Shared visual and layout defaults for the music controls hosted by the V2 footer.
+    /// </summary>
+    public sealed class SkinV2FooterMusicPlayerConfig
+    {
+        [Range(1, 8192)]
+        public float MinimumWidth { get; set; } = 320;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ControlsHeight { get; set; } = 25;
+
+        [Range(1, 8192)]
+        public float BannerWidth { get; set; } = 580;
+
+        [Range(1, 8192)]
+        public float BannerHeight { get; set; } = 55;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float BannerTextHorizontalPadding { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float BannerTextGap { get; set; } = 0;
+
+        [Range(0d, 1d)]
+        public float BannerBrightness { get; set; } = 0.2f;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float Padding { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float SectionGap { get; set; } = SkinV2MarginsConfig.Sm;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float ControlGap { get; set; } = SkinV2MarginsConfig.Lg;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ButtonSize { get; set; } = 20;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float PreviousNextIconWidth { get; set; } = 16;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float PreviousNextIconHeight { get; set; } = 18;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float PlayPauseIconWidth { get; set; } = 20;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float PlayPauseIconHeight { get; set; } = 20;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ListIconWidth { get; set; } = 21;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ListIconHeight { get; set; } = 20;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float VolumeIconWidth { get; set; } = 30;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float VolumeIconHeight { get; set; } = 30;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ProgressWidth { get; set; } = 265;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float ProgressHeight { get; set; } = 12;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float TimeWidth { get; set; } = 110;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = 5;
+
+        [Range(0, 4096)]
+        public float ProgressCornerRadius { get; set; } = 7;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string TitleFont { get; set; } = SkinV2FontWeightsConfig.Bold;
+
+        [Range(1, 256)]
+        public int TitleFontSize { get; set; } = SkinV2FontSizesConfig.TextBase;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string ArtistFont { get; set; } = SkinV2FontWeightsConfig.SemiBold;
+
+        [Range(1, 256)]
+        public int ArtistFontSize { get; set; } = SkinV2FontSizesConfig.TextSm;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string TimeFont { get; set; } = SkinV2FontWeightsConfig.SemiBold;
+
+        [Range(1, 256)]
+        [SkinEditorIgnore]
+        public int TimeFontSize { get; set; } = SkinV2FontSizesConfig.TextSm;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string BackgroundColor { get; set; } = "#273038FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ForegroundColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string SecondaryForegroundColor { get; set; } = "#D0DBEDFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TitleColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ArtistColor { get; set; } = "#D0DBEDFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ProgressTrackColor { get; set; } = "#181E25FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string ProgressFillColor { get; set; } = "#6B83B2FF";
+
+        [Required]
+        public SkinV2MusicPlayerIconsConfig Icons { get; set; } = new SkinV2MusicPlayerIconsConfig();
+
+        [Required]
+        public SkinV2VolumeDialogConfig VolumeDialog { get; set; } = new SkinV2VolumeDialogConfig();
+    }
+
+    public sealed class SkinV2VolumeDialogConfig
+    {
+        [Range(-8192, 8192)]
+        public float PositionOffsetX { get; set; } = 0;
+
+        [Range(-8192, 8192)]
+        public float PositionOffsetY { get; set; } = 0;
+
+        [Range(1, 8192)]
+        public float CardWidth { get; set; } = 44;
+
+        [Range(1, 8192)]
+        public float CardHeight { get; set; } = 245;
+
+        [Range(0, 2048)]
+        public float CardGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(1, 8192)]
+        public float FooterHeight { get; set; } = 40;
+
+        [Range(1, 8192)]
+        public float TrackWidth { get; set; } = 12;
+
+        [Range(1, 8192)]
+        public float TrackHeight { get; set; } = 170;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float TrackTopInset { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float IconHeight { get; set; } = 20;
+
+        [Range(0, 4096)]
+        public float CardCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [Range(0, 4096)]
+        public float TrackCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float AnchorGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(-2048, 2048)]
+        [SkinEditorIgnore]
+        public float HorizontalOffset { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float WindowInset { get; set; } = SkinV2MarginsConfig.Md;
+
+        public bool SlideFromLeft { get; set; } = true;
+
+        [Range(0, 8192)]
+        public float SlideDistance { get; set; } = 40;
+
+        [Range(1, 10000)]
+        public int AnimationDuration { get; set; } = 250;
+
+        [Range(0d, 1d)]
+        [SkinEditorIgnore]
+        public float DimOpacity { get; set; } = 0.75f;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string CardColor { get; set; } = "#181E25FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string FooterColor { get; set; } = "#273038FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TrackColor { get; set; } = "#273038FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string InactiveFillColor { get; set; } = "#77808FFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string SelectedColor { get; set; } = "#6B83B2FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string IconColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2MusicPlayerIconsConfig
+    {
+        [SkinAssetPath]
+        public string Previous { get; set; } = "";
+
+        [SkinAssetPath]
+        public string Play { get; set; } = "";
+
+        [SkinAssetPath]
+        public string Pause { get; set; } = "";
+
+        [SkinAssetPath]
+        public string Next { get; set; } = "";
+
+        [SkinAssetPath]
+        public string Queue { get; set; } = "";
+
+        [SkinAssetPath]
+        public string Volume { get; set; } = "";
+    }
+
+    /// <summary>
     ///     Shared visual and layout defaults for V2 modal dialogs.
     /// </summary>
     public sealed class SkinV2ModalConfig

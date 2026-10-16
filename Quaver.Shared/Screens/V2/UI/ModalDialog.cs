@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.V2.UI
         Neutral
     }
 
-    public class V2ModalDialog : DialogScreen
+    public class ModalDialog : DialogScreen
     {
         private readonly SkinStoreV2Lease Skin;
         private readonly SkinV2ModalConfig Config;
@@ -47,7 +47,7 @@ namespace Quaver.Shared.Screens.V2.UI
         private bool Closing { get; set; }
         private bool ClosedCallbackInvoked { get; set; }
 
-        public V2ModalDialog(string title, string description, Action onClosed = null) : base(0)
+        public ModalDialog(string title, string description, Action onClosed = null) : base(0)
         {
             if (title == null)
                 throw new ArgumentNullException(nameof(title));
@@ -211,7 +211,7 @@ namespace Quaver.Shared.Screens.V2.UI
             return content;
         }
 
-        public RoundedButton AddButton(string label, V2ModalButtonStyle style, Action<V2ModalDialog> action)
+        public RoundedButton AddButton(string label, V2ModalButtonStyle style, Action<ModalDialog> action)
         {
             if (label == null)
                 throw new ArgumentNullException(nameof(label));

@@ -34,6 +34,8 @@ namespace Quaver.Shared.Screens.V2.Main
         private const string ChatEditorSurfaceId = "chat";
         private const string OptionsEditorSurfaceId = "options";
 
+        private const string AudioEditorSurfaceId = "audio";
+
         private SkinStoreV2Lease Skin { get; }
 
         private SkinV2Config RootConfig { get; set; }
@@ -74,6 +76,8 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private OptionsV2Dialog OptionsPreview { get; set; }
 
+        private VolumeDialog VolumePreview { get; set; }
+
         public Container PreviewRoot { get; }
 
         public Container EditorRoot { get; }
@@ -83,6 +87,7 @@ namespace Quaver.Shared.Screens.V2.Main
             HubEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Hub"),
             ChatEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Chat"),
             OptionsEditorSurfaceId => LocalizationManager.Get("SkinEditor_Group_Options"),
+            AudioEditorSurfaceId => LocalizationManager.Get("Screen_Options_AudioSettings"),
             _ => LocalizationManager.Get("SkinEditor_Group_MainMenu")
         };
 
@@ -134,7 +139,8 @@ namespace Quaver.Shared.Screens.V2.Main
                 new SkinEditorSurface(MainEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_MainMenu")),
                 new SkinEditorSurface(HubEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Hub")),
                 new SkinEditorSurface(ChatEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Chat")),
-                new SkinEditorSurface(OptionsEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Options"))
+                new SkinEditorSurface(OptionsEditorSurfaceId, LocalizationManager.Get("SkinEditor_Group_Options")),
+                new SkinEditorSurface(AudioEditorSurfaceId, LocalizationManager.Get("Screen_Options_AudioSettings"))
             };
 
             BuildContent();
@@ -295,7 +301,7 @@ namespace Quaver.Shared.Screens.V2.Main
         {
             var navigation = ScreenNavigation.EnsureAttached(PreviewRoot);
             navigation.ShowMainTopBar();
-            navigation.ShowDefaultFooter();
+            navigation.ShowMainFooter();
             AddNavigationTargets(navigation);
         }
 
@@ -314,9 +320,13 @@ namespace Quaver.Shared.Screens.V2.Main
                 case OptionsEditorSurfaceId:
                     BuildOptionsPreview();
                     break;
+                case AudioEditorSurfaceId:
+                    BuildAudioPreview();
+                    break;
                 default:
                     BuildContent();
                     var navigation = ScreenNavigation.ReplaceAttached(PreviewRoot, RootConfig);
+                    navigation.ShowMainFooter();
                     AddNavigationTargets(navigation);
                     break;
             }
@@ -327,7 +337,8 @@ namespace Quaver.Shared.Screens.V2.Main
         public void SelectEditorSurface(string surfaceId, SkinV2Config config)
         {
             if (surfaceId != MainEditorSurfaceId && surfaceId != HubEditorSurfaceId &&
-                surfaceId != ChatEditorSurfaceId && surfaceId != OptionsEditorSurfaceId)
+                surfaceId != ChatEditorSurfaceId && surfaceId != OptionsEditorSurfaceId &&
+                surfaceId != AudioEditorSurfaceId)
                 throw new ArgumentOutOfRangeException(nameof(surfaceId), surfaceId,
                     "Unknown skin editor surface.");
 
@@ -344,6 +355,9 @@ namespace Quaver.Shared.Screens.V2.Main
                     break;
                 case OptionsEditorSurfaceId:
                     BuildOptionsPreview();
+                    break;
+                case AudioEditorSurfaceId:
+                    BuildAudioPreview();
                     break;
                 default:
                     DestroySurfacePreviews();
@@ -440,6 +454,23 @@ namespace Quaver.Shared.Screens.V2.Main
             UpdateResponsiveLayout(true);
         }
 
+        private void BuildAudioPreview()
+        {
+            DestroySurfacePreviews();
+            ScreenManager.TryGetElement<ScreenNavigation>(ScreenNavigation.ElementKey, out var navigation);
+            VolumePreview = new VolumeDialog(Skin, RootConfig.Shared.MusicPlayer,
+                navigation?.VolumeDialogAnchor)
+            {
+                Parent = PreviewRoot,
+                IsInteractionEnabled = false
+            };
+            editorTargets = new List<SkinEditorTarget>(VolumePreview.GetSkinEditorTargets());
+
+            LastWindowWidth = -1;
+            LastWindowHeight = -1;
+            UpdateResponsiveLayout(true);
+        }
+
         private void DestroySurfacePreviews()
         {
             DestroyHubPreview();
@@ -447,6 +478,8 @@ namespace Quaver.Shared.Screens.V2.Main
             ChatPreview = null;
             OptionsPreview?.Destroy();
             OptionsPreview = null;
+            VolumePreview?.Destroy();
+            VolumePreview = null;
         }
 
         private void DestroyHubPreview()
@@ -469,6 +502,7 @@ namespace Quaver.Shared.Screens.V2.Main
             {
                 PreviewRoot.Position = new ScalableVector2(0, 0);
                 PreviewRoot.Scale = Vector2.One;
+                VolumePreview?.RefreshPreviewLayout();
                 return;
             }
 
@@ -483,6 +517,7 @@ namespace Quaver.Shared.Screens.V2.Main
             PreviewRoot.Position = new ScalableVector2(
                 EditorLeftWidth + margin + (availableWidth - WindowManager.Width * scale) / 2f,
                 margin + (availableHeight - WindowManager.Height * scale) / 2f);
+            VolumePreview?.RefreshPreviewLayout();
         }
 
         private void CreateAction(TextureRegion icon, string localizationKey, Action action)
@@ -535,6 +570,7 @@ namespace Quaver.Shared.Screens.V2.Main
 
             ChatPreview?.RefreshPreviewLayout();
             OptionsPreview?.RefreshPreviewLayout();
+            VolumePreview?.RefreshPreviewLayout();
             if (HubNavigationHeaderLayout != null)
             {
                 HubNavigationHeaderLayout.Position = new ScalableVector2(0, NavigationConfig.EdgePadding);

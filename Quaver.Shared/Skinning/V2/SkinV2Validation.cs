@@ -8,6 +8,11 @@ using Quaver.Shared.Assets;
 namespace Quaver.Shared.Skinning.V2
 {
     [AttributeUsage(AttributeTargets.Property)]
+    public sealed class SkinEditorIgnoreAttribute : Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class SkinColorAttribute : ValidationAttribute
     {
         private static readonly Regex Pattern = new Regex("^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$",

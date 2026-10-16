@@ -54,7 +54,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 "ControlHoverColor", "SelectedControlColor", "AccentTextColor", "SearchWidth",
                 "FilterWidth", "SearchIconSize", "SearchIconInset", "FeedButtonWidth",
                 "TwitchIcon", "AlertsButtonWidth", "TwitchButtonWidth", "ActionGap", "TwitchIconWidth",
-                "TwitchIconHeight", "TwitchColor"
+                "TwitchIconHeight", "TwitchColor", "PositionOffsetX", "PositionOffsetY", "SlideFromLeft"
             }, StringComparer.Ordinal);
 
         private readonly ISkinV2EditorHost host;
@@ -352,6 +352,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 Y = 44,
                 Depth = -10
             };
+            surfaceDropdown.ItemContainer.Scrollbar.Tint = Color.White;
+            surfaceDropdown.ItemContainer.Scrollbar.Width = 2;
             surfaceDropdown.ItemSelected += (sender, args) => SelectSurface(editorSurfaces[args.Index]);
             foreach (var item in surfaceDropdown.Items)
                 item.Depth = -10;
@@ -382,8 +384,13 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         }
 
         private IReadOnlyList<SkinEditorTarget> GetEditableTargets() => host.EditorTargets
-            .Where(x => session.GetProperties(x.ConfigPath).Count > 0)
+            .Where(x => GetTargetProperties(x).Count > 0)
             .ToArray();
+
+        private IReadOnlyList<SkinEditorProperty> GetTargetProperties(SkinEditorTarget target) =>
+            session.GetProperties(target.ConfigPath)
+                .Where(property => target.IncludesConfigPath(property.Path))
+                .ToArray();
 
         private void AddTargetGroup(string label, IEnumerable<SkinEditorTarget> targets)
         {
@@ -470,7 +477,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
             AddInspectorText(selectedTarget.Label, y, Color.White, 16);
             y += 28;
-            var properties = GetVisibleProperties(session.GetProperties(selectedTarget.ConfigPath));
+            var properties = GetVisibleProperties(GetTargetProperties(selectedTarget));
             inspectorProperties = properties;
             if (properties.Count == 0)
             {

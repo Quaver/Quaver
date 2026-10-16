@@ -8,7 +8,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Options.Modal
 {
-    internal sealed class OptionsPresetCreateDialog : V2ModalDialog
+    internal sealed class OptionsPresetCreateDialog : ModalDialog
     {
         public OptionsPresetCreateDialog(Action<OptionsPreset> onCreated) : base(LocalizationManager.Get("Screen_Options_CreatePreset"), LocalizationManager.Get("Screen_Options_PresetDescription"))
         {

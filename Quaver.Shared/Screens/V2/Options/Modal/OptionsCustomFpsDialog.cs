@@ -6,7 +6,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Options.Modal
 {
-    internal sealed class OptionsCustomFpsDialog : V2ModalDialog
+    internal sealed class OptionsCustomFpsDialog : ModalDialog
     {
         public OptionsCustomFpsDialog(Action onChanged = null, Action onClosed = null) : base(LocalizationManager.Get("Screen_Options_SetCustomFPS"), LocalizationManager.Get("Screen_Options_CustomFpsDescription"), onClosed)
         {

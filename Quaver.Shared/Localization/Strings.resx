@@ -351,6 +351,9 @@
   <data name="Screen_Main_MapReadFailed" xml:space="preserve">
     <value>Unable to read map file!</value>
   </data>
+  <data name="Screen_Music_ListeningPartyHostRequired" xml:space="preserve">
+    <value>You are not the host of the listening party!</value>
+  </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>All</value>
   </data>
@@ -3968,6 +3971,15 @@ You might want to back up your keymap first.</value>
   <data name="SkinEditor_Property_TwitchColor" xml:space="preserve">
     <value>Twitch Color</value>
   </data>
+<data name="SkinEditor_Property_PositionOffsetX" xml:space="preserve">
+<value>Position Offset X</value>
+</data>
+<data name="SkinEditor_Property_PositionOffsetY" xml:space="preserve">
+<value>Position Offset Y</value>
+</data>
+<data name="SkinEditor_Property_SlideFromLeft" xml:space="preserve">
+<value>Slide From Left</value>
+</data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
     <value>Metadata</value>
   </data>

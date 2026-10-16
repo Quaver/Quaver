@@ -77,9 +77,21 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private SkinV2BrandConfig BrandConfig { get; }
 
+        private SkinV2FooterMusicPlayerConfig MusicPlayerConfig { get; }
+
         private NavigationBar TopBar { get; }
 
         private NavigationBar BottomBar { get; }
+
+        private MusicPlaybackController MusicPlayback { get; }
+
+        private Container MusicPlayerHost { get; set; }
+
+        private FooterMusicPlayer MusicPlayer { get; set; }
+
+        internal Drawable VolumeDialogAnchor => MusicPlayer?.VolumeDialogAnchor;
+
+        private VolumeDialog VolumeDialog { get; set; }
 
         private HeaderScreenNavigation HeaderControls { get; }
 
@@ -131,7 +143,10 @@ namespace Quaver.Shared.Screens.V2.UI
             var rootConfig = previewConfig ?? Skin.Config;
             Config = rootConfig.Shared.Navigation;
             BrandConfig = rootConfig.Shared.Brand;
+            MusicPlayerConfig = rootConfig.Shared.MusicPlayer;
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
+
+            MusicPlayback = new MusicPlaybackController();
 
             TopBar = CreateBar(Alignment.TopLeft, Config.Bar);
             BottomBar = CreateBar(Alignment.BotLeft, Config.Footer);
@@ -226,27 +241,25 @@ namespace Quaver.Shared.Screens.V2.UI
 
             SetFooter(layout =>
             {
-                layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Website),
-                    LocalizationManager.Get("Screen_Main_Menu_Website"),
-                    () => BrowserHelper.OpenURL("https://quavergame.com"));
-                layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Discord),
-                    LocalizationManager.Get("Screen_Main_Menu_Discord"),
-                    () => BrowserHelper.OpenURL("https://discord.gg/quaver", true));
-                layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.GitHub),
-                    LocalizationManager.Get("Screen_Main_Menu_GitHub"),
-                    () => BrowserHelper.OpenURL("https://github.com/Quaver"));
-
-                layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Volume),
-                    LocalizationManager.Get("Screen_Options_Volume"), ShowVolume);
-                layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Options),
-                    LocalizationManager.Get("Screen_Main_Options"),
-                    () => DialogManager.Show(new OptionsV2Dialog()));
-                layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Quit),
-                    LocalizationManager.Get("Screen_Main_QuitGame"),
-                    () => DialogManager.Show(new QuitDialog()));
+                AddDefaultFooterButtons(layout);
+                AddMusicPlayer(layout, false);
             });
 
             CurrentFooterLayout = FooterLayout.Default;
+        }
+
+        public void ShowMainFooter()
+        {
+            if (CurrentFooterLayout == FooterLayout.Main)
+                return;
+
+            SetFooter(layout =>
+            {
+                AddDefaultFooterButtons(layout);
+                AddMusicPlayer(layout, true);
+            });
+
+            CurrentFooterLayout = FooterLayout.Main;
         }
 
         public void ShowSelectionFooter()
@@ -254,8 +267,9 @@ namespace Quaver.Shared.Screens.V2.UI
             if (CurrentFooterLayout == FooterLayout.Selection)
                 return;
 
-            SetFooter(layout => layout.AddRoundedButton(NavigationBarRegion.Right,
-                new NavigationBarButtonOptions
+            SetFooter(layout =>
+            {
+                layout.AddRoundedButton(NavigationBarRegion.Right, new NavigationBarButtonOptions
                 {
                     IconRegion = GlobalIcons.Get(GlobalIcon.Play),
                     IconSize = new Vector2(Config.Button.IconSize, Config.Button.IconSize),
@@ -270,7 +284,9 @@ namespace Quaver.Shared.Screens.V2.UI
                     ForegroundColor = SkinV2Color.Parse(Config.Button.ForegroundColor),
                     AlwaysShowLabel = true,
                     ClickAction = (sender, args) => ShowSelectionPlayUnavailable()
-                }));
+                });
+                AddMusicPlayer(layout, false);
+            });
 
             CurrentFooterLayout = FooterLayout.Selection;
         }
@@ -351,6 +367,13 @@ namespace Quaver.Shared.Screens.V2.UI
                     "Shared.Brand", ApplicationLogo));
             }
 
+            if (MusicPlayer != null && !MusicPlayer.IsDisposed)
+            {
+                targets.Add(new SkinEditorTarget("footer-music-player",
+                    LocalizationManager.Get("Screen_Main_Menu_Jukebox"), "Shared.MusicPlayer",
+                    new[] { "Shared.MusicPlayer.VolumeDialog" }, MusicPlayer));
+            }
+
             return targets;
         }
 
@@ -358,6 +381,7 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             ResizeToWindow();
             EnsureOnlineHubSubscription();
+            HandleVolumeShortcut();
             if (AccountDropdownOpen && MouseManager.IsUniqueClick(MouseButton.Left) && !ProfileButton.IsHovered &&
                 GameBase.Game is QuaverGame game &&
                 game.CurrentScreen?.ActiveLoggedInUserDropdown?.IsHovered() != true)
@@ -377,6 +401,8 @@ namespace Quaver.Shared.Screens.V2.UI
                 SubscribedOnlineHub.UnreadStateChanged -= OnHubUnreadStateChanged;
 
             ProfileButton.Clicked -= OnProfileClicked;
+
+            MusicPlayback.Destroy();
 
             base.Destroy();
 
@@ -681,6 +707,47 @@ namespace Quaver.Shared.Screens.V2.UI
 
             FooterButtons.Clear();
             BottomBar.Clear(destroy: true);
+            MusicPlayerHost = null;
+            MusicPlayer = null;
+        }
+
+        private void AddDefaultFooterButtons(ScreenNavigationLayout layout)
+        {
+            layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Website), LocalizationManager.Get("Screen_Main_Menu_Website"),
+                () => BrowserHelper.OpenURL("https://quavergame.com"));
+            layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Discord), LocalizationManager.Get("Screen_Main_Menu_Discord"),
+                () => BrowserHelper.OpenURL("https://discord.gg/quaver", true));
+            layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.GitHub), LocalizationManager.Get("Screen_Main_Menu_GitHub"),
+                () => BrowserHelper.OpenURL("https://github.com/Quaver"));
+
+            layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Options), LocalizationManager.Get("Screen_Main_Options"),
+                () => DialogManager.Show(new OptionsV2Dialog()));
+            layout.AddIconButton(NavigationBarRegion.Right, GlobalIcons.Get(GlobalIcon.Quit), LocalizationManager.Get("Screen_Main_QuitGame"),
+                () => DialogManager.Show(new QuitDialog()));
+        }
+
+        private void AddMusicPlayer(ScreenNavigationLayout layout, bool expanded)
+        {
+            var width = GetMusicPlayerWidth();
+            MusicPlayerHost = new Container
+            {
+                Size = new ScalableVector2(width, Config.Button.Size)
+            };
+            MusicPlayer = new FooterMusicPlayer(Skin, MusicPlayerConfig, MusicPlayback, expanded, OpenMusicPlayer, ShowVolume)
+            {
+                Parent = MusicPlayerHost,
+                Alignment = Alignment.BotCenter
+            };
+            MusicPlayer.ApplyWidth(width);
+            layout.Add(MusicPlayerHost, NavigationBarRegion.Center);
+        }
+
+        private float GetMusicPlayerWidth()
+        {
+            var reservedSideWidth = Config.EdgePadding + (Config.Button.Size + Config.ItemSpacing) * 3;
+            var availableWidth = WindowManager.Width - reservedSideWidth * 2;
+            var preferredWidth = MusicPlayerConfig.BannerWidth + MusicPlayerConfig.Padding * 2;
+            return Math.Min(preferredWidth, Math.Max(MusicPlayerConfig.MinimumWidth, availableWidth));
         }
 
         private void EnsureOnlineHubSubscription()
@@ -720,6 +787,13 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 TopBar.Width = WindowManager.Width;
                 BottomBar.Width = WindowManager.Width;
+            }
+
+            if (MusicPlayerHost != null && MusicPlayer != null)
+            {
+                var width = GetMusicPlayerWidth();
+                MusicPlayerHost.Width = width;
+                MusicPlayer.ApplyWidth(width);
             }
         }
 
@@ -864,10 +938,40 @@ namespace Quaver.Shared.Screens.V2.UI
             "Donating is currently unavailable from in-game and can only be done on the website.\n\n" +
             "We are working on adding this back soon.");
 
-        private static void ShowVolume()
+        private void ShowVolume(Drawable anchor)
         {
-            if (GameBase.Game is QuaverGame game)
-                game.VolumeController?.Show();
+            if (VolumeDialog != null && !VolumeDialog.IsDisposed && !VolumeDialog.IsClosing)
+                return;
+
+            VolumeDialog = new VolumeDialog(anchor, MusicPlayerConfig);
+            DialogManager.Show(VolumeDialog);
+        }
+
+        private void HandleVolumeShortcut()
+        {
+            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || MusicPlayer == null ||
+                MusicPlayer.IsDisposed)
+                return;
+
+            var increase = KeyboardManager.IsUniqueKeyPress(Keys.Up);
+            var decrease = KeyboardManager.IsUniqueKeyPress(Keys.Down);
+            var selectPrevious = KeyboardManager.IsUniqueKeyPress(Keys.Left);
+            var selectNext = KeyboardManager.IsUniqueKeyPress(Keys.Right);
+            if (!increase && !decrease && !selectPrevious && !selectNext)
+                return;
+
+            if (VolumeDialog != null && !VolumeDialog.IsDisposed && !VolumeDialog.IsClosing)
+            {
+                VolumeDialog.EnableKeyboardControl();
+                return;
+            }
+
+            VolumeDialog = new VolumeDialog(MusicPlayer.VolumeDialogAnchor, MusicPlayerConfig, true);
+            if (increase || decrease)
+                VolumeDialog.AdjustFocusedSlider(increase ? 5 : -5);
+            else
+                VolumeDialog.SelectRelativeSlider(selectNext ? 1 : -1);
+            DialogManager.Show(VolumeDialog);
         }
 
         private static void ShowSelectionPlayUnavailable() =>
@@ -889,6 +993,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private enum FooterLayout
         {
+            Main,
             Default,
             Selection,
             Custom

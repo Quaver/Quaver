@@ -4,7 +4,7 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Options.Modal
 {
-    internal sealed class OptionsSkinConfigOverwriteDialog : V2ModalDialog
+    internal sealed class OptionsSkinConfigOverwriteDialog : ModalDialog
     {
         public OptionsSkinConfigOverwriteDialog(Action onConfirmed, Action onClosed = null) : base(LocalizationManager.Get("Screen_Options_OverwriteSkinConfig"), LocalizationManager.Get("Screen_Options_OverwriteSkinConfigDescription"), onClosed)
         {
