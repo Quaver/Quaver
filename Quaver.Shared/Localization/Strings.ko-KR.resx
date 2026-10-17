@@ -1443,10 +1443,10 @@ Use the filters to narrow your search.</value>
     <value>10K</value>
   </data>
   <data name="Screen_Download_SearchMaps" xml:space="preserve">
-    <value>Search maps...</value>
+    <value>맵 검색...</value>
   </data>
   <data name="Screen_Download_SearchPlaylists" xml:space="preserve">
-    <value>Search playlists...</value>
+    <value>플레이리스트 검색</value>
   </data>
   <data name="Screen_Download_OwnedMaps" xml:space="preserve">
     <value>Owned Maps</value>
@@ -3239,7 +3239,7 @@ for other players to download?</value>
     <value>Assets / {0}</value>
   </data>
   <data name="SkinEditor_Group_MainMenu" xml:space="preserve">
-    <value>Main Menu</value>
+    <value>메인 메뉴</value>
   </data>
   <data name="SkinEditor_Group_SharedNavigation" xml:space="preserve">
     <value>Shared Navigation</value>
