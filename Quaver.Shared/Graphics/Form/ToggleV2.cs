@@ -27,6 +27,16 @@ namespace Quaver.Shared.Graphics.Form
         private Sprite OnAccent { get; }
         private RoundedButton MovingButton { get; }
 
+        public bool IsClickable
+        {
+            get => MovingButton.IsClickable;
+            set
+            {
+                MovingButton.IsClickable = value;
+                MovingButton.IsInteractionEnabled = value;
+            }
+        }
+
         public ToggleV2(Bindable<bool> enabled)
         {
             Enabled = enabled ?? new Bindable<bool>(false);

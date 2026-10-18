@@ -260,18 +260,19 @@ namespace Quaver.Shared.Screens.V2.UI
             ClearAnimations();
             FadeTo(0, Easing.Linear, Config.AnimationDuration);
             Panel.ClearAnimations();
-            Panel.MoveToX(OpenX + (Config.SlideFromLeft ? -Config.SlideDistance : Config.SlideDistance),
-                Easing.OutQuint, Config.AnimationDuration);
+            if (KeyboardControlled)
+            {
+                Panel.MoveToX(OpenX +
+                    (Config.SlideFromLeft ? -Config.SlideDistance : Config.SlideDistance),
+                    Easing.OutQuint, Config.AnimationDuration);
+            }
+
             foreach (var slider in Sliders)
                 slider.FadeOut(Config.AnimationDuration);
         }
 
-        internal IReadOnlyList<SkinEditorTarget> GetSkinEditorTargets() => new[]
-        {
-            new SkinEditorTarget("volume-dialog",
-                LocalizationManager.Get("Screen_Options_AudioSettings"),
-                "Shared.MusicPlayer.VolumeDialog", Panel)
-        };
+        internal static SkinEditorTarget CreateSkinEditorTarget(Drawable drawable) =>
+            new SkinEditorTarget("volume-dialog", LocalizationManager.Get("SkinEditor_Component_VolumeDialog"), "Shared.MusicPlayer.VolumeDialog", drawable);
 
         internal void RefreshPreviewLayout()
         {

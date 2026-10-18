@@ -378,6 +378,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             session.FocusedAssetProperty = null;
             multiSurfaceHost.SelectEditorSurface(surface.Id, session.Working);
             selectedTarget = GetEditableTargets().FirstOrDefault();
+            NotifyTargetSelected();
             BuildTargetList();
             BuildInspector();
             BuildSelectionButtons();
@@ -425,12 +426,19 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
         private void SelectTarget(SkinEditorTarget target)
         {
-            target?.Activate();
             selectedTarget = target;
+            NotifyTargetSelected();
             session.FocusedAssetProperty = null;
             BuildTargetList();
             BuildInspector();
             BuildSelectionButtons();
+        }
+
+        private void NotifyTargetSelected()
+        {
+            selectedTarget?.Activate();
+            if (host is ISkinV2EditorTargetSelectionHost selectionHost)
+                selectionHost.OnSkinEditorTargetSelected(selectedTarget?.Id);
         }
 
         private void BuildInspector()
@@ -597,6 +605,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
                 if (drawable is SkinEditorTextbox textbox)
                     textbox.Button.IsInteractionEnabled = visible && !readOnly;
+                else if (drawable is ToggleV2 toggle)
+                    toggle.IsClickable = visible && !readOnly;
                 else if (drawable is Wobble.Graphics.UI.Buttons.Button button)
                     button.IsInteractionEnabled = visible;
             }
@@ -647,19 +657,18 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             if (property.ValueType == typeof(bool))
             {
                 var bindable = new Bindable<bool>((bool) value);
-                var checkbox = new QuaverCheckbox(bindable)
+                var toggle = new ToggleV2(bindable)
                 {
                     Parent = inspectorContent,
-                    Y = controlY + 5,
-                    IsClickable = !readOnly,
-                    DisposeBindableOnDestroy = true
+                    Y = controlY + 8,
+                    IsClickable = !readOnly
                 };
                 bindable.ValueChanged += (sender, args) =>
                 {
                     if (!readOnly)
                         CommitValue(property, args.Value);
                 };
-                AddInspectorDrawable(checkbox);
+                AddInspectorDrawable(toggle);
                 CreateInspectorResetButton(controlY, () => ResetProperty(property));
                 return controlY + 42;
             }
@@ -1022,6 +1031,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             var editableTargets = GetEditableTargets();
             selectedTarget = editableTargets.FirstOrDefault(x => x.Id == selectedId) ??
                              editableTargets.FirstOrDefault();
+            NotifyTargetSelected();
             BuildTargetList();
             BuildSelectionButtons();
             RefreshSaveState();
@@ -1505,6 +1515,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
                 var submit = Focused && KeyboardManager.IsUniqueKeyPress(Keys.Enter);
                 base.Update(gameTime);
+
+                if (!Focused && Selected)
+                    MoveCaretTo(CursorPosition);
 
                 if (!string.Equals(lastObservedText, RawText, StringComparison.Ordinal))
                 {

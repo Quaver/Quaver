@@ -155,6 +155,155 @@ namespace Quaver.Shared.Screens.V2.UI
 
         [Required]
         public SkinV2VolumeDialogConfig VolumeDialog { get; set; } = new SkinV2VolumeDialogConfig();
+
+        [Required]
+        public SkinV2MusicQueueDialogConfig MusicQueueDialog { get; set; } =
+            new SkinV2MusicQueueDialogConfig();
+    }
+
+    public sealed class SkinV2MusicQueueDialogConfig
+    {
+        [Range(1, 8192)]
+        public float Width { get; set; } = 610;
+
+        [Range(1, 8192)]
+        public float Height { get; set; } = 736;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string PanelColor { get; set; } = "#273038FF";
+
+        [Required]
+        public SkinV2MusicQueueSearchConfig Search { get; set; } =
+            new SkinV2MusicQueueSearchConfig();
+
+        [Required]
+        public SkinV2MusicQueueListConfig List { get; set; } =
+            new SkinV2MusicQueueListConfig();
+
+        [Required]
+        public SkinV2MusicQueueRowConfig Row { get; set; } =
+            new SkinV2MusicQueueRowConfig();
+    }
+
+    public sealed class SkinV2MusicQueueSearchConfig
+    {
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float Height { get; set; } = 50;
+
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float IconSize { get; set; } = SkinV2FontSizesConfig.TextXl;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float IconInset { get; set; } = SkinV2MarginsConfig.Lg;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+
+        [Range(1, 256)]
+        [SkinEditorIgnore]
+        public int FontSize { get; set; } = SkinV2FontSizesConfig.TextXl;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string BackgroundColor { get; set; } = "#181E25FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string PlaceholderColor { get; set; } = "#6B83B2FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string CursorColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2MusicQueueListConfig
+    {
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float HeaderHeight { get; set; } = 52;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float ContentPadding { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float HeaderGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float RowGap { get; set; } = SkinV2MarginsConfig.Md;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+
+        [Range(1, 256)]
+        [SkinEditorIgnore]
+        public int FontSize { get; set; } = SkinV2FontSizesConfig.TextXl;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2MusicQueueRowConfig
+    {
+        [Range(1, 8192)]
+        [SkinEditorIgnore]
+        public float Height { get; set; } = 80;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float HorizontalPadding { get; set; } = SkinV2MarginsConfig.Lg;
+
+        [Range(0, 4096)]
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+        [Range(0.1, 0.8)]
+        public float ArtistColumnStart { get; set; } = 0.48f;
+
+        [Range(0.2, 0.95)]
+        public float LengthColumnStart { get; set; } = 0.82f;
+
+        [SkinFont]
+        [SkinEditorIgnore]
+        public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+
+        [Range(1, 256)]
+        [SkinEditorIgnore]
+        public int FontSize { get; set; } = SkinV2FontSizesConfig.TextXl;
+
+        [ConfigEditable]
+        [SkinColor]
+        public string BackgroundColor { get; set; } = "#181E25FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string SelectedColor { get; set; } = "#6B83B2FF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string TextColor { get; set; } = "#FFFFFFFF";
+
+        [ConfigEditable]
+        [SkinColor]
+        public string LengthColor { get; set; } = "#D0DBEDFF";
     }
 
     public sealed class SkinV2VolumeDialogConfig

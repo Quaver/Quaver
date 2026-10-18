@@ -45,6 +45,10 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public Drawable VolumeDialogAnchor => VolumeButton;
 
+        private RoundedButton QueueButton { get; }
+
+        public Drawable QueueDialogAnchor => this;
+
         private RoundedButton ProgressButton { get; }
 
         private RoundedButton ProgressFill { get; }
@@ -59,7 +63,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private float LastProgressWidth { get; set; } = -1;
 
-        public FooterMusicPlayer(SkinStoreV2Lease skin, SkinV2FooterMusicPlayerConfig config, MusicPlaybackController playback, bool expanded, Action openMusicPlayer, Action<Drawable> showVolume)
+        public FooterMusicPlayer(SkinStoreV2Lease skin, SkinV2FooterMusicPlayerConfig config,
+            MusicPlaybackController playback, bool expanded, Action<Drawable> showQueue,
+            Action<Drawable> showVolume)
         {
             Config = config;
             Playback = playback;
@@ -145,20 +151,22 @@ namespace Quaver.Shared.Screens.V2.UI
             };
             Controls.SetItemOptions(TimeSlot, new FlexItemOptions { Basis = Config.TimeWidth, Shrink = 0 });
 
-            TimeText = new SpriteTextPlus(FontManager.GetWobbleFont(Config.TimeFont), "00:00 / 00:00", Config.TimeFontSize)
+            TimeText = new SpriteTextPlus(FontManager.GetWobbleFont(Config.TimeFont),
+                "00:00 / 00:00", Config.TimeFontSize, false)
             {
                 Parent = TimeSlot,
                 Alignment = Alignment.MidCenter,
                 Tint = SkinV2Color.Parse(Config.SecondaryForegroundColor)
             };
 
-            var queue = CreateIconButton(skin.LoadTexture(Config.Icons.Queue, UserInterface.JukeboxHamburgerIconV2), new Vector2(Config.ListIconWidth, Config.ListIconHeight), openMusicPlayer);
+            QueueButton = CreateIconButton(skin.LoadTexture(Config.Icons.Queue, UserInterface.JukeboxHamburgerIconV2),
+                new Vector2(Config.ListIconWidth, Config.ListIconHeight), () => showQueue(this));
             VolumeButton = CreateIconButton(GlobalIcons.Get(GlobalIcon.Volume), new Vector2(Config.VolumeIconWidth, Config.VolumeIconHeight), () => showVolume(VolumeButton));
 
             SetFixedControl(previous);
             SetFixedControl(PlayButton);
             SetFixedControl(next);
-            SetFixedControl(queue);
+            SetFixedControl(QueueButton);
             SetFixedControl(VolumeButton);
             Controls.RefreshLayout();
 

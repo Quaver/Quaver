@@ -354,6 +354,9 @@
   <data name="Screen_Music_ListeningPartyHostRequired" xml:space="preserve">
     <value>You are not the host of the listening party!</value>
   </data>
+  <data name="Screen_Music_SongsFound" xml:space="preserve">
+    <value>{0:N0} Songs Found</value>
+  </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>All</value>
   </data>
@@ -3700,6 +3703,12 @@ You might want to back up your keymap first.</value>
   </data>
   <data name="SkinEditor_Component_News" xml:space="preserve">
     <value>News Card</value>
+  </data>
+  <data name="SkinEditor_Component_MusicQueue" xml:space="preserve">
+    <value>Music Queue</value>
+  </data>
+  <data name="SkinEditor_Component_VolumeDialog" xml:space="preserve">
+    <value>Volume Dialog</value>
   </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
     <value>Top Navigation</value>

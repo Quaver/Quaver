@@ -1,37 +1,55 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Server.Client.Objects.Listening;
 using Quaver.Shared.Audio;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
+using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
-using Quaver.Shared.Scheduling;
-using Wobble;
+using Quaver.Shared.Screens.Music.Components;
 using Wobble.Bindables;
-using Wobble.Logging;
+using Wobble.Graphics;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.UI
 {
     internal sealed class MusicPlaybackController
     {
-        private List<Map> TrackQueue { get; } = new List<Map>();
+        private Bindable<string> EmptySearchQuery { get; } = new Bindable<string>(string.Empty);
+
+        internal Bindable<List<Mapset>> AvailableSongs { get; } = new Bindable<List<Mapset>>(new List<Mapset>());
+
+        private MusicPlayerJukebox Jukebox { get; }
 
         private Random Random { get; } = new Random();
 
-        private int QueuePosition { get; set; } = -1;
-
-        private bool ChangingSelection { get; set; }
-
-        private bool LoadingTrack { get; set; }
-
         private bool IsDestroyed { get; set; }
 
-        public MusicPlaybackController()
+        private bool DefaultTrackRequested { get; set; }
+
+        public MusicPlaybackController(Func<bool> isActive)
         {
-            AddSelectedMapToQueue(MapManager.Selected?.Value);
-            MapManager.Selected.ValueChanged += OnSelectedMapChanged;
+            RefreshAvailableSongs();
+            Jukebox = new MusicPlayerJukebox(AvailableSongs, isActive);
+
+            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
+            PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;
+
+            var track = AudioEngine.Track;
+            if (track != null && !track.IsDisposed && track.IsPaused)
+            {
+                track.Play();
+                track.Fade(100, 300);
+            }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (!IsDestroyed)
+                Jukebox.Update(gameTime);
         }
 
         public void TogglePlayback()
@@ -61,40 +79,65 @@ namespace Quaver.Shared.Screens.V2.UI
             if (track == null || track.IsDisposed || !CanControlListeningParty())
                 return;
 
-            if (track.Position >= 2000 || QueuePosition <= 0)
+            lock (track)
             {
-                LoadSelectedTrack();
-                return;
-            }
+                if (track.Position >= 2000 || Jukebox.TrackListQueuePosition <= 0)
+                {
+                    AudioEngine.LoadCurrentTrack();
+                    AudioEngine.Track?.Play();
+                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
+                    return;
+                }
 
-            QueuePosition--;
-            SetSelectedMap(TrackQueue[QueuePosition]);
-            LoadSelectedTrack();
+                Jukebox.SelectNextTrack(Direction.Backward);
+            }
         }
 
         public void Next()
         {
-            if (!CanControlListeningParty() || LoadingTrack || IsCurrentScreenExiting())
+            if (CanControlListeningParty())
+                Jukebox.SelectNextTrack(Direction.Forward);
+        }
+
+        public void Select(Mapset mapset)
+        {
+            if (mapset?.Maps == null || mapset.Maps.Count == 0 || !CanControlListeningParty())
                 return;
 
-            if (QueuePosition < TrackQueue.Count - 1)
-            {
-                QueuePosition++;
-                SetSelectedMap(TrackQueue[QueuePosition]);
-                LoadSelectedTrack();
-                return;
-            }
+            var map = mapset.Maps.First();
+            if (!ReferenceEquals(MapManager.Selected?.Value, map))
+                MapManager.Selected.Value = map;
+        }
 
-            var mapsets = MapManager.Mapsets.Where(mapset => mapset.Maps.Count != 0).ToList();
-            if (mapsets.Count == 0)
+        public List<Mapset> GetOrderedMapsets() => AvailableSongs.Value.ToList();
+
+        public List<Mapset> GetQueueMapsets(int previousCount, int nextCount)
+        {
+            var songs = AvailableSongs.Value;
+            var selected = MapManager.Selected?.Value;
+            if (songs == null || songs.Count == 0)
+                return new List<Mapset>();
+
+            var currentIndex = selected == null ? -1 : songs.FindIndex(mapset => mapset.Maps.Contains(selected));
+            if (currentIndex < 0)
+                return songs.Take(previousCount + nextCount + 1).ToList();
+
+            var startIndex = Math.Max(0, currentIndex - previousCount);
+            var endIndex = Math.Min(songs.Count - 1, currentIndex + nextCount);
+            return songs.GetRange(startIndex, endIndex - startIndex + 1);
+        }
+
+        public void EnsureDefaultTrack()
+        {
+            if (DefaultTrackRequested || AudioEngine.Track != null || MapManager.Mapsets.Count == 0)
                 return;
 
-            var mapset = mapsets[Random.Next(mapsets.Count)];
-            var map = mapset.Maps[Random.Next(mapset.Maps.Count)];
-            TrackQueue.Add(map);
-            QueuePosition = TrackQueue.Count - 1;
-            SetSelectedMap(map);
-            LoadSelectedTrack();
+            var mapset = MapManager.Mapsets[Random.Next(0, MapManager.Mapsets.Count)];
+            if (mapset.Maps.Count == 0)
+                return;
+
+            DefaultTrackRequested = true;
+            MapManager.Selected.Value = mapset.Maps[Random.Next(0, mapset.Maps.Count)];
         }
 
         public void Seek(double normalizedPosition)
@@ -113,69 +156,18 @@ namespace Quaver.Shared.Screens.V2.UI
         public void Destroy()
         {
             IsDestroyed = true;
-            MapManager.Selected.ValueChanged -= OnSelectedMapChanged;
+            ConfigManager.MusicPlayerOrderMapsBy.ValueChanged -= OnOrderMapsByChanged;
+            PlaylistManager.Selected.ValueChanged -= OnPlaylistChanged;
+            Jukebox.Destroy();
         }
 
-        private void LoadSelectedTrack()
-        {
-            if (LoadingTrack || IsDestroyed || MapManager.Selected?.Value == null || IsCurrentScreenExiting())
-                return;
+        private void RefreshAvailableSongs() => AvailableSongs.Value = MapsetHelper.FilterMapsets(EmptySearchQuery, true);
 
-            LoadingTrack = true;
-            var map = MapManager.Selected.Value;
+        private void OnOrderMapsByChanged(object sender, BindableValueChangedEventArgs<OrderMapsetsBy> args) =>
+            RefreshAvailableSongs();
 
-            ThreadScheduler.Run(() =>
-            {
-                try
-                {
-                    if (IsDestroyed)
-                        return;
-
-                    AudioEngine.LoadCurrentTrack();
-                    if (AudioEngine.Track != null && !AudioEngine.Track.IsDisposed)
-                    {
-                        AudioEngine.Track.Play();
-                        OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
-                    }
-
-                    Logger.Debug($"Selected V2 footer track: {map.Artist} - {map.Title} " + $"[{map.DifficultyName}]", LogType.Runtime);
-                }
-                catch (Exception exception)
-                {
-                    Logger.Error(exception, LogType.Runtime);
-                    Logger.Error("Failed to load a track from the V2 footer music player.", LogType.Runtime);
-                }
-                finally
-                {
-                    LoadingTrack = false;
-                }
-            });
-        }
-
-        private void OnSelectedMapChanged(object sender, BindableValueChangedEventArgs<Map> args)
-        {
-            if (!ChangingSelection)
-                AddSelectedMapToQueue(args.Value);
-        }
-
-        private void AddSelectedMapToQueue(Map map)
-        {
-            if (map == null || QueuePosition >= 0 && ReferenceEquals(TrackQueue[QueuePosition], map))
-                return;
-
-            if (QueuePosition < TrackQueue.Count - 1)
-                TrackQueue.RemoveRange(QueuePosition + 1, TrackQueue.Count - QueuePosition - 1);
-
-            TrackQueue.Add(map);
-            QueuePosition = TrackQueue.Count - 1;
-        }
-
-        private void SetSelectedMap(Map map)
-        {
-            ChangingSelection = true;
-            MapManager.Selected.Value = map;
-            ChangingSelection = false;
-        }
+        private void OnPlaylistChanged(object sender, BindableValueChangedEventArgs<Playlist> args) =>
+            RefreshAvailableSongs();
 
         private static bool CanControlListeningParty()
         {
@@ -185,7 +177,5 @@ namespace Quaver.Shared.Screens.V2.UI
             NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Music_ListeningPartyHostRequired"));
             return false;
         }
-
-        private static bool IsCurrentScreenExiting() => GameBase.Game is QuaverGame game && game.CurrentScreen?.Exiting == true;
     }
 }

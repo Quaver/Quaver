@@ -89,4 +89,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
         void SelectEditorSurface(string surfaceId, SkinV2Config config);
     }
+
+    internal interface ISkinV2EditorTargetSelectionHost
+    {
+        void OnSkinEditorTargetSelected(string? targetId);
+    }
 }

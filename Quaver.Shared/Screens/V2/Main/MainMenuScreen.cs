@@ -17,7 +17,6 @@ using Quaver.Shared.Screens.Importing;
 using Quaver.Shared.Screens.Main.Cheats;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Selection.UI.Dialogs;
-using Quaver.Shared.Screens.V2.Main.UI;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning;
@@ -45,8 +44,6 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private CheatCodeTheater TheaterCheat { get; }
 
-        private MainMenuJukeboxController Jukebox { get; }
-
         protected override ISkinV2EditorHost SkinEditorHost => (MainMenuScreenView) View;
 
         public MainMenuScreen()
@@ -58,7 +55,6 @@ namespace Quaver.Shared.Screens.V2.Main
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged += OnAutoLoadOsuBeatmapsChanged;
             TheaterCheat = new CheatCodeTheater();
 
-            Jukebox = new MainMenuJukeboxController(this);
             View = new MainMenuScreenView(this);
         }
 
@@ -93,7 +89,6 @@ namespace Quaver.Shared.Screens.V2.Main
 
         public override void Update(GameTime gameTime)
         {
-            Jukebox.Update();
             if (!IsSkinEditorActive)
                 HandleInput(gameTime);
             base.Update(gameTime);
@@ -103,7 +98,6 @@ namespace Quaver.Shared.Screens.V2.Main
         {
             ConfigManager.AutoLoadOsuBeatmaps.ValueChanged -= OnAutoLoadOsuBeatmapsChanged;
             ScreenExiting -= OnScreenExiting;
-            Jukebox.Destroy();
             TheaterCheat.Destroy();
             base.Destroy();
         }

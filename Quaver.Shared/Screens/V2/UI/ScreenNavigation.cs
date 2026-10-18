@@ -91,7 +91,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
         internal Drawable VolumeDialogAnchor => MusicPlayer?.VolumeDialogAnchor;
 
+        internal Drawable QueueDialogAnchor => MusicPlayer?.QueueDialogAnchor;
+
+        internal MusicPlaybackController MusicPlaybackController => MusicPlayback;
+
         private VolumeDialog VolumeDialog { get; set; }
+
+        private MusicQueueDialog MusicQueueDialog { get; set; }
 
         private HeaderScreenNavigation HeaderControls { get; }
 
@@ -146,7 +152,7 @@ namespace Quaver.Shared.Screens.V2.UI
             MusicPlayerConfig = rootConfig.Shared.MusicPlayer;
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
 
-            MusicPlayback = new MusicPlaybackController();
+            MusicPlayback = new MusicPlaybackController(() => MusicPlayer != null && !MusicPlayer.IsDisposed);
 
             TopBar = CreateBar(Alignment.TopLeft, Config.Bar);
             BottomBar = CreateBar(Alignment.BotLeft, Config.Footer);
@@ -181,7 +187,7 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 buttons.Add(layout.AddIconButton(NavigationBarRegion.Left,
                     GlobalIcons.Get(GlobalIcon.Jukebox),
-                    LocalizationManager.Get("Screen_Main_Menu_Jukebox"), OpenMusicPlayer));
+                    LocalizationManager.Get("Screen_Main_Menu_Jukebox"), ShowMusicQueue));
                 buttons.Add(layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Chat),
                     LocalizationManager.Get("Screen_Options_ToggleChatOverlay"), ToggleChat));
                 layout.AddSharedRightControls();
@@ -220,7 +226,7 @@ namespace Quaver.Shared.Screens.V2.UI
                     ToggleChat, false));
                 buttons.Add(layout.AddApplicationButton(GlobalIcon.Jukebox,
                     "Screen_Overlay_VolumeControl_Music",
-                    OpenMusicPlayer, activeScreen == QuaverScreenType.Music));
+                    ShowMusicQueue, activeScreen == QuaverScreenType.Music));
                 layout.AddSharedRightControls();
             });
 
@@ -371,7 +377,11 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 targets.Add(new SkinEditorTarget("footer-music-player",
                     LocalizationManager.Get("Screen_Main_Menu_Jukebox"), "Shared.MusicPlayer",
-                    new[] { "Shared.MusicPlayer.VolumeDialog" }, MusicPlayer));
+                    new[]
+                    {
+                        "Shared.MusicPlayer.VolumeDialog",
+                        "Shared.MusicPlayer.MusicQueueDialog"
+                    }, MusicPlayer));
             }
 
             return targets;
@@ -381,6 +391,7 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             ResizeToWindow();
             EnsureOnlineHubSubscription();
+            MusicPlayback.Update(gameTime);
             HandleVolumeShortcut();
             if (AccountDropdownOpen && MouseManager.IsUniqueClick(MouseButton.Left) && !ProfileButton.IsHovered &&
                 GameBase.Game is QuaverGame game &&
@@ -733,11 +744,12 @@ namespace Quaver.Shared.Screens.V2.UI
             {
                 Size = new ScalableVector2(width, Config.Button.Size)
             };
-            MusicPlayer = new FooterMusicPlayer(Skin, MusicPlayerConfig, MusicPlayback, expanded, OpenMusicPlayer, ShowVolume)
+            MusicPlayer = new FooterMusicPlayer(Skin, MusicPlayerConfig, MusicPlayback, expanded, ShowMusicQueue, ShowVolume)
             {
                 Parent = MusicPlayerHost,
                 Alignment = Alignment.BotCenter
             };
+            MusicPlayback.EnsureDefaultTrack();
             MusicPlayer.ApplyWidth(width);
             layout.Add(MusicPlayerHost, NavigationBarRegion.Center);
         }
@@ -802,10 +814,10 @@ namespace Quaver.Shared.Screens.V2.UI
             AccountDropdownOpen = false;
         }
 
-        private static void OpenMusicPlayer()
+        private void ShowMusicQueue()
         {
-            if (GameBase.Game is QuaverGame game)
-                game.CurrentScreen?.Exit(() => QuaverScreenFactory.CreateMusicPlayer());
+            if (MusicPlayer != null && !MusicPlayer.IsDisposed)
+                ShowMusicQueue(MusicPlayer.QueueDialogAnchor);
         }
 
         private static void NavigateHome()
@@ -937,6 +949,16 @@ namespace Quaver.Shared.Screens.V2.UI
         private static void ShowDonateMessage() => NotificationManager.Show(NotificationLevel.Info,
             "Donating is currently unavailable from in-game and can only be done on the website.\n\n" +
             "We are working on adding this back soon.");
+
+        private void ShowMusicQueue(Drawable anchor)
+        {
+            if (anchor == null || anchor.IsDisposed ||
+                MusicQueueDialog != null && !MusicQueueDialog.IsDisposed && !MusicQueueDialog.IsClosing)
+                return;
+
+            MusicQueueDialog = new MusicQueueDialog(anchor, MusicPlayerConfig, MusicPlayback);
+            DialogManager.Show(MusicQueueDialog);
+        }
 
         private void ShowVolume(Drawable anchor)
         {
