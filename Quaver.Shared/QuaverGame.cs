@@ -38,6 +38,7 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
 using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
@@ -198,6 +199,9 @@ namespace Quaver.Shared
                         break;
                     case GlobalKeybindActions.ToggleOnlineHub:
                         game.ToggleOnlineHub();
+                        break;
+                    case GlobalKeybindActions.GameplayToggleOverlay:
+                        game.ToggleChat();
                         break;
                     case GlobalKeybindActions.ReloadSkin:
                         game.ReloadSkin();
@@ -1203,6 +1207,28 @@ namespace Quaver.Shared
 
             var useNewScreen = ConfigManager.UseNewScreens.Value;
             DialogManager.Show(useNewScreen ? new OverlayDialog() : new OnlineHubDialog());
+        }
+
+        private void ToggleChat()
+        {
+            if (!ConfigManager.UseNewScreens.Value)
+            {
+                if (OnlineChat == null)
+                    return;
+
+                if (OnlineChat.IsOpen)
+                    OnlineChat.Close();
+                else
+                    OnlineChat.Open();
+
+                return;
+            }
+
+            var chat = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+            if (chat == null)
+                DialogManager.Show(new ChatV2Dialog());
+            else
+                chat.Close();
         }
 
         /// <summary>

@@ -17,6 +17,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 {
     internal sealed class ChatInputBar : Textbox
     {
+        private const int MaximumMessageLength = 500;
+
         private const UserGroups ChatModeratorGroups = UserGroups.Swan | UserGroups.Developer | UserGroups.Admin |
                                                       UserGroups.Moderator | UserGroups.Bot;
 
@@ -35,6 +37,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             InputText.Tint = SkinV2Color.Parse(config.TextColor);
             Cursor.Tint = SkinV2Color.Parse(config.TextColor);
             InputText.X = 15;
+            MaxCharacters = MaximumMessageLength;
 
             OnSubmit += SubmitMessage;
             ApplySize();

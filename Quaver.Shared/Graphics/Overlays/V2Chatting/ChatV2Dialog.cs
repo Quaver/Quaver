@@ -36,6 +36,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 {
     public class ChatV2Dialog : DialogScreen
     {
+        private const string DefaultChannelName = "#quaver";
+
+        private static bool ShouldSelectDefaultChannel { get; set; } = true;
+
         private SkinStoreV2Lease Skin { get; }
         private bool OwnsSkin { get; }
         private bool PreviewMode { get; }
@@ -126,6 +130,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 ChatSession.ActiveChannel.ValueChanged += OnActiveChannelValueChanged;
                 ChatSession.ChannelUpdated += OnChannelUpdated;
                 WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
+                TrySelectDefaultChannel();
                 Panel.MoveToY(0, Easing.InCubic, Config.Layout.AnimationDurationMilliseconds);
             }
             else
@@ -724,9 +729,26 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void OnChannelAdded(object sender, BindableListItemAddedEventArgs<ChatChannel> channel) => AddScheduledUpdate(() =>
         {
-            if (!IsDisposed)
-                CreateTabButton(channel.Item);
+            if (IsDisposed)
+                return;
+
+            CreateTabButton(channel.Item);
+            TrySelectDefaultChannel();
         });
+
+        private void TrySelectDefaultChannel()
+        {
+            if (!ShouldSelectDefaultChannel)
+                return;
+
+            var channel = ChatSession.JoinedChannels.Value.FirstOrDefault(x =>
+                string.Equals(x.Name, DefaultChannelName, StringComparison.OrdinalIgnoreCase));
+            if (channel == null)
+                return;
+
+            ShouldSelectDefaultChannel = false;
+            ChatSession.ActiveChannel.Value = channel;
+        }
 
         private void OnChannelRemoved(object sender, BindableListItemRemovedEventArgs<ChatChannel> channel) => AddScheduledUpdate(() => RemoveTabButton(channel.Item));
 
@@ -864,7 +886,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ItemHeight = 40,
             FontSize = 18,
             TriggerColor = "#181E25FF",
-            ItemColor = "#181E25FF",
+            ItemColor = SkinV2DropdownConfig.DefaultItemColor,
             HoverColor = "#354451FF",
             SelectedItemColor = "#6B83B2FF",
             TextColor = "#8CAFEAFF",

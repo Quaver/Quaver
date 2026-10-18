@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 ItemHeight = Config.Layout.HeaderHeight,
                 FontSize = Config.Header.FontSize,
                 TriggerColor = Config.Header.BackgroundColor,
-                ItemColor = Config.Header.BackgroundColor,
+                ItemColor = SkinV2DropdownConfig.DefaultItemColor,
                 HoverColor = Config.Header.HoverColor,
                 SelectedItemColor = Config.Sidebar.SelectedColor,
                 TextColor = Config.Header.AccentTextColor,
@@ -687,7 +687,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 Size = new ScalableVector2(Config.Layout.Width, Config.Layout.Height),
-                Tint = SkinV2Color.Parse(Config.Panel.GapColor)
+                Tint = Color.Transparent
             };
             Panel.Image = RoundedRectTextureCache.Get(Panel.Width, Panel.Height,
                 Config.Layout.CornerRadius);

@@ -520,6 +520,8 @@ namespace Quaver.Shared.Screens.V2.UI
     /// </summary>
     public sealed class SkinV2DropdownConfig
     {
+        public const string DefaultItemColor = "#273038FF";
+
         [Range(1, 8192)]
         public float Height { get; set; } = 34;
 
@@ -574,7 +576,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         [ConfigEditable]
         [SkinColor]
-        public string ItemColor { get; set; } = "#0F2C44FF";
+        public string ItemColor { get; set; } = DefaultItemColor;
 
         [ConfigEditable]
         [SkinColor]

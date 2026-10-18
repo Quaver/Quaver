@@ -164,7 +164,7 @@ public class SongRequestsSection : Container
             Font = section.Font,
             FontSize = section.FontSize,
             TriggerColor = section.ControlColor,
-            ItemColor = section.ControlColor,
+            ItemColor = SkinV2DropdownConfig.DefaultItemColor,
             HoverColor = section.ControlHoverColor,
             SelectedItemColor = section.SelectedControlColor,
             TextColor = section.AccentTextColor,

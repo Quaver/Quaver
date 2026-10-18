@@ -364,7 +364,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
             ItemHeight = 40,
             FontSize = 18,
             TriggerColor = "#181E25FF",
-            ItemColor = "#181E25FF",
+            ItemColor = SkinV2DropdownConfig.DefaultItemColor,
             HoverColor = "#354451FF",
             SelectedItemColor = "#6B83B2FF",
             TextColor = "#8CAFEAFF",

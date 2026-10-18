@@ -58,6 +58,7 @@ public sealed class SkinV2OptionsLayoutConfig
 public sealed class SkinV2OptionsPanelConfig
 {
     [ConfigEditable, SkinColor]
+    [SkinEditorIgnore]
     public string GapColor { get; set; } = "#424141FF";
 }
 

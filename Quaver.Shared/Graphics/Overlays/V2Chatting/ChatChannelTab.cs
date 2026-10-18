@@ -83,12 +83,11 @@ public sealed class ChatChannelTab : RoundedButton
             Position = new ScalableVector2(-10, 0),
             Size = new ScalableVector2(20, 20),
             CornerRadius = 10,
-            Tint = ColorHelper.FromHex("#FFFFFF"),
+            Tint = Color.Transparent,
             Depth = -1,
         };
-        CloseButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), "×", 20, ColorHelper.FromHex("#181E25"));
-        CloseButton.Label.Y -= 1;
-        CloseButton.Label.Alignment = Alignment.MidCenter;
+        CloseButton.SetIcon(GlobalIcons.Get(GlobalIcon.Remove), new Vector2(40, 40));
+        CloseButton.Icon.Tint = Color.White;
     }
 
     private void CreateAvatar()
