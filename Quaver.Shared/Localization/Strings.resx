@@ -642,6 +642,9 @@
   <data name="Screen_Options_SelectPresetToManage" xml:space="preserve">
     <value>Select a preset to manage.</value>
   </data>
+  <data name="Screen_Options_SelectPresetToSave" xml:space="preserve">
+    <value>Select a preset to save.</value>
+  </data>
   <data name="Screen_Options_PresetName" xml:space="preserve">
     <value>Preset Name</value>
   </data>
@@ -730,7 +733,7 @@
     <value>Navigation &amp; Maintenance</value>
   </data>
   <data name="Screen_Options_UseNewScreens" xml:space="preserve">
-    <value>Use New Screens (Requires Restart)</value>
+    <value>Use New Screens</value>
   </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
     <value>Installed Games</value>
@@ -3760,6 +3763,9 @@ You might want to back up your keymap first.</value>
   </data>
   <data name="SkinEditor_Component_ChatInput" xml:space="preserve">
     <value>Message Input</value>
+  </data>
+  <data name="SkinEditor_ChatPreviewMessage" xml:space="preserve">
+    <value>Welcome to #quaver! This is what a chat message looks like.</value>
   </data>
   <data name="SkinEditor_Component_OptionsLayout" xml:space="preserve">
     <value>Options Layout</value>

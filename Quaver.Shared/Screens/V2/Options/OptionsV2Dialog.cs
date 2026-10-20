@@ -44,6 +44,8 @@ namespace Quaver.Shared.Screens.V2.Options
         private float LayoutGap => Config.Layout.Gap;
         private static readonly Guid CreatePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
         private static readonly Guid ManagePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffe");
+        private static readonly Guid SavePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffd");
+        private static readonly Color UnsavedPresetColor = new(255, 224, 50);
 
         private bool InputRecorderWasFocused { get; set; }
         private bool RecentOptionsDirty { get; set; }
@@ -78,9 +80,9 @@ namespace Quaver.Shared.Screens.V2.Options
         private bool IsIconListExpanded;
 
         private OptionCategory? CurrentCategory { get; set; } = null;
-        private (OptionCategory Category, string Name)? SelectedCategorySection { get; set; }
+        private readonly HashSet<(OptionCategory Category, string Name)> SelectedCategorySections = new();
         private readonly Dictionary<(OptionCategory Category, string Name), RoundedButton> CategorySectionButtons = new Dictionary<(OptionCategory, string), RoundedButton>();
-        private readonly List<(OptionCategory Category, string Name, FlexContainer Header)> SectionStarts = new List<(OptionCategory, string, FlexContainer)>();
+        private readonly List<(OptionCategory Category, string Name, FlexContainer Header, List<OptionsRow> Rows)> SectionStarts = new();
 
         private FlexContainer MainMenuLayout { get; set; }
         private FlexContainer HeaderMenuLayout { get; set; }
@@ -217,8 +219,14 @@ namespace Quaver.Shared.Screens.V2.Options
             {
                 new DropdownOption<Guid>(Guid.Empty, LocalizationManager.Get("Screen_Selection_None"))
             };
-            presetEntries.AddRange(presets.Select(preset => (DropdownEntry<Guid>)new DropdownOption<Guid>(preset.Id, preset.Id == AppliedPresetId && AppliedPresetHasChanges ? $"* {preset.Name}" : preset.Name)));
+            presetEntries.AddRange(presets.Select(preset =>
+            {
+                var unsaved = preset.Id == AppliedPresetId && AppliedPresetHasChanges;
+                return (DropdownEntry<Guid>) new DropdownOption<Guid>(preset.Id,
+                    unsaved ? $"* {preset.Name}" : preset.Name, unsaved ? UnsavedPresetColor : null);
+            }));
             presetEntries.Add(new DropdownDivider<Guid>());
+            presetEntries.Add(new DropdownOption<Guid>(SavePresetEntryId, LocalizationManager.Get("Screen_Options_SavePreset")));
             presetEntries.Add(new DropdownOption<Guid>(ManagePresetEntryId, LocalizationManager.Get("Screen_Options_ManagePreset")));
             presetEntries.Add(new DropdownOption<Guid>(CreatePresetEntryId, LocalizationManager.Get("Screen_Options_CreatePreset")));
 
@@ -293,8 +301,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = LayoutGap
             };
-            SectionListScroll.AddContainedDrawable(SectionListLayout, true,
-                minimumRightPadding: Config.Layout.ContentPadding);
+            SectionListScroll.AddContainedDrawable(SectionListLayout);
 
             IconList = new NineSliceSprite(RoundedRectTextureCache.Get(20f, 20f,
                 Config.Layout.CornerRadius), new SliceMargins((int) Config.Layout.CornerRadius))
@@ -406,7 +413,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 button.Destroy();
             CategorySectionButtons.Clear();
 
-            SelectedCategorySection = null;
+            SelectedCategorySections.Clear();
 
             var options = GetVisibleOptions();
             var sections = options.DistinctBy(option => (option.Category, option.SectionName)).ToList();
@@ -422,7 +429,6 @@ namespace Quaver.Shared.Screens.V2.Options
             }
             UpdateSectionListLayout();
             SectionListScroll.ScrollTo(0, 1);
-            SetSectionHighlight(sections.Count > 0 ? (sections[0].Category, sections[0].SectionName) : null);
         }
         private void CreateSectionMenuButton((OptionCategory Category, string Name) section, string label)
         {
@@ -495,8 +501,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 AlignItems = FlexAlignItems.Stretch,
                 RowGap = LayoutGap
             };
-            OptionsScroll.AddContainedDrawable(OptionsRows, true,
-                minimumRightPadding: Config.Layout.ContentPadding);
+            OptionsScroll.AddContainedDrawable(OptionsRows);
         }
 
         private void RefreshOptionsRows()
@@ -518,7 +523,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 if (SectionStarts.Count == 0 || SectionStarts[SectionStarts.Count - 1].Category != option.Category || SectionStarts[SectionStarts.Count - 1].Name != option.SectionName)
                 {
                     var header = CreateSectionHeader(option.Category, option.SectionName);
-                    SectionStarts.Add((option.Category, option.SectionName, header));
+                    SectionStarts.Add((option.Category, option.SectionName, header, new List<OptionsRow>()));
                 }
 
                 var row = new OptionsRow(option)
@@ -527,13 +532,14 @@ namespace Quaver.Shared.Screens.V2.Options
                     Size = new ScalableVector2(1, 54)
                 };
                 OptionsRows.SetItemOptions(row, new FlexItemOptions { Basis = row.Height, Shrink = 0 });
+                SectionStarts[SectionStarts.Count - 1].Rows.Add(row);
                 row.SetControl(control);
                 UseScrollSpriteBatch(row);
             }
 
             UpdateOptionsContentLayout();
             OptionsScroll.ScrollTo(0, 1);
-            SetSectionHighlight(SectionStarts.Count > 0 ? (SectionStarts[0].Category, SectionStarts[0].Name) : null);
+            UpdateSectionHighlight();
         }
 
         private IReadOnlyList<OptionsDefinition> GetVisibleOptions() => CurrentCategory.HasValue
@@ -814,50 +820,47 @@ namespace Quaver.Shared.Screens.V2.Options
                 OptionsScroll.ScrollTo(-start.Header.Y, 800);
         }
 
-        private void SetSectionHighlight((OptionCategory Category, string Name)? section)
+        private void SetSectionHighlights(IEnumerable<(OptionCategory Category, string Name)> sections)
         {
-            if (SelectedCategorySection == section)
+            var selected = sections.ToHashSet();
+            if (SelectedCategorySections.SetEquals(selected))
                 return;
 
-            SelectedCategorySection = section;
+            SelectedCategorySections.Clear();
+            SelectedCategorySections.UnionWith(selected);
             foreach (var button in CategorySectionButtons)
-                button.Value.Tint = SkinV2Color.Parse(section.HasValue && button.Key == section.Value
+                button.Value.Tint = SkinV2Color.Parse(SelectedCategorySections.Contains(button.Key)
                     ? Config.Sidebar.SelectedColor : Config.Sidebar.SectionButtonColor);
         }
 
         private void UpdateSectionHighlight()
         {
-            var scrollableHeight = OptionsScroll.ContentContainer.Height - OptionsScroll.Height;
-            var scrollTop = Math.Max(0, -OptionsScroll.CurrentY);
             if (SectionStarts.Count == 0)
             {
-                SetSectionHighlight(null);
+                SetSectionHighlights(Array.Empty<(OptionCategory, string)>());
                 return;
             }
 
-            if (scrollableHeight <= 1 || scrollTop <= 1)
+            const float visibilityTolerance = 1;
+            var visibleTop = -OptionsScroll.ContentContainer.Y - OptionsRows.Y;
+            var visibleBottom = visibleTop + OptionsScroll.Height;
+            var visibleSections = SectionStarts
+                .Where(section => section.Rows.Count > 0 && section.Rows.All(row =>
+                    row.Y >= visibleTop - visibilityTolerance &&
+                    row.Y + row.Height <= visibleBottom + visibilityTolerance))
+                .Select(section => (section.Category, section.Name))
+                .ToHashSet();
+
+            if (visibleSections.Count == 0)
             {
-                var first = SectionStarts[0];
-                SetSectionHighlight((first.Category, first.Name));
-                return;
+                var mostVisibleSection = SectionStarts
+                    .OrderByDescending(section => section.Rows.Sum(row => Math.Max(0, Math.Min(row.Y + row.Height, visibleBottom) - Math.Max(row.Y, visibleTop))))
+                    .First();
+
+                visibleSections.Add((mostVisibleSection.Category, mostVisibleSection.Name));
             }
 
-            if (scrollTop >= scrollableHeight - 1)
-            {
-                var last = SectionStarts[SectionStarts.Count - 1];
-                SetSectionHighlight((last.Category, last.Name));
-                return;
-            }
-
-            var activeSection = SectionStarts[0];
-            foreach (var section in SectionStarts)
-            {
-                if (section.Header.Y > scrollTop + LayoutGap)
-                    break;
-                activeSection = section;
-            }
-
-            SetSectionHighlight((activeSection.Category, activeSection.Name));
+            SetSectionHighlights(visibleSections);
         }
 
         private void SetIconColor(RoundedButton button, Color buttonColor, Color textColor)
@@ -873,6 +876,13 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private void OnPresetSelected(object sender, DropdownOptionEventArgs<Guid> args)
         {
+            if (args.Option.Value == SavePresetEntryId)
+            {
+                SelectedPresetId.Value = AppliedPresetId;
+                SaveAppliedPreset();
+                return;
+            }
+
             if (args.Option.Value == CreatePresetEntryId)
             {
                 SelectedPresetId.Value = AppliedPresetId;
@@ -929,6 +939,32 @@ namespace Quaver.Shared.Screens.V2.Options
                 SelectedPresetId.Value = AppliedPresetId;
                 NotificationManager.Show(NotificationLevel.Error, LocalizationManager.Get("Screen_Options_PresetApplyFailed", preset.Name));
             }
+        }
+
+        private void SaveAppliedPreset()
+        {
+            if (AppliedPresetId == Guid.Empty || !LoadedPresets.TryGetValue(AppliedPresetId, out var preset))
+            {
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Options_SelectPresetToSave"));
+                return;
+            }
+
+            OptionsPreset saved;
+            try
+            {
+                saved = OptionsList.CapturePreset(preset.Id, preset.Name);
+                OptionsPressetStore.Save(saved);
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Could not save options preset {preset.Name} ({preset.Id}): {e}", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error,
+                    LocalizationManager.Get("Screen_Options_PresetSaveFailed"));
+                return;
+            }
+
+            OnPresetSaved(saved);
         }
 
         private void OnPresetCreated(OptionsPreset preset)
@@ -1111,13 +1147,14 @@ namespace Quaver.Shared.Screens.V2.Options
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
             Container.Size = Size;
 
+            var navigation = RootConfig.Shared.Navigation;
+            var navigationBarHeight = navigation.Button.Size + navigation.EdgePadding * 2;
+            var availableHeight = Math.Max(1f, WindowManager.Height - navigationBarHeight * 2);
+
             Panel.Size = new ScalableVector2(
-                Math.Max(1f, Math.Min(Config.Layout.Width,
-                    WindowManager.Width - Config.Layout.WindowPadding * 2)),
-                Math.Max(1f, Math.Min(Config.Layout.Height,
-                    WindowManager.Height - Config.Layout.WindowPadding * 2)));
-            Panel.Image = RoundedRectTextureCache.Get(Panel.Width, Panel.Height,
-                Config.Layout.CornerRadius);
+                Math.Max(1f, Math.Min(Config.Layout.Width, WindowManager.Width - Config.Layout.WindowPadding * 2)),
+                Math.Max(1f, Math.Min(Config.Layout.Height, Math.Min(WindowManager.Height - Config.Layout.WindowPadding * 2, availableHeight))));
+            Panel.Image = RoundedRectTextureCache.Get(Panel.Width, Panel.Height, Config.Layout.CornerRadius);
 
             Layout.Size = Panel.Size;
 
@@ -1141,8 +1178,8 @@ namespace Quaver.Shared.Screens.V2.Options
             var buttonsHeight = CategorySectionButtons.Count * Config.Sidebar.ButtonSize +
                                 Math.Max(0, CategorySectionButtons.Count - 1) * SectionListLayout.RowGap;
             SectionListLayout.Height = Math.Max(1, buttonsHeight);
+            SectionListLayout.Width = V2Scrollbar.GetContentWidth(SectionListScroll);
             SectionListScroll.ContentContainer.Height = SectionListLayout.Height;
-            SectionListScroll.RefreshContentLayout();
             SectionListLayout.RefreshLayout();
 
             foreach (var button in CategorySectionButtons.Values)
@@ -1170,12 +1207,12 @@ namespace Quaver.Shared.Screens.V2.Options
                 ContentBackground.Width - Config.Layout.ContentPadding,
                 ContentBackground.Height - Config.Layout.ContentPadding * 2);
             OptionsScroll.Size = OptionsScrollClip.Size;
+            OptionsRows.Width = V2Scrollbar.GetContentWidth(OptionsScroll);
 
             var rowsHeight = OptionsRows.Children.Sum(row => row.Height) + Math.Max(0, OptionsRows.Children.Count - 1) * OptionsRows.RowGap;
             OptionsRows.Height = Math.Max(
                 ContentBackground.Height - Config.Layout.ContentPadding * 2, rowsHeight);
             OptionsScroll.ContentContainer.Height = OptionsRows.Height;
-            OptionsScroll.RefreshContentLayout();
             OptionsRows.RefreshLayout();
             foreach (var section in SectionStarts)
                 section.Header.RefreshLayout();

@@ -54,11 +54,14 @@ public class UserRow : PoolableSprite<User>
     /// </summary>
     private Sprite OnlineStatusIcon { get; set; }
 
+    private bool PreviewMode { get; }
+
     public event Action<User> OnClick;
     
-    public UserRow(PoolableScrollContainer<User> container, User item, int index) : base(container, item, index)
+    public UserRow(PoolableScrollContainer<User> container, User item, int index, bool previewMode = false, float? width = null) : base(container, item, index)
     {
-        Size = new ScalableVector2(container.Width, HEIGHT);
+        PreviewMode = previewMode;
+        Size = new ScalableVector2(width ?? container.Width, HEIGHT);
         
         CreateRow();
         
@@ -77,25 +80,8 @@ public class UserRow : PoolableSprite<User>
         UserInfoLayout.RefreshLayout();
         NameLayout.RefreshLayout();
 
-        SteamManager.SteamUserAvatarLoaded += OnSteamUserAvatarLoaded;
-    }
-
-    protected override void OnRectangleRecalculated()
-    {
-        base.OnRectangleRecalculated();
-        if (IsDisposed || Row == null || Row.Parent != this || Layout?.Parent != Row)
-            return;
-
-        Row.Width = Width;
-        Layout.Width = Row.Width;
-
-        Layout.RefreshLayout();
-        DetailsLayout.RefreshLayout();
-        UserInfoLayout.RefreshLayout();
-        NameLayout.RefreshLayout();
-
-        Status.Width = Math.Max(1, DetailsLayout.Width - 50);
-        Status.ResetPosition();
+        if (!PreviewMode)
+            SteamManager.SteamUserAvatarLoaded += OnSteamUserAvatarLoaded;
     }
 
     public override void UpdateContent(User item, int index)
@@ -110,16 +96,24 @@ public class UserRow : PoolableSprite<User>
             Status.ResetPosition();
             Avatar.ClearAnimations();
 
-            var avatarTexture = TryGetAvatar(steamId);
-            if (avatarTexture != null)
+            if (PreviewMode)
             {
-                Avatar.Image = Avatar.PerformBlend(avatarTexture, UserInterface.HubOnlineAvatarMask);
+                Avatar.Image = UserInterface.UnknownAvatar;
                 Avatar.Alpha = 1;
             }
             else
             {
-                Avatar.Alpha = 0;
-                SteamManager.SendAvatarRetrievalRequest(steamId);
+                var avatarTexture = TryGetAvatar(steamId);
+                if (avatarTexture != null)
+                {
+                    Avatar.Image = Avatar.PerformBlend(avatarTexture, UserInterface.HubOnlineAvatarMask);
+                    Avatar.Alpha = 1;
+                }
+                else
+                {
+                    Avatar.Alpha = 0;
+                    SteamManager.SendAvatarRetrievalRequest(steamId);
+                }
             }
 
             if (!item.HasUserInfo)
@@ -144,11 +138,12 @@ public class UserRow : PoolableSprite<User>
                 Username.Text = item.OnlineUser.Username;
                 Username.Tint = Colors.GetUserChatColor(item.OnlineUser.UserGroups);
                 Flag.Region = Flags.GetRegion(item.OnlineUser.CountryFlag);
-                UpdatePresence();
                 
                 DetailsLayout.RefreshLayout();
                 NameLayout.RefreshLayout();
             }
+
+            UpdatePresence();
         });
     }
 
@@ -313,8 +308,15 @@ public class UserRow : PoolableSprite<User>
 
     private void UpdatePresence()
     {
+        if (PreviewMode)
+        {
+            OnlineStatusIndicator.SetOnline(OnlineStatusIcon, true);
+            UpdateUserStatus();
+            return;
+        }
+
         var online = Item?.OnlineUser != null && OnlineManager.Connected && OnlineManager.OnlineUsers.ContainsKey(Item.OnlineUser.Id);
-        OnlineStatusIcon.Tint = online ? Color.White : ColorHelper.FromHex("#828E99");
+        OnlineStatusIndicator.SetOnline(OnlineStatusIcon, online);
 
         if (online)
             UpdateUserStatus();
@@ -410,7 +412,8 @@ public class UserRow : PoolableSprite<User>
     
     public override void Destroy()
     {
-        SteamManager.SteamUserAvatarLoaded -= OnSteamUserAvatarLoaded;
+        if (!PreviewMode)
+            SteamManager.SteamUserAvatarLoaded -= OnSteamUserAvatarLoaded;
         base.Destroy();
     }
     

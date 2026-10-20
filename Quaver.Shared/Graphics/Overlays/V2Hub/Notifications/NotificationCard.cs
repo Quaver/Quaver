@@ -30,6 +30,7 @@ public class NotificationCard : Container
     private const float ContentPadding = 12;
     private const float ImageSlotSize = 40;
     private const float IconSize = 34;
+    private const float AvatarTopOffset = 2;
     private const float ImageTextGap = 10;
     private const float TextGap = 2;
     private const float TimestampHeight = 20;
@@ -106,6 +107,7 @@ public class NotificationCard : Container
         Avatar = new SpriteAlphaMaskBlend
         {
             Parent = ImageSlot,
+            Position = new ScalableVector2(0, AvatarTopOffset),
             Size = new ScalableVector2(ImageSlotSize, ImageSlotSize),
             Image = UserInterface.UnknownAvatar,
             Visible = false,
@@ -227,7 +229,7 @@ public class NotificationCard : Container
         Row.Size = new ScalableVector2(rowWidth, height);
 
         var y = (height - contentHeight) / 2f;
-        ImageSlot.Position = new ScalableVector2(ContentPadding, Avatar.Visible ? y : (height - ImageSlotSize) / 2f);
+        ImageSlot.Position = new ScalableVector2(ContentPadding, y);
 
         Title.Position = new ScalableVector2(textX, y);
         y += Title.Height;

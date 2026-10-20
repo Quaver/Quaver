@@ -24,9 +24,12 @@ namespace Quaver.Shared.Screens.V2.UI
             scroll.ScrollbarBackground.UsePreviousSpriteBatchOptions = scroll.Scrollbar.UsePreviousSpriteBatchOptions;
             scroll.ScrollbarCornerRadius = cornerRadius;
             scroll.ShowScrollbarBackground = true;
-            scroll.ReserveScrollbarSpace = true;
-            scroll.ScrollbarContentGap = DefaultGap;
-            scroll.ScrollbarRightGap = DefaultGap;
+            scroll.ShowScrollbarBackgroundWhenContentFits = true;
+            scroll.Scrollbar.X = -DefaultGap;
+            scroll.ScrollbarBackground.X = -DefaultGap;
         }
+
+        public static float GetContentWidth(ScrollContainer scroll) =>
+            Math.Max(1, scroll.Width - scroll.Scrollbar.Width - DefaultGap * 2);
     }
 }

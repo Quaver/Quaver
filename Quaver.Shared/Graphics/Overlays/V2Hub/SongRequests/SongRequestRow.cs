@@ -5,6 +5,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
@@ -39,34 +40,12 @@ public class SongRequestRow : PoolableSprite<SongRequest>
 
     public SongRequestRow(PoolableScrollContainer<SongRequest> container, SongRequest item, int index) : base(container, item, index)
     {
-        Size = new ScalableVector2(container.Width, HEIGHT);
+        Size = new ScalableVector2(V2Scrollbar.GetContentWidth(container), HEIGHT);
 
         CreateRow();
         CreateIcon();
         CreateDetails();
         CreateDifficultyDetails();
-
-        Layout.RefreshLayout();
-        DetailsLayout.RefreshLayout();
-        DifficultyLayout.RefreshLayout();
-    }
-
-    protected override void OnRectangleRecalculated()
-    {
-        base.OnRectangleRecalculated();
-        if (IsDisposed || Row == null || Row.Parent != this || Layout?.Parent != Row)
-            return;
-
-        Row.Width = Width;
-        Layout.Width = Math.Max(1, Row.Width - 32);
-        DetailsLayout.Width = Math.Max(1, Layout.Width - Icon.Width - 16);
-
-        RequestBy.Width = DetailsLayout.Width;
-        Details.Width = DetailsLayout.Width;
-        CreatorDetails.Width = DetailsLayout.Width;
-        RequestBy.ResetPosition();
-        Details.ResetPosition();
-        CreatorDetails.ResetPosition();
 
         Layout.RefreshLayout();
         DetailsLayout.RefreshLayout();

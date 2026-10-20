@@ -37,6 +37,8 @@ public class UsersSection : Container
     private UserList Scroll { get; set; }
     internal Sprite Header { get; private set; }
 
+    private float HeaderHeight => SectionConfig.ControlHeight + SectionConfig.ContentPadding;
+
     public UsersSection(ScalableVector2 size, SkinV2Config rootConfig, bool previewMode = false)
     {
         HubConfig = rootConfig.Screens.Hub;
@@ -68,18 +70,19 @@ public class UsersSection : Container
         Header = new Sprite
         {
             Parent = Layout,
-            Size = new ScalableVector2(Layout.Width, section.HeaderHeight),
+            Size = new ScalableVector2(Layout.Width, HeaderHeight),
             Tint = SkinV2Color.Parse(section.BackgroundColor)
         };
-        Layout.SetItemOptions(Header, new FlexItemOptions { Basis = section.HeaderHeight, Shrink = 0 });
+        Layout.SetItemOptions(Header, new FlexItemOptions { Basis = HeaderHeight, Shrink = 0 });
 
         var headerLayout = new FlexContainer
         {
             Parent = Header,
-            Size = new ScalableVector2(Header.Width - section.ContentPadding, Header.Height - section.ContentPadding * 2),
+            Size = new ScalableVector2(Header.Width - section.ContentPadding, section.ControlHeight),
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
-            JustifyContent = FlexJustifyContent.SpaceBetween
+            JustifyContent = FlexJustifyContent.SpaceBetween,
+            ColumnGap = section.ContentPadding
         };
         
         var searchStyle = new V2FilterFieldStyle
@@ -98,6 +101,7 @@ public class UsersSection : Container
         {
             Parent = headerLayout
         };
+        headerLayout.SetItemOptions(SearchBox, new FlexItemOptions { Basis = Config.SearchWidth, Grow = 1, Shrink = 1 });
 
         DropdownStyle = new SkinV2DropdownConfig
         {
@@ -125,13 +129,14 @@ public class UsersSection : Container
         {
             Parent = headerLayout
         };
+        headerLayout.SetItemOptions(FilterDropdown, new FlexItemOptions { Basis = Config.FilterWidth, Shrink = 0 });
     }
     
     private void CreateContent()
     {
         var userList = OnlineManager.OnlineUsers == null ? new List<User>() : OnlineManager.OnlineUsers.Values.ToList();
-        var availableHeight = Height - SectionConfig.HeaderHeight - SectionConfig.ContentPadding * 2;
-        Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Width, 1), new ScalableVector2(Width, 1), SearchQuery, Filter)
+        var availableHeight = Height - HeaderHeight - SectionConfig.ContentPadding * 2;
+        Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Layout.Width, 1), new ScalableVector2(Layout.Width, 1), SearchQuery, Filter)
         {
             Parent = Layout,
             Tint = SkinV2Color.Parse(SectionConfig.BackgroundColor),

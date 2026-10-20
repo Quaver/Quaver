@@ -27,7 +27,7 @@ public sealed class SkinV2ChatLayoutConfig
     [Range(1, 4096)]
     public float PanelHeight { get; set; } = 620;
 
-    [ConfigEditable, Range(1, 4096)]
+    [ConfigEditable, Range(360, 720)]
     public float SearchSectionWidth { get; set; } = 480;
 
     [Range(0, 512)]
@@ -96,7 +96,7 @@ public sealed class SkinV2ChatSearchConfig
     [Range(1, 512)]
     public float IconSize { get; set; } = 18;
 
-    [ConfigEditable, Range(0, 512)]
+    [ConfigEditable, Range(5, 30)]
     public float IconInset { get; set; } = SkinV2MarginsConfig.Md;
 
     [ConfigEditable, SkinColor]

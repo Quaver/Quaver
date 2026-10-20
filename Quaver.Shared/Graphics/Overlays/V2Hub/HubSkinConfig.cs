@@ -36,7 +36,7 @@ public sealed class SkinV2HubLayoutConfig
 {
     [ConfigEditable]
     [Range(1, 8192)]
-    public float Width { get; set; } = 736;
+    public float Width { get; set; } = 600;
 
     [Range(0, 2048)]
     public float NavigationHeaderGap { get; set; } = SkinV2MarginsConfig.Md;
@@ -47,6 +47,10 @@ public sealed class SkinV2HubLayoutConfig
 
 public sealed class SkinV2HubPanelConfig
 {
+    [ConfigEditable]
+    [SkinColor]
+    public string NavigationHeaderColor { get; set; } = "#181E25FF";
+
     [ConfigEditable]
     [SkinColor]
     public string HeaderColor { get; set; } = "#181E25FF";
@@ -90,7 +94,7 @@ public sealed class SkinV2HubTabsConfig
     public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
     [Range(1, 8192)]
-    public float IconSize { get; set; } = 20;
+    public float IconSize { get; set; } = 24;
 
     [SkinFont]
     public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;

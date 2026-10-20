@@ -195,7 +195,7 @@ public sealed class ChatChannelTab : RoundedButton
     private void UpdateOnlineStatus(bool online)
     {
         if (!IsDisposed && OnlineStatusIcon != null)
-            OnlineStatusIcon.Tint = online ? Color.White : ColorHelper.FromHex("#828E99");
+            OnlineStatusIndicator.SetOnline(OnlineStatusIcon, online);
     }
 
     public override void Destroy()

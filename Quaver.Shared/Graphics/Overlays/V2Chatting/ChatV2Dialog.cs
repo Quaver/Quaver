@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
@@ -57,10 +59,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private Container SearchSection { get; set; }
         private FlexContainer Layout {  get; set; }
         private FlexContainer SearchLayout { get; set; }
-        private RoundedButton ChatHeaderBackground { get; set; }
-        private RoundedButton ChatBodyBackground { get; set; }
-        private RoundedButton SearchHeaderBackground { get; set; }
-        private RoundedButton SearchBodyBackground { get; set; }
+        private NineSliceSprite ChatHeaderBackground { get; set; }
+        private NineSliceSprite ChatBodyBackground { get; set; }
+        private NineSliceSprite SearchHeaderBackground { get; set; }
+        private NineSliceSprite SearchBodyBackground { get; set; }
         private FlexContainer HeaderLayout {  get; set; }
         private HorizontalClippingContainer HeaderTabsClip { get; set; }
         private FlexContainer HeaderTabsLayout { get; set; }
@@ -75,8 +77,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private FlexContainer ContentLayout {  get; set; }
         private ChatMessageList MessageList { get; set; }
         private ChatInputBar InputBar { get; set; }
-        private Sprite PreviewMessageList { get; set; }
-        private Sprite PreviewUserList { get; set; }
+        private ScrollContainer PreviewMessageList { get; set; }
+        private ChatMessageRow PreviewMessageRow { get; set; }
+        private ChatPreviewUserList PreviewUserList { get; set; }
         private Sprite PreviewInputBar { get; set; }
         private RoundedButton PreviewTab { get; set; }
         private UserRightClickOptions UserDropdownMenu { get; set; }
@@ -203,26 +206,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void CreateHeaderContent()
         {
-            ChatHeaderBackground = new RoundedButton
-            {
-                Parent = ChatSection,
-                Size = new ScalableVector2(ChatSection.Width, HeaderHeight + SectionPadding * 2 + 1),
-                CornerRadii = new RoundedRectCornerRadii(Config.Layout.CornerRadius, Config.Layout.CornerRadius, 0, 0),
-                Tint = SkinV2Color.Parse(Config.Panels.HeaderColor),
-                IsClickable = false,
-                IsInteractionEnabled = false
-            };
+            ChatHeaderBackground = CreateSectionBackground(ChatSection, true, SkinV2Color.Parse(Config.Panels.HeaderColor));
+            ChatHeaderBackground.Size = new ScalableVector2(ChatSection.Width, HeaderHeight + SectionPadding * 2 + 1);
 
-            ChatBodyBackground = new RoundedButton
-            {
-                Parent = ChatSection,
-                Position = new ScalableVector2(0, HeaderHeight + SectionPadding * 2),
-                Size = new ScalableVector2(ChatSection.Width, Math.Max(1, ChatSection.Height - HeaderHeight - SectionPadding * 2)),
-                CornerRadii = new RoundedRectCornerRadii(0, 0, Config.Layout.CornerRadius, Config.Layout.CornerRadius),
-                Tint = SkinV2Color.Parse(Config.Panels.SectionColor),
-                IsClickable = false,
-                IsInteractionEnabled = false
-            };
+            ChatBodyBackground = CreateSectionBackground(ChatSection, false, SkinV2Color.Parse(Config.Panels.SectionColor));
+            ChatBodyBackground.Position = new ScalableVector2(0, HeaderHeight + SectionPadding * 2);
+            ChatBodyBackground.Size = new ScalableVector2(ChatSection.Width, Math.Max(1, ChatSection.Height - HeaderHeight - SectionPadding * 2));
 
             // Keeps content above the header background
             Layout.Parent = ChatSection;
@@ -270,26 +259,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ToggleSearchSectionButton.Tint = SkinV2Color.Parse(Config.Tabs.SelectedColor);
             HeaderLayout.SetItemOptions(ToggleSearchSectionButton, new FlexItemOptions { Basis = HeaderButtonSize, Shrink = 0 });
 
-            SearchHeaderBackground = new RoundedButton
-            {
-                Parent = SearchSection,
-                Size = new ScalableVector2(SearchSection.Width, HeaderHeight + SectionPadding * 2 + 1),
-                CornerRadii = new RoundedRectCornerRadii(Config.Layout.CornerRadius, Config.Layout.CornerRadius, 0, 0),
-                Tint = SkinV2Color.Parse(Config.Panels.HeaderColor),
-                IsClickable = false,
-                IsInteractionEnabled = false
-            };
+            SearchHeaderBackground = CreateSectionBackground(SearchSection, true, SkinV2Color.Parse(Config.Panels.HeaderColor));
+            SearchHeaderBackground.Size = new ScalableVector2(SearchSection.Width, HeaderHeight + SectionPadding * 2 + 1);
 
-            SearchBodyBackground = new RoundedButton
-            {
-                Parent = SearchSection,
-                Position = new ScalableVector2(0, HeaderHeight + SectionPadding * 2),
-                Size = new ScalableVector2(SearchSection.Width, Math.Max(1, SearchSection.Height - HeaderHeight - SectionPadding * 2)),
-                CornerRadii = new RoundedRectCornerRadii(0, 0, Config.Layout.CornerRadius, Config.Layout.CornerRadius),
-                Tint = SkinV2Color.Parse(Config.Panels.SectionColor),
-                IsClickable = false,
-                IsInteractionEnabled = false
-            };
+            SearchBodyBackground = CreateSectionBackground(SearchSection, false, SkinV2Color.Parse(Config.Panels.SectionColor));
+            SearchBodyBackground.Position = new ScalableVector2(0, HeaderHeight + SectionPadding * 2);
+            SearchBodyBackground.Size = new ScalableVector2(SearchSection.Width, Math.Max(1, SearchSection.Height - HeaderHeight - SectionPadding * 2));
 
             // Keep search components above the header background
             SearchLayout.Parent = SearchSection;
@@ -326,6 +301,22 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 CreatePreviewTab();
             else
                 ChatSession.JoinedChannels.Value.ForEach(CreateTabButton);
+        }
+
+        private NineSliceSprite CreateSectionBackground(Drawable parent, bool roundTop, Color tint)
+        {
+            var radius = Math.Max(0, Config.Layout.CornerRadius);
+            var margin = (int) Math.Ceiling(radius);
+            var textureSize = Math.Max(20, margin * 2 + 2);
+            var radii = roundTop
+                ? new RoundedRectCornerRadii(radius, radius, 0, 0)
+                : new RoundedRectCornerRadii(0, 0, radius, radius);
+
+            return new NineSliceSprite(RoundedRectTextureCache.Get(textureSize, textureSize, radii), new SliceMargins(margin))
+            {
+                Parent = parent,
+                Tint = tint
+            };
         }
 
         private RoundedButton CreateHeaderIconButton(Drawable parent, GlobalIcon icon, EventHandler clickAction)
@@ -412,6 +403,13 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             HeaderLayout.RefreshLayout();
             SearchHeaderLayout.RefreshLayout();
             ContentLayout?.RefreshLayout();
+
+            if (PreviewMessageList != null)
+            {
+                PreviewMessageList.ContentContainer.Width = PreviewMessageList.Width;
+                PreviewMessageRow?.UpdateContent(PreviewMessageRow.Item, PreviewMessageList.Width);
+                PreviewMessageList.ContentContainer.Height = Math.Max(PreviewMessageList.Height, PreviewMessageRow?.Height ?? 1);
+            }
 
             // The section layouts provide the left inset. Let the scrolling lists extend through the
             // matching right inset because ScrollContainer already owns the scrollbar's right gap.
@@ -670,20 +668,25 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void CreatePreviewMainContent()
         {
-            PreviewMessageList = new Sprite
+            var previewUsers = CreatePreviewUsers();
+            var quaverBot = previewUsers[0];
+
+            PreviewMessageList = new ScrollContainer(new ScalableVector2(1, 1), new ScalableVector2(1, 1))
             {
                 Parent = ContentLayout,
-                Size = new ScalableVector2(1, 1),
                 Tint = SkinV2Color.Parse(Config.Panels.SectionColor)
             };
             ContentLayout.SetItemOptions(PreviewMessageList, new FlexItemOptions { Basis = 0, Grow = 1 });
 
-            new SpriteTextPlus(FontManager.GetWobbleFont(Config.Tabs.Font), LocalizationManager.Get("Screen_Main_Menu_Chat"), Config.Tabs.FontSize)
+            var previewMessage = new ChatMessage(DefaultChannelName, LocalizationManager.Get("SkinEditor_ChatPreviewMessage"))
             {
-                Parent = PreviewMessageList,
-                Position = new ScalableVector2(SectionPadding, SectionPadding),
-                Tint = SkinV2Color.Parse(Config.Tabs.TextColor)
+                SenderId = quaverBot.OnlineUser.Id,
+                SenderName = quaverBot.OnlineUser.Username,
+                Sender = quaverBot,
+                Time = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
+            PreviewMessageRow = new ChatMessageRow(previewMessage, 1, PreviewMessageList);
+            PreviewMessageList.AddContainedDrawable(PreviewMessageRow);
 
             PreviewInputBar = new Sprite
             {
@@ -701,21 +704,29 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Tint = SkinV2Color.Parse(Config.Search.PlaceholderColor)
             };
 
-            PreviewUserList = new Sprite
+            PreviewUserList = new ChatPreviewUserList(previewUsers, new ScalableVector2(1, 1))
             {
                 Parent = SearchLayout,
-                Size = new ScalableVector2(1, 1),
                 Tint = SkinV2Color.Parse(Config.Panels.SectionColor)
             };
             SearchLayout.SetItemOptions(PreviewUserList, new FlexItemOptions { Basis = 0, Grow = 1 });
-
-            new SpriteTextPlus(FontManager.GetWobbleFont(Config.Search.Font), LocalizationManager.Get("Screen_Hub_UsersHeader"), Config.Search.FontSize)
-            {
-                Parent = PreviewUserList,
-                Position = new ScalableVector2(SectionPadding, SectionPadding),
-                Tint = SkinV2Color.Parse(Config.Search.TextColor)
-            };
         }
+
+        private static List<User> CreatePreviewUsers() => new()
+        {
+            CreatePreviewUser(2, "QuaverBot", "US", UserGroups.Bot),
+            CreatePreviewUser(3, "Swan", "AU", UserGroups.Swan),
+            CreatePreviewUser(4, "Player", "FR", UserGroups.Donator)
+        };
+
+        private static User CreatePreviewUser(int id, string username, string country, UserGroups userGroups) =>
+            new(new OnlineUser
+            {
+                Id = id,
+                Username = username,
+                CountryFlag = country,
+                UserGroups = userGroups
+            });
 
         private void UpdateChannelButtonTints()
         {
@@ -839,15 +850,20 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void SetPanelHeight(float height)
         {
-            var maximumHeight = GetMaximumPanelHeight(WindowManager.Height);
-            var minimumHeight = Math.Min(240, maximumHeight);
-            var clampedHeight = MathHelper.Clamp(height, minimumHeight, maximumHeight);
+            var clampedHeight = ClampPanelHeight(height);
 
             if (Math.Abs(Panel.Height - clampedHeight) < 0.001f)
                 return;
 
             Panel.Height = clampedHeight;
             RefreshDialogLayout();
+        }
+
+        private float ClampPanelHeight(float height)
+        {
+            var maximumHeight = GetMaximumPanelHeight(WindowManager.Height);
+            var minimumHeight = Math.Min(240, maximumHeight);
+            return MathHelper.Clamp(height, minimumHeight, maximumHeight);
         }
 
         private float GetMaximumPanelHeight(float windowHeight) =>

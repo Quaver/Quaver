@@ -9,6 +9,7 @@ using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.V2.UI;
 using Wobble.Bindables;
 using Wobble.Graphics;
 
@@ -29,9 +30,6 @@ public class UserList : PoolableScrollContainer<User>
     
     public UserList(List<User> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize, Bindable<string> searchQuery, Bindable<UsersSection.UserFilter> filter, bool startFromBottom = false) : base(availableItems, poolSize, poolStartingIndex, size, contentSize, startFromBottom)
     {
-        FillPooledItemsToContentWidth = true;
-        PooledItemMinimumRightPadding = 10;
-
         SearchQuery = searchQuery;
         SearchQuery.ValueChanged += OnSearchChanged;
 
@@ -57,7 +55,7 @@ public class UserList : PoolableScrollContainer<User>
 
     protected override PoolableSprite<User> CreateObject(User item, int index)
     {
-        var row = new UserRow(this, item, index)
+        var row = new UserRow(this, item, index, width: V2Scrollbar.GetContentWidth(this))
         {
             Alpha = 0
         };

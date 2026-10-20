@@ -28,14 +28,12 @@ namespace Quaver.Shared.Screens.V2.Music.UI
             RowConfig = rowConfig;
             Selected = selected;
             Tint = Color.Transparent;
-            FillPooledItemsToContentWidth = true;
             PaddingBottom = (int) Math.Round(ListConfig.ContentPadding);
             EasingType = Easing.OutQuint;
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
             InputEnabled = true;
             V2Scrollbar.Apply(this);
-            ScrollbarRightGap = 0;
             CreatePool();
         }
 
@@ -109,6 +107,8 @@ namespace Quaver.Shared.Screens.V2.Music.UI
             ContentContainer.Y = centeredY;
             TargetY = centeredY;
             PreviousTargetY = centeredY;
+
+            HandlePoolShifting();
             PreviousContentContainerY = centeredY;
         }
 

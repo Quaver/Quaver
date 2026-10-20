@@ -84,7 +84,8 @@ public class NotificationsSection : Container
             Size = new ScalableVector2(Header.Width - section.ContentPadding, Header.Height - section.ContentPadding * 2),
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
-            JustifyContent = FlexJustifyContent.SpaceBetween
+            JustifyContent = FlexJustifyContent.SpaceBetween,
+            ColumnGap = section.ContentPadding
         };
 
         var buttonLayout = new FlexContainer
@@ -96,6 +97,7 @@ public class NotificationsSection : Container
             JustifyContent = FlexJustifyContent.FlexStart,
             ColumnGap = 0
         };
+        headerLayout.SetItemOptions(buttonLayout, new FlexItemOptions { Basis = buttonLayout.Width, Shrink = 1 });
 
         // Connect both button together
         var cornerRadius = section.CornerRadius;
@@ -106,6 +108,7 @@ public class NotificationsSection : Container
             CornerRadii = new RoundedRectCornerRadii(cornerRadius, 0, 0, cornerRadius), // used to remove the rounded edges on connecting sides
             Tint = SkinV2Color.Parse(section.SelectedControlColor)
         };
+        buttonLayout.SetItemOptions(RecentNotification, new FlexItemOptions { Basis = Config.FeedButtonWidth, Grow = 1, Shrink = 1 });
         UpdateNewCountLabel();
 
         AllNotification = new RoundedButton
@@ -115,15 +118,17 @@ public class NotificationsSection : Container
             CornerRadii = new RoundedRectCornerRadii(0, cornerRadius, cornerRadius, 0),
             Tint = SkinV2Color.Parse(section.ControlColor)
         };
+        buttonLayout.SetItemOptions(AllNotification, new FlexItemOptions { Basis = Config.FeedButtonWidth, Grow = 1, Shrink = 1 });
         AllNotification.SetLabel(FontManager.GetWobbleFont(section.Font), LocalizationManager.Get("Screen_Hub_NotificationAll"), section.FontSize, SkinV2Color.Parse(section.TextColor));
 
         ClearButton = new RoundedButton((sender, args) => ClearAllNotifications())
         {
             Parent = headerLayout,
-            Size = new ScalableVector2(section.ClearButtonWidth, section.ControlHeight),
+            Size = new ScalableVector2(section.ClearButtonWidth, RecentNotification.Height),
             CornerRadius = section.CornerRadius,
             Tint = SkinV2Color.Parse(section.ControlColor)
         };
+        headerLayout.SetItemOptions(ClearButton, new FlexItemOptions { Basis = section.ClearButtonWidth, Shrink = 0 });
         ClearButton.SetLabel(FontManager.GetWobbleFont(section.Font), LocalizationManager.Get("Screen_Hub_NotificationClearAll"), section.FontSize, SkinV2Color.Parse(section.TextColor));
         ClearButton.SetIcon(Skin.LoadTexture(section.ClearIcon, UserInterface.HubNotificationsClearIcon), new Vector2(section.IconSize, section.IconSize));
     }

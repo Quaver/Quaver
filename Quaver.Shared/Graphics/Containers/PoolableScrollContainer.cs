@@ -58,16 +58,6 @@ namespace Quaver.Shared.Graphics.Containers
         /// </summary>
         private int DrawableHeight => Pool.Count > 0 ? Pool.First().HEIGHT : 0;
 
-        /// <summary>
-        ///     Whether pooled rows should fill the horizontal space available beside the scrollbar.
-        /// </summary>
-        protected bool FillPooledItemsToContentWidth { get; set; }
-
-        /// <summary>
-        ///     The right inset retained by fill-width pooled rows when the scrollbar uses less space.
-        /// </summary>
-        protected float PooledItemMinimumRightPadding { get; set; }
-
         protected virtual float GetItemOffset(int index) => index * DrawableHeight;
 
         protected virtual int GetMiddleObjectIndex() =>
@@ -134,7 +124,7 @@ namespace Quaver.Shared.Graphics.Containers
                 var drawable = AddObject(PoolStartingIndex + i, updateContent);
 
                 if (containDrawables)
-                    AddContainedDrawable(drawable, FillPooledItemsToContentWidth, minimumRightPadding: PooledItemMinimumRightPadding);
+                    AddContainedDrawable(drawable);
             }
 
             RecalculateContainerHeight();
@@ -271,7 +261,7 @@ namespace Quaver.Shared.Graphics.Containers
 
                     // Need another drawable to use
                     if (Pool.Count < PoolSize)
-                        AddContainedDrawable(AddObject(index), FillPooledItemsToContentWidth, minimumRightPadding: PooledItemMinimumRightPadding);
+                        AddContainedDrawable(AddObject(index));
 
                     RecalculateContainerHeight(usePoolCount);
 
@@ -295,7 +285,7 @@ namespace Quaver.Shared.Graphics.Containers
 
                     // Need another drawable to use
                     if (Pool.Count < PoolSize)
-                        AddContainedDrawable(AddObject(AvailableItems.Count - 1), FillPooledItemsToContentWidth, minimumRightPadding: PooledItemMinimumRightPadding);
+                        AddContainedDrawable(AddObject(AvailableItems.Count - 1));
 
                     RecalculateContainerHeight(usePoolCount);
 

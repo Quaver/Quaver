@@ -654,7 +654,6 @@ namespace Quaver.Shared.Config
 
         /// <summary>
         ///     Whether newly-created menu screens should use registered replacement implementations.
-        ///     This value is snapshotted when the screen manager initializes and requires a restart to change.
         /// </summary>
         internal static Bindable<bool> UseNewScreens { get; private set; }
 

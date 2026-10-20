@@ -135,7 +135,7 @@ namespace Quaver.Shared.Screens.V2.UI
             var username = GetDisplayUsername(connected);
 
             UpdateAvatar(GetAvatar());
-            StatusIcon.Tint = connected ? Color.White : SkinV2Color.Parse(Config.OfflineStatusColor);
+            OnlineStatusIndicator.SetOnline(StatusIcon, connected, SkinV2Color.Parse(Config.OfflineStatusColor));
 
             if (connected)
             {

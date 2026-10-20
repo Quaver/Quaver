@@ -70,7 +70,7 @@ namespace Quaver.Shared.Screens.V2.UI
             Config = config;
             Playback = playback;
             Expanded = expanded;
-            Size = new ScalableVector2(GetPreferredWidth(), Expanded ? GetPreferredHeight() : Config.ControlsHeight);
+            Size = new ScalableVector2(GetPreferredWidth(), Expanded ? GetPreferredHeight() : GetCollapsedHeight());
 
             Background = new Sprite
             {
@@ -224,6 +224,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private float GetPreferredHeight() => Config.Padding * 2 + Config.BannerHeight + Config.SectionGap + Config.ControlsHeight;
 
+        private float GetCollapsedHeight() => Config.Padding * 2 + Config.ControlsHeight;
+
         private RoundedButton CreateIconButton(Texture2D icon, Vector2 iconSize, Action action, Color? background = null, Color? foreground = null)
         {
             var button = new RoundedButton((sender, args) => action())
@@ -256,7 +258,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void SetFixedControl(Drawable control) => Controls.SetItemOptions(control, new FlexItemOptions { Basis = control.Width, Grow = 0, Shrink = 0 });
 
-        private float GetControlsY() => Expanded ? Config.Padding + Config.BannerHeight + Config.SectionGap : 0;
+        private float GetControlsY() => Expanded
+            ? Config.Padding + Config.BannerHeight + Config.SectionGap : Config.Padding;
 
         private void UpdatePlaybackState()
         {

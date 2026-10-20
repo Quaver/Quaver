@@ -137,15 +137,16 @@ namespace Quaver.Shared.Screens.V2.Music.UI
                 var headerY = padding + Config.Search.Height;
                 var listY = headerY + Config.List.HeaderHeight;
                 var contentWidth = Math.Max(1, Width - padding * 2);
-                var artistX = padding + contentWidth * Config.Row.ArtistColumnStart;
+                List.Position = new ScalableVector2(padding, listY);
+                List.ApplySize(new ScalableVector2(contentWidth, Math.Max(1, Height - listY - padding)));
+
+                var rowWidth = V2Scrollbar.GetContentWidth(List);
+                var artistX = padding + rowWidth * Config.Row.ArtistColumnStart;
                 var headerTextY = Math.Max(headerY, listY - Config.List.HeaderGap - TitleHeader.Height);
 
                 TitleHeader.Position = new ScalableVector2(padding + Config.Row.HorizontalPadding, headerTextY);
                 ArtistHeader.Position = new ScalableVector2(artistX, headerTextY);
-                LengthHeader.Position = new ScalableVector2(-padding - Config.Row.HorizontalPadding, headerTextY);
-
-                List.Position = new ScalableVector2(padding, listY);
-                List.ApplySize(new ScalableVector2(contentWidth, Math.Max(1, Height - listY - padding)));
+                LengthHeader.Position = new ScalableVector2(padding + rowWidth - Config.Row.HorizontalPadding - Width, headerTextY);
             }
             finally
             {
@@ -162,7 +163,7 @@ namespace Quaver.Shared.Screens.V2.Music.UI
                 items = new List<Mapset>();
             else if (string.IsNullOrEmpty(query))
             {
-                items = Playback.GetQueueMapsets(5, 5);
+                items = Playback.GetQueueMapsets(14, 15);
                 focusCurrent = true;
             }
             else

@@ -1,17 +1,16 @@
 using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.SongRequests;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Screens.V2.UI;
-using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
@@ -78,12 +77,10 @@ public class HubPanel : Container
     private void CreateNavigationHeader()
     {
         var headerHeight = NavigationConfig.Button.Size + NavigationConfig.EdgePadding * 2;
-        NavigationHeader = new Sprite
-        {
-            Parent = BackgroundLayout,
-            Size = new ScalableVector2(Width, headerHeight),
-            Tint = SkinV2Color.Parse(Config.Panel.HeaderColor)
-        };
+        var cornerRadius = Config.Tabs.CornerRadius;
+        NavigationHeader = CreateRoundedBackground(new RoundedRectCornerRadii(0, 0, 0, cornerRadius), SkinV2Color.Parse(Config.Panel.NavigationHeaderColor));
+        NavigationHeader.Parent = BackgroundLayout;
+        NavigationHeader.Size = new ScalableVector2(Width, headerHeight);
         BackgroundLayout.SetItemOptions(NavigationHeader, new FlexItemOptions { Basis = headerHeight, Shrink = 0 });
 
         var spacer = new Container
@@ -97,12 +94,9 @@ public class HubPanel : Container
     private void CreateSectionsHeader()
     {
         var tabs = Config.Tabs;
-        SectionsHeader = new Sprite
-        {
-            Parent = BackgroundLayout,
-            Size = new ScalableVector2(Width, tabs.HeaderHeight),
-            Tint = SkinV2Color.Parse(Config.Panel.HeaderColor)
-        };
+        SectionsHeader = CreateRoundedBackground(new RoundedRectCornerRadii(tabs.CornerRadius, 0, tabs.CornerRadius, tabs.CornerRadius), SkinV2Color.Parse(Config.Panel.HeaderColor));
+        SectionsHeader.Parent = BackgroundLayout;
+        SectionsHeader.Size = new ScalableVector2(Width, tabs.HeaderHeight);
         BackgroundLayout.SetItemOptions(SectionsHeader, new FlexItemOptions { Basis = tabs.HeaderHeight, Shrink = 0 });
 
         var headerLayout = new FlexContainer
@@ -176,6 +170,18 @@ public class HubPanel : Container
         {
             Parent = ContentBackground,
             UpdateWhenInvisible = false
+        };
+    }
+
+    private NineSliceSprite CreateRoundedBackground(RoundedRectCornerRadii radii, Color tint)
+    {
+        var radius = Math.Max(0, Config.Tabs.CornerRadius);
+        var margin = (int) Math.Ceiling(radius);
+        var textureSize = Math.Max(20, margin * 2 + 2);
+
+        return new NineSliceSprite(RoundedRectTextureCache.Get(textureSize, textureSize, radii), new SliceMargins(margin))
+        {
+            Tint = tint
         };
     }
 

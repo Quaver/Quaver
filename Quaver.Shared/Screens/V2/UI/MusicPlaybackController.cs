@@ -118,13 +118,16 @@ namespace Quaver.Shared.Screens.V2.UI
             if (songs == null || songs.Count == 0)
                 return new List<Mapset>();
 
+            previousCount = Math.Max(0, previousCount);
+            nextCount = Math.Max(0, nextCount);
+            var count = Math.Min(songs.Count, previousCount + nextCount + 1);
             var currentIndex = selected == null ? -1 : songs.FindIndex(mapset => mapset.Maps.Contains(selected));
             if (currentIndex < 0)
-                return songs.Take(previousCount + nextCount + 1).ToList();
+                return songs.Take(count).ToList();
 
             var startIndex = Math.Max(0, currentIndex - previousCount);
-            var endIndex = Math.Min(songs.Count - 1, currentIndex + nextCount);
-            return songs.GetRange(startIndex, endIndex - startIndex + 1);
+            startIndex = Math.Min(startIndex, songs.Count - count);
+            return songs.GetRange(startIndex, count);
         }
 
         public void EnsureDefaultTrack()

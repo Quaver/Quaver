@@ -163,13 +163,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
     public sealed class SkinV2MusicQueueDialogConfig
     {
-        [Range(1, 8192)]
-        public float Width { get; set; } = 610;
+        [Range(520, 1000)]
+        public float Width { get; set; } = 620;
 
-        [Range(1, 8192)]
-        public float Height { get; set; } = 736;
+        [Range(300, 1000)]
+        public float Height { get; set; } = 762;
 
-        [Range(0, 4096)]
+        [Range(0, 20)]
         public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
         [ConfigEditable]
@@ -193,7 +193,7 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         [Range(1, 8192)]
         [SkinEditorIgnore]
-        public float Height { get; set; } = 50;
+        public float Height { get; set; } = 40;
 
         [Range(1, 8192)]
         [SkinEditorIgnore]
@@ -203,7 +203,7 @@ namespace Quaver.Shared.Screens.V2.UI
         [SkinEditorIgnore]
         public float IconInset { get; set; } = SkinV2MarginsConfig.Lg;
 
-        [Range(0, 4096)]
+        [Range(0, 20)]
         public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
         [SkinFont]
@@ -266,19 +266,19 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         [Range(1, 8192)]
         [SkinEditorIgnore]
-        public float Height { get; set; } = 80;
+        public float Height { get; set; } = 40;
 
         [Range(0, 2048)]
         [SkinEditorIgnore]
         public float HorizontalPadding { get; set; } = SkinV2MarginsConfig.Lg;
 
-        [Range(0, 4096)]
+        [Range(0, 20)]
         public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
-        [Range(0.1, 0.8)]
+        [Range(0.3, 0.6)]
         public float ArtistColumnStart { get; set; } = 0.48f;
 
-        [Range(0.2, 0.95)]
+        [Range(0.7, 0.9)]
         public float LengthColumnStart { get; set; } = 0.82f;
 
         [SkinFont]
@@ -308,28 +308,28 @@ namespace Quaver.Shared.Screens.V2.UI
 
     public sealed class SkinV2VolumeDialogConfig
     {
-        [Range(-8192, 8192)]
+        [Range(-1920, 1920)]
         public float PositionOffsetX { get; set; } = 0;
 
-        [Range(-8192, 8192)]
+        [Range(-1080, 1080)]
         public float PositionOffsetY { get; set; } = 0;
 
-        [Range(1, 8192)]
+        [Range(40, 80)]
         public float CardWidth { get; set; } = 44;
 
-        [Range(1, 8192)]
+        [Range(240, 360)]
         public float CardHeight { get; set; } = 245;
 
-        [Range(0, 2048)]
+        [Range(5, 30)]
         public float CardGap { get; set; } = SkinV2MarginsConfig.Md;
 
-        [Range(1, 8192)]
+        [Range(30, 50)]
         public float FooterHeight { get; set; } = 40;
 
-        [Range(1, 8192)]
+        [Range(8, 20)]
         public float TrackWidth { get; set; } = 12;
 
-        [Range(1, 8192)]
+        [Range(120, 180)]
         public float TrackHeight { get; set; } = 170;
 
         [Range(0, 2048)]
@@ -340,10 +340,10 @@ namespace Quaver.Shared.Screens.V2.UI
         [SkinEditorIgnore]
         public float IconHeight { get; set; } = 20;
 
-        [Range(0, 4096)]
+        [Range(0, 20)]
         public float CardCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
-        [Range(0, 4096)]
+        [Range(0, 10)]
         public float TrackCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
         [Range(0, 2048)]
@@ -360,10 +360,10 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public bool SlideFromLeft { get; set; } = true;
 
-        [Range(0, 8192)]
+        [Range(0, 200)]
         public float SlideDistance { get; set; } = 40;
 
-        [Range(1, 10000)]
+        [Range(50, 1000)]
         public int AnimationDuration { get; set; } = 250;
 
         [Range(0d, 1d)]
@@ -733,7 +733,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         [SkinColor]
         [ConfigEditable]
-        public string OfflineStatusColor { get; set; } = "#828E99FF";
+        public string OfflineStatusColor { get; set; } = "#FF3A6FFF";
     }
 
     public sealed class SkinV2NavigationStatsConfig

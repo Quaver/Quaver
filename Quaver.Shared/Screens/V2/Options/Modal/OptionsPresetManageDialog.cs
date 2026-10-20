@@ -40,13 +40,7 @@ namespace Quaver.Shared.Screens.V2.Options.Modal
                     OptionsPreset saved;
                     try
                     {
-                        saved = new OptionsPreset
-                        {
-                            Id = preset.Id,
-                            Name = name,
-                            Values = OptionsList.CapturePresetValues()
-                        };
-                        OptionsList.CapturePresetInputs(saved);
+                        saved = OptionsList.CapturePreset(preset.Id, name);
                         OptionsPressetStore.Save(saved);
                     }
                     catch (Exception e)

@@ -112,6 +112,18 @@ namespace Quaver.Shared.Screens.V2.Options.Model
             return values;
         }
 
+        public static OptionsPreset CapturePreset(Guid id, string name)
+        {
+            var preset = new OptionsPreset
+            {
+                Id = id,
+                Name = name,
+                Values = CapturePresetValues()
+            };
+            CapturePresetInputs(preset);
+            return preset;
+        }
+
         public static void CapturePresetInputs(OptionsPreset preset)
         {
             if (preset == null)

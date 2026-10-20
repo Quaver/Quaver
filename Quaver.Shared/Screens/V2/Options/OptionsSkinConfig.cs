@@ -24,10 +24,10 @@ public sealed class SkinV2OptionsConfig
 
 public sealed class SkinV2OptionsLayoutConfig
 {
-    [ConfigEditable, Range(1, 4096)]
+    [ConfigEditable, Range(1100, 1800)]
     public float Width { get; set; } = 1268;
 
-    [ConfigEditable, Range(1, 4096)]
+    [ConfigEditable, Range(500, 900)]
     public float Height { get; set; } = 622;
 
     [Range(0, 512)]
@@ -36,7 +36,7 @@ public sealed class SkinV2OptionsLayoutConfig
     [Range(0, 512)]
     public float Gap { get; set; } = SkinV2MarginsConfig.Md;
 
-    [ConfigEditable, Range(1, 2048)]
+    [ConfigEditable, Range(318, 450)]
     public float SidebarWidth { get; set; } = 318;
 
     [Range(1, 512)]
@@ -48,7 +48,7 @@ public sealed class SkinV2OptionsLayoutConfig
     [Range(0, 512)]
     public float ContentPadding { get; set; } = SkinV2MarginsConfig.Md;
 
-    [ConfigEditable, Range(0, 512)]
+    [ConfigEditable, Range(0, 20)]
     public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
     [Range(1, 10000)]
@@ -67,10 +67,10 @@ public sealed class SkinV2OptionsHeaderConfig
     [Range(1, 2048)]
     public float TitleWidth { get; set; } = 89;
 
-    [ConfigEditable, Range(1, 4096)]
+    [ConfigEditable, Range(300, 900)]
     public float SearchWidth { get; set; } = 726;
 
-    [ConfigEditable, Range(1, 2048)]
+    [ConfigEditable, Range(180, 320)]
     public float PresetWidth { get; set; } = 242;
 
     [SkinFont]

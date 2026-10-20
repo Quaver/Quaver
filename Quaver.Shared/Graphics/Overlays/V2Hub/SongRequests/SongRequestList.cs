@@ -14,9 +14,6 @@ public class SongRequestList : PoolableScrollContainer<SongRequest>
 
     public SongRequestList(List<SongRequest> availableItems, int poolSize, ScalableVector2 size) : base(availableItems, poolSize, 0, size, size)
     {
-        FillPooledItemsToContentWidth = true;
-        PooledItemMinimumRightPadding = 10;
-
         CreatePool();
     }
 

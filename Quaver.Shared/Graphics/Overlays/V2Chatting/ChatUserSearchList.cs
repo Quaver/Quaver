@@ -43,8 +43,6 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(), 1, 0, size, size)
     {
         V2Scrollbar.Apply(this);
-        FillPooledItemsToContentWidth = true;
-        PooledItemMinimumRightPadding = 10;
 
         SelectedChannel = activeChannel.Value;
         SearchQuery = searchQuery;
@@ -73,7 +71,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     protected override PoolableSprite<User> CreateObject(User item, int index)
     {
-        var row = new UserRow(this, item, index)
+        var row = new UserRow(this, item, index, width: V2Scrollbar.GetContentWidth(this))
         {
             Alpha = 0
         };
@@ -357,7 +355,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
         if (string.IsNullOrWhiteSpace(SearchQuery.Value))
         {
-            RefreshDefaultUsers(false);
+            RefreshDefaultUsers(false, false);
             return;
         }
 
@@ -371,7 +369,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         ReplaceUsers(users, false);
     }
 
-    private void RefreshDefaultUsers(bool resetScroll = true)
+    private void RefreshDefaultUsers(bool resetScroll = true, bool refreshRemote = true)
     {
         SearchTask.Cancel();
 
@@ -380,7 +378,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             ClanMembersTask.Cancel();
             LoadingClanId = null;
 
-            if (FriendsCache != null)
+            if (!refreshRemote && FriendsCache != null && !FriendsTask.IsRunning)
             {
                 ApplyFriends(FriendsCache, resetScroll);
                 return;
@@ -388,7 +386,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
             RefreshOnlineUsers(resetScroll);
 
-            if (!FriendsTask.IsRunning)
+            if ((refreshRemote || FriendsCache == null) && !FriendsTask.IsRunning)
                 FriendsTask.Run(true);
 
             return;
@@ -404,19 +402,20 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             return;
         }
 
-        if (ClanMembersCache.TryGetValue(clanId, out var members))
+        if (!refreshRemote && ClanMembersCache.TryGetValue(clanId, out var members) &&
+            !(LoadingClanId == clanId && ClanMembersTask.IsRunning))
         {
             ApplyClanMembers(members, resetScroll: resetScroll);
             return;
         }
+
+        RefreshOnlineUsers(resetScroll);
 
         if (LoadingClanId == clanId && ClanMembersTask.IsRunning)
             return;
 
         ClanMembersTask.Cancel();
         LoadingClanId = clanId;
-        RefreshOnlineUsers(resetScroll);
-
         ClanMembersTask.Run(clanId);
     }
 

@@ -905,8 +905,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public static void SetHubOverlayState(bool opened, FlexContainer controlsHost = null)
         {
-            if (ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
-                navigation.ApplyHubOverlayState(opened, controlsHost);
+            var navigation = ScreenManager.GetElement<ScreenNavigation>(ElementKey);
+            navigation.ApplyHubOverlayState(opened, controlsHost);
         }
 
         private void ApplyHubOverlayState(bool opened, FlexContainer controlsHost)

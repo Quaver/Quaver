@@ -17,6 +17,7 @@ using Quaver.Shared.Graphics.Overlays.Chatting.Channels.Join;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.V2Chatting;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -387,6 +388,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting
 
                     if (ConfigManager.UseNewScreens.Value)
                     {
+                        DialogManager.Dialogs.OfType<OverlayDialog>().LastOrDefault()?.Close();
+
                         if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
                             DialogManager.Show(new ChatV2Dialog());
                     }

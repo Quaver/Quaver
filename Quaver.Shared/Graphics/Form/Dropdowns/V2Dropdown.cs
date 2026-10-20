@@ -160,6 +160,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
         private int OptionCount { get; set; }
 
+        private bool? OptionCornerRadiiOpenDown { get; set; }
+
 
         private float ExternalAlpha { get; set; } = 1;
 
@@ -501,7 +503,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                     var button = CreateOptionButton(option);
                     button.Position = new ScalableVector2(0, y);
                     button.Size = new ScalableVector2(contentWidth, Config.ItemHeight);
-                    MenuScroll.AddContainedDrawable(button, true);
+                    MenuScroll.AddContainedDrawable(button);
                     OptionButtons.Add(button);
                     y += Config.ItemHeight;
                     optionCount++;
@@ -518,8 +520,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
                         Tint = SkinV2Color.Parse(Config.DividerColor),
                         Alpha = 0
                     };
-                    MenuScroll.AddContainedDrawable(divider, true, Config.DividerInset,
-                        contentRightPadding: Config.DividerInset);
+                    MenuScroll.AddContainedDrawable(divider);
                     EntryDividers.Add(divider);
                     y += Config.DividerThickness;
                 }
@@ -617,8 +618,9 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             var icon = SummaryIcon;
             if (icon == null && selected.Count == 1)
                 icon = selected[0].Icon;
+            var textColor = selected.Count == 1 ? selected[0].TextColor : null;
 
-            Trigger.SetContent(label, icon, Config);
+            Trigger.SetContent(label, icon, Config, textColor);
             Trigger.CornerRadii = GetTriggerRadii();
         }
 
@@ -705,8 +707,8 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             var itemLimitRequiresScroll = MaxVisibleItems > 0 && MaxVisibleItems < OptionCount;
             var viewportRequiresScroll = available < desiredHeight - 0.5f;
             MenuScroll.Scrollbar.Visible = itemLimitRequiresScroll || viewportRequiresScroll;
-            MenuScroll.RefreshContentLayout();
             MenuScroll.InputEnabled = IsMenuScrollInputAllowed();
+            RefreshOptionCornerRadii();
 
             if (applyMenuHeight && Math.Abs(Menu.Height - menuHeight) > 0.5f &&
                 !IsClosing && !IsOpening)
@@ -714,6 +716,26 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
 
             if (Trigger != null)
                 Trigger.CornerRadii = GetTriggerRadii();
+        }
+
+        private void RefreshOptionCornerRadii()
+        {
+            if (OptionButtons.Count == 0 || OptionCornerRadiiOpenDown == OpensDown)
+                return;
+
+            foreach (var button in OptionButtons)
+                button.CornerRadii = RoundedRectCornerRadii.All(0);
+
+            if (OpensDown)
+            {
+                OptionButtons[OptionButtons.Count - 1].CornerRadii = new RoundedRectCornerRadii(0, 0, Config.CornerRadius, Config.CornerRadius);
+            }
+            else
+            {
+                OptionButtons[0].CornerRadii = new RoundedRectCornerRadii(Config.CornerRadius, Config.CornerRadius, 0, 0);
+            }
+
+            OptionCornerRadiiOpenDown = OpensDown;
         }
 
         private float CalculateTargetMenuHeight(float contentHeight, int optionCount)
@@ -844,6 +866,7 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             RequestedMenuHeight = 0;
             TargetMenuHeight = 0;
             OptionCount = 0;
+            OptionCornerRadiiOpenDown = null;
             IsClosing = false;
             CloseImmediatelyRequested = false;
             RefreshTrigger();
@@ -952,10 +975,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
             }
 
             public void SetContent(string label, TextureRegion? icon,
-                SkinV2DropdownConfig config)
+                SkinV2DropdownConfig config, Color? textColor = null)
             {
                 MarqueeLabel.TextSprite.Text = label ?? string.Empty;
-                MarqueeLabel.TextSprite.Tint = SkinV2Color.Parse(Config.TextColor);
+                MarqueeLabel.TextSprite.Tint = textColor ?? SkinV2Color.Parse(Config.TextColor);
                 MarqueeLabel.ResetPosition();
                 MarqueeLabel.IsActive = false;
                 Chevron.X = -config.HorizontalPadding;

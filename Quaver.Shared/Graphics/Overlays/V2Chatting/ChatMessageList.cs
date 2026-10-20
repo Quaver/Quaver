@@ -31,8 +31,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private float PreviousHeight { get; set; } = -1;
 
-        private float PreviousContentWidth { get; set; } = -1;
-
         public event Action<User> SenderMenuRequested;
 
         public ChatMessageList(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, size)
@@ -55,17 +53,18 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         public override void Update(GameTime gameTime)
         {
             InputEnabled = IsHovered();
-            RefreshContentLayout();
 
-            var contentWidth = ContentContainer.Width;
-            if (Math.Abs(PreviousWidth - Width) > 0.001f ||
-                Math.Abs(PreviousHeight - Height) > 0.001f ||
-                Math.Abs(PreviousContentWidth - contentWidth) > 0.001f)
+            var widthChanged = Math.Abs(PreviousWidth - Width) > 0.001f;
+            var heightChanged = Math.Abs(PreviousHeight - Height) > 0.001f;
+            if (widthChanged || heightChanged)
             {
                 PreviousWidth = Width;
                 PreviousHeight = Height;
-                PreviousContentWidth = contentWidth;
-                RebuildRows();
+
+                if (widthChanged)
+                    RebuildRows();
+                else
+                    UpdateContentHeight();
             }
 
             SynchronizeMessageStore();
@@ -201,13 +200,19 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ContentContainer.Height = Math.Max(Height, y);
         }
 
+        private void UpdateContentHeight()
+        {
+            var rowsHeight = Rows.Count == 0 ? 0 : Rows[^1].Y + Rows[^1].Height;
+            ContentContainer.Height = Math.Max(Height, rowsHeight);
+        }
+
         private void AddRow(ChatMessage message)
         {
             var row = new ChatMessageRow(message, GetRowWidth(), this);
             row.UpdateWhenInvisible = false;
             row.SenderMenuRequested += OnSenderMenuRequested;
 
-            AddContainedDrawable(row, true, minimumRightPadding: 10);
+            AddContainedDrawable(row);
 
             Messages.Add(message);
             Rows.Add(row);
@@ -225,7 +230,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Messages.Clear();
         }
 
-        private float GetRowWidth() => ContentContainer.Width;
+        private float GetRowWidth() => V2Scrollbar.GetContentWidth(this);
 
         private bool IsNearBottom() => ContentContainer.Height <= Height || ContentContainer.Height - Height + ContentContainer.Y <= 40;
 

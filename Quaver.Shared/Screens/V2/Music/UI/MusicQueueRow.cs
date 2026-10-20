@@ -32,7 +32,7 @@ namespace Quaver.Shared.Screens.V2.Music.UI
         {
             Config = config;
             Selected = selected;
-            Size = new ScalableVector2(container.Width, Config.Height);
+            Size = new ScalableVector2(V2Scrollbar.GetContentWidth(container), Config.Height);
             Tint = Color.Transparent;
 
             Button = new RoundedButton((sender, args) =>
@@ -96,13 +96,6 @@ namespace Quaver.Shared.Screens.V2.Music.UI
             var selected = MapManager.Selected?.Value;
             Button.Tint = selected != null && Item?.Maps?.Contains(selected) == true
                 ? SkinV2Color.Parse(Config.SelectedColor) : SkinV2Color.Parse(Config.BackgroundColor);
-        }
-
-        protected override void OnRectangleRecalculated()
-        {
-            base.OnRectangleRecalculated();
-            if (Button != null && !IsDisposed)
-                ApplyLayout();
         }
 
         private void ApplyLayout()

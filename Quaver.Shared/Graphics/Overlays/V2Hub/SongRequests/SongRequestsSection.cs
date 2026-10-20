@@ -101,7 +101,8 @@ public class SongRequestsSection : Container
             Size = new ScalableVector2(Header.Width - section.ContentPadding, Header.Height - section.ContentPadding * 2),
             Direction = FlexDirection.Row,
             AlignItems = FlexAlignItems.Center,
-            JustifyContent = FlexJustifyContent.SpaceBetween
+            JustifyContent = FlexJustifyContent.SpaceBetween,
+            ColumnGap = section.ContentPadding
         };
 
         var actionsLayout = new FlexContainer
@@ -112,7 +113,7 @@ public class SongRequestsSection : Container
             AlignItems = FlexAlignItems.Center,
             ColumnGap = Config.ActionGap
         };
-        headerLayout.SetItemOptions(actionsLayout, new FlexItemOptions { Basis = actionsLayout.Width, Shrink = 0 });
+        headerLayout.SetItemOptions(actionsLayout, new FlexItemOptions { Basis = actionsLayout.Width, Shrink = 1 });
 
         AlertsButton = new RoundedButton((sender, args) => ToggleAlerts())
         {
@@ -122,6 +123,7 @@ public class SongRequestsSection : Container
             Tint = SkinV2Color.Parse(section.ControlColor),
             PerformHoverFade = false
         };
+        actionsLayout.SetItemOptions(AlertsButton, new FlexItemOptions { Basis = Config.AlertsButtonWidth, Grow = 1, Shrink = 1 });
         AlertsButton.SetLabel(FontManager.GetWobbleFont(section.Font), LocalizationManager.Get("Screen_Hub_DisplayAlert"), section.FontSize, SkinV2Color.Parse(section.TextColor));
         AlertsButton.Label.Alignment = Alignment.MidLeft;
         AlertsButton.Label.X = section.ContentPadding;
@@ -142,6 +144,7 @@ public class SongRequestsSection : Container
             Tint = SkinV2Color.Parse(Config.TwitchColor),
             PerformHoverFade = false
         };
+        actionsLayout.SetItemOptions(TwitchButton, new FlexItemOptions { Basis = Config.TwitchButtonWidth, Grow = 1, Shrink = 1 });
         TwitchButton.SetIcon(Skin.LoadTexture(Config.TwitchIcon, UserInterface.TwitchIconV2), new Vector2(Config.TwitchIconWidth, Config.TwitchIconHeight));
 
         ClearButton = new RoundedButton((sender, args) => ClearRequests())
@@ -152,6 +155,7 @@ public class SongRequestsSection : Container
             Tint = SkinV2Color.Parse(section.ControlColor),
             PerformHoverFade = false
         };
+        headerLayout.SetItemOptions(ClearButton, new FlexItemOptions { Basis = section.ClearButtonWidth, Shrink = 0 });
         ClearButton.SetLabel(FontManager.GetWobbleFont(section.Font), LocalizationManager.Get("Screen_Hub_NotificationClearAll"), section.FontSize, SkinV2Color.Parse(section.TextColor));
         ClearButton.SetIcon(Skin.LoadTexture(section.ClearIcon, UserInterface.HubNotificationsClearIcon), new Vector2(section.IconSize, section.IconSize));
 

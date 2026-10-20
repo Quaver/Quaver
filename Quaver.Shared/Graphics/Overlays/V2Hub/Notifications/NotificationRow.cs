@@ -4,6 +4,7 @@ using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
@@ -34,8 +35,6 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
 
     private ViewportRoundedButton CloseButton { get; set; }
 
-    private bool UpdatingSize { get; set; }
-
     public event Action<NotificationInfo> OnClick;
 
     public bool IsCardHovered => Card.IsCardHovered || CloseButton.IsHovered;
@@ -43,7 +42,7 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
     public NotificationRow(PoolableScrollContainer<NotificationInfo> container, NotificationInfo item, int index)
         : base(container, item, index)
     {
-        Size = new ScalableVector2(container?.Width ?? MeasurementWidth, container == null ? GetCardHeight(item) : GetHeight(item));
+        Size = new ScalableVector2(container == null ? MeasurementWidth : V2Scrollbar.GetContentWidth(container), container == null ? GetCardHeight(item) : GetHeight(item));
 
         if (container == null)
             Alpha = 0;
@@ -56,15 +55,6 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
 
         CreateActions();
         CreateCloseButton();
-    }
-
-    protected override void OnRectangleRecalculated()
-    {
-        base.OnRectangleRecalculated();
-        if (IsDisposed || UpdatingSize || Card == null || Item == null)
-            return;
-
-        UpdateContent(Item, Index);
     }
 
     public override void UpdateContent(NotificationInfo item, int index)
@@ -89,9 +79,7 @@ public class NotificationRow : PoolableSprite<NotificationInfo>
             DenyButton.ResetInteractionState();
         }
 
-        UpdatingSize = true;
         Size = new ScalableVector2(Width, Card.Height + (Container == null ? 0 : RowSpacing));
-        UpdatingSize = false;
     }
 
     private void OnCardClicked(NotificationInfo item, object sender, EventArgs args)
