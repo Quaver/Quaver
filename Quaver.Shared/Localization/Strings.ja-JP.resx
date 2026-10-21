@@ -76,7 +76,7 @@
     <value>設定を閉じると言語が更新されます</value>
   </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
-    <value>メッセージを入力…</value>
+    <value>メッセージを入力...</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>ホーム</value>
