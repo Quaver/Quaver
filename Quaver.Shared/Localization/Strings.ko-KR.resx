@@ -804,7 +804,7 @@ Marvelous instead.</value>
     <value>리플레이 내보내기 중 오류가 발생했습니다!</value>
   </data>
   <data name="Screen_Results_YouhavealreadyfixedyourlocaloffsetforthismapTheresnoneedtodoitagain" xml:space="preserve">
-    <value>This map's local offset is already fixed.</value>
+    <value>이 맵의 오프셋은 이미 정해졌습니다!</value>
   </data>
   <data name="Screen_Results_Thereisnodatatobeabletofixyourlocaloffset" xml:space="preserve">
     <value>There is no data to be able to fix your local offset!</value>
@@ -1122,22 +1122,22 @@ Marvelous instead.</value>
     <value>Search for options...</value>
   </data>
   <data name="Screen_Options_KeyCountGameplayLayout" xml:space="preserve">
-    <value>{0}K Gameplay Layout</value>
+    <value>{0}K 키 설정</value>
   </data>
   <data name="Screen_Options_KeyCountScrollSpeed" xml:space="preserve">
-    <value>{0}K Scroll Speed</value>
+    <value>{0}K 스크롤 속도</value>
   </data>
   <data name="Screen_Options_KeyCountScrollDirection" xml:space="preserve">
-    <value>{0}K Scroll Direction</value>
+    <value>{0}K 스크롤 방향</value>
   </data>
   <data name="Screen_Options_KeyCountScratchLayout" xml:space="preserve">
-    <value>{0}K Scratch Layout</value>
+    <value>{0}K 스크래치 키 설정</value>
   </data>
   <data name="Screen_Options_KeyCountPlaceScratchLaneOnLeft" xml:space="preserve">
-    <value>Place {0}K Scratch Lane On Left</value>
+    <value>{0}K 스크래치 키를 왼쪽에 배치</value>
   </data>
   <data name="Screen_Options_KeyCountCoopLayout" xml:space="preserve">
-    <value>{0}K Co-op Layout</value>
+    <value>{0}K Co-op 키 설정</value>
   </data>
   <data name="Screen_Options_KeyCountPrioritizedDifficulty" xml:space="preserve">
     <value>Prioritized {0}K Difficulty</value>
@@ -1336,9 +1336,9 @@ for the selected game mode?</value>
     <value>No Song Selected</value>
   </data>
   <data name="Screen_Download_NoSongSelectedDescription" xml:space="preserve">
-    <value>Double-click a song to download it.
-Click once to preview it.
-Use the filters to narrow your search.</value>
+    <value>노래를 다운로드하려면 더블 클릭하세요.
+한 번 클릭하여 미리보기 합니다.
+필터를 사용하여 검색 범위를 좁히세요.</value>
   </data>
   <data name="Screen_Download_EndDate" xml:space="preserve">
     <value>End Date</value>
@@ -1449,16 +1449,16 @@ Use the filters to narrow your search.</value>
     <value>플레이리스트 검색</value>
   </data>
   <data name="Screen_Download_OwnedMaps" xml:space="preserve">
-    <value>Owned Maps</value>
+    <value>이미 다운로드된 맵</value>
   </data>
   <data name="Screen_Download_OwnedPlaylists" xml:space="preserve">
-    <value>Owned Playlists</value>
+    <value>이미 플레이리스르에 있음</value>
   </data>
   <data name="Screen_Download_Mapsets" xml:space="preserve">
     <value>맵셋</value>
   </data>
   <data name="Screen_Download_AllKeymodes" xml:space="preserve">
-    <value>All Keymodes</value>
+    <value>전체</value>
   </data>
   <data name="Screen_Download_NPS" xml:space="preserve">
     <value>NPS</value>
@@ -1498,7 +1498,7 @@ sure you would like to start without all players ready?</value>
     <value>로비로 나가기</value>
   </data>
   <data name="Screen_Multi_ExitToLobbyMessage" xml:space="preserve">
-    <value>Exit to the lobby?</value>
+    <value>로비로 나가시겠습니까?</value>
   </data>
   <data name="Screen_Multi_Leave" xml:space="preserve">
     <value>나가기</value>
@@ -2105,7 +2105,7 @@ for other players to download?</value>
     <value>Display Gameplay Preview</value>
   </data>
   <data name="Screen_Editor_ShowBookmarks" xml:space="preserve">
-    <value>Show Bookmarks</value>
+    <value>북마크 보기</value>
   </data>
   <data name="Screen_Editor_ReferenceDifficulty" xml:space="preserve">
     <value>Reference Difficulty</value>
@@ -2351,10 +2351,10 @@ for other players to download?</value>
     <value>SAVE CHANGES</value>
   </data>
   <data name="Screen_Editor_UnsavedChanges" xml:space="preserve">
-    <value>UNSAVED CHANGES</value>
+    <value>저장되지 않은 변경</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>This map hasn't been saved.&#xA;Refreshing from .qua will discard unsaved changes. Continue?</value>
+    <value>이 맵은 저장되지 않았습니다.  .qua의 &#xA; 새로고침은 저장되지 않은 변경사항을 폐기합니다. 계속하시겠습니까?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
     <value>You have unsaved changes. Would you like to save&#xA;before creating a new difficulty?</value>
@@ -2375,7 +2375,7 @@ for other players to download?</value>
     <value>NO</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>Submit this mapset for rank?&#xA;It must meet the ranking criteria.</value>
+    <value>이 맵을 랭크로 제출하시겠습니까?&#xA; 랭크 기준을 충족해야합니다.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>CUSTOM BEAT SNAP</value>
@@ -2480,7 +2480,7 @@ for other players to download?</value>
     <value>Please wait while your map is being submitted for rank...</value>
   </data>
   <data name="Screen_Editor_RankingIssuesFound" xml:space="preserve">
-    <value>AutoMod found ranking blockers. Review each difficulty and try again.</value>
+    <value>AutoMod가 랭크 불가 요소를 발견했습니다. 각 항목을 검토하고 다시 시도해 주세요.</value>
   </data>
   <data name="Screen_Editor_SubmitForRankError" xml:space="preserve">
     <value>An error occurred while submitting your mapset for rank.</value>
@@ -3101,7 +3101,7 @@ for other players to download?</value>
     <value>Ready for rank!</value>
   </data>
   <data name="Screen_Editor_AutoModWarningTooltip" xml:space="preserve">
-    <value>Potential error; ignore it if harmless.</value>
+    <value>잠재적인 에러; 문제가 없다면 무시하세요.</value>
   </data>
   <data name="Screen_Editor_AutoModCriticalTooltip" xml:space="preserve">
     <value>This is a critical error which affects the playability of your map.</value>
@@ -3248,7 +3248,7 @@ for other players to download?</value>
     <value>Shared Components</value>
   </data>
   <data name="SkinEditor_Group_Other" xml:space="preserve">
-    <value>Screen Components</value>
+    <value>화면 구성 요소</value>
   </data>
   <data name="SkinEditor_Save" xml:space="preserve">
     <value>저장</value>
@@ -3260,61 +3260,61 @@ for other players to download?</value>
     <value>취소</value>
   </data>
   <data name="SkinEditor_Discard" xml:space="preserve">
-    <value>Discard</value>
+    <value>삭제</value>
   </data>
   <data name="SkinEditor_Reload" xml:space="preserve">
     <value>새로고침</value>
   </data>
   <data name="SkinEditor_Overwrite" xml:space="preserve">
-    <value>Overwrite</value>
+    <value>덮어쓰기</value>
   </data>
   <data name="SkinEditor_Copy" xml:space="preserve">
     <value>복사</value>
   </data>
   <data name="SkinEditor_CopyToLocal" xml:space="preserve">
-    <value>Copy to Local Skins</value>
+    <value>로컬 스킨 복사</value>
   </data>
   <data name="SkinEditor_CopyTitle" xml:space="preserve">
-    <value>Name the local skin copy</value>
+    <value>로컬 스킨 보사본의 이름을 정해주세요.</value>
   </data>
   <data name="SkinEditor_CopyFailed" xml:space="preserve">
-    <value>Could not copy the Workshop skin: {0}</value>
+    <value>창작마당 스킨을 복사하지 못했습니다: {0}</value>
   </data>
   <data name="SkinEditor_WorkshopReadOnly" xml:space="preserve">
-    <value>Workshop skins are read-only.</value>
+    <value>창작마당 스킨은 읽기 전용입니다.</value>
   </data>
   <data name="SkinEditor_UnsavedTitle" xml:space="preserve">
-    <value>Unsaved skin changes</value>
+    <value>저장되지 않은 스킨 변화</value>
   </data>
   <data name="SkinEditor_UnsavedMessage" xml:space="preserve">
-    <value>Save your staged skin changes before closing?</value>
+    <value>종료하기 전에 스킨 변경 사항을 적용하시겠습니까?</value>
   </data>
   <data name="SkinEditor_ConflictTitle" xml:space="preserve">
-    <value>skin.yml changed externally</value>
+    <value>skin.yml이 외부에서 변경되었습니다.</value>
   </data>
   <data name="SkinEditor_ConflictMessage" xml:space="preserve">
-    <value>Reload the external file, overwrite it, or keep editing?</value>
+    <value>외부 파일을 다시 불러오겠습니까, 덮어쓰시겠씁니까, 아니면 계속 편집하시겠습니까?</value>
   </data>
   <data name="SkinEditor_SaveSuccess" xml:space="preserve">
-    <value>Skin V2 configuration saved.</value>
+    <value>Skin V2 설정 저장</value>
   </data>
   <data name="SkinEditor_SaveFailed" xml:space="preserve">
-    <value>The Skin V2 configuration could not be saved.</value>
+    <value>Skin V2 저장 실패</value>
   </data>
   <data name="SkinEditor_OpenFailed" xml:space="preserve">
-    <value>The Skin Editor could not open: {0}</value>
+    <value>스킨 편집기를 열 수 없습니다: {0}</value>
   </data>
   <data name="SkinEditor_FileCheckFailed" xml:space="preserve">
-    <value>Could not check skin.yml for external changes: {0}</value>
+    <value>외부 변경사항에서 skin.yml을 확인할 수 없습니다: {0}</value>
   </data>
   <data name="SkinEditor_ReloadFailed" xml:space="preserve">
-    <value>Could not reload skin.yml: {0}</value>
+    <value>skin.yml을 불러올 수 없습니다: {0}</value>
   </data>
   <data name="SkinEditor_SelectComponent" xml:space="preserve">
-    <value>Select a component to edit.</value>
+    <value>편집할 요소를 선택하세요.</value>
   </data>
   <data name="SkinEditor_NoEditableProperties" xml:space="preserve">
-    <value>This component has no editable properties.</value>
+    <value>이 요소에는 편집 가능한 지점이 없습니다.</value>
   </data>
   <data name="SkinEditor_On" xml:space="preserve">
     <value>켜기</value>
@@ -3332,40 +3332,40 @@ for other players to download?</value>
     <value>Add Gradient Stop</value>
   </data>
   <data name="SkinEditor_SearchAssets" xml:space="preserve">
-    <value>Search assets...</value>
+    <value>에셋을 검색...</value>
   </data>
   <data name="SkinEditor_LoadingAssets" xml:space="preserve">
-    <value>Loading assets…</value>
+    <value>에셋을 불러오는중...</value>
   </data>
   <data name="SkinEditor_AssetScanFailed" xml:space="preserve">
-    <value>Could not scan skin assets.</value>
+    <value>스킨 에셋을 스캔할 수 없습니다.</value>
   </data>
   <data name="SkinEditor_AllFolders" xml:space="preserve">
-    <value>All folders</value>
+    <value>모든 폴더</value>
   </data>
   <data name="SkinEditor_Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>새로고침</value>
   </data>
   <data name="SkinEditor_OpenFolder" xml:space="preserve">
     <value>폴더 열기</value>
   </data>
   <data name="SkinEditor_InvalidValue" xml:space="preserve">
-    <value>Enter a valid value.</value>
+    <value>유효한 값을 입력하세요.</value>
   </data>
   <data name="SkinEditor_InvalidRange" xml:space="preserve">
-    <value>Enter a value from {0} to {1}.</value>
+    <value>{0}부터 {1}까지의 값 중 하나를 입력하세요.</value>
   </data>
   <data name="SkinEditor_InvalidColor" xml:space="preserve">
-    <value>Use #RRGGBB or #RRGGBBAA format.</value>
+    <value>#RRGGBB 또는 #RRGGBBAA 형식을 사용하세요.</value>
   </data>
   <data name="SkinEditor_InvalidAssetPath" xml:space="preserve">
-    <value>Choose a file inside this skin.</value>
+    <value>이 스킨 안의 파일 중 하나를 선택하세요.</value>
   </data>
   <data name="SkinEditor_InvalidGradientStop" xml:space="preserve">
-    <value>Use unique positions from 0 to 1 and valid hex colors.</value>
+    <value>0부터 1까지의 고유한 위치와 16진수 색상을 사용하세요.</value>
   </data>
   <data name="SkinEditor_SelectorTooltip" xml:space="preserve">
-    <value>Click to select the next option.</value>
+    <value>다음 옵션을 선택하려면 클릭하세요.</value>
   </data>
   <data name="SkinEditor_Component_Background" xml:space="preserve">
     <value>배경</value>
@@ -3374,16 +3374,16 @@ for other players to download?</value>
     <value>배경 효과</value>
   </data>
   <data name="SkinEditor_Component_Logo" xml:space="preserve">
-    <value>Logo</value>
+    <value>로고</value>
   </data>
   <data name="SkinEditor_Component_LogoAccent" xml:space="preserve">
-    <value>Logo Accent</value>
+    <value>로고 악센트</value>
   </data>
   <data name="SkinEditor_Component_Actions" xml:space="preserve">
-    <value>Action Buttons</value>
+    <value>액션 버튼</value>
   </data>
   <data name="SkinEditor_Component_News" xml:space="preserve">
-    <value>News Card</value>
+    <value>뉴스 카드</value>
   </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
     <value>Top Navigation</value>
@@ -3398,25 +3398,25 @@ for other players to download?</value>
     <value>프로필</value>
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
-    <value>Screen Title</value>
+    <value>화면 타이틀</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>타입</value>
   </data>
   <data name="SkinEditor_Property_SolidColor" xml:space="preserve">
-    <value>Solid Color</value>
+    <value>단일 색상</value>
   </data>
   <data name="SkinEditor_Property_Path" xml:space="preserve">
-    <value>Image Path</value>
+    <value>이미지 경로</value>
   </data>
   <data name="SkinEditor_Property_Fit" xml:space="preserve">
-    <value>Image Fit</value>
+    <value>이미지 맞춤</value>
   </data>
   <data name="SkinEditor_Property_Stops" xml:space="preserve">
     <value>Gradient Stops</value>
   </data>
   <data name="SkinEditor_Property_AngleDegrees" xml:space="preserve">
-    <value>Angle</value>
+    <value>각도</value>
   </data>
   <data name="SkinEditor_Property_X" xml:space="preserve">
     <value>Origin X</value>
@@ -3425,76 +3425,76 @@ for other players to download?</value>
     <value>Origin Y</value>
   </data>
   <data name="SkinEditor_Property_RadialRadius" xml:space="preserve">
-    <value>Radial Radius</value>
+    <value>반지름</value>
   </data>
   <data name="SkinEditor_Property_Effect" xml:space="preserve">
     <value>효과</value>
   </data>
   <data name="SkinEditor_Property_PrimaryColor" xml:space="preserve">
-    <value>Primary Color</value>
+    <value>대표 색상</value>
   </data>
   <data name="SkinEditor_Property_SecondaryColor" xml:space="preserve">
-    <value>Secondary Color</value>
+    <value>보조 색상</value>
   </data>
   <data name="SkinEditor_Property_Primary" xml:space="preserve">
-    <value>Primary Image</value>
+    <value>대표 이미지</value>
   </data>
   <data name="SkinEditor_Property_Secondary" xml:space="preserve">
-    <value>Secondary Image</value>
+    <value>보조 이미지</value>
   </data>
   <data name="SkinEditor_Property_Tertiary" xml:space="preserve">
-    <value>Tertiary Image</value>
+    <value>3차 이미지</value>
   </data>
   <data name="SkinEditor_Property_Image" xml:space="preserve">
-    <value>Image</value>
+    <value>이미지</value>
   </data>
   <data name="SkinEditor_Property_Color" xml:space="preserve">
-    <value>Color</value>
+    <value>색상</value>
   </data>
   <data name="SkinEditor_Property_HoverColor" xml:space="preserve">
-    <value>Hover Color</value>
+    <value>마우스 커서 색상</value>
   </data>
   <data name="SkinEditor_Property_AccentColor" xml:space="preserve">
-    <value>Accent Color</value>
+    <value>강조 색상</value>
   </data>
   <data name="SkinEditor_Property_TextColor" xml:space="preserve">
-    <value>Text Color</value>
+    <value>텍스트 색상</value>
   </data>
   <data name="SkinEditor_Property_BottomOffset" xml:space="preserve">
-    <value>Bottom Offset</value>
+    <value>바닥 오프셋</value>
   </data>
   <data name="SkinEditor_Property_Scale" xml:space="preserve">
-    <value>Scale</value>
+    <value>크기</value>
   </data>
   <data name="SkinEditor_Property_FallbackImage" xml:space="preserve">
-    <value>Fallback Image</value>
+    <value>대체 이미지</value>
   </data>
   <data name="SkinEditor_Group_Download" xml:space="preserve">
     <value>다운로드</value>
   </data>
   <data name="SkinEditor_Component_SearchArea" xml:space="preserve">
-    <value>Search Area</value>
+    <value>범위 검색</value>
   </data>
   <data name="SkinEditor_Property_BackgroundColor" xml:space="preserve">
-    <value>Background Color</value>
+    <value>배경 색상</value>
   </data>
   <data name="SkinEditor_Property_ForegroundColor" xml:space="preserve">
-    <value>Foreground Color</value>
+    <value>전경 색상</value>
   </data>
   <data name="SkinEditor_Property_OfflineStatusColor" xml:space="preserve">
-    <value>Offline Status Color</value>
+    <value>오프라인 상태 색상</value>
   </data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
-    <value>Metadata</value>
+    <value>메타데이터</value>
   </data>
   <data name="SkinEditor_MetadataTitle" xml:space="preserve">
-    <value>Edit Skin Metadata</value>
+    <value>스킨 메타데이터 수정</value>
   </data>
   <data name="SkinEditor_MetadataName" xml:space="preserve">
     <value>스킨 이름</value>
   </data>
   <data name="SkinEditor_MetadataAuthor" xml:space="preserve">
-    <value>Author</value>
+    <value>작가</value>
   </data>
   <data name="SkinEditor_MetadataVersion" xml:space="preserve">
     <value>버전</value>
@@ -3503,57 +3503,57 @@ for other players to download?</value>
     <value>적용</value>
   </data>
   <data name="SkinEditor_MetadataRequired" xml:space="preserve">
-    <value>Name, author, and version are required.</value>
+    <value>곡 이름, 작가, 버전이 필요합니다.</value>
   </data>
   <data name="SkinEditor_PreviewDrop" xml:space="preserve">
-    <value>Drop an image here for the Workshop preview</value>
+    <value>이미지를 가져와 창작마당 미리보기를 설정하세요.</value>
   </data>
   <data name="SkinEditor_PreviewDropHint" xml:space="preserve">
-    <value>PNG, JPG, or JPEG; saved as steam_workshop_preview.png</value>
+    <value>PNG, JPG나 JPEG는 steam_workshop_preview.png로 저장됩니다.</value>
   </data>
   <data name="SkinEditor_PreviewInvalid" xml:space="preserve">
-    <value>Choose a valid PNG, JPG, or JPEG image.</value>
+    <value>유효한 PNG, JPG, JPEG 이미지를 고르세요.</value>
   </data>
   <data name="SkinEditor_PreviewFileMissing" xml:space="preserve">
-    <value>The selected preview image no longer exists.</value>
+    <value>선택한 미리보기 이미지가 더 이상 존재하지 않습니다.</value>
   </data>
   <data name="SkinEditor_PreviewTooLarge" xml:space="preserve">
-    <value>The converted Workshop preview must be smaller than 1 MB.</value>
+    <value>창작마당 미리보기는 1MB보다 작아야 합니다.</value>
   </data>
   <data name="SkinEditor_PreviewSaveFailed" xml:space="preserve">
-    <value>Could not save the Workshop preview: {0}</value>
+    <value>창작마당 미리보기를 저장할 수 없습니다: {0}</value>
   </data>
   <data name="Screen_V2_InitializationScreen" xml:space="preserve">
-    <value>InitializationScreen</value>
+    <value>초기화 화면</value>
   </data>
   <data name="Screen_V2_ImportingScreen" xml:space="preserve">
-    <value>ImportingScreen</value>
+    <value>기져오기 화면</value>
   </data>
   <data name="Screen_V2_MapLoadingScreen" xml:space="preserve">
-    <value>MapLoadingScreen</value>
+    <value>맵 로딩 화면</value>
   </data>
   <data name="Screen_V2_SelectionScreen" xml:space="preserve">
-    <value>SelectionScreen</value>
+    <value>선택창 화면</value>
   </data>
   <data name="Screen_V2_DownloadingScreen" xml:space="preserve">
-    <value>DownloadingScreen</value>
+    <value>다운로드중 화면</value>
   </data>
   <data name="Screen_V2_MultiplayerLobbyScreen" xml:space="preserve">
-    <value>MultiplayerLobbyScreen</value>
+    <value>멀티플레이어 로비 화면</value>
   </data>
   <data name="Screen_V2_MultiplayerGameScreen" xml:space="preserve">
-    <value>MultiplayerGameScreen</value>
+    <value>멀티플레이어 게임 화면</value>
   </data>
   <data name="Screen_V2_MultiplayerScreen" xml:space="preserve">
-    <value>MultiplayerScreen</value>
+    <value>멀티플레이어 화면</value>
   </data>
   <data name="Screen_V2_MusicPlayerScreen" xml:space="preserve">
-    <value>MusicPlayerScreen</value>
+    <value>뮤직플레이어 화면</value>
   </data>
   <data name="Screen_V2_TheaterScreen" xml:space="preserve">
-    <value>TheaterScreen</value>
+    <value>관람 화면</value>
   </data>
   <data name="Screen_V2_ResultsScreen" xml:space="preserve">
-    <value>ResultsScreen</value>
+    <value>결과 화면</value>
   </data>
 </root>
