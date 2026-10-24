@@ -27,6 +27,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private bool Expanded { get; }
 
+        private bool ShowsBanner => Expanded && Config.ShowBanner;
+
         private Sprite Background { get; }
 
         private Sprite Banner { get; }
@@ -70,7 +72,7 @@ namespace Quaver.Shared.Screens.V2.UI
             Config = config;
             Playback = playback;
             Expanded = expanded;
-            Size = new ScalableVector2(GetPreferredWidth(), Expanded ? GetPreferredHeight() : GetCollapsedHeight());
+            Size = new ScalableVector2(GetPreferredWidth(), ShowsBanner ? GetPreferredHeight() : GetCollapsedHeight());
 
             Background = new Sprite
             {
@@ -80,7 +82,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 Tint = SkinV2Color.Parse(Config.BackgroundColor)
             };
 
-            if (Expanded)
+            if (ShowsBanner)
             {
                 Banner = new Sprite
                 {
@@ -115,7 +117,7 @@ namespace Quaver.Shared.Screens.V2.UI
             var previous = CreateIconButton(skin.LoadTexture(Config.Icons.Previous, UserInterface.JukeboxBackwardButtonV2), new Vector2(Config.PreviousNextIconWidth, Config.PreviousNextIconHeight), Playback.Previous);
 
             PlayIcon = skin.LoadTexture(Config.Icons.Play, UserInterface.JukeboxPlayButtonV2);
-            PauseIcon = skin.LoadTexture(Config.Icons.Pause, UserInterface.JukeboxPauseButton);
+            PauseIcon = skin.LoadTexture(Config.Icons.Pause, UserInterface.JukeboxPauseButtonV2);
             PlayButton = CreateIconButton(PlayIcon, new Vector2(Config.PlayPauseIconWidth, Config.PlayPauseIconHeight), Playback.TogglePlayback);
             PlayButton.CornerRadius = Config.ButtonSize / 2f;
 
@@ -170,7 +172,7 @@ namespace Quaver.Shared.Screens.V2.UI
             SetFixedControl(VolumeButton);
             Controls.RefreshLayout();
 
-            if (Expanded)
+            if (ShowsBanner)
             {
                 MapManager.Selected.ValueChanged += OnSelectedMapChanged;
                 BackgroundHelper.BannerLoaded += OnBannerLoaded;
@@ -188,7 +190,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public override void Destroy()
         {
-            if (Expanded)
+            if (ShowsBanner)
             {
                 MapManager.Selected.ValueChanged -= OnSelectedMapChanged;
                 BackgroundHelper.BannerLoaded -= OnBannerLoaded;
@@ -258,7 +260,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void SetFixedControl(Drawable control) => Controls.SetItemOptions(control, new FlexItemOptions { Basis = control.Width, Grow = 0, Shrink = 0 });
 
-        private float GetControlsY() => Expanded
+        private float GetControlsY() => ShowsBanner
             ? Config.Padding + Config.BannerHeight + Config.SectionGap : Config.Padding;
 
         private void UpdatePlaybackState()

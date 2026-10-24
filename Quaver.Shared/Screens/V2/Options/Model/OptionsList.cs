@@ -93,8 +93,11 @@ namespace Quaver.Shared.Screens.V2.Options.Model
             if (ConfigManager.RecentlyChangedOptions == null)
                 return;
 
-            var ids = GetRecentIds().Where(recentId => recentId != id).Prepend(id).Take(RecentOptionsLimit);
-            var value = string.Join(",", ids);
+            var ids = GetRecentIds();
+            if (ids.Contains(id, StringComparer.Ordinal))
+                return;
+
+            var value = string.Join(",", ids.Prepend(id).Take(RecentOptionsLimit));
 
             if (ConfigManager.RecentlyChangedOptions.Value != value)
                 ConfigManager.RecentlyChangedOptions.Value = value;

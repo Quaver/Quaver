@@ -15,6 +15,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 {
     internal sealed class ChatMessageList : ScrollContainer
     {
+        private const int MaxMessagesFlushedPerUpdate = 8;
+
+        private const int MaxRetainedMessages = 250;
+
+        private LoadingWheel LoadingWheel { get; }
+
         private Bindable<ChatChannel> ActiveChannel { get; }
 
         private ChatMessageStore MessageStore { get; set; }
@@ -22,6 +28,18 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private List<ChatMessage> Messages { get; } = new List<ChatMessage>();
 
         private List<ChatMessageRow> Rows { get; } = new List<ChatMessageRow>();
+
+        private List<ChatMessage> MessageHistoryQueue { get; } = new List<ChatMessage>();
+
+        private List<ChatMessage> MessageQueue { get; } = new List<ChatMessage>();
+
+        private bool HasQueuedInitialHistory { get; set; }
+
+        private bool NeedsReflow { get; set; }
+
+        private bool NeedsScrollToBottom { get; set; }
+
+        private bool ForceScrollToBottom { get; set; }
 
         private long AppliedStoreGeneration { get; set; } = -1;
 
@@ -45,6 +63,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             V2Scrollbar.Apply(this);
 
+            LoadingWheel = new LoadingWheel
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Size = new ScalableVector2(50, 50),
+                Visible = false
+            };
+
             ActiveChannel.ValueChanged += OnActiveChannelChanged;
             ConfigManager.ChatCensorEnabled.ValueChanged += OnChatCensorToggled;
             ChangeChannel(ActiveChannel.Value);
@@ -52,8 +78,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public override void Update(GameTime gameTime)
         {
-            InputEnabled = IsHovered();
-
             var widthChanged = Math.Abs(PreviousWidth - Width) > 0.001f;
             var heightChanged = Math.Abs(PreviousHeight - Height) > 0.001f;
             if (widthChanged || heightChanged)
@@ -62,15 +86,36 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 PreviousHeight = Height;
 
                 if (widthChanged)
-                    RebuildRows();
+                    ReflowRows(true);
                 else
                     UpdateContentHeight();
             }
 
             SynchronizeMessageStore();
+            FlushMessageHistoryQueue();
+            FlushMessageQueue();
+
+            var isLoadingHistory = MessageStore != null && IsLoadingMessageHistory();
+            LoadingWheel.Visible = isLoadingHistory;
+            ContentViewport.Visible = !isLoadingHistory;
+            Scrollbar.Visible = !isLoadingHistory;
+            InputEnabled = !isLoadingHistory && IsHovered();
+
+            if (NeedsReflow)
+            {
+                ReflowRows(false);
+
+                if (NeedsScrollToBottom)
+                    ScrollToBottom(ForceScrollToBottom ? 0 : 150);
+
+                NeedsScrollToBottom = false;
+                ForceScrollToBottom = false;
+            }
+
             base.Update(gameTime);
 
-            UpdateVisibleRows(this, Rows);
+            if (!isLoadingHistory)
+                UpdateVisibleRows(this, Rows);
         }
 
         private static void UpdateVisibleRows(ScrollContainer scroll, IEnumerable<Drawable> rows)
@@ -87,9 +132,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private void ChangeChannel(ChatChannel channel)
         {
             MessageStore = channel == null ? null : ChatMessageStore.GetOrCreate(channel);
+            LoadingWheel.Visible = false;
             AppliedStoreGeneration = -1;
             AppliedStoreVersion = -1;
-            ClearRows();
+            ClearDisplayedMessages();
 
             ContentContainer.Animations.Clear();
             ContentContainer.Height = Height;
@@ -106,98 +152,79 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             // Snapshots makes sure that we handle an already network-managed version of the chat rows
             // This helps handling skipped or duplicated messages (*flashbacks to v1 row stacking*)
             var snapshot = MessageStore.GetSnapshot();
-            if (snapshot.Generation == AppliedStoreGeneration && snapshot.Version == AppliedStoreVersion)
+
+            if (snapshot.Generation != AppliedStoreGeneration)
+            {
+                ClearDisplayedMessages();
+                AppliedStoreGeneration = snapshot.Generation;
+                AppliedStoreVersion = -1;
+            }
+
+            if (!snapshot.HasLoadedMessageHistory || snapshot.Version == AppliedStoreVersion)
                 return;
 
-            // Rebuild can happen after the Message store becomes invalid,
-            // which usually is after changing channel or loosing connexion and reconnecting to the game
-            var rebuild = snapshot.Generation != AppliedStoreGeneration;
-            var shouldRemainAtBottom = rebuild || IsNearBottom();
+            var queue = HasQueuedInitialHistory ? MessageQueue : MessageHistoryQueue;
+            foreach (var message in snapshot.Messages)
+            {
+                if (!ContainsMessage(Messages, message) && !ContainsMessage(MessageHistoryQueue, message) && !ContainsMessage(MessageQueue, message))
+                    queue.Add(message);
+            }
 
-            ApplySnapshot(snapshot.Messages, rebuild);
-            AppliedStoreGeneration = snapshot.Generation;
+            HasQueuedInitialHistory = true;
             AppliedStoreVersion = snapshot.Version;
-
-            if (shouldRemainAtBottom)
-                ScrollToBottom(rebuild ? 0 : 150);
         }
 
-        private void ApplySnapshot(List<ChatMessage> messages, bool rebuild)
+        private void FlushMessageHistoryQueue()
         {
-            if (rebuild)
-            {
-                RebuildRows(messages);
+            if (!HasQueuedInitialHistory || MessageHistoryQueue.Count == 0)
                 return;
-            }
 
-            var overlap = FindOverlap(messages);
+            var count = Math.Min(MessageHistoryQueue.Count, MaxMessagesFlushedPerUpdate);
+            for (var i = 0; i < count; i++)
+                AddRow(MessageHistoryQueue[i]);
 
-            if (Messages.Count != 0 && messages.Count != 0 && overlap == 0)
-            {
-                RebuildRows(messages);
+            
+            MessageHistoryQueue.RemoveRange(0, count);
+            if (MessageHistoryQueue.Count != 0)
                 return;
-            }
 
-            var removedCount = Messages.Count - overlap;
-            for (var i = 0; i < removedCount; i++)
-            {
-                Rows[0].Destroy();
-                Rows.RemoveAt(0);
-                Messages.RemoveAt(0);
-            }
-
-            for (var i = overlap; i < messages.Count; i++)
-                AddRow(messages[i]);
-
-            RebuildRows();
+            NeedsScrollToBottom = true;
+            ForceScrollToBottom = true;
         }
 
-        private int FindOverlap(List<ChatMessage> messages)
+        private void FlushMessageQueue()
         {
-            var maximumOverlap = Math.Min(Messages.Count, messages.Count);
-            for (var overlap = maximumOverlap; overlap > 0; overlap--)
-            {
-                var currentStart = Messages.Count - overlap;
-                var matches = true;
+            if (!HasQueuedInitialHistory || MessageQueue.Count == 0 || HasPendingHistoryMessages())
+                return;
 
-                for (var i = 0; i < overlap; i++)
-                {
-                    if (MessagesMatch(Messages[currentStart + i], messages[i]))
-                        continue;
+            var count = Math.Min(MessageQueue.Count, MaxMessagesFlushedPerUpdate);
+            for (var i = 0; i < count; i++)
+                AddRow(MessageQueue[i]);
 
-                    matches = false;
-                    break;
-                }
 
-                if (matches)
-                    return overlap;
-            }
-
-            return 0;
+            MessageQueue.RemoveRange(0, count);
         }
 
-        private void RebuildRows(List<ChatMessage> messages)
-        {
-            ClearRows();
+        private bool HasPendingHistoryMessages() => MessageHistoryQueue.Count != 0;
 
-            foreach (var message in messages)
-                AddRow(message);
+        private bool IsLoadingMessageHistory() => !HasQueuedInitialHistory || HasPendingHistoryMessages();
 
-            RebuildRows();
-        }
-        private void RebuildRows()
+        private void ReflowRows(bool updateContent)
         {
             var y = 0f;
             var rowWidth = GetRowWidth();
 
             foreach (var row in Rows)
             {
-                row.UpdateContent(row.Item, rowWidth);
+                if (updateContent)
+                    row.UpdateContent(row.Item, rowWidth);
+
                 row.Y = y;
                 y += row.Height;
             }
 
             ContentContainer.Height = Math.Max(Height, y);
+            NeedsReflow = false;
         }
 
         private void UpdateContentHeight()
@@ -208,6 +235,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void AddRow(ChatMessage message)
         {
+            if (ContainsMessage(Messages, message))
+                return;
+
+            var shouldRemainAtBottom = IsNearBottom() || message.IsFromSelf;
             var row = new ChatMessageRow(message, GetRowWidth(), this);
             row.UpdateWhenInvisible = false;
             row.SenderMenuRequested += OnSenderMenuRequested;
@@ -216,9 +247,29 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             Messages.Add(message);
             Rows.Add(row);
+            TrimRetainedMessages();
+
+            NeedsReflow = true;
+            if (shouldRemainAtBottom)
+                NeedsScrollToBottom = true;
         }
 
-        private void ClearRows()
+        private void TrimRetainedMessages()
+        {
+            var excess = Messages.Count - MaxRetainedMessages;
+            for (var i = 0; i < excess; i++)
+            {
+                var row = Rows[0];
+                row.SenderMenuRequested -= OnSenderMenuRequested;
+                row.Destroy();
+                Rows.RemoveAt(0);
+            }
+
+            if (excess > 0)
+                Messages.RemoveRange(0, excess);
+        }
+
+        private void ClearDisplayedMessages()
         {
             foreach (var row in Rows)
             {
@@ -228,6 +279,13 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             Rows.Clear();
             Messages.Clear();
+            MessageHistoryQueue.Clear();
+            MessageQueue.Clear();
+            HasQueuedInitialHistory = false;
+            NeedsReflow = false;
+            NeedsScrollToBottom = false;
+            ForceScrollToBottom = false;
+            UpdateContentHeight();
         }
 
         private float GetRowWidth() => V2Scrollbar.GetContentWidth(this);
@@ -254,16 +312,27 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ReferenceEquals(first, second) || first.SenderId == second.SenderId &&
             first.Channel == second.Channel && first.Message == second.Message && first.Time == second.Time;
 
+        private static bool ContainsMessage(List<ChatMessage> messages, ChatMessage message)
+        {
+            foreach (var existing in messages)
+            {
+                if (MessagesMatch(existing, message))
+                    return true;
+            }
+
+            return false;
+        }
+
         private void OnSenderMenuRequested(User user) => SenderMenuRequested?.Invoke(user);
 
         private void OnActiveChannelChanged(object sender, BindableValueChangedEventArgs<ChatChannel> e) => ChangeChannel(e.Value);
-        private void OnChatCensorToggled(object sender, BindableValueChangedEventArgs<bool> e) => RebuildRows();
+        private void OnChatCensorToggled(object sender, BindableValueChangedEventArgs<bool> e) => ReflowRows(true);
 
         public override void Destroy()
         {
             ActiveChannel.ValueChanged -= OnActiveChannelChanged;
             ConfigManager.ChatCensorEnabled.ValueChanged -= OnChatCensorToggled;
-            ClearRows();
+            ClearDisplayedMessages();
             SenderMenuRequested = null;
             base.Destroy();
         }

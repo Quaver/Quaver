@@ -287,7 +287,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 }
             }
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || MouseManager.IsUniqueClick(MouseButton.Left) && !ModalLayout.IsHovered())
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) || MouseManager.IsUniquePress(MouseButton.Left) && !ModalLayout.IsHovered())
                 Close();
         }
 

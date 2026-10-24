@@ -22,6 +22,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D PlayfieldMask => TextureManager.Load($"Quaver.Resources/Textures/UI/playfield-mask.png");
         public static Texture2D UnknownAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/unknown-avatar.png");
         public static Texture2D YouAvatar => TextureManager.Load($"Quaver.Resources/Textures/UI/you-avatar.png");
+        public static Texture2D QuaverIcon => TextureManager.Load("Quaver.Resources/Icons/quaver-logo.png");
         public static Texture2D MenuBackground => TextureManager.Load($"Quaver.Resources/Textures/UI/Menu/menu-background.jpg");
         public static Texture2D NotificationError => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-error.png");
         public static Texture2D NotificationWarning => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-warning.png");
@@ -109,6 +110,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D JukeboxPlayButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-play-button.png");
         public static Texture2D JukeboxPlayButtonV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-play-button-v2.png");
         public static Texture2D JukeboxPauseButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-pause-button.png");
+        public static Texture2D JukeboxPauseButtonV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-pause-button-v2.png");
         public static Texture2D JukeboxHamburgerIcon => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-hamburger-icon.png");
         public static Texture2D JukeboxHamburgerIconV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-hamburger-icon-v2.png");
         public static Texture2D JukeboxBackwardButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Jukebox/jukebox-backward-button.png");

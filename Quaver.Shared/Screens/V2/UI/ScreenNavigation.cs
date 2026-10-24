@@ -159,6 +159,11 @@ namespace Quaver.Shared.Screens.V2.UI
 
             HeaderControls = new HeaderScreenNavigation(Config);
             ProfileButton.Clicked += OnProfileClicked;
+            ProfileButton.AddTooltip(new TooltipOptions(LocalizationManager.Get("Screen_Multiplayer_ViewProfile"))
+            {
+                Anchor = TooltipAnchor.BottomCenter,
+                MaximumWidth = 240
+            });
 
             HubListIcon = GlobalIcons.Get(GlobalIcon.BurgerRedDot);
             HubMenuIcon = GlobalIcons.Get(GlobalIcon.Burger);

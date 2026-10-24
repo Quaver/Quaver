@@ -638,6 +638,12 @@ namespace Quaver.Shared
                 NotificationManager.Show(NotificationLevel.Info,
                     LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
             };
+
+            ConfigManager.UseNewScreens.ValueChanged += (sender, e) =>
+            {
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Notification_NewScreensChangeRequiresScreenChange"));
+            };
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
@@ -1242,11 +1248,18 @@ namespace Quaver.Shared
             var dialog = DialogManager.Dialogs.Last();
 
             if (dialog is OverlayDialog hub)
+            {
                 hub.Close();
-            else if (dialog is OnlineHubDialog legacyHub)
-                legacyHub.Close();
+                return true;
+            }
 
-            return true;
+            if (dialog is OnlineHubDialog legacyHub)
+            {
+                legacyHub.Close();
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

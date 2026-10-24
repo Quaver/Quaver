@@ -1,7 +1,9 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Server.Client.Handlers;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Scheduling;
 using Quaver.Shared.Screens;
@@ -40,10 +42,15 @@ public class OverlayDialog : DialogScreen
     
     public OverlayDialog(HubPanel.HubSection initialSection = HubPanel.HubSection.Users) : base(0)
     {
+        var chat = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+        if (chat != null)
+            DialogManager.Dismiss(chat);
+
         InitialSection = initialSection;
         Skin = SkinManager.AcquireV2();
         RootConfig = Skin.Config;
         CreateContent();
+        FadeTo(0.75f, Easing.Linear, Config.Layout.AnimationDurationMilliseconds);
     }
 
     public void SelectTab(HubPanel.HubSection section) => Hub.SelectTab(section);
@@ -64,7 +71,7 @@ public class OverlayDialog : DialogScreen
             return;
         }
 
-        if (!MouseManager.IsUniqueClick(MouseButton.Left))
+        if (!MouseManager.IsUniquePress(MouseButton.Left))
             return;
 
         if (NotificationManager.IsPointerOverActiveNotification)
@@ -147,6 +154,7 @@ public class OverlayDialog : DialogScreen
         DismissProfileDropdown();
 
         ClearAnimations();
+        FadeTo(0, Easing.Linear, Config.Layout.AnimationDurationMilliseconds);
         Hub.MoveToX(Config.Layout.Width, Easing.InCubic, Config.Layout.AnimationDurationMilliseconds);
 
         if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)

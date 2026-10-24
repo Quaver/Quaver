@@ -108,7 +108,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) ||
-                MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
+                MouseManager.IsUniquePress(MouseButton.Left) && !Panel.IsHovered())
                 Close();
         }
 
@@ -172,6 +172,25 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void PositionPanel()
         {
+            if (PreviewMode)
+            {
+                var y = (Height - Panel.Height) / 2f;
+
+                if (Anchor != null && !Anchor.IsDisposed)
+                {
+                    var previewAnchor = Anchor.ScreenRectangle;
+                    var previewContainer = Container.ScreenRectangle;
+                    var previewScaleY = Math.Abs(Container.AbsoluteScale.Y) < float.Epsilon ? 1 : Container.AbsoluteScale.Y;
+                    y = (previewAnchor.Center.Y - previewContainer.Top) / previewScaleY - Panel.Height / 2f;
+                }
+
+                OpenX = Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width);
+                Panel.Position = new ScalableVector2(
+                    OpenX, 
+                    MathHelper.Clamp(y, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
+                return;
+            }
+
             if (Anchor == null || Anchor.IsDisposed)
             {
                 OpenX = MathHelper.Clamp((Width - Panel.Width) / 2f, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width));

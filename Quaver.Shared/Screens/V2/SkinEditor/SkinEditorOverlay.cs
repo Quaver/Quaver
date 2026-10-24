@@ -68,8 +68,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private readonly HashSet<string> invalidPaths = new HashSet<string>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> invalidText =
             new Dictionary<string, string>(StringComparer.Ordinal);
-        private readonly Dictionary<RoundedButton, Drawable> selectionBindings =
-            new Dictionary<RoundedButton, Drawable>();
         private readonly Queue<SkinEditorAssetButton> thumbnailLoadQueue =
             new Queue<SkinEditorAssetButton>();
         private readonly ConcurrentQueue<SkinEditorAssetButton> thumbnailReadyQueue =
@@ -81,6 +79,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private Sprite leftPanel;
         private Sprite rightPanel;
         private Sprite assetPanel;
+        private RoundedButton previewInteractionBlocker;
         private FlexContainer targetRoot;
         private Container inspectorRoot;
         private Container inspectorViewport;
@@ -89,7 +88,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private readonly List<Drawable> inspectorDrawables = new List<Drawable>();
         private readonly List<SpriteTextPlus> inspectorErrorTexts = new List<SpriteTextPlus>();
         private IReadOnlyList<SkinEditorProperty> inspectorProperties = Array.Empty<SkinEditorProperty>();
-        private Container selectionRoot;
         private ScrollContainer assetScroll;
         private Dropdown surfaceDropdown;
         private Dropdown folderDropdown;
@@ -170,7 +168,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             }
             if (assetScroll != null)
                 assetScroll.InputEnabled = !folderMenuOpen && !surfaceMenuOpen && assetScroll.IsHovered();
-            UpdateSelectionHitAreas();
             base.Update(gameTime);
 
             if (previewPending)
@@ -206,6 +203,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             {
             }
             RestoreButtonClickability();
+            previewInteractionBlocker?.Destroy();
+            previewInteractionBlocker = null;
             colorPicker.Destroy();
             skin.Dispose();
             base.Destroy();
@@ -261,10 +260,19 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             leftPanel = CreatePanel(this);
             rightPanel = CreatePanel(this);
             assetPanel = CreatePanel(this);
+            previewInteractionBlocker = new RoundedButton((sender, args) => { })
+            {
+                Parent = host.PreviewRoot,
+                Size = host.PreviewRoot.Size,
+                Tint = Color.Transparent,
+                Alpha = 0,
+                PerformHoverFade = false,
+                CornerRadius = 0,
+                Depth = int.MinValue
+            };
 
             targetRoot = new FlexContainer { Parent = leftPanel };
             inspectorRoot = new Container { Parent = rightPanel };
-            selectionRoot = new Container { Parent = this };
 
             if (HasMultipleSurfaces)
             {
@@ -302,7 +310,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
             BuildTargetList();
             BuildAssetBrowser();
-            BuildSelectionButtons();
             Resize(true);
         }
 
@@ -381,7 +388,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             NotifyTargetSelected();
             BuildTargetList();
             BuildInspector();
-            BuildSelectionButtons();
         }
 
         private IReadOnlyList<SkinEditorTarget> GetEditableTargets() => host.EditorTargets
@@ -431,7 +437,6 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             session.FocusedAssetProperty = null;
             BuildTargetList();
             BuildInspector();
-            BuildSelectionButtons();
         }
 
         private void NotifyTargetSelected()
@@ -1033,70 +1038,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                              editableTargets.FirstOrDefault();
             NotifyTargetSelected();
             BuildTargetList();
-            BuildSelectionButtons();
             RefreshSaveState();
-        }
-
-        private void BuildSelectionButtons()
-        {
-            selectionRoot.Destroy();
-            selectionRoot = new Container { Parent = this };
-            selectionBindings.Clear();
-            foreach (var target in GetEditableTargets())
-            {
-                foreach (var drawable in target.Drawables)
-                {
-                    var captured = target;
-                    var button = new RoundedButton((sender, args) => SelectTarget(captured))
-                    {
-                        Parent = selectionRoot,
-                        // Keep selection hit areas invisible so the editor never tints the preview.
-                        Tint = Color.Transparent,
-                        Alpha = 0,
-                        PerformHoverFade = false,
-                        CornerRadius = 3
-                    };
-                    button.Hovered += (sender, args) =>
-                    {
-                        if (captured.Id != selectedTarget?.Id)
-                            button.Alpha = 0.09f;
-                    };
-                    button.LeftHover += (sender, args) =>
-                    {
-                        if (captured.Id != selectedTarget?.Id)
-                            button.Alpha = 0;
-                    };
-                    selectionBindings[button] = drawable;
-                }
-            }
-        }
-
-        private void UpdateSelectionHitAreas()
-        {
-            foreach (var pair in selectionBindings)
-            {
-                var button = pair.Key;
-                var target = pair.Value;
-                if (target.IsDisposed || !target.Visible)
-                {
-                    if (button.Visible)
-                        button.Visible = false;
-                    continue;
-                }
-
-                if (!button.Visible)
-                    button.Visible = true;
-
-                var rectangle = target.ScreenRectangle;
-                if (button.ScreenRectangle.X == rectangle.X &&
-                    button.ScreenRectangle.Y == rectangle.Y &&
-                    button.ScreenRectangle.Width == rectangle.Width &&
-                    button.ScreenRectangle.Height == rectangle.Height)
-                    continue;
-
-                button.Position = new ScalableVector2(rectangle.X, rectangle.Y);
-                button.Size = new ScalableVector2(rectangle.Width, rectangle.Height);
-            }
         }
 
         private void BuildAssetBrowser()
@@ -1450,6 +1392,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             lastWidth = WindowManager.Width;
             lastHeight = WindowManager.Height;
             Size = new ScalableVector2(lastWidth, lastHeight);
+            previewInteractionBlocker.Size = host.PreviewRoot.Size;
             leftPanel.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth, lastHeight - SkinEditorController.AssetPanelHeight);
             targetRoot.Size = new ScalableVector2(SkinEditorController.LeftPanelWidth - 24, Math.Max(1, lastHeight - SkinEditorController.AssetPanelHeight - TargetListTop - 12));
             targetRoot.RefreshLayout();

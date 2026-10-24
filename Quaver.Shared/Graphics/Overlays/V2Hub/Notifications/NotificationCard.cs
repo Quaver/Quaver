@@ -81,6 +81,7 @@ public class NotificationCard : Container
             Parent = this,
             Alignment = Alignment.TopRight,
             Size = new ScalableVector2(GetRowWidth(width), Height),
+            Depth = allowInputWhenDialogOpen ? int.MinValue : 0,
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
             Tint = ColorHelper.FromHex("#181E25"),
             PerformHoverFade = false,
@@ -228,9 +229,11 @@ public class NotificationCard : Container
         Bar.Image = RoundedRectTextureCache.Get(BarWidth, height, BarWidth / 2);
         Row.Size = new ScalableVector2(rowWidth, height);
 
-        var y = (height - contentHeight) / 2f;
-        ImageSlot.Position = new ScalableVector2(ContentPadding, y);
+        var contentY = (height - contentHeight) / 2f;
+        ImageSlot.Position = new ScalableVector2(ContentPadding, contentY);
 
+        var y = !Description.Visible && !ShowTimestamp && footerHeight <= 0
+            ? (height - Title.Height) / 2f : contentY;
         Title.Position = new ScalableVector2(textX, y);
         y += Title.Height;
 

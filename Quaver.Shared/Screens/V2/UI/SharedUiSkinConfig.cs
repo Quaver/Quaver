@@ -10,6 +10,8 @@ namespace Quaver.Shared.Screens.V2.UI
     /// </summary>
     public sealed class SkinV2FooterMusicPlayerConfig
     {
+        public bool ShowBanner { get; set; } = true;
+
         [Range(1, 8192)]
         public float MinimumWidth { get; set; } = 320;
 
@@ -95,10 +97,10 @@ namespace Quaver.Shared.Screens.V2.UI
         public float TimeWidth { get; set; } = 110;
 
         [Range(0, 4096)]
-        public float CornerRadius { get; set; } = 5;
+        public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
         [Range(0, 4096)]
-        public float ProgressCornerRadius { get; set; } = 7;
+        public float ProgressCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
         [SkinFont]
         [SkinEditorIgnore]

@@ -23,6 +23,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting;
 
 public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 {
+    private const string PrivateSearchCacheKey = "private";
+
+    private LoadingWheel LoadingWheel { get; }
     private ChatChannel SelectedChannel { get; set; }
     private Bindable<string> SearchQuery { get; }
     private OnlineClient SubscribedClient { get; }
@@ -30,6 +33,8 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     private TaskHandler<int, List<User>> ClanMembersTask { get; }
     private TaskHandler<bool, List<User>> FriendsTask { get; }
     private Dictionary<int, List<User>> ClanMembersCache { get; } = new Dictionary<int, List<User>>();
+    private Dictionary<string, Dictionary<string, List<User>>> SearchCache { get; } =
+        new Dictionary<string, Dictionary<string, List<User>>>(StringComparer.OrdinalIgnoreCase);
     private List<User> FriendsCache { get; set; }
     private int? LoadingClanId { get; set; }
 
@@ -55,6 +60,14 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         ClanMembersTask.OnCompleted += OnClanMembersCompleted;
         FriendsTask.OnCompleted += OnFriendsCompleted;
         OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+
+        LoadingWheel = new LoadingWheel
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(50, 50),
+            Visible = false
+        };
 
         if (SubscribedClient != null)
         {
@@ -113,6 +126,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     public override void Update(GameTime gameTime)
     {
         InputEnabled = IsHovered();
+        UpdateLoadingWheelVisibility();
         base.Update(gameTime);
 
         TimeSinceLastInfoRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -246,9 +260,17 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         SearchTask.Cancel();
         ClanMembersTask.Cancel();
         LoadingClanId = null;
+
+        if (TryGetCachedSearch(query, out var cachedUsers))
+        {
+            ApplySearchResults(cachedUsers);
+            return;
+        }
+
         ReplaceUsers(new List<User>());
 
         SearchTask.Run(query, delay);
+        UpdateLoadingWheelVisibility();
     }
 
     private void OnSearchCompleted(object sender, TaskCompleteEventArgs<string, List<User>> e) => AddScheduledUpdate(() =>
@@ -258,14 +280,10 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
         var users = e.Result
             .Where(user => user?.OnlineUser != null && !IsSelf(user))
-            .Where(CanAccessActiveChannel)
-            .OrderByDescending(GetLastSeen)
-            .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
-            .Select(GetOnlineUserIfAvailable)
-            .Take(50)
             .ToList();
 
-        ReplaceUsers(users);
+        CacheSearch(e.Input, users);
+        ApplySearchResults(users);
     });
 
     private void OnClanMembersCompleted(object sender, TaskCompleteEventArgs<int, List<User>> e) => AddScheduledUpdate(() =>
@@ -359,14 +377,67 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             return;
         }
 
-        var users = AvailableItems
-            .Select(GetOnlineUserIfAvailable)
+        var query = SearchQuery.Value.Trim();
+
+        if (TryGetClanIdFromSelectedChannel(out var clanId) && ClanMembersCache.TryGetValue(clanId, out var members))
+        {
+            ApplyClanMembers(members, query, false);
+            return;
+        }
+
+        if (TryGetCachedSearch(query, out var cachedUsers))
+        {
+            ApplySearchResults(cachedUsers, false);
+            return;
+        }
+
+        var users = AvailableItems.Select(GetOnlineUserIfAvailable).ToList();
+
+        ReplaceUsers(users, false);
+    }
+
+    private void ApplySearchResults(IEnumerable<User> results, bool resetScroll = true)
+    {
+        var users = results
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
             .Where(CanAccessActiveChannel)
             .OrderByDescending(GetLastSeen)
             .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
+            .Select(GetOnlineUserIfAvailable)
+            .Take(50)
             .ToList();
 
-        ReplaceUsers(users, false);
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private void CacheSearch(string query, List<User> users)
+    {
+        var channelKey = GetSearchCacheKey();
+        if (channelKey == null)
+            return;
+
+        if (!SearchCache.TryGetValue(channelKey, out var channelCache))
+        {
+            channelCache = new Dictionary<string, List<User>>(StringComparer.OrdinalIgnoreCase);
+            SearchCache[channelKey] = channelCache;
+        }
+
+        channelCache[query] = users;
+    }
+
+    private bool TryGetCachedSearch(string query, out List<User> users)
+    {
+        users = null;
+        var channelKey = GetSearchCacheKey();
+        return channelKey != null && SearchCache.TryGetValue(channelKey, out var channelCache) && channelCache.TryGetValue(query, out users);
+    }
+
+    private string GetSearchCacheKey()
+    {
+        if (SelectedChannel == null)
+            return null;
+
+        return SelectedChannel.IsPrivate ? PrivateSearchCacheKey : SelectedChannel.Name;
     }
 
     private void RefreshDefaultUsers(bool resetScroll = true, bool refreshRemote = true)
@@ -547,6 +618,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
             PreviousTargetY = currentY;
             PreviousContentContainerY = currentY;
             HandlePoolShifting();
+            UpdateLoadingWheelVisibility();
             return;
         }
 
@@ -555,6 +627,13 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         PreviousTargetY = 0;
         PreviousContentContainerY = 0;
         CreatePool();
+        UpdateLoadingWheelVisibility();
+    }
+
+    private void UpdateLoadingWheelVisibility()
+    {
+        LoadingWheel.Visible = AvailableItems.Count == 0 &&
+            (SearchTask.IsRunning || ClanMembersTask.IsRunning || FriendsTask.IsRunning);
     }
 
     public override void Destroy()

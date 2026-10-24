@@ -23,6 +23,7 @@ namespace Quaver.Shared.Screens.V2.UI
             scroll.ScrollbarBackground.Tint = trackColor ?? DefaultTrackColor;
             scroll.ScrollbarBackground.UsePreviousSpriteBatchOptions = scroll.Scrollbar.UsePreviousSpriteBatchOptions;
             scroll.ScrollbarCornerRadius = cornerRadius;
+            scroll.AllowScrollbarDragging = true;
             scroll.ShowScrollbarBackground = true;
             scroll.ShowScrollbarBackgroundWhenContentFits = true;
             scroll.Scrollbar.X = -DefaultGap;

@@ -173,9 +173,9 @@ namespace Quaver.Shared.Screens.V2.UI
             OpenX = MathHelper.Clamp(OpenX, Config.WindowInset,
                 Math.Max(Config.WindowInset, Width - Config.WindowInset - Panel.Width));
 
-            Panel.Position = new ScalableVector2(OpenX,
-                MathHelper.Clamp(anchorCenterY - Panel.Height / 2f + offsetY, Config.WindowInset,
-                    Math.Max(Config.WindowInset, Height - Config.WindowInset - Panel.Height)));
+            var maximumY = Math.Max(Config.WindowInset, Height - Config.WindowInset - Panel.Height);
+            var anchoredY = MathHelper.Clamp(anchorCenterY - Panel.Height / 2f, Config.WindowInset, maximumY);
+            Panel.Position = new ScalableVector2(OpenX, MathHelper.Clamp(anchoredY + offsetY, Config.WindowInset, maximumY));
         }
 
         public override void Update(GameTime gameTime)
@@ -231,7 +231,7 @@ namespace Quaver.Shared.Screens.V2.UI
             }
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape) ||
-                MouseManager.IsUniqueClick(MouseButton.Left) && !Panel.IsHovered())
+                MouseManager.IsUniquePress(MouseButton.Left) && !Panel.IsHovered())
                 Close();
         }
 

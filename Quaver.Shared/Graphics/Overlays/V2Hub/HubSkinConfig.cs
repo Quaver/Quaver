@@ -139,7 +139,7 @@ public sealed class SkinV2HubSectionConfig
     public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
 
     [Range(1, 8192)]
-    public float IconSize { get; set; } = 20;
+    public float IconSize { get; set; } = 18;
 
     [SkinFont]
     public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
@@ -207,7 +207,7 @@ public sealed class SkinV2HubSongRequestsConfig
     public float AlertsButtonWidth { get; set; } = 234;
 
     [Range(1, 8192)]
-    public float TwitchButtonWidth { get; set; } = 232;
+    public float TwitchButtonWidth { get; set; } = 234;
 
     [Range(0, 2048)]
     public float ActionGap { get; set; } = SkinV2MarginsConfig.Md;

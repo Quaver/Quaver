@@ -96,7 +96,12 @@ public class UserRow : PoolableSprite<User>
             Status.ResetPosition();
             Avatar.ClearAnimations();
 
-            if (PreviewMode)
+            if (item.OnlineUser.UserGroups.HasFlag(UserGroups.Bot))
+            {
+                Avatar.Image = Avatar.PerformBlend(UserInterface.QuaverIcon, UserInterface.HubOnlineAvatarMask);
+                Avatar.Alpha = 1;
+            }
+            else if (PreviewMode)
             {
                 Avatar.Image = UserInterface.UnknownAvatar;
                 Avatar.Alpha = 1;
@@ -392,12 +397,12 @@ public class UserRow : PoolableSprite<User>
     {
         AddScheduledUpdate(() =>
         {
-            if (IsDisposed || e.SteamId != (ulong)Item.OnlineUser.SteamId)
+            if (IsDisposed || Item.OnlineUser.UserGroups.HasFlag(UserGroups.Bot) || e.SteamId != (ulong)Item.OnlineUser.SteamId)
                 return;
             
             GameBase.Game.ScheduleRenderTargetDraw(() =>
             {
-                if (IsDisposed || e.SteamId != (ulong)Item.OnlineUser.SteamId)
+                if (IsDisposed || Item.OnlineUser.UserGroups.HasFlag(UserGroups.Bot) || e.SteamId != (ulong)Item.OnlineUser.SteamId)
                     return;
 
                 var texture = TryGetAvatar(e.SteamId);

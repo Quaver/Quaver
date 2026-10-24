@@ -180,6 +180,9 @@
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>Change screens to update the language.</value>
   </data>
+  <data name="Notification_NewScreensChangeRequiresScreenChange" xml:space="preserve">
+    <value>Change screens to apply the new screen setting.</value>
+  </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
     <value>Send a message...</value>
   </data>

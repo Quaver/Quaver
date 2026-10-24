@@ -46,6 +46,9 @@ namespace Quaver.Shared.Screens.V2.Options
         private static readonly Guid ManagePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffe");
         private static readonly Guid SavePresetEntryId = Guid.Parse("ffffffff-ffff-ffff-ffff-fffffffffffd");
         private static readonly Color UnsavedPresetColor = new(255, 224, 50);
+        private static readonly Color SavePresetActionColor = ColorHelper.FromHex("#27B06E");
+        private static readonly Color ManagePresetActionColor = ColorHelper.FromHex("#F2994A");
+        private static readonly Color CreatePresetActionColor = ColorHelper.FromHex("#9B51E0");
 
         private bool InputRecorderWasFocused { get; set; }
         private bool RecentOptionsDirty { get; set; }
@@ -225,10 +228,12 @@ namespace Quaver.Shared.Screens.V2.Options
                 return (DropdownEntry<Guid>) new DropdownOption<Guid>(preset.Id,
                     unsaved ? $"* {preset.Name}" : preset.Name, unsaved ? UnsavedPresetColor : null);
             }));
-            presetEntries.Add(new DropdownDivider<Guid>());
-            presetEntries.Add(new DropdownOption<Guid>(SavePresetEntryId, LocalizationManager.Get("Screen_Options_SavePreset")));
-            presetEntries.Add(new DropdownOption<Guid>(ManagePresetEntryId, LocalizationManager.Get("Screen_Options_ManagePreset")));
-            presetEntries.Add(new DropdownOption<Guid>(CreatePresetEntryId, LocalizationManager.Get("Screen_Options_CreatePreset")));
+            presetEntries.Add(new DropdownOption<Guid>(SavePresetEntryId,
+                LocalizationManager.Get("Screen_Options_SavePreset"), SavePresetActionColor));
+            presetEntries.Add(new DropdownOption<Guid>(ManagePresetEntryId,
+                LocalizationManager.Get("Screen_Options_ManagePreset"), ManagePresetActionColor));
+            presetEntries.Add(new DropdownOption<Guid>(CreatePresetEntryId,
+                LocalizationManager.Get("Screen_Options_CreatePreset"), CreatePresetActionColor));
 
             PressetDropdown = new V2Dropdown<Guid>(Config.Header.PresetWidth, SelectedPresetId, presetEntries,
                 FontManager.GetWobbleFont(Config.Header.Font), dropdownStyle, Container)
@@ -1107,7 +1112,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 return;
             }
 
-            if (!MouseManager.IsUniqueClick(MouseButton.Left))
+            if (!MouseManager.IsUniquePress(MouseButton.Left))
                 return;
 
             if (NotificationManager.IsPointerOverActiveNotification)

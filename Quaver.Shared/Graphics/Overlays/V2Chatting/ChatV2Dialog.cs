@@ -10,6 +10,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.Chat;
@@ -99,18 +100,26 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private bool IsResizing { get; set; }
         private bool ResizedDuringHeaderPress { get; set; }
-        private bool SuppressNextOutsideClick { get; set; }
         private float ResizeStartMouseY { get; set; }
         private float ResizeStartPanelHeight { get; set; }
 
         Dictionary<ChatChannel, ChatChannelTab> ChatChannels = new Dictionary<ChatChannel, ChatChannelTab>();
         private bool IsClosing { get; set; }
+        private bool FocusInputWhenChannelAvailable { get; set; }
         public ChatV2Dialog() : this(null, null, false)
         {
         }
 
-        internal ChatV2Dialog(SkinStoreV2Lease skin, SkinV2Config config, bool previewMode) : base(0)
+        internal ChatV2Dialog(SkinStoreV2Lease skin, SkinV2Config config, bool previewMode)
+            : base(0)
         {
+            if (!previewMode)
+            {
+                var hub = DialogManager.Dialogs.OfType<OverlayDialog>().LastOrDefault();
+                if (hub != null)
+                    DialogManager.Dismiss(hub);
+            }
+
             Skin = skin ?? SkinManager.AcquireV2();
             OwnsSkin = skin == null;
             RootConfig = config ?? Skin.Config;
@@ -133,7 +142,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 ChatSession.ActiveChannel.ValueChanged += OnActiveChannelValueChanged;
                 ChatSession.ChannelUpdated += OnChannelUpdated;
                 WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
+                FocusInputWhenChannelAvailable = true;
                 TrySelectDefaultChannel();
+                FadeTo(0.75f, Easing.Linear, Config.Layout.AnimationDurationMilliseconds);
                 Panel.MoveToY(0, Easing.InCubic, Config.Layout.AnimationDurationMilliseconds);
             }
             else
@@ -183,7 +194,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Size = new ScalableVector2(1, 1),
                 Direction = FlexDirection.Column,
                 AlignItems = FlexAlignItems.Stretch,
-                RowGap = SectionGap
+                RowGap = SectionGap * 2
             };
 
             SearchLayout = new FlexContainer
@@ -551,7 +562,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private void OnOverflowChannelSelected(object sender, DropdownOptionEventArgs<ChatChannel> e)
         {
-            SuppressNextOutsideClick = true;
             ChatSession.ActiveChannel.Value = e.Option.Value;
             AddScheduledUpdate(DismissOverflowMenu);
         }
@@ -608,6 +618,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         {
             UpdateSearchSectionAnimation(gameTime);
             base.Update(gameTime);
+            FocusInputIfRequested();
         }
 
         private void CreateMainContent()
@@ -782,6 +793,15 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             UserSearchList.RefreshResult(e.Value);
         });
 
+        private void FocusInputIfRequested()
+        {
+            if (!FocusInputWhenChannelAvailable || ChatSession.ActiveChannel.Value == null)
+                return;
+
+            InputBar.Focused = true;
+            FocusInputWhenChannelAvailable = false;
+        }
+
         private void OnChannelUpdated(ChatChannel channel) => AddScheduledUpdate(() =>
         {
             if (!IsDisposed && ChatChannels.ContainsKey(channel))
@@ -799,18 +819,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 return;
             }
 
-            if (MouseManager.IsUniqueClick(MouseButton.Left))
+            if (MouseManager.IsUniquePress(MouseButton.Left))
             {
                 if (NotificationManager.IsPointerOverActiveNotification)
                     return;
 
-                if (SuppressNextOutsideClick)
-                {
-                    SuppressNextOutsideClick = false;
-                    return;
-                }
-
-                if (!Panel.IsHovered())
+                if (!Panel.IsHovered() && UserDropdownMenu?.IsHovered() != true && OverflowMenu?.IsHovered() != true)
                     Close();
             }
         }
@@ -892,7 +906,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                     MouseManager.CurrentState.X - Container.AbsolutePosition.X,
                     MouseManager.CurrentState.Y - Container.AbsolutePosition.Y)
             };
-            UserDropdownMenu.OptionSelected += (sender, args) => SuppressNextOutsideClick = true;
             UserDropdownMenu.Open();
         }
 
@@ -943,6 +956,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             UserSearchBox.Focused = false;
 
             ClearAnimations();
+            FadeTo(0, Easing.Linear, Config.Layout.AnimationDurationMilliseconds);
             Panel.MoveToY((int)WindowManager.Height, Easing.OutCubic, Config.Layout.AnimationDurationMilliseconds);
 
             if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)
