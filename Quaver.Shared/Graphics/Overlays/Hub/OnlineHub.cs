@@ -322,6 +322,8 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             Sections[type].MarkAsUnread();
         }
 
+        public void MarkSectionAsRead(OnlineHubSectionType type) => Sections[type].MarkAsRead();
+
         internal void OnSectionUnreadStateChanged()
         {
             var hasUnreadSections = Sections.Values.Any(section => section.IsUnread);

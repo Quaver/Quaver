@@ -5,6 +5,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Options;
 using Quaver.Shared.Database.Profiles;
 using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
@@ -41,24 +42,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "CALIBRATE", 18, Color.White);
 
-            Button.Clicked += (sender, args) =>
-            {
-                foreach (GameMode mode in ModeHelper.AllModes)
-                    UpdateSuggestedDifficulty(mode);
-
-                NotificationManager.Show(NotificationLevel.Info, $"Suggested difficulties have been recalculated.");
-            };
-        }
-
-        private static void UpdateSuggestedDifficulty(GameMode mode)
-        {
-            var profile = UserProfileDatabaseCache.Selected.Value;
-            profile.PopulateStats();
-
-            var rating = profile.Stats[mode].OverallRating;
-            var diff = (int)(rating / 20f * 10);
-
-            ConfigManager.PrioritizedMapDifficulty[mode].Value = diff;
+            Button.Clicked += (sender, args) => OptionsActions.SuggestDifficulty();
         }
     }
 }

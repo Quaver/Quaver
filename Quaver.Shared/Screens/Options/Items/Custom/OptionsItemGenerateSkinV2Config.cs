@@ -6,6 +6,7 @@ using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Notifications;
+using Quaver.Shared.Options;
 using Quaver.Shared.Skinning;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -40,55 +41,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
             Button.Clicked += OnClicked;
         }
 
-        private void OnClicked(object sender, EventArgs args)
-        {
-            var store = SkinManager.SkinV2;
-            if (store == null)
-            {
-                ShowUnavailable();
-                return;
-            }
-
-            if (!File.Exists(store.ConfigPath))
-            {
-                Generate();
-                return;
-            }
-
-            Focused = true;
-            DialogManager.Show(new YesNoDialog("Overwrite skin.yml?",
-                "This will keep only required metadata and properties marked ConfigEditable.",
-                () =>
-                {
-                    Focused = false;
-                    Generate();
-                },
-                () => Focused = false));
-        }
-
-        private static void Generate()
-        {
-            var store = SkinManager.SkinV2;
-            if (store == null)
-            {
-                ShowUnavailable();
-                return;
-            }
-
-            if (store.TrySaveEditableConfig(out var errors))
-            {
-                NotificationManager.Show(NotificationLevel.Success,
-                    "Generated skin.yml with the skin-author editable properties.");
-                return;
-            }
-
-            var message = errors.Count == 0
-                ? "The Skin V2 configuration could not be generated."
-                : string.Join(" ", errors.Take(3));
-            NotificationManager.Show(NotificationLevel.Error, message);
-        }
-
-        private static void ShowUnavailable() => NotificationManager.Show(NotificationLevel.Error,
-            "The selected skin's V2 configuration is not loaded.");
+        private void OnClicked(object sender, EventArgs args) =>
+            OptionsActions.GenerateSkinConfig(focused => Focused = focused);
     }
 }
