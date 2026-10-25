@@ -174,17 +174,21 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (PreviewMode)
             {
-                var y = (Height - Panel.Height) / 2f;
+                var y = (Height - Panel.Height) / 2f + Config.PositionOffsetY;
 
                 if (Anchor != null && !Anchor.IsDisposed)
                 {
                     var previewAnchor = Anchor.ScreenRectangle;
                     var previewContainer = Container.ScreenRectangle;
                     var previewScaleY = Math.Abs(Container.AbsoluteScale.Y) < float.Epsilon ? 1 : Container.AbsoluteScale.Y;
-                    y = (previewAnchor.Center.Y - previewContainer.Top) / previewScaleY - Panel.Height / 2f;
+                    y = (previewAnchor.Center.Y - previewContainer.Top) / previewScaleY - Panel.Height / 2f +
+                        Config.PositionOffsetY;
                 }
 
-                OpenX = Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width);
+                OpenX = MathHelper.Clamp(
+                    Width - PlacementConfig.WindowInset - Panel.Width + Config.PositionOffsetX,
+                    PlacementConfig.WindowInset,
+                    Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width));
                 Panel.Position = new ScalableVector2(
                     OpenX, 
                     MathHelper.Clamp(y, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
@@ -193,8 +197,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (Anchor == null || Anchor.IsDisposed)
             {
-                OpenX = MathHelper.Clamp((Width - Panel.Width) / 2f, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width));
-                Panel.Position = new ScalableVector2(OpenX, MathHelper.Clamp((Height - Panel.Height) / 2f, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
+                OpenX = MathHelper.Clamp((Width - Panel.Width) / 2f + Config.PositionOffsetX,
+                    PlacementConfig.WindowInset,
+                    Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width));
+                Panel.Position = new ScalableVector2(OpenX,
+                    MathHelper.Clamp((Height - Panel.Height) / 2f + Config.PositionOffsetY,
+                        PlacementConfig.WindowInset,
+                        Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
                 return;
             }
 
@@ -207,10 +216,14 @@ namespace Quaver.Shared.Screens.V2.UI
             var anchorCenterY = (anchor.Center.Y - container.Top) / scaleY;
             var rightX = anchorRight + PlacementConfig.AnchorGap;
             var anchorsRight = rightX + Panel.Width <= Width - PlacementConfig.WindowInset;
-            OpenX = (anchorsRight ? rightX : anchorLeft - PlacementConfig.AnchorGap - Panel.Width) + PlacementConfig.HorizontalOffset;
+            OpenX = (anchorsRight ? rightX : anchorLeft - PlacementConfig.AnchorGap - Panel.Width) +
+                    PlacementConfig.HorizontalOffset + Config.PositionOffsetX;
             OpenX = MathHelper.Clamp(OpenX, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Width - PlacementConfig.WindowInset - Panel.Width));
 
-            Panel.Position = new ScalableVector2(OpenX, MathHelper.Clamp(anchorCenterY - Panel.Height / 2f, PlacementConfig.WindowInset, Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
+            Panel.Position = new ScalableVector2(OpenX,
+                MathHelper.Clamp(anchorCenterY - Panel.Height / 2f + Config.PositionOffsetY,
+                    PlacementConfig.WindowInset,
+                    Math.Max(PlacementConfig.WindowInset, Height - PlacementConfig.WindowInset - Panel.Height)));
         }
 
         private void OnVirtualScreenSizeChanged(object sender, WindowVirtualScreenSizeChangedEventArgs args)

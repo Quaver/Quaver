@@ -12,6 +12,11 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Screens\V2\Chat\**" />
+    <EmbeddedResource Remove="Screens\V2\Chat\**" />
+    <None Remove="Screens\V2\Chat\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../Quaver.API/Quaver.API/Quaver.API.csproj" />
     <ProjectReference Include="../Quaver.Resources/Quaver.Resources.csproj" />
     <ProjectReference Include="../Wobble/Wobble.Extended/Wobble.Extended.csproj" />
@@ -76,8 +81,5 @@
     <PackageReference Include="UniversalThreadManagement" Version="0.1.0" />
     <PackageReference Include="Steamworks.NET.AnyCPU" Version="2026.164.0" IncludeAssets="all" />
     <PackageReference Include="WilliamQiufeng.SearchParser" Version="0.2.6-beta.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Screens\V2\Chat\" />
   </ItemGroup>
 </Project>

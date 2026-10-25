@@ -111,9 +111,9 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private float lastWidth = -1;
         private float lastHeight = -1;
         private float inspectorOffset;
+        private float inspectorAvailableHeight;
         private float inspectorViewportHeight;
         private float inspectorBaseContentHeight;
-        private float inspectorErrorTop;
         private Container lastInspectorVisibilityContent;
         private float lastInspectorVisibilityOffset = float.NaN;
         private float lastInspectorVisibilityViewportHeight = float.NaN;
@@ -506,13 +506,12 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                     : AddProperty(property, y);
             }
 
-            inspectorErrorTop = y + 4;
             FinalizeInspector(viewportHeight, y + 12);
         }
 
         private void FinalizeInspector(float viewportHeight, float contentHeight)
         {
-            inspectorViewportHeight = viewportHeight;
+            inspectorAvailableHeight = viewportHeight;
             inspectorBaseContentHeight = contentHeight;
             RefreshInspectorErrors();
         }
@@ -524,22 +523,39 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
             foreach (var errorText in inspectorErrorTexts.ToArray())
             {
-                inspectorDrawables.Remove(errorText);
                 errorText.Destroy();
             }
             inspectorErrorTexts.Clear();
 
-            var y = inspectorErrorTop;
             foreach (var error in GetInspectorErrors())
             {
-                var errorText = AddInspectorText(error, y, new Color(249, 100, 93), 11);
+                var errorText = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterMedium), error, 11)
+                {
+                    Parent = inspectorRoot,
+                    X = inspectorViewport.X,
+                    Tint = new Color(249, 100, 93)
+                };
                 errorText.MaxWidth = SkinEditorController.RightPanelWidth - 24;
                 inspectorErrorTexts.Add(errorText);
-                y += errorText.Height + 4;
             }
 
-            inspectorContent.Height = Math.Max(inspectorViewportHeight,
-                inspectorErrorTexts.Count == 0 ? inspectorBaseContentHeight : y + 8);
+            var errorHeight = inspectorErrorTexts.Sum(x => x.Height) + Math.Max(0, inspectorErrorTexts.Count - 1) * 4;
+            
+            var errorGap = 8;
+            inspectorViewportHeight = Math.Max(1, inspectorAvailableHeight - (inspectorErrorTexts.Count == 0 ? 0 : errorGap + errorHeight));
+            inspectorViewport.Height = inspectorViewportHeight;
+            inspectorContent.Height = Math.Max(inspectorViewportHeight, inspectorBaseContentHeight);
+
+            var errorY = inspectorViewport.Y + inspectorViewportHeight + errorGap;
+            foreach (var errorText in inspectorErrorTexts)
+            {
+                errorText.Y = errorY;
+                errorY += errorText.Height + 4;
+            }
+
+            var maximum = Math.Max(0, inspectorContent.Height - inspectorViewportHeight);
+            inspectorOffset = MathHelper.Clamp(inspectorOffset, 0, maximum);
+            inspectorContent.Y = -inspectorOffset;
             lastInspectorVisibilityContent = null;
             UpdateInspectorVisibility();
         }

@@ -165,6 +165,12 @@ namespace Quaver.Shared.Screens.V2.UI
 
     public sealed class SkinV2MusicQueueDialogConfig
     {
+        [Range(-1920, 1920)]
+        public float PositionOffsetX { get; set; } = 0;
+
+        [Range(-1080, 1080)]
+        public float PositionOffsetY { get; set; } = 0;
+
         [Range(520, 1000)]
         public float Width { get; set; } = 620;
 

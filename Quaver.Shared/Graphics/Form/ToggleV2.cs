@@ -26,14 +26,17 @@ namespace Quaver.Shared.Graphics.Form
         private Sprite OffAccent { get; }
         private Sprite OnAccent { get; }
         private RoundedButton MovingButton { get; }
+        private RoundedButton InteractionArea { get; }
+
+        private bool DisplayedValue { get; set; }
 
         public bool IsClickable
         {
-            get => MovingButton.IsClickable;
+            get => InteractionArea.IsClickable;
             set
             {
-                MovingButton.IsClickable = value;
-                MovingButton.IsInteractionEnabled = value;
+                InteractionArea.IsClickable = value;
+                InteractionArea.IsInteractionEnabled = value;
             }
         }
 
@@ -77,12 +80,24 @@ namespace Quaver.Shared.Graphics.Form
                 Size = new ScalableVector2(31.5f, Height - 2.5f * 2),
                 Y = 2.5f,
                 CornerRadius = 9.23f, // Ask figma, not me
-                Tint = Color.White
+                Tint = Color.White,
+                IsClickable = false,
+                IsInteractionEnabled = false
             };
             MovingButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), GetLabel(Enabled.Value), 11, GetAccentColor(Enabled.Value));
             MovingButton.X = GetButtonX(Enabled.Value);
+            DisplayedValue = Enabled.Value;
 
-            MovingButton.Clicked += OnClicked;
+            InteractionArea = new RoundedButton
+            {
+                Parent = this,
+                Size = Size,
+                CornerRadius = Height / 2f,
+                Tint = Color.Transparent,
+                PerformHoverFade = false
+            };
+
+            InteractionArea.Clicked += OnClicked;
             Enabled.ValueChanged += OnValueChanged;
         }
 
@@ -94,22 +109,41 @@ namespace Quaver.Shared.Graphics.Form
 
         private void OnClicked(object sender, EventArgs e)
         {
+            var previousValue = Enabled.Value;
             Enabled.Value = !Enabled.Value;
-            ValueEdited?.Invoke(this, EventArgs.Empty);
+            ApplyVisualState(Enabled.Value);
+
+            if (Enabled.Value != previousValue)
+                ValueEdited?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnValueChanged(object sender, BindableValueChangedEventArgs<bool> e)
+            => ApplyVisualState(Enabled.Value);
+
+        private void ApplyVisualState(bool value)
         {
+            if (DisplayedValue == value)
+                return;
+
+            DisplayedValue = value;
             OffAccent.ClearAnimations();
-            OffAccent.FadeTo(e.Value ? 0 : 0.8f, Easing.OutCubic, 180);
+            OffAccent.FadeTo(value ? 0 : 0.8f, Easing.OutCubic, 180);
 
             OnAccent.ClearAnimations();
-            OnAccent.FadeTo(e.Value ? 0.8f : 0, Easing.OutCubic, 180);
+            OnAccent.FadeTo(value ? 0.8f : 0, Easing.OutCubic, 180);
 
             MovingButton.ClearAnimations();
-            MovingButton.MoveToX(GetButtonX(e.Value), Easing.OutCubic, 180);
-            MovingButton.Label.Text = GetLabel(e.Value);
-            MovingButton.Label.Tint = GetAccentColor(e.Value);
+            MovingButton.MoveToX(GetButtonX(value), Easing.OutCubic, 180);
+            MovingButton.Label.Text = GetLabel(value);
+            MovingButton.Label.Tint = GetAccentColor(value);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (DisplayedValue != Enabled.Value)
+                ApplyVisualState(Enabled.Value);
+
+            base.Update(gameTime);
         }
 
         private Texture2D CreateGradientTexture()
@@ -147,7 +181,7 @@ namespace Quaver.Shared.Graphics.Form
 
         public override void Destroy()
         {
-            MovingButton.Clicked -= OnClicked;
+            InteractionArea.Clicked -= OnClicked;
             Enabled.ValueChanged -= OnValueChanged;
 
             base.Destroy();

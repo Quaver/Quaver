@@ -142,7 +142,7 @@ public class SongRequestsSection : Container
             Size = new ScalableVector2(Config.TwitchButtonWidth, section.ControlHeight),
             CornerRadius = section.CornerRadius,
             Tint = SkinV2Color.Parse(Config.TwitchColor),
-            PerformHoverFade = false
+            PerformHoverFade = true
         };
         actionsLayout.SetItemOptions(TwitchButton, new FlexItemOptions { Basis = Config.TwitchButtonWidth, Grow = 1, Shrink = 1 });
         TwitchButton.SetIcon(Skin.LoadTexture(Config.TwitchIcon, UserInterface.TwitchIconV2), new Vector2(Config.TwitchIconWidth, Config.TwitchIconHeight));
