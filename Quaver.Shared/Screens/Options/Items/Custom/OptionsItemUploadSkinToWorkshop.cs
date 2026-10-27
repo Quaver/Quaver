@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Options;
 using Wobble.Graphics.Buttons;
 using Quaver.Shared.Graphics.Notifications;
 using ColorHelper = Quaver.Shared.Helpers.ColorHelper;
@@ -46,21 +47,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "UPLOAD", 18, Color.White);
 
-            Button.Clicked += (sender, args) =>
-            {
-                if (string.IsNullOrEmpty(ConfigManager.Skin.Value) || ConfigManager.Skin.Value == "Default Skin")
-                {
-                    NotificationManager.Show(NotificationLevel.Warning, "You currently do not have a selected custom skin!");
-                    return;
-                }
-
-                var skin = new SteamWorkshopItem(ConfigManager.Skin.Value, SkinManager.Skin.Dir.Replace("\\", "/"));
-
-                if (skin.HasUploaded)
-                    return;
-
-                DialogManager.Show(new UploadWorkshopSkinDialog(skin));
-            };
+            Button.Clicked += (sender, args) => OptionsActions.UploadSkin();
         }
     }
 }

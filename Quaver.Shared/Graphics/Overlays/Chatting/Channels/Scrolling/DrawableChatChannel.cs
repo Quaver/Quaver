@@ -174,12 +174,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
         /// <param name="e"></param>
         private void OnActiveChannelChanged(object sender, BindableValueChangedEventArgs<ChatChannel> e)
         {
-            if (e.Value == Item)
-            {
-                Item.IsUnread = false;
-                Item.IsMentioned = false;
-            }
-
             UpdateContent(Item, Index);
         }
     }

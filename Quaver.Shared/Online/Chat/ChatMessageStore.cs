@@ -143,10 +143,7 @@ namespace Quaver.Shared.Online.Chat
             Channel.Closed += OnChannelClosed;
 
             if (Client != null)
-            {
-                Client.OnChatMessageReceived += OnChatMessageReceived;
                 Client.OnConnectionStatusChanged += OnConnectionStatusChanged;
-            }
 
             RequestMessageHistoryIfNecessary();
         }
@@ -173,7 +170,6 @@ namespace Quaver.Shared.Online.Chat
             if (Client == null)
                 return;
 
-            Client.OnChatMessageReceived -= OnChatMessageReceived;
             Client.OnConnectionStatusChanged -= OnConnectionStatusChanged;
         }
 
@@ -245,36 +241,6 @@ namespace Quaver.Shared.Online.Chat
         {
             lock (MessageLock)
                 AddMessage(e.Message);
-        }
-
-        /// <summary>
-        ///     Receives messages for this channel and queues them through the shared channel object.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
-        {
-            if (BlockedUsers.IsUserBlocked(e.Message.SenderId))
-                return;
-
-            if (Channel.Name.StartsWith("#") && Channel.Name != e.Message.Channel)
-                return;
-
-            if (!Channel.Name.StartsWith("#"))
-            {
-                if (Channel.Name != e.Message.SenderName || e.Message.Channel != OnlineManager.Self?.OnlineUser.Username)
-                    return;
-            }
-
-            if (!OnlineManager.OnlineUsers.TryGetValue(e.Message.SenderId, out var onlineUser))
-                return;
-
-            e.Message.Sender = onlineUser;
-
-            if (OnlineManager.Self != null && e.Message.SenderId == OnlineManager.Self.OnlineUser.Id)
-                return;
-
-            Channel.QueueMessage(e.Message);
         }
 
         /// <summary>

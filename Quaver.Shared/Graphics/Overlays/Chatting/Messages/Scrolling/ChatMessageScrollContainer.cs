@@ -142,8 +142,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
             TimeToCompleteScroll = 1200;
             ScrollSpeed = 220;
 
-            Channel.Closed += OnChannelClosed;
-
             CreateLoadingWheel();
             Pool = new List<PoolableSprite<ChatMessage>>();
 
@@ -191,7 +189,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         /// </summary>
         public override void Destroy()
         {
-            Channel.Closed -= OnChannelClosed;
             base.Destroy();
         }
 
@@ -563,20 +560,6 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling
         private bool ShouldScrollToBottom(ChatMessage latestMessage, bool force = false)
         {
             return force || TotalMessageHeight - Height - Math.Abs(ContentContainer.Y) < 600 || latestMessage.IsFromSelf;
-        }
-
-        /// <summary>
-        ///     When the channel closes, dispose of everything
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnChannelClosed(object sender, Server.Client.Structures.ChannelClosedEventArgs e)
-        {
-            Destroy();
-            RecalculateContainerHeight();
-
-            OnlineChat.JoinedChatChannels.RemoveAll(x => x.Name == e.Channel.Name);
-            OnlineChat.Instance?.MessageContainer.MessageScrollContainers.Remove(Channel);
         }
 
         /// <summary>

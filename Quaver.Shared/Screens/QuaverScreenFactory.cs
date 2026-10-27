@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
 using Quaver.Server.Client.Objects.Multiplayer;
+using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Database.Settings;
@@ -53,13 +54,6 @@ namespace Quaver.Shared.Screens
         };
 
         private static readonly ScreenFactorySet NewScreens = NewScreenRegistry.CreateFactorySet();
-
-        /// <summary>
-        ///     The startup snapshot of the replacement-screen configuration value.
-        /// </summary>
-        private static bool UseNewScreens { get; set; }
-
-        internal static void Initialize(bool useNewScreens) => UseNewScreens = useNewScreens;
 
         internal static QuaverScreen CreateMainMenu() =>
             Resolve(nameof(ScreenFactorySet.MainMenu), Legacy.MainMenu!, NewScreens.MainMenu)();
@@ -154,7 +148,7 @@ namespace Quaver.Shared.Screens
 
         private static T Resolve<T>(string screen, T legacy, T? replacement) where T : Delegate
         {
-            if (!UseNewScreens)
+            if (!ConfigManager.UseNewScreens.Value)
                 return legacy;
 
             if (replacement != null)

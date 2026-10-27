@@ -122,6 +122,9 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         /// </summary>
         private void HandleInput(GameTime gameTime)
         {
+            if (ConfigManager.UseNewScreens.Value)
+                return;
+
             // Dictate which slider is the one that is currently focused.
             SetFocusedSlider();
 

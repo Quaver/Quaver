@@ -22,7 +22,7 @@ public enum GlobalKeybindActions : ulong
     IncreaseOffset                   = 13 | LayerGameplay,
     GameplayPause                    = 14 | LayerGameplay,
     GameplayToggleScoreboard         = 15 | LayerGameplayNormal,
-    GameplayToggleOverlay            = 16 | LayerGameplay,
+    GameplayToggleOverlay            = 16 | LayerGlobal,
     GameplayRetry                    = 17 | LayerGameplay,
     GameplayQuickExit                = 18 | LayerGameplay,
     GameplaySkipIntro                = 19 | LayerGameplay,

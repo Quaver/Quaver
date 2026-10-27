@@ -194,7 +194,7 @@ namespace Quaver.Shared.Screens.V2.Main
         /// </summary>
         [Range(-8192, 8192)]
         [ConfigEditable]
-        public float BottomOffset { get; set; } = -SkinV2Spacing.SpacingXs;
+        public float BottomOffset { get; set; } = -127;
 
         [Range(1, 8192)]
         public float BannerHeight { get; set; } = 128;

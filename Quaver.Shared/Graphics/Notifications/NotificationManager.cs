@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -35,6 +36,11 @@ namespace Quaver.Shared.Graphics.Notifications
         public static List<DrawableNotification> QueuedNotifications { get; set; } = new List<DrawableNotification>();
 
         /// <summary>
+        ///     Notification data waiting to be turned into drawables on the main thread.
+        /// </summary>
+        private static ConcurrentQueue<NotificationInfo> PendingNotifications { get; } = new ConcurrentQueue<NotificationInfo>();
+
+        /// <summary>
         ///     Notifications that are currently active
         /// </summary>
         public static List<DrawableNotification> ActiveNotifications { get; set; } = new List<DrawableNotification>();
@@ -50,9 +56,34 @@ namespace Quaver.Shared.Graphics.Notifications
         private static Dictionary<string, DrawableNotification> KeyedNotifications { get; } = new Dictionary<string, DrawableNotification>();
 
         /// <summary>
+        ///     Notifications list used for the hub's new notification section
+        /// </summary>
+        public static List<NotificationInfo> NewNotificationsFeed { get; } = new List<NotificationInfo>();
+
+        /// <summary>
+        ///     Notifications list used for the hub's history notification section
+        /// </summary>
+        public static List<NotificationInfo> HistoryNotificationsFeed { get; }  = new List<NotificationInfo>();
+
+        /// <summary>
         ///     Event invoked when a notification has been missed by the user
         /// </summary>
         public static event EventHandler<NotificationMissedEventArgs> NotificationMissed;
+
+        /// <summary>
+        ///     Invoked when a queued notification becomes visible.
+        /// </summary>
+        public static event Action<NotificationInfo> NotificationShown;
+
+        /// <summary>
+        ///     Invoked when a shown notification is clicked and removed from the new feed.
+        /// </summary>
+        public static event Action<NotificationInfo> NotificationViewed;
+
+        /// <summary>
+        ///     Whether the pointer is currently over an on-screen notification.
+        /// </summary>
+        public static bool IsPointerOverActiveNotification => ActiveNotifications.Any(notification => notification.Visible && notification.IsHovered());
 
         /// <summary>
         ///     The initial/top level position for notifications
@@ -67,6 +98,7 @@ namespace Quaver.Shared.Graphics.Notifications
             Container.Width = WindowManager.Width;
             Container.Height = WindowManager.Height;
 
+            CreatePendingNotifications();
             FlushNotificationQueue();
             PerformAnimations(gameTime);
             Container.Update(gameTime);
@@ -83,15 +115,52 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="text"></param>
         /// <param name="onClick"></param>
         /// <param name="forceShow"></param>
-        internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false)
+        internal static void Show(NotificationLevel level, string text, EventHandler onClick = null, bool forceShow = false,
+            NotificationType type = NotificationType.General, string senderName = null, long senderSteamId = 0, string detailText = null)
         {
-            var info = new NotificationInfo(level, text, true, onClick, forceShow);
-            var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
+            var info = new NotificationInfo(level, text, true, onClick, forceShow, type: type, senderName: senderName, senderSteamId: senderSteamId, detailText: detailText);
+            PendingNotifications.Enqueue(info);
+        }
 
-            lock (QueuedNotifications)
+        /// <summary>
+        ///     Creates notification drawables on the main update thread.
+        /// </summary>
+        private static void CreatePendingNotifications()
+        {
+            while (PendingNotifications.TryDequeue(out var info))
             {
-                QueuedNotifications.Add(notification);
+                var notification = new DrawableNotification(null, info, -1) { Alignment = Alignment.TopRight };
+
+                lock (QueuedNotifications)
+                    QueuedNotifications.Add(notification);
             }
+        }
+
+        internal static bool StoreShownNotification(NotificationInfo info)
+        {
+            if (info.StoredInHub || (info.Level != NotificationLevel.Error && info.ClickAction == null))
+                return false;
+
+            StoreInHub(info, false);
+            return true;
+        }
+
+        internal static void MarkClicked(NotificationInfo info)
+        {
+            info.WasClicked = true;
+
+            if (info.StoredInHub && NewNotificationsFeed.Remove(info))
+                NotificationViewed?.Invoke(info);
+        }
+
+        private static void StoreInHub(NotificationInfo info, bool missed)
+        {
+            info.StoredInHub = true;
+            NewNotificationsFeed.Insert(0, info);
+            HistoryNotificationsFeed.Insert(0, info);
+
+            if (missed)
+                NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
         }
 
         /// <summary>
@@ -169,6 +238,7 @@ namespace Quaver.Shared.Graphics.Notifications
 
                     ActiveNotifications.Add(notification);
                     NotificationsToClear.Add(notification);
+                    NotificationShown?.Invoke(notification.Item);
                 }
 
                 foreach (var notification in NotificationsToClear)
@@ -187,24 +257,24 @@ namespace Quaver.Shared.Graphics.Notifications
                 return;
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var targetOffset = InitialY;
 
             for (var i = ActiveNotifications.Count - 1; i >= 0; i--)
             {
                 var notification = ActiveNotifications[i];
 
-                // Get the current iteration
-                var iteration = ActiveNotifications.Count - 1 - i;
-
                 // Calculate the new target y position
                 if (!notification.IsSlidingOut)
                 {
-                    var targetY = InitialY + (ActiveNotifications.Last().Height + 20) * iteration;
+                    var targetY = targetOffset;
 
                     if (ConfigManager.DisplayNotificationsBottomToTop?.Value ?? false)
                         targetY = -targetY;
 
                     notification.Y = MathHelper.Lerp(notification.Y, targetY, (float)Math.Min(dt / 60, 1));
                 }
+
+                targetOffset += notification.Height + 20;
 
                 if (!notification.Item.WasClicked && !notification.HasSlidOut)
                     continue;
@@ -216,6 +286,9 @@ namespace Quaver.Shared.Graphics.Notifications
                 if (notification.Item.WasClicked)
                     continue;
 
+                if (notification.Item.StoredInHub)
+                    continue;
+
                 // Consider a notification "missed" if it's an error OR it has a click action attached to it
                 if (notification.Item.Level != NotificationLevel.Error && notification.Item.ClickAction == null)
                     continue;
@@ -224,10 +297,11 @@ namespace Quaver.Shared.Graphics.Notifications
                 Logger.Important($"Notification Missed: {notification.Item.Level} | {notification.Item.Text}",
                     LogType.Runtime, false);
 
-                var info = new NotificationInfo(notification.Item.Level, notification.Item.Text, false,
-                    notification.Item.ClickAction);
+                var info = new NotificationInfo(notification.Item.Level, notification.Item.Text, false, notification.Item.ClickAction,
+                    createdAt: notification.Item.CreatedAt, type: notification.Item.Type, senderName: notification.Item.SenderName, 
+                    senderSteamId: notification.Item.SenderSteamId, detailText: notification.Item.DetailText);
 
-                NotificationMissed?.Invoke(typeof(NotificationManager), new NotificationMissedEventArgs(info));
+                StoreInHub(info, true);
             }
         }
 
