@@ -78,7 +78,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Modifiers
         public override void Update(GameTime gameTime)
         {
             InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position)
-                           && DialogManager.Dialogs.Count == 0
+                           && DialogManager.IsInputAllowed(this)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
                            && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt);
             ScrollbarBackground.Visible = ContentContainer.Height > Height;
