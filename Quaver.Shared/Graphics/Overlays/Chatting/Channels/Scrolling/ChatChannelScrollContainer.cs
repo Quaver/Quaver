@@ -347,7 +347,9 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Channels.Scrolling
 
                         if (joinedChannel != null)
                             ActiveChatChannel.Value = chatChannel;
-                    });
+                    }, type: NotificationType.DirectMessage, senderName: e.Message.SenderName,
+                        senderSteamId: e.Message.Sender?.OnlineUser?.SteamId ?? 0,
+                        detailText: e.Message.Message);
                 }
 
                 return;

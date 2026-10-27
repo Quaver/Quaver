@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Options;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Scores;
 using Quaver.Shared.Graphics.Backgrounds;
@@ -47,39 +48,7 @@ namespace Quaver.Shared.Screens.Options.Items.Custom
 
             Button.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), "DETECT", 18, Color.White);
 
-            Button.Clicked += (sender, args) =>
-            {
-                OtherGameMapDatabaseCache.FindOsuStableInstallation();
-                OtherGameMapDatabaseCache.FindEtternaInstallation();
-
-                var count = 0;
-
-                if (!string.IsNullOrEmpty(ConfigManager.OsuDbPath.Value))
-                    count++;
-
-                if (!string.IsNullOrEmpty(ConfigManager.EtternaDbPath.Value))
-                    count++;
-
-                if (count != 0)
-                {
-                    var message = $"Detected song databases for {count} other installed game";
-
-                    if (count > 1)
-                        message += "s.";
-                    else
-                        message += ".";
-
-                    NotificationManager.Show(NotificationLevel.Success, message);
-                    Logger.Important(message, LogType.Runtime);
-                    ConfigManager.AutoLoadOsuBeatmaps.Value = true;
-                }
-                else
-                {
-                    var message = $"Could not find song databases for other installed games";
-                    NotificationManager.Show(NotificationLevel.Warning, message);
-                    Logger.Important(message, LogType.Runtime);
-                }
-            };
+            Button.Clicked += (sender, args) => OptionsActions.DetectOtherGames();
         }
     }
 }
