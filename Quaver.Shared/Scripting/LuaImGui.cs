@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework.Input;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.CoreLib;
@@ -49,12 +49,12 @@ namespace Quaver.Shared.Scripting
         private static readonly StringComparer s_comparer = StringComparer.OrdinalIgnoreCase;
 
         private static readonly Dictionary<string, DynValue> s_methods = MethodNamesOf(typeof(ImGui))
-           .Distinct()
+           .Distinct(s_comparer)
            .ToDictionary(x => x, s_imgui.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
         private static readonly Dictionary<string, DynValue> s_redirectMethods =
             MethodNamesOf(typeof(ImGuiRedirect))
-               .Distinct()
+               .Distinct(s_comparer)
                .ToDictionary(x => x, s_imguiRedirects.GetWrappedFunctionThatPacksReturnedVectors, s_comparer);
 
         private static readonly Dictionary<Type, DynValue> s_enums = new()
@@ -64,22 +64,68 @@ namespace Quaver.Shared.Scripting
             [typeof(ImGuiCol)] = DefineEnum(
                 ("TabActive", ImGuiCol.TabSelected),
                 ("TabUnfocused", ImGuiCol.TabDimmed),
-                ("TabUnfocusedActive", ImGuiCol.TabDimmedSelected)
+                ("TabUnfocusedActive", ImGuiCol.TabDimmedSelected),
+                ("NavHighlight", ImGuiCol.NavCursor),
+                ("COUNT", ImGuiCol.Count)
             ),
             [typeof(ImGuiColorEditFlags)] = DefineEnum(
+                ("AlphaPreview", ImGuiColorEditFlags.None),
+                ("HDR", ImGuiColorEditFlags.Hdr),
+                ("DisplayRGB", ImGuiColorEditFlags.DisplayRgb),
+                ("DisplayHSV", ImGuiColorEditFlags.DisplayHsv),
+                ("InputRGB", ImGuiColorEditFlags.InputRgb),
+                ("InputHSV", ImGuiColorEditFlags.InputHsv),
                 ("_DataTypeMask", ImGuiColorEditFlags.DataTypeMask),
                 ("_DisplayMask", ImGuiColorEditFlags.DisplayMask),
                 ("_InputMask", ImGuiColorEditFlags.InputMask),
                 ("_OptionsDefault", ImGuiColorEditFlags.DefaultOptions),
                 ("_PickerMask", ImGuiColorEditFlags.PickerMask)
             ),
-            [typeof(ImGuiDragDropFlags)] =
-                DefineEnum(("SourceAutoExpirePayload", ImGuiDragDropFlags.PayloadAutoExpire)),
+            [typeof(ImGuiConfigFlags)] = DefineEnum(
+                ("NavEnableSetMousePos", ImGuiConfigFlags.None),
+                ("NavNoCaptureKeyboard", ImGuiConfigFlags.None),
+                ("DpiEnableScaleViewports", ImGuiConfigFlags.None),
+                ("DpiEnableScaleFonts", ImGuiConfigFlags.None),
+                ("IsSRGB", ImGuiConfigFlags.IsSrgb)
+            ),
+            [typeof(ImGuiChildFlags)] = DefineEnum(("Border", ImGuiChildFlags.Borders)),
+            [typeof(ImGuiDragDropFlags)] = DefineEnum(
+                ("SourceAutoExpirePayload", ImGuiDragDropFlags.PayloadAutoExpire),
+                ("SourceAllowNullID", ImGuiDragDropFlags.SourceAllowNullId)
+            ),
+            [typeof(ImGuiKey)] = DefineEnum(
+                ("_0", ImGuiKey.Key0), ("_1", ImGuiKey.Key1), ("_2", ImGuiKey.Key2),
+                ("_3", ImGuiKey.Key3), ("_4", ImGuiKey.Key4), ("_5", ImGuiKey.Key5),
+                ("_6", ImGuiKey.Key6), ("_7", ImGuiKey.Key7), ("_8", ImGuiKey.Key8),
+                ("_9", ImGuiKey.Key9), ("NamedKey_BEGIN", ImGuiKey.NamedKeyBegin),
+                ("KeysData_OFFSET", ImGuiKey.NamedKeyBegin), ("NamedKey_END", ImGuiKey.NamedKeyEnd),
+                ("NamedKey_COUNT", ImGuiKey.NamedKeyCount), ("KeysData_SIZE", ImGuiKey.NamedKeyCount),
+                ("COUNT", ImGuiKey.NamedKeyEnd)
+            ),
+            [typeof(ImGuiMouseCursor)] = DefineEnum(
+                ("ResizeNS", ImGuiMouseCursor.ResizeNs), ("ResizeEW", ImGuiMouseCursor.ResizeEw),
+                ("ResizeNESW", ImGuiMouseCursor.ResizeNesw), ("ResizeNWSE", ImGuiMouseCursor.ResizeNwse),
+                ("COUNT", ImGuiMouseCursor.Count)
+            ),
+            [typeof(ImGuiMultiSelectFlags)] = DefineEnum(
+                ("BoxSelect1d", ImGuiMultiSelectFlags.BoxSelect1D),
+                ("BoxSelect2d", ImGuiMultiSelectFlags.BoxSelect2D),
+                ("SelectOnClick", ImGuiMultiSelectFlags.OnClick),
+                ("SelectOnClickRelease", ImGuiMultiSelectFlags.OnClickRelease)
+            ),
+            [typeof(ImGuiTabBarFlags)] = DefineEnum(
+                ("TabListPopupButton", ImGuiTabBarFlags.ListPopupButton),
+                ("FittingPolicyResizeDown", ImGuiTabBarFlags.FittingPolicyShrink)
+            ),
             [typeof(ImGuiInputTextFlags)] = DefineEnum(
                 ("AlwaysInsertMode", ImGuiInputTextFlags.AlwaysOverwrite),
                 ("Multiline", ImGuiInputTextFlags.None)
             ),
-            [typeof(ImGuiTreeNodeFlags)] = DefineEnum(("AllowItemOverlap", ImGuiTreeNodeFlags.AllowOverlap)),
+            [typeof(ImGuiTreeNodeFlags)] = DefineEnum(
+                ("AllowItemOverlap", ImGuiTreeNodeFlags.AllowOverlap),
+                ("SpanTextWidth", ImGuiTreeNodeFlags.SpanLabelWidth),
+                ("NavLeftJumpsBackHere", ImGuiTreeNodeFlags.NavLeftJumpsToParent)
+            ),
             [typeof(ImGuiSelectableFlags)] = DefineEnum(("DontClosePopups", ImGuiSelectableFlags.NoAutoClosePopups)),
         };
 
@@ -88,6 +134,14 @@ namespace Quaver.Shared.Scripting
         private static readonly Regex s_chunks = new(@"chunk_\d+:", RegexOptions.Compiled);
 
         private static readonly Type[] s_types = typeof(ImGui).Assembly.GetTypes();
+
+        private static readonly DynValue s_legacyModFlags = DefineEnum(
+            ("None", ImGuiKey.None),
+            ("Ctrl", ImGuiKey.ModCtrl),
+            ("Shift", ImGuiKey.ModShift),
+            ("Alt", ImGuiKey.ModAlt),
+            ("Super", ImGuiKey.ModSuper)
+        );
 
         private static Action<IEditorAction, HistoryType, bool> s_events;
 
@@ -198,7 +252,7 @@ namespace Quaver.Shared.Scripting
             Script.GlobalOptions.CustomConverters.SetScriptToClrCustomConversion(
                 DataType.Boolean,
                 typeof(ImGuiChildFlags),
-                x => x.Boolean ? ImGuiChildFlags.Border : ImGuiChildFlags.None
+                x => x.Boolean ? ImGuiChildFlags.Borders : ImGuiChildFlags.None
             );
 
             UserData.RegisterAssembly(typeof(SliderVelocityInfo).Assembly);
@@ -310,6 +364,8 @@ namespace Quaver.Shared.Scripting
                 if (s_enums.TryGetValue(type, out var value) &&
                     type.Name.Replace(s_capitals, Lower, 2).Replace(s_capitals, UnderscoreLower) is var key)
                     WorkingScript.Globals[key] = value;
+
+            WorkingScript.Globals["imgui_mod_flags"] = s_legacyModFlags;
         }
 
         /// <summary>
@@ -323,6 +379,8 @@ namespace Quaver.Shared.Scripting
         /// </summary>
         protected override void RenderImguiLayout()
         {
+            ImGuiRedirect.ResetWindowFontScales();
+
             if (DateTime.Now - LastException < TimeSpan.FromSeconds(1))
                 return;
 
@@ -336,10 +394,17 @@ namespace Quaver.Shared.Scripting
                     HandleLuaException(awakeException);
             }
 
-            if (CallUserDefinedFunction("Draw", "draw") is { } drawException)
-                HandleLuaException(drawException);
+            try
+            {
+                if (CallUserDefinedFunction("Draw", "draw") is { } drawException)
+                    HandleLuaException(drawException);
 
-            AfterRender();
+                AfterRender();
+            }
+            finally
+            {
+                ImGuiRedirect.ResetWindowFontScales();
+            }
         }
 
         /// <summary>

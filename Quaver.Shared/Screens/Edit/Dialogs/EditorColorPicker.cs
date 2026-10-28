@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
 using Wobble.Graphics.ImGUI;
@@ -18,9 +18,9 @@ namespace Quaver.Shared.Screens.Edit.Dialogs
         private const int PresetsPerRow = 5;
 
         private const ImGuiColorEditFlags PickerFlags =
-            ImGuiColorEditFlags.DisplayRGB |
+            ImGuiColorEditFlags.DisplayRgb |
             ImGuiColorEditFlags.DisplayHex |
-            ImGuiColorEditFlags.InputRGB |
+            ImGuiColorEditFlags.InputRgb |
             ImGuiColorEditFlags.Uint8;
 
         private static readonly Color[] BuiltInPresetColors =

@@ -1,5 +1,5 @@
 using System;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Config;
 using Quaver.Shared.Screens.Edit;
@@ -15,8 +15,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
     internal sealed class SkinEditorColorPicker : SpriteImGui
     {
         private const ImGuiColorEditFlags PickerFlags =
-            ImGuiColorEditFlags.DisplayRGB |
-            ImGuiColorEditFlags.InputRGB |
+            ImGuiColorEditFlags.DisplayRgb |
+            ImGuiColorEditFlags.InputRgb |
             ImGuiColorEditFlags.Uint8;
 
         private Action<string> changed;

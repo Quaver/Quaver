@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ImGuiNET;
+using Hexa.NET.ImGui;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Maps.Structures;
@@ -89,7 +89,7 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
         SelectedBookmarks.RemoveAll(x => !Screen.WorkingMap.Bookmarks.Contains(x));
 
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(600, float.MaxValue));
-        ImGui.PushFont(Options.Fonts.First().Context);
+        ImGui.PushFont(Options.Fonts.First().Context, 20f);
         ((IColoredImGuiTitle)this).ImGuiPushTitleColors();
         var open = IsActive;
         ImGui.Begin(Name, ref open);
@@ -364,9 +364,9 @@ public class EditorBookmarkPanel : SpriteImGui, IEditorPlugin, IColoredImGuiTitl
     private unsafe void SortBookmarks(List<(BookmarkInfo Bookmark, int OriginalIndex)> bookmarks)
     {
         var sortSpecs = ImGui.TableGetSortSpecs();
-        var nativeSpecs = sortSpecs.Specs.NativePtr;
+        var nativeSpecs = sortSpecs.Specs;
 
-        if (nativeSpecs == null || sortSpecs.SpecsCount == 0)
+        if (nativeSpecs.IsNull || sortSpecs.SpecsCount == 0)
         {
             bookmarks.Sort((left, right) =>
             {
