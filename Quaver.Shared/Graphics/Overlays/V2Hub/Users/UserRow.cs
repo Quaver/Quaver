@@ -162,25 +162,6 @@ public class UserRow : PoolableSprite<User>
             Tint = ColorHelper.FromHex("#181E25"),
             PerformHoverFade = false
         };
-
-        /// Background hover fix
-        /*
-        var background = new Sprite
-        {
-            Parent = Row,
-            Position = new ScalableVector2(70, 0),
-            Size = new ScalableVector2(Row.Width - 70, Row.Height),
-            Image = RoundedRectTextureCache.Get(
-            Row.Width - 70,
-            Row.Height,
-            new RoundedRectCornerRadii(0, SkinV2BorderRadiusConfig.Normal, SkinV2BorderRadiusConfig.Normal, 0)),
-            Tint = ColorHelper.FromHex("#181E25"),
-            UsePreviousSpriteBatchOptions = true
-        };
-
-        Row.Hovered += (s, e) => background.Tint = ColorHelper.FromHex("#3D4B64");
-        Row.LeftHover += (s, e) => background.Tint = ColorHelper.FromHex("#181E25");
-        */
         Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#3D4B64");
         Row.LeftHover += (s, e) => Row.Tint = ColorHelper.FromHex("#181E25");
 

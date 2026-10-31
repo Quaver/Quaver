@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
                 "Type", "SolidColor", "Path", "Fit", "Stops", "AngleDegrees", "X", "Y",
                 "RadialRadius", "Effect", "PrimaryColor", "SecondaryColor", "Primary", "Secondary",
                 "Tertiary", "Image", "Color", "HoverColor", "AccentColor", "TextColor",
-                "BottomOffset", "FallbackImage", "BackgroundColor", "ForegroundColor",
+                "FallbackImage", "BackgroundColor", "ForegroundColor",
                 "OfflineStatusColor", "Scale", "Width", "NavigationHeaderGap",
                 "AnimationDurationMilliseconds", "HeaderColor", "ContentColor", "NotificationsIcon",
                 "UsersIcon", "SongRequestsIcon", "HeaderHeight",
