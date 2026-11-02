@@ -1,0 +1,661 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Microsoft.Xna.Framework;
+using Quaver.Server.Client;
+using Quaver.Server.Client.Enums;
+using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Objects;
+using Quaver.Server.Client.Structures;
+using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
+using Quaver.Shared.Online;
+using Quaver.Shared.Online.API.User;
+using Quaver.Shared.Screens.V2.UI;
+using Wobble.Bindables;
+using Wobble.Graphics;
+using Wobble.Logging;
+using Wobble.Scheduling;
+using Wobble.Window;
+
+namespace Quaver.Shared.Graphics.Overlays.V2Chatting;
+
+public sealed class ChatUserSearchList : PoolableScrollContainer<User>
+{
+    private const string PrivateSearchCacheKey = "private";
+
+    private LoadingWheel LoadingWheel { get; }
+    private ChatChannel SelectedChannel { get; set; }
+    private Bindable<string> SearchQuery { get; }
+    private OnlineClient SubscribedClient { get; }
+    private TaskHandler<string, List<User>> SearchTask { get; }
+    private TaskHandler<int, List<User>> ClanMembersTask { get; }
+    private TaskHandler<bool, List<User>> FriendsTask { get; }
+    private Dictionary<int, List<User>> ClanMembersCache { get; } = new Dictionary<int, List<User>>();
+    private Dictionary<string, Dictionary<string, List<User>>> SearchCache { get; } =
+        new Dictionary<string, Dictionary<string, List<User>>>(StringComparer.OrdinalIgnoreCase);
+    private List<User> FriendsCache { get; set; }
+    private int? LoadingClanId { get; set; }
+
+    private double TimeSinceLastInfoRequest { get; set; }
+    private double TimeSinceLastStatusRequest { get; set; }
+    private float PreviousViewportWidth { get; set; }
+    private float PreviousViewportHeight { get; set; }
+
+    public event Action<User> OnRowClicked;
+
+    public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(), 1, 0, size, size)
+    {
+        V2Scrollbar.Apply(this);
+
+        SelectedChannel = activeChannel.Value;
+        SearchQuery = searchQuery;
+        SubscribedClient = OnlineManager.Client;
+        SearchTask = new TaskHandler<string, List<User>>(SearchUsers);
+        ClanMembersTask = new TaskHandler<int, List<User>>(GetClanMembers);
+        FriendsTask = new TaskHandler<bool, List<User>>(GetFriends);
+        SearchQuery.ValueChanged += OnSearchChanged;
+        SearchTask.OnCompleted += OnSearchCompleted;
+        ClanMembersTask.OnCompleted += OnClanMembersCompleted;
+        FriendsTask.OnCompleted += OnFriendsCompleted;
+        OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+
+        LoadingWheel = new LoadingWheel
+        {
+            Parent = this,
+            Alignment = Alignment.MidCenter,
+            Size = new ScalableVector2(50, 50),
+            Visible = false
+        };
+
+        if (SubscribedClient != null)
+        {
+            SubscribedClient.OnUserConnected += OnUserConnected;
+            SubscribedClient.OnUserDisconnected += OnUserDisconnected;
+            SubscribedClient.OnUsersOnline += OnUsersOnline;
+            SubscribedClient.OnUserInfoReceived += OnUserInfoReceived;
+            SubscribedClient.OnUserStatusReceived += OnUserStatusReceived;
+        }
+
+        RefreshViewport();
+        RefreshDefaultUsers();
+    }
+
+    protected override PoolableSprite<User> CreateObject(User item, int index)
+    {
+        var row = new UserRow(this, item, index, width: V2Scrollbar.GetContentWidth(this))
+        {
+            Alpha = 0
+        };
+        row.OnClick += user => OnRowClicked?.Invoke(user);
+        return row;
+    }
+
+    public void RefreshViewport(bool hideUntilRebuilt = false)
+    {
+        var widthChanged = Math.Abs(PreviousViewportWidth - Width) > 0.001f;
+        var heightChanged = Math.Abs(PreviousViewportHeight - Height) > 0.001f;
+        if (!widthChanged && !heightChanged)
+            return;
+
+        PreviousViewportWidth = Width;
+        PreviousViewportHeight = Height;
+
+        var desiredPoolSize = Math.Min(50, Math.Max(1, (int)Math.Ceiling(WindowManager.Height / 80f) + 3));
+        if (!widthChanged && Pool != null && PoolSize == desiredPoolSize)
+        {
+            RecalculateContainerHeight();
+            return;
+        }
+
+        if (hideUntilRebuilt)
+            Visible = false;
+
+        if (Pool != null)
+            DestroyPool();
+
+        PoolSize = desiredPoolSize;
+        PoolStartingIndex = Math.Clamp(PoolStartingIndex, 0, Math.Max(0, AvailableItems.Count - PoolSize));
+        CreatePool();
+
+        if (hideUntilRebuilt)
+            AddScheduledUpdate(() => Visible = true);
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        InputEnabled = IsHovered();
+        UpdateLoadingWheelVisibility();
+        base.Update(gameTime);
+
+        TimeSinceLastInfoRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
+        TimeSinceLastStatusRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        // Get users info of potential query match if needed
+        if (string.IsNullOrWhiteSpace(SearchQuery.Value) && TimeSinceLastInfoRequest >= 1000)
+        {
+            TimeSinceLastInfoRequest = 0;
+            IEnumerable<User> candidates = HasAccessByDefault(SelectedChannel) ? AvailableItems : OnlineManager.OnlineUsers.Values;
+            var ids = candidates
+                .Where(user => !user.HasUserInfo)
+                .Take(20)
+                .Select(user => user.OnlineUser.Id)
+                .ToList();
+
+            if (ids.Count > 0)
+                SubscribedClient?.RequestUserInfo(ids);
+        }
+
+        // Refresh statuses of displayed users
+        if (TimeSinceLastStatusRequest >= 2000)
+        {
+            TimeSinceLastStatusRequest = 0;
+            var ids = AvailableItems
+                .Where(user => OnlineManager.OnlineUsers.ContainsKey(user.OnlineUser.Id))
+                .Select(user => user.OnlineUser.Id)
+                .ToList();
+            if (ids.Count > 0)
+                SubscribedClient?.RequestUserStatuses(ids);
+        }
+    }
+
+    private List<User> SearchUsers(string query, CancellationToken token)
+    {
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            var users = new APIRequestUserSearch(query).ExecuteRequest();
+            token.ThrowIfCancellationRequested();
+            return users;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Network);
+            return new List<User>();
+        }
+    }
+
+    private List<User> GetClanMembers(int clanId, CancellationToken token)
+    {
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            var users = new APIRequestClanMembers(clanId).ExecuteRequest();
+            token.ThrowIfCancellationRequested();
+            return users;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Network);
+            return null;
+        }
+    }
+
+    private List<User> GetFriends(bool _, CancellationToken token)
+    {
+        try
+        {
+            token.ThrowIfCancellationRequested();
+            var users = SubscribedClient?.RetrieveFriendsList();
+            token.ThrowIfCancellationRequested();
+            return users;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e, LogType.Network);
+            return null;
+        }
+    }
+
+    private void OnSearchChanged(object sender, BindableValueChangedEventArgs<string> e)
+    {
+        var query = e.Value?.Trim();
+
+        if (string.IsNullOrEmpty(query))
+        {
+            SearchTask.Cancel();
+            RefreshDefaultUsers();
+            return;
+        }
+
+        StartSearch(query, 300);
+    }
+
+    private void StartSearch(string query, int delay)
+    {
+        if (TryGetClanIdFromSelectedChannel(out var clanId))
+        {
+            SearchTask.Cancel();
+
+            if (ClanMembersCache.TryGetValue(clanId, out var members))
+            {
+                ApplyClanMembers(members, query);
+                return;
+            }
+
+            ReplaceUsers(new List<User>());
+
+            if (LoadingClanId == clanId && ClanMembersTask.IsRunning)
+                return;
+
+            ClanMembersTask.Cancel();
+            LoadingClanId = clanId;
+            ClanMembersTask.Run(clanId);
+            return;
+        }
+
+        SearchTask.Cancel();
+        ClanMembersTask.Cancel();
+        LoadingClanId = null;
+
+        if (TryGetCachedSearch(query, out var cachedUsers))
+        {
+            ApplySearchResults(cachedUsers);
+            return;
+        }
+
+        ReplaceUsers(new List<User>());
+
+        SearchTask.Run(query, delay);
+        UpdateLoadingWheelVisibility();
+    }
+
+    private void OnSearchCompleted(object sender, TaskCompleteEventArgs<string, List<User>> e) => AddScheduledUpdate(() =>
+    {
+        if (IsDisposed || !string.Equals(e.Input, SearchQuery.Value?.Trim(), StringComparison.Ordinal))
+            return;
+
+        var users = e.Result
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
+            .ToList();
+
+        CacheSearch(e.Input, users);
+        ApplySearchResults(users);
+    });
+
+    private void OnClanMembersCompleted(object sender, TaskCompleteEventArgs<int, List<User>> e) => AddScheduledUpdate(() =>
+    {
+        if (IsDisposed)
+            return;
+
+        if (LoadingClanId == e.Input)
+            LoadingClanId = null;
+
+        if (e.Result != null)
+            ClanMembersCache[e.Input] = e.Result;
+
+        if (!TryGetClanIdFromSelectedChannel(out var selectedClanId) || selectedClanId != e.Input)
+            return;
+
+        if (e.Result == null)
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery.Value))
+                RefreshOnlineUsers(false);
+
+            return;
+        }
+
+        ApplyClanMembers(e.Result, SearchQuery.Value?.Trim());
+    });
+
+    private void OnFriendsCompleted(object sender, TaskCompleteEventArgs<bool, List<User>> e) => AddScheduledUpdate(() =>
+    {
+        if (IsDisposed)
+            return;
+
+        if (e.Result != null)
+            FriendsCache = e.Result;
+
+        if (SelectedChannel?.IsPrivate != true || !string.IsNullOrWhiteSpace(SearchQuery.Value))
+            return;
+
+        if (e.Result == null)
+        {
+            RefreshOnlineUsers(false);
+            return;
+        }
+
+        ApplyFriends(e.Result, false);
+    });
+
+    public void RefreshResult(ChatChannel channel)
+    {
+        SelectedChannel = channel;
+
+        if (string.IsNullOrWhiteSpace(SearchQuery.Value))
+        {
+            RefreshDefaultUsers();
+            return;
+        }
+
+        StartSearch(SearchQuery.Value.Trim(), 0);
+    }
+
+    private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e) => AddScheduledUpdate(RefreshCurrentResults);
+
+    private void OnUserConnected(object sender, UserConnectedEventArgs e) => AddScheduledUpdate(RefreshCurrentResults);
+
+    private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) => AddScheduledUpdate(RefreshCurrentResults);
+
+    private void OnUsersOnline(object sender, UsersOnlineEventArgs e) => AddScheduledUpdate(RefreshCurrentResults);
+
+    private void OnUserInfoReceived(object sender, UserInfoEventArgs e) => AddScheduledUpdate(RefreshCurrentResults);
+
+    private void OnUserStatusReceived(object sender, UserStatusEventArgs e) => AddScheduledUpdate(() =>
+    {
+        if (IsDisposed || Pool == null)
+            return;
+
+        foreach (var row in Pool.OfType<UserRow>())
+        {
+            if (e.Statuses.TryGetValue(row.Item.OnlineUser.Id, out var status))
+                row.OnStatusUpdate(status ?? new UserClientStatus(ClientStatus.InMenus, -1, string.Empty, 1, string.Empty, 0));
+        }
+    });
+
+    private void RefreshCurrentResults()
+    {
+        if (IsDisposed)
+            return;
+
+        if (string.IsNullOrWhiteSpace(SearchQuery.Value))
+        {
+            RefreshDefaultUsers(false, false);
+            return;
+        }
+
+        var query = SearchQuery.Value.Trim();
+
+        if (TryGetClanIdFromSelectedChannel(out var clanId) && ClanMembersCache.TryGetValue(clanId, out var members))
+        {
+            ApplyClanMembers(members, query, false);
+            return;
+        }
+
+        if (TryGetCachedSearch(query, out var cachedUsers))
+        {
+            ApplySearchResults(cachedUsers, false);
+            return;
+        }
+
+        var users = AvailableItems.Select(GetOnlineUserIfAvailable).ToList();
+
+        ReplaceUsers(users, false);
+    }
+
+    private void ApplySearchResults(IEnumerable<User> results, bool resetScroll = true)
+    {
+        var users = results
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
+            .Where(CanAccessActiveChannel)
+            .OrderByDescending(GetLastSeen)
+            .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
+            .Select(GetOnlineUserIfAvailable)
+            .Take(50)
+            .ToList();
+
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private void CacheSearch(string query, List<User> users)
+    {
+        var channelKey = GetSearchCacheKey();
+        if (channelKey == null)
+            return;
+
+        if (!SearchCache.TryGetValue(channelKey, out var channelCache))
+        {
+            channelCache = new Dictionary<string, List<User>>(StringComparer.OrdinalIgnoreCase);
+            SearchCache[channelKey] = channelCache;
+        }
+
+        channelCache[query] = users;
+    }
+
+    private bool TryGetCachedSearch(string query, out List<User> users)
+    {
+        users = null;
+        var channelKey = GetSearchCacheKey();
+        return channelKey != null && SearchCache.TryGetValue(channelKey, out var channelCache) && channelCache.TryGetValue(query, out users);
+    }
+
+    private string GetSearchCacheKey()
+    {
+        if (SelectedChannel == null)
+            return null;
+
+        return SelectedChannel.IsPrivate ? PrivateSearchCacheKey : SelectedChannel.Name;
+    }
+
+    private void RefreshDefaultUsers(bool resetScroll = true, bool refreshRemote = true)
+    {
+        SearchTask.Cancel();
+
+        if (SelectedChannel?.IsPrivate == true)
+        {
+            ClanMembersTask.Cancel();
+            LoadingClanId = null;
+
+            if (!refreshRemote && FriendsCache != null && !FriendsTask.IsRunning)
+            {
+                ApplyFriends(FriendsCache, resetScroll);
+                return;
+            }
+
+            RefreshOnlineUsers(resetScroll);
+
+            if ((refreshRemote || FriendsCache == null) && !FriendsTask.IsRunning)
+                FriendsTask.Run(true);
+
+            return;
+        }
+
+        FriendsTask.Cancel();
+
+        if (!TryGetClanIdFromSelectedChannel(out var clanId))
+        {
+            ClanMembersTask.Cancel();
+            LoadingClanId = null;
+            RefreshOnlineUsers(resetScroll);
+            return;
+        }
+
+        if (!refreshRemote && ClanMembersCache.TryGetValue(clanId, out var members) &&
+            !(LoadingClanId == clanId && ClanMembersTask.IsRunning))
+        {
+            ApplyClanMembers(members, resetScroll: resetScroll);
+            return;
+        }
+
+        RefreshOnlineUsers(resetScroll);
+
+        if (LoadingClanId == clanId && ClanMembersTask.IsRunning)
+            return;
+
+        ClanMembersTask.Cancel();
+        LoadingClanId = clanId;
+        ClanMembersTask.Run(clanId);
+    }
+
+    private void ApplyClanMembers(IEnumerable<User> members, string query = null, bool resetScroll = true)
+    {
+        var users = members
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
+            .Where(user => string.IsNullOrWhiteSpace(query) || user.OnlineUser.Username.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .Where(CanAccessActiveChannel)
+            .OrderByDescending(GetLastSeen)
+            .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
+            .Select(GetOnlineUserIfAvailable)
+            .Take(50)
+            .ToList();
+
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private void ApplyFriends(IEnumerable<User> friends, bool resetScroll = true)
+    {
+        var users = friends
+            .Where(user => user?.OnlineUser != null && !IsSelf(user))
+            .OrderByDescending(GetLastSeen)
+            .ThenBy(user => user.OnlineUser.Username, StringComparer.OrdinalIgnoreCase)
+            .Select(GetOnlineUserIfAvailable)
+            .Take(50)
+            .ToList();
+
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private void RefreshOnlineUsers(bool resetScroll = true)
+    {
+        if (IsDisposed)
+            return;
+
+        var users = (OnlineManager.OnlineUsers?.Values ?? Enumerable.Empty<User>())
+            .Where(user => user?.OnlineUser != null && !IsSelf(user) && CanAccessActiveChannel(user))
+            .OrderBy(user => user.HasUserInfo ? user.OnlineUser.Username : string.Empty, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(user => user.OnlineUser.Id)
+            .Take(50)
+            .ToList();
+
+        ReplaceUsers(users, resetScroll);
+    }
+
+    private bool CanAccessActiveChannel(User user)
+    {
+        var channel = SelectedChannel;
+        if (channel == null)
+            return false;
+
+        if (channel.IsPrivate)
+            return OnlineManager.FriendsList?.Contains(user.OnlineUser.Id) == true;
+
+        if (!user.HasUserInfo)
+            return HasAccessByDefault(channel);
+
+        if (channel.Name.StartsWith("#clan_", StringComparison.OrdinalIgnoreCase))
+            return string.Equals(user.OnlineUser.ClanId, channel.Name.Substring("#clan_".Length), StringComparison.OrdinalIgnoreCase);
+
+        if (channel.Name.StartsWith("#multiplayer", StringComparison.OrdinalIgnoreCase))
+            return OnlineManager.CurrentGame?.PlayerIds?.Contains(user.OnlineUser.Id) == true;
+
+        if (channel.Name.StartsWith("#spectator_", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!int.TryParse(channel.Name.Substring("#spectator_".Length), out var playerId))
+                return false;
+
+            if (user.OnlineUser.Id == playerId)
+                return true;
+
+            return playerId == OnlineManager.Self?.OnlineUser?.Id && OnlineManager.Spectators.ContainsKey(user.OnlineUser.Id);
+        }
+
+        if (channel.AllowedUserGroups != 0)
+            return (user.OnlineUser.UserGroups & channel.AllowedUserGroups) != 0;
+
+        return true;
+    }
+
+    private static bool HasAccessByDefault(ChatChannel channel) =>
+        channel == null || channel.AllowedUserGroups == 0 || channel.DirectMessageUser?.OnlineUser != null ||
+         (!channel.IsPrivate && !string.Equals(channel.Name, "#admin", StringComparison.OrdinalIgnoreCase) && !channel.Name.StartsWith("#clan_", StringComparison.OrdinalIgnoreCase));
+
+    private bool TryGetClanIdFromSelectedChannel(out int clanId)
+    {
+        clanId = 0;
+        return SelectedChannel?.Name?.StartsWith("#clan_", StringComparison.OrdinalIgnoreCase) == true && int.TryParse(SelectedChannel.Name.Substring("#clan_".Length), out clanId);
+    }
+
+    private static bool IsSelf(User user) => OnlineManager.Self?.OnlineUser != null && user.OnlineUser.Id == OnlineManager.Self.OnlineUser.Id;
+
+    private static User GetOnlineUserIfAvailable(User user) =>
+        OnlineManager.OnlineUsers != null && OnlineManager.OnlineUsers.TryGetValue(user.OnlineUser.Id, out var onlineUser) ? onlineUser : user;
+
+    private static DateTime GetLastSeen(User user)
+    {
+        if (OnlineManager.OnlineUsers?.ContainsKey(user.OnlineUser.Id) == true)
+            return DateTime.MaxValue;
+
+        return user switch
+        {
+            APIUserSearchResult result => result.LatestActivity,
+            UserFriend friend => friend.LatestActivity,
+            _ => DateTime.MinValue
+        };
+    }
+
+    private void ReplaceUsers(List<User> users, bool resetScroll = true)
+    {
+        var previousY = ContentContainer.Y;
+        var previousTargetY = TargetY;
+
+        DestroyPool();
+        AvailableItems = users.Take(50).ToList();
+        PoolStartingIndex = 0;
+        ContentContainer.Animations.Clear();
+
+        if (!resetScroll)
+        {
+            CreatePool();
+
+            var minimumY = Math.Min(0, Height - ContentContainer.Height);
+            var currentY = Math.Clamp(previousY, minimumY, 0);
+            var targetY = Math.Clamp(previousTargetY, minimumY, 0);
+            ContentContainer.Y = currentY;
+            TargetY = targetY;
+            PreviousTargetY = currentY;
+            PreviousContentContainerY = currentY;
+            HandlePoolShifting();
+            UpdateLoadingWheelVisibility();
+            return;
+        }
+
+        ContentContainer.Y = 0;
+        TargetY = 0;
+        PreviousTargetY = 0;
+        PreviousContentContainerY = 0;
+        CreatePool();
+        UpdateLoadingWheelVisibility();
+    }
+
+    private void UpdateLoadingWheelVisibility()
+    {
+        LoadingWheel.Visible = AvailableItems.Count == 0 &&
+            (SearchTask.IsRunning || ClanMembersTask.IsRunning || FriendsTask.IsRunning);
+    }
+
+    public override void Destroy()
+    {
+        SearchQuery.ValueChanged -= OnSearchChanged;
+        SearchTask.OnCompleted -= OnSearchCompleted;
+        SearchTask.Dispose();
+        ClanMembersTask.OnCompleted -= OnClanMembersCompleted;
+        ClanMembersTask.Dispose();
+        FriendsTask.OnCompleted -= OnFriendsCompleted;
+        FriendsTask.Dispose();
+        OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+
+        if (SubscribedClient != null)
+        {
+            SubscribedClient.OnUserConnected -= OnUserConnected;
+            SubscribedClient.OnUserDisconnected -= OnUserDisconnected;
+            SubscribedClient.OnUsersOnline -= OnUsersOnline;
+            SubscribedClient.OnUserInfoReceived -= OnUserInfoReceived;
+            SubscribedClient.OnUserStatusReceived -= OnUserStatusReceived;
+        }
+
+        base.Destroy();
+    }
+}

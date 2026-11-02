@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Server.Client;
-using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages.Scrolling;
 using Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -48,13 +46,26 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             CreateTextboxContainer();
 
             // Create a channel for all available container
-            if (OnlineChat.JoinedChatChannels.Count != 0)
+            if (ChatSession.JoinedChannels.Value.Count != 0)
             {
-                OnlineChat.JoinedChatChannels.ForEach(AddChannel);
-                ActiveChannel.Value = OnlineChat.JoinedChatChannels.First();
+                ChatSession.JoinedChannels.Value.ForEach(AddChannel);
+                ActiveChannel.Value = ChatSession.JoinedChannels.Value.First();
             }
 
-            OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
+            ChatSession.JoinedChannels.ItemAdded += OnChannelAdded;
+            ChatSession.JoinedChannels.ItemRemoved += OnChannelRemoved;
+        }
+
+        public override void Destroy()
+        {
+            ChatSession.JoinedChannels.ItemAdded -= OnChannelAdded;
+            ChatSession.JoinedChannels.ItemRemoved -= OnChannelRemoved;
+
+            foreach (var container in MessageScrollContainers.Values.ToList())
+                container.Destroy();
+
+            MessageScrollContainers.Clear();
+            base.Destroy();
         }
 
         /// <inheritdoc />
@@ -154,51 +165,15 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages
             MessageScrollContainers.Add(chan, container);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e)
-        {
-            if (e.Value != ConnectionStatus.Connected)
-            {
-                UnsubcribeFromEvents();
-                return;
-            }
+        private void OnChannelAdded(object sender, BindableListItemAddedEventArgs<ChatChannel> e) => AddChannel(e.Item);
 
-            SubscribeToEvents();
-        }
-
-        /// <summary>
-        /// </summary>
-        private void SubscribeToEvents()
+        private void OnChannelRemoved(object sender, BindableListItemRemovedEventArgs<ChatChannel> e)
         {
-            OnlineManager.Client.OnJoinedChatChannel += OnJoinedChatChannel;
-        }
-
-        /// <summary>
-        /// </summary>
-        private void UnsubcribeFromEvents()
-        {
-            if (OnlineManager.Client == null)
+            if (!MessageScrollContainers.TryGetValue(e.Item, out var container))
                 return;
 
-            OnlineManager.Client.OnJoinedChatChannel -= OnJoinedChatChannel;
-        }
-
-        /// <summary>
-        ///     Called when joining a channel. Creates a new message container
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnJoinedChatChannel(object sender, JoinedChatChannelEventArgs e)
-        {
-            var chan = OnlineChat.JoinedChatChannels.Find(x => x.Name == e.Channel);
-
-            if (chan == null)
-                return;
-
-            AddChannel(chan);
+            container.Destroy();
+            MessageScrollContainers.Remove(e.Item);
         }
     }
 }

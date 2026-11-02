@@ -9,6 +9,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens;
 using Wobble;
 using Wobble.Graphics;
@@ -241,24 +242,23 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
         /// <param name="user"></param>
         private void HandleOpenChat(User user)
         {
-            var chan = OnlineChat.JoinedChatChannels.Find(x => x.Name == user.OnlineUser.Username);
+            var chan = ChatSession.JoinedChannels.Value.Find(x => x.Name == user.OnlineUser.Username);
 
             if (chan != null)
             {
-                OnlineChat.Instance.ActiveChannel.Value = chan;
+                ChatSession.ActiveChannel.Value = chan;
                 return;
             }
 
             var privateChat = new ChatChannel()
             {
                 Name = user.OnlineUser.Username,
+                DirectMessageUser = user,
                 AllowedUserGroups = UserGroups.Normal,
                 Description = "Private Chat"
             };
 
-            OnlineChat.Instance.ChannelList.ChannelContainer.Add(privateChat);
-            OnlineChat.Instance.MessageContainer.AddChannel(privateChat);
-            OnlineChat.Instance.ActiveChannel.Value = privateChat;
+            ChatSession.AddChannel(privateChat);
         }
 
         /// <summary>

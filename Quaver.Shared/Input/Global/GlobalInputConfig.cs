@@ -180,6 +180,8 @@ namespace Quaver.Shared.Input.Global
         {
             var count = 0;
 
+            var removedOnlineHubF8 = _keybinds.RemoveKeybindFromAction(GlobalKeybindActions.ToggleOnlineHub, new Keybind(KeyModifiers.Free, Keys.F8));
+
             foreach (var (action, defaultBind) in s_defaultKeybinds)
             {
                 var bind = fillWithDefaultBinds ? LegacyOrDefaultKeybindsFor(action) : [];
@@ -187,11 +189,17 @@ namespace Quaver.Shared.Input.Global
                     count++;
             }
 
-            if (count > 0)
+            if (count > 0 || removedOnlineHubF8)
             {
                 SaveToConfig();
-                Logger.Debug($"Filled {count} missing action keybinds in key config file",
-                    LogType.Runtime);
+                if (count > 0)
+                {
+                    Logger.Debug($"Filled {count} missing action keybinds in key config file",
+                        LogType.Runtime);
+                }
+
+                if (removedOnlineHubF8)
+                    Logger.Debug("Moved F8 from Online Hub to chat", LogType.Runtime);
             }
 
             NotifyUpdate();
@@ -357,10 +365,7 @@ namespace Quaver.Shared.Input.Global
             [GlobalKeybindActions.ToggleFullscreen] = new KeybindList(new Keybind([KeyModifiers.Alt, KeyModifiers.Free], Keys.Enter)),
             [GlobalKeybindActions.TogglePause] = new KeybindList(new Keybind([KeyModifiers.Ctrl, KeyModifiers.Free], Keys.P)),
             [GlobalKeybindActions.CycleFpsLimiter] = new KeybindList(new Keybind(KeyModifiers.Free, Keys.F7)),
-            [GlobalKeybindActions.ToggleOnlineHub] = new KeybindList([
-                new Keybind(KeyModifiers.Free, Keys.F8),
-                new Keybind(KeyModifiers.Free, Keys.F9)
-            ]),
+            [GlobalKeybindActions.ToggleOnlineHub] = new KeybindList(new Keybind(KeyModifiers.Free, Keys.F9)),
             [GlobalKeybindActions.ReloadSkin] = new KeybindList(new Keybind([KeyModifiers.Ctrl, KeyModifiers.Free], Keys.S)),
             [GlobalKeybindActions.Back] = new KeybindList(new Keybind(KeyModifiers.Free, Keys.Escape)),
             [GlobalKeybindActions.IncreaseRate] = new KeybindList(new Keybind([KeyModifiers.Ctrl], Keys.OemPlus)),

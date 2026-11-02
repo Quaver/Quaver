@@ -38,6 +38,8 @@ using Quaver.Shared.Graphics.Menu.Border;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Chatting;
 using Quaver.Shared.Graphics.Overlays.Hub;
+using Quaver.Shared.Graphics.Overlays.V2Chatting;
+using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Graphics.Overlays.Volume;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Helpers;
@@ -124,6 +126,7 @@ using Wobble.Timing;
 using Wobble.Window;
 using NewMainMenuScreen = Quaver.Shared.Screens.V2.Main.MainMenuScreen;
 using Version = YamlDotNet.Core.Version;
+using Quaver.Shared.Screens.V2.Options;
 
 namespace Quaver.Shared
 {
@@ -196,6 +199,9 @@ namespace Quaver.Shared
                         break;
                     case GlobalKeybindActions.ToggleOnlineHub:
                         game.ToggleOnlineHub();
+                        break;
+                    case GlobalKeybindActions.GameplayToggleOverlay:
+                        game.ToggleChat();
                         break;
                     case GlobalKeybindActions.ReloadSkin:
                         game.ReloadSkin();
@@ -632,6 +638,12 @@ namespace Quaver.Shared
                 NotificationManager.Show(NotificationLevel.Info,
                     LocalizationManager.Get("Notification_LanguageChangeRequiresScreenChange"));
             };
+
+            ConfigManager.UseNewScreens.ValueChanged += (sender, e) =>
+            {
+                NotificationManager.Show(NotificationLevel.Info,
+                    LocalizationManager.Get("Notification_NewScreensChangeRequiresScreenChange"));
+            };
             
             ConfigManager.WindowFullScreen.ValueChanged += (sender, e) =>
             {
@@ -973,7 +985,8 @@ namespace Quaver.Shared
                 case QuaverScreenType.Music:
                 case QuaverScreenType.Download:
                 case QuaverScreenType.Results:
-                    DialogManager.Show(new OptionsDialog());
+                    var useNewScreen = ConfigManager.UseNewScreens.Value;
+                    DialogManager.Show(useNewScreen ? new OptionsV2Dialog() : new OptionsDialog());
                     break;
             }
         }
@@ -1198,7 +1211,30 @@ namespace Quaver.Shared
             if (CloseOnlineHubDialog())
                 return;
 
-            DialogManager.Show(new OnlineHubDialog());
+            var useNewScreen = ConfigManager.UseNewScreens.Value;
+            DialogManager.Show(useNewScreen ? new OverlayDialog() : new OnlineHubDialog());
+        }
+
+        private void ToggleChat()
+        {
+            if (!ConfigManager.UseNewScreens.Value)
+            {
+                if (OnlineChat == null)
+                    return;
+
+                if (OnlineChat.IsOpen)
+                    OnlineChat.Close();
+                else
+                    OnlineChat.Open();
+
+                return;
+            }
+
+            var chat = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+            if (chat == null)
+                DialogManager.Show(new ChatV2Dialog());
+            else
+                chat.Close();
         }
 
         /// <summary>
@@ -1209,13 +1245,21 @@ namespace Quaver.Shared
             if (DialogManager.Dialogs.Count == 0)
                 return false;
 
-            if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
+            var dialog = DialogManager.Dialogs.Last();
+
+            if (dialog is OverlayDialog hub)
+            {
+                hub.Close();
                 return true;
+            }
 
-            var dialog = (OnlineHubDialog)DialogManager.Dialogs.Last();
-            dialog?.Close();
+            if (dialog is OnlineHubDialog legacyHub)
+            {
+                legacyHub.Close();
+                return true;
+            }
 
-            return true;
+            return false;
         }
 
         /// <summary>

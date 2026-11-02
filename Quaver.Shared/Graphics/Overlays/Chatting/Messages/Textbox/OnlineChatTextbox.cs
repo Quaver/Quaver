@@ -16,6 +16,8 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
 {
     public class OnlineChatTextbox : Wobble.Graphics.UI.Form.Textbox
     {
+        private const int MaximumMessageLength = 500;
+
         /// <summary>
         /// </summary>
         private Bindable<ChatChannel> ActiveChannel { get; }
@@ -55,6 +57,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
         {
             ActiveChannel = activeChatChannel;
             Standalone = standalone;
+            MaxCharacters = MaximumMessageLength;
 
             Image = UserInterface.SearchBox;
             Tint = ColorHelper.HexToColor("#181818");

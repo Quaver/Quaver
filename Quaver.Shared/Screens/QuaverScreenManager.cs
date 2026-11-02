@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Transitions;
 using Quaver.Shared.Online;
@@ -46,7 +45,6 @@ namespace Quaver.Shared.Screens
 
         public static void Initialize()
         {
-            QuaverScreenFactory.Initialize(ConfigManager.UseNewScreens.Value);
             ScreenLoadTask = new TaskHandler<ScreenChangeRequest, QuaverScreen>(LoadScreen);
             ScreenLoadTask.OnCompleted += OnCompleted;
         }
@@ -94,8 +92,13 @@ namespace Quaver.Shared.Screens
         private static QuaverScreen LoadScreen(ScreenChangeRequest request, CancellationToken token)
         {
             Transitioner.FadeIn(request.ForegroundKeys);
-            // Wait for the transitioner to fully fade to black.
             var waitStarted = Environment.TickCount64;
+
+            // Build the next screen while the current one fades out instead of waiting at a fully
+            // black screen before starting the potentially expensive screen construction.
+            var screen = request.NewScreen();
+
+            // The screen can only be swapped once the transitioner fully covers the current screen.
             while (Transitioner.IsAnimating &&
                    Environment.TickCount64 - waitStarted < TransitionWaitTimeout)
                 Thread.Sleep(16);
@@ -103,8 +106,6 @@ namespace Quaver.Shared.Screens
             if (Transitioner.IsAnimating)
                 Logger.Warning("Screen transition fade-in timed out; forcing the screen switch and recovery fade.",
                     LogType.Runtime);
-
-            var screen = request.NewScreen();
 
             if (token.IsCancellationRequested)
             {

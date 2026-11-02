@@ -151,7 +151,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             {
                 if (property.GetMethod == null || property.SetMethod == null ||
                     property.GetIndexParameters().Length != 0 ||
-                    property.GetCustomAttribute<YamlIgnoreAttribute>() != null)
+                    property.GetCustomAttribute<YamlIgnoreAttribute>() != null ||
+                    property.GetCustomAttribute<SkinEditorIgnoreAttribute>() != null)
                     continue;
 
                 var name = property.GetCustomAttribute<YamlMemberAttribute>()?.Alias;

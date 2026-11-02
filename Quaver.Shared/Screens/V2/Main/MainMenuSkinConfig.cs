@@ -189,13 +189,6 @@ namespace Quaver.Shared.Screens.V2.Main
         [Range(0, 2048)]
         public float HorizontalMargin { get; set; } = 40;
 
-        /// <summary>
-        ///     Vertical offset from the bottom edge of the window. Negative values move the banner up.
-        /// </summary>
-        [Range(-8192, 8192)]
-        [ConfigEditable]
-        public float BottomOffset { get; set; } = -SkinV2Spacing.SpacingXs;
-
         [Range(1, 8192)]
         public float BannerHeight { get; set; } = 128;
 

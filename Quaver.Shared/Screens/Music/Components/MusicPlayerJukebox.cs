@@ -25,6 +25,12 @@ namespace Quaver.Shared.Screens.Music.Components
         private Bindable<List<Mapset>> AvailableSongs { get; }
 
         /// <summary>
+        ///     Allows shared owners to pause this jukebox while its controls are not active.
+        ///     The legacy music screen leaves this enabled at all times.
+        /// </summary>
+        private Func<bool> IsActive { get; }
+
+        /// <summary>
         ///     The list of tracks (maps) that were played during this jukebox section,
         ///     so we can go to the previous/next song.
         /// </summary>
@@ -44,9 +50,10 @@ namespace Quaver.Shared.Screens.Music.Components
 
         /// <summary>
         /// </summary>
-        public MusicPlayerJukebox(Bindable<List<Mapset>> availableSongs)
+        public MusicPlayerJukebox(Bindable<List<Mapset>> availableSongs, Func<bool> isActive = null)
         {
             AvailableSongs = availableSongs;
+            IsActive = isActive ?? (() => true);
             MapManager.Selected.ValueChanged += OnMapChanged;
 
             if (OnlineManager.Client != null)
@@ -74,7 +81,9 @@ namespace Quaver.Shared.Screens.Music.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            SelectNextTrackIfFinished();
+            if (IsActive())
+                SelectNextTrackIfFinished();
+
             base.Update(gameTime);
         }
 
@@ -123,6 +132,9 @@ namespace Quaver.Shared.Screens.Music.Components
         /// </summary>
         public void SelectNextTrack(Direction direction)
         {
+            if (!IsActive())
+                return;
+
             var game = (QuaverGame)GameBase.Game;
 
             if (AvailableSongs.Value.Count == 0 || game.CurrentScreen != null && game.CurrentScreen.Exiting)
@@ -258,6 +270,9 @@ namespace Quaver.Shared.Screens.Music.Components
         /// <param name="e"></param>
         private void OnMapChanged(object sender, BindableValueChangedEventArgs<Map> e)
         {
+            if (!IsActive())
+                return;
+
             try
             {
                 SetRichPresence();
