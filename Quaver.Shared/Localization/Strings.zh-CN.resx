@@ -1,5 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -75,8 +180,20 @@
   <data name="Notification_LanguageChangeRequiresScreenChange" xml:space="preserve">
     <value>退出当前界面以更新语言。</value>
   </data>
+  <data name="Notification_NewScreensChangeRequiresScreenChange" xml:space="preserve">
+    <value>Change screens to apply the new screen setting.</value>
+  </data>
   <data name="Chat_SendAMessage" xml:space="preserve">
     <value>发送消息……</value>
+  </data>
+  <data name="Chat_CannotWriteInChannel" xml:space="preserve">
+    <value>You cannot write in this channel</value>
+  </data>
+  <data name="Screen_Options_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Screen_Options_CensorMessages" xml:space="preserve">
+    <value>Censor Chat Messages</value>
   </data>
   <data name="Screen_Main_Menu_Home" xml:space="preserve">
     <value>主页</value>
@@ -236,6 +353,12 @@
   </data>
   <data name="Screen_Main_MapReadFailed" xml:space="preserve">
     <value>无法读取谱面文件！</value>
+  </data>
+  <data name="Screen_Music_ListeningPartyHostRequired" xml:space="preserve">
+    <value>You are not the host of the listening party!</value>
+  </data>
+  <data name="Screen_Music_SongsFound" xml:space="preserve">
+    <value>{0:N0} Songs Found</value>
   </data>
   <data name="Screen_Selection_All" xml:space="preserve">
     <value>全部</value>
@@ -498,6 +621,45 @@
   <data name="Screen_Options_Advanced" xml:space="preserve">
     <value>高级</value>
   </data>
+  <data name="Screen_Options_PresetApplyFailed" xml:space="preserve">
+    <value>Could not apply preset '{0}'.</value>
+  </data>
+  <data name="Screen_Options_CreatePreset" xml:space="preserve">
+    <value>Create Preset</value>
+  </data>
+  <data name="Screen_Options_ManagePreset" xml:space="preserve">
+    <value>Manage Preset</value>
+  </data>
+  <data name="Screen_Options_SavePreset" xml:space="preserve">
+    <value>Save Preset</value>
+  </data>
+  <data name="Screen_Options_DeletePreset" xml:space="preserve">
+    <value>Delete Preset</value>
+  </data>
+  <data name="Screen_Options_PresetManageDescription" xml:space="preserve">
+    <value>Save your current options to this preset, or delete it.</value>
+  </data>
+  <data name="Screen_Options_PresetDeleteFailed" xml:space="preserve">
+    <value>Could not delete the preset.</value>
+  </data>
+  <data name="Screen_Options_SelectPresetToManage" xml:space="preserve">
+    <value>Select a preset to manage.</value>
+  </data>
+  <data name="Screen_Options_SelectPresetToSave" xml:space="preserve">
+    <value>Select a preset to save.</value>
+  </data>
+  <data name="Screen_Options_PresetName" xml:space="preserve">
+    <value>Preset Name</value>
+  </data>
+  <data name="Screen_Options_PresetDescription" xml:space="preserve">
+    <value>Presets allows you to quickly changes between sets of options</value>
+  </data>
+  <data name="Screen_Options_PresetNameTaken" xml:space="preserve">
+    <value>A preset with that name already exists.</value>
+  </data>
+  <data name="Screen_Options_PresetSaveFailed" xml:space="preserve">
+    <value>Could not save the preset.</value>
+  </data>
   <data name="Screen_Options_Window" xml:space="preserve">
     <value>窗口</value>
   </data>
@@ -573,6 +735,9 @@
   <data name="Screen_Options_NavigationMaintenance" xml:space="preserve">
     <value>导航与维护</value>
   </data>
+  <data name="Screen_Options_UseNewScreens" xml:space="preserve">
+    <value>Use New Screens</value>
+  </data>
   <data name="Screen_Options_InstalledGames" xml:space="preserve">
     <value>其他游戏</value>
   </data>
@@ -596,6 +761,24 @@
   </data>
   <data name="Screen_Options_SetCustomFPS" xml:space="preserve">
     <value>自定义FPS</value>
+  </data>
+  <data name="Screen_Options_CustomFpsDescription" xml:space="preserve">
+    <value>Enter a custom FPS value.</value>
+  </data>
+  <data name="Screen_Options_Fps" xml:space="preserve">
+    <value>FPS</value>
+  </data>
+  <data name="Screen_Options_InvalidFps" xml:space="preserve">
+    <value>Please enter a valid FPS value.</value>
+  </data>
+  <data name="Screen_Options_CustomFpsSet" xml:space="preserve">
+    <value>Custom FPS set to {0}.</value>
+  </data>
+  <data name="Screen_Options_OverwriteSkinConfig" xml:space="preserve">
+    <value>Overwrite skin.yml?</value>
+  </data>
+  <data name="Screen_Options_OverwriteSkinConfigDescription" xml:space="preserve">
+    <value>This will keep only required metadata and properties marked ConfigEditable.</value>
   </data>
   <data name="Screen_Options_DisplayFPSCounter" xml:space="preserve">
     <value>显示FPS</value>
@@ -1168,6 +1351,114 @@
   <data name="Screen_Options_10Keys" xml:space="preserve">
     <value>10K</value>
   </data>
+  <data name="Screen_Options_MenuMusicVolume" xml:space="preserve">
+    <value>Menu Music Volume</value>
+  </data>
+  <data name="Screen_Options_MuteAudioWhenUnfocused" xml:space="preserve">
+    <value>Mute Audio When Unfocused</value>
+  </data>
+  <data name="Screen_Options_GenerateEditableskinyml" xml:space="preserve">
+    <value>Generate Editable skin.yml</value>
+  </data>
+  <data name="Screen_Options_DisplaySongSelectBanners" xml:space="preserve">
+    <value>Display Song Select Banners</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeed1" xml:space="preserve">
+    <value>Decrease Scroll Speed (-1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeed1" xml:space="preserve">
+    <value>Increase Scroll Speed (+1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseScrollSpeed01" xml:space="preserve">
+    <value>Decrease Scroll Speed (-0.1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseScrollSpeed01" xml:space="preserve">
+    <value>Increase Scroll Speed (+0.1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseLocalScrollSpeed1" xml:space="preserve">
+    <value>Decrease Local Scroll Speed (-1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseLocalScrollSpeed1" xml:space="preserve">
+    <value>Increase Local Scroll Speed (+1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseLocalScrollSpeed01" xml:space="preserve">
+    <value>Decrease Local Scroll Speed (-0.1)</value>
+  </data>
+  <data name="Screen_Options_IncreaseLocalScrollSpeed01" xml:space="preserve">
+    <value>Increase Local Scroll Speed (+0.1)</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset5ms" xml:space="preserve">
+    <value>Decrease Map Offset (-5ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset5ms" xml:space="preserve">
+    <value>Increase Map Offset (+5ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseMapOffset1ms" xml:space="preserve">
+    <value>Decrease Map Offset (-1ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseMapOffset1ms" xml:space="preserve">
+    <value>Increase Map Offset (+1ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseVisualOffset5ms" xml:space="preserve">
+    <value>Decrease Visual Offset (-5ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseVisualOffset5ms" xml:space="preserve">
+    <value>Increase Visual Offset (+5ms)</value>
+  </data>
+  <data name="Screen_Options_DecreaseVisualOffset1ms" xml:space="preserve">
+    <value>Decrease Visual Offset (-1ms)</value>
+  </data>
+  <data name="Screen_Options_IncreaseVisualOffset1ms" xml:space="preserve">
+    <value>Increase Visual Offset (+1ms)</value>
+  </data>
+  <data name="Screen_Options_ResetVisualOffset" xml:space="preserve">
+    <value>Reset Visual Offset</value>
+  </data>
+  <data name="Screen_Options_OpenOptions" xml:space="preserve">
+    <value>Open Options</value>
+  </data>
+  <data name="Screen_Options_ToggleFullscreen" xml:space="preserve">
+    <value>Toggle Fullscreen</value>
+  </data>
+  <data name="Screen_Options_ToggleOnlineHub" xml:space="preserve">
+    <value>Toggle Online Hub</value>
+  </data>
+  <data name="Screen_Options_PauseUnpauseMusic" xml:space="preserve">
+    <value>Pause/Unpause Music</value>
+  </data>
+  <data name="Screen_Options_DecreaseGameplayRateHalfStep" xml:space="preserve">
+    <value>Decrease Gameplay Rate (Half Step)</value>
+  </data>
+  <data name="Screen_Options_IncreaseGameplayRateHalfStep" xml:space="preserve">
+    <value>Increase Gameplay Rate (Half Step)</value>
+  </data>
+  <data name="Screen_Options_ToggleModifiersPanel" xml:space="preserve">
+    <value>Toggle Modifiers Panel</value>
+  </data>
+  <data name="Screen_Options_SelectRandomMap" xml:space="preserve">
+    <value>Select Random Map</value>
+  </data>
+  <data name="Screen_Options_ToggleMapPreviewPanel" xml:space="preserve">
+    <value>Toggle Map Preview Panel</value>
+  </data>
+  <data name="Screen_Options_ToggleUserProfilePanel" xml:space="preserve">
+    <value>Toggle User Profile Panel</value>
+  </data>
+  <data name="Screen_Options_RefreshSongs" xml:space="preserve">
+    <value>Refresh Songs</value>
+  </data>
+  <data name="Screen_Options_CycleFPSLimiter" xml:space="preserve">
+    <value>Cycle FPS Limiter</value>
+  </data>
+  <data name="Screen_Options_ReloadSkin" xml:space="preserve">
+    <value>Reload Skin</value>
+  </data>
+  <data name="Screen_Options_DisplayGameplayOverlayShiftF6" xml:space="preserve">
+    <value>Display Gameplay Overlay (Shift + F6)</value>
+  </data>
+  <data name="Screen_Options_EditorImGuiFontSize" xml:space="preserve">
+    <value>Editor ImGui Font Size</value>
+  </data>
   <data name="Screen_Options_VideoSettings" xml:space="preserve">
     <value>视频设置</value>
   </data>
@@ -1211,7 +1502,7 @@
     <value>已经在下载此谱面了！</value>
   </data>
   <data name="Screen_Download_RECOMMENDDIFFICULTY" xml:space="preserve">
-    <value>推荐难度</value>
+    <value>Recommend Difficulty</value>
   </data>
   <data name="Screen_Download_RecommendDifficultyDescription" xml:space="preserve">
     <value>希望推荐所选模式下适应您水平的谱面吗？</value>
@@ -1241,7 +1532,7 @@
     <value>战队记分</value>
   </data>
   <data name="Screen_Download_DIFFICULTY" xml:space="preserve">
-    <value>难度：</value>
+    <value>Difficulty</value>
   </data>
   <data name="Screen_Download_None" xml:space="preserve">
     <value>无</value>
@@ -1278,9 +1569,6 @@
   </data>
   <data name="Screen_Download_Length" xml:space="preserve">
     <value>长度</value>
-  </data>
-  <data name="Screen_Download_Difficulty" xml:space="preserve">
-    <value>难度</value>
   </data>
   <data name="Screen_Download_MaxCombo" xml:space="preserve">
     <value>最大连击</value>
@@ -1388,9 +1676,6 @@
   </data>
   <data name="Screen_Download_MinBPM" xml:space="preserve">
     <value>最低BPM</value>
-  </data>
-  <data name="Screen_Download_RecommendDifficulty" xml:space="preserve">
-    <value>推荐难度</value>
   </data>
   <data name="Screen_Download_Recommendeddifficulty" xml:space="preserve">
     <value>推荐难度</value>
@@ -2335,7 +2620,8 @@
     <value>将 .mp3 文件拖入窗口以创建谱面</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetToMapMessage" xml:space="preserve">
-    <value>输入应用给该难度所有物件、BPM、SV等等的偏移......</value>
+    <value>Enter a value to apply an offset to all of your map's objects, timing points,
+ and scroll velocities...</value>
   </data>
   <data name="Screen_Editor_ApplyOffsetPlaceholder" xml:space="preserve">
     <value>输入应用于谱面的偏移......</value>
@@ -2347,14 +2633,16 @@
     <value>未保存的改动</value>
   </data>
   <data name="Screen_Editor_RefreshFromQuaUnsavedWarning" xml:space="preserve">
-    <value>这张谱面还没有保存。
-从 .qua 刷新将丢弃所有未保存的改动。要继续吗？</value>
+    <value>This map hasn't been saved.
+Refreshing from .qua will discard unsaved changes. Continue?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeCreatingDifficulty" xml:space="preserve">
-    <value>你有未保存的改动。是否在创建难度前保存该谱面？</value>
+    <value>You have unsaved changes. Would you like to save
+before creating a new difficulty?</value>
   </data>
   <data name="Screen_Editor_SaveBeforeSwitchingDifficulty" xml:space="preserve">
-    <value>你有未保存的改动。是否在切换难度前保存该谱面？</value>
+    <value>You have unsaved changes. Would you like to save
+before switching to another difficulty?</value>
   </data>
   <data name="Screen_Editor_MapSavedSuccessfully" xml:space="preserve">
     <value>该谱面已成功保存！</value>
@@ -2369,7 +2657,8 @@
     <value>否</value>
   </data>
   <data name="Screen_Editor_SubmitForRankConfirmation" xml:space="preserve">
-    <value>要提交歌曲至审核吗？&#xA;谱面必须符合上架规范。</value>
+    <value>Submit this mapset for rank?
+It must meet the ranking criteria.</value>
   </data>
   <data name="Screen_Editor_CustomBeatSnap" xml:space="preserve">
     <value>自定义吸附分度</value>
@@ -2423,7 +2712,8 @@
     <value>上传谱面</value>
   </data>
   <data name="Screen_Editor_UploadMapsetConfirmation" xml:space="preserve">
-    <value>是否确认将谱面上传至服务器？&amp;#xA注：你必须拥有所有上传的文件的权利。</value>
+    <value>Are you sure you would like to upload your mapset to the server?
+Note: You must own the rights to all files you upload.</value>
   </data>
   <data name="Screen_Editor_CannotSubmitRankedMapset" xml:space="preserve">
     <value>不能上传已上架的谱面！</value>
@@ -2435,7 +2725,9 @@
     <value>应用模组</value>
   </data>
   <data name="Screen_Editor_ApplyModifierConfirmation" xml:space="preserve">
-    <value>确认对该难度应用“{0}”模组吗？&#xA;&#xA;此操作不可逆！请慎重操作。</value>
+    <value>Would like to apply the modifier: "{0}" to your map?
+
+This action is NOT reversible! Choose wisely.</value>
   </data>
   <data name="Screen_Editor_ChangeBackgroundOrBanner" xml:space="preserve">
     <value>变更背景/横幅</value>
@@ -2480,10 +2772,16 @@
     <value>提交谱面至审核时出现了一个错误。</value>
   </data>
   <data name="Screen_Editor_BpmAffectsSvTooltip" xml:space="preserve">
-    <value>开启时，BPM 变化将同时改变SV。&#xA;例如，从120BPM变为240BPM时，SV将变为初始时的两倍。SV列表仍然生效。</value>
+    <value>When set to ON, A BPM change will also change the Scroll Velocity.
+For instance, going from 120BPM to 240BPM effectively creates
+an implicit 2x Scroll Velocity multiplier starting from the beginning
+of that BPM change until the next. Scroll Velocity is still applied.</value>
   </data>
   <data name="Screen_Editor_LegacyLnRenderingTooltip" xml:space="preserve">
-    <value>开启时，强制使用旧长条渲染方式。如果谱面没有 SV 变化，此选项可忽略。&#xA;当前渲染方式将长条头尾分别置于能经过的最早于最晚的位置，而旧&#xA;方式对两者均使用正常物件位置计算。</value>
+    <value>When set to ON, forces the use of the old LN renderer. If your map has no Scroll
+Velocity changes, you can safely ignore this option. The current LN renderer places
+the head and tail to the earliest and latest positions reached, respectively. The old LN
+renderer instead places them both wherever the playfield happens to be at the time.</value>
   </data>
   <data name="Screen_Editor_SyncMetadataTooltip" xml:space="preserve">
     <value>将此难度的全部元信息拷贝至该谱面所有难度。</value>
@@ -2639,22 +2937,30 @@
     <value>已禁用 {0} 上色</value>
   </data>
   <data name="Screen_Editor_AddBookmarkTooltip" xml:space="preserve">
-    <value>在当前位置添加书签。将鼠标置于黄色书签线上可查看其中的注释。.&amp;#xA左键书签线以编辑，右键以删除。快捷键：{0}</value>
+    <value>Adds a bookmark at the current position the timeline.
+- Hover over a bookmark tick to view the note associated with it.
+- Left click a bookmark tick to edit it.
+- Right click a bookmark tick to delete it.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_BeatSnap" xml:space="preserve">
     <value>吸附分度</value>
   </data>
   <data name="Screen_Editor_BeatSnapTooltip" xml:space="preserve">
-    <value>更改当前吸附分度。&#xA;快捷键：{0} / {1}</value>
+    <value>Change the current beat snap divisor.
+Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_PlaybackSpeedTooltip" xml:space="preserve">
-    <value>更改播放速度。&#xA;快捷键：{0} / {1}</value>
+    <value>Change the audio playback rate.
+Hotkeys: {0} / {1}</value>
   </data>
   <data name="Screen_Editor_TestPlay" xml:space="preserve">
     <value>试玩</value>
   </data>
   <data name="Screen_Editor_TestPlayTooltip" xml:space="preserve">
-    <value>保存并试玩谱面。&#xA;右键以选择试玩使用的模组。&#xA;快捷键：{0}</value>
+    <value>Save and test play your map.
+Right-clicking will allow you to select modifers to use while test playing.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointEditor" xml:space="preserve">
     <value>BPM 编辑器</value>
@@ -2814,6 +3120,9 @@
   </data>
   <data name="Screen_Editor_EnterNewKeybind" xml:space="preserve">
     <value>请输入要绑定的键位</value>
+  </data>
+  <data name="Screen_Options_PressKeys" xml:space="preserve">
+    <value>Press {0} keys...</value>
   </data>
   <data name="Screen_Editor_Change" xml:space="preserve">
     <value>更改</value>
@@ -3047,10 +3356,12 @@
     <value>正在加载频谱图......</value>
   </data>
   <data name="Screen_Editor_NextBookmarkTooltip" xml:space="preserve">
-    <value>跳转至时间线里下一个书签。&#xA;快捷键：{0}</value>
+    <value>Seek to the next bookmark in the timeline.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_PreviousBookmarkTooltip" xml:space="preserve">
-    <value>跳转至时间线里上一个书签。&#xA;快捷键：{0}</value>
+    <value>Seek to the previous bookmark in the timeline.
+Hotkey: {0}</value>
   </data>
   <data name="Screen_Editor_TimingPointsSelected" xml:space="preserve">
     <value>已选择 {0} 个 BPM 节点</value>
@@ -3083,7 +3394,8 @@
     <value>应用键位配置</value>
   </data>
   <data name="Screen_Editor_ApplyKeymapConfirmation" xml:space="preserve">
-    <value>您确定要覆盖您的键位配置吗？&#xA;您可以先备份一下当前配置文件。 </value>
+    <value>Are you sure you want to overwrite your keymap?
+You might want to back up your keymap first.</value>
   </data>
   <data name="Screen_Editor_IssueCountLabel" xml:space="preserve">
     <value>问题数量：</value>
@@ -3226,6 +3538,9 @@
   <data name="SkinEditor_Components" xml:space="preserve">
     <value>组件</value>
   </data>
+  <data name="SkinEditor_Surface" xml:space="preserve">
+    <value>Screen</value>
+  </data>
   <data name="SkinEditor_Assets" xml:space="preserve">
     <value>资源文件</value>
   </data>
@@ -3234,6 +3549,15 @@
   </data>
   <data name="SkinEditor_Group_MainMenu" xml:space="preserve">
     <value>主菜单</value>
+  </data>
+  <data name="SkinEditor_Group_Hub" xml:space="preserve">
+    <value>Online Hub</value>
+  </data>
+  <data name="SkinEditor_Group_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="SkinEditor_Group_Options" xml:space="preserve">
+    <value>Options</value>
   </data>
   <data name="SkinEditor_Group_SharedNavigation" xml:space="preserve">
     <value>共享导航</value>
@@ -3379,6 +3703,12 @@
   <data name="SkinEditor_Component_News" xml:space="preserve">
     <value>新闻卡片</value>
   </data>
+  <data name="SkinEditor_Component_MusicQueue" xml:space="preserve">
+    <value>Music Queue</value>
+  </data>
+  <data name="SkinEditor_Component_VolumeDialog" xml:space="preserve">
+    <value>Volume Dialog</value>
+  </data>
   <data name="SkinEditor_Component_TopNavigation" xml:space="preserve">
     <value>顶部导航</value>
   </data>
@@ -3393,6 +3723,60 @@
   </data>
   <data name="SkinEditor_Component_ScreenTitle" xml:space="preserve">
     <value>屏幕标题</value>
+  </data>
+  <data name="SkinEditor_Component_HubLayout" xml:space="preserve">
+    <value>Hub Layout</value>
+  </data>
+  <data name="SkinEditor_Component_HubPanel" xml:space="preserve">
+    <value>Hub Panel</value>
+  </data>
+  <data name="SkinEditor_Component_HubTabs" xml:space="preserve">
+    <value>Section Tabs</value>
+  </data>
+  <data name="SkinEditor_Component_HubSections" xml:space="preserve">
+    <value>Section Headers</value>
+  </data>
+  <data name="SkinEditor_Component_HubUsers" xml:space="preserve">
+    <value>Users Section</value>
+  </data>
+  <data name="SkinEditor_Component_HubNotifications" xml:space="preserve">
+    <value>Notifications Section</value>
+  </data>
+  <data name="SkinEditor_Component_HubSongRequests" xml:space="preserve">
+    <value>Song Requests Section</value>
+  </data>
+  <data name="SkinEditor_Component_ChatLayout" xml:space="preserve">
+    <value>Chat Layout</value>
+  </data>
+  <data name="SkinEditor_Component_ChatPanels" xml:space="preserve">
+    <value>Chat Panels</value>
+  </data>
+  <data name="SkinEditor_Component_ChatTabs" xml:space="preserve">
+    <value>Channel Tabs</value>
+  </data>
+  <data name="SkinEditor_Component_ChatSearch" xml:space="preserve">
+    <value>User Search</value>
+  </data>
+  <data name="SkinEditor_Component_ChatInput" xml:space="preserve">
+    <value>Message Input</value>
+  </data>
+  <data name="SkinEditor_ChatPreviewMessage" xml:space="preserve">
+    <value>Welcome to #quaver! This is what a chat message looks like.</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsLayout" xml:space="preserve">
+    <value>Options Layout</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsPanel" xml:space="preserve">
+    <value>Options Panel</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsHeader" xml:space="preserve">
+    <value>Options Header</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsSidebar" xml:space="preserve">
+    <value>Category Sidebar</value>
+  </data>
+  <data name="SkinEditor_Component_OptionsContent" xml:space="preserve">
+    <value>Options Content</value>
   </data>
   <data name="SkinEditor_Property_Type" xml:space="preserve">
     <value>类型</value>
@@ -3478,6 +3862,135 @@
   <data name="SkinEditor_Property_OfflineStatusColor" xml:space="preserve">
     <value>离线状态颜色</value>
   </data>
+  <data name="SkinEditor_Property_Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="SkinEditor_Property_NavigationHeaderGap" xml:space="preserve">
+    <value>Navigation Header Gap</value>
+  </data>
+  <data name="SkinEditor_Property_AnimationDurationMilliseconds" xml:space="preserve">
+    <value>Animation Duration</value>
+  </data>
+  <data name="SkinEditor_Property_HeaderColor" xml:space="preserve">
+    <value>Header Color</value>
+  </data>
+  <data name="SkinEditor_Property_ContentColor" xml:space="preserve">
+    <value>Content Color</value>
+  </data>
+  <data name="SkinEditor_Property_NotificationsIcon" xml:space="preserve">
+    <value>Notifications Icon</value>
+  </data>
+  <data name="SkinEditor_Property_UsersIcon" xml:space="preserve">
+    <value>Users Icon</value>
+  </data>
+  <data name="SkinEditor_Property_SongRequestsIcon" xml:space="preserve">
+    <value>Song Requests Icon</value>
+  </data>
+  <data name="SkinEditor_Property_HeaderHeight" xml:space="preserve">
+    <value>Header Height</value>
+  </data>
+  <data name="SkinEditor_Property_Padding" xml:space="preserve">
+    <value>Padding</value>
+  </data>
+  <data name="SkinEditor_Property_Gap" xml:space="preserve">
+    <value>Gap</value>
+  </data>
+  <data name="SkinEditor_Property_ButtonWidth" xml:space="preserve">
+    <value>Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_ButtonHeight" xml:space="preserve">
+    <value>Button Height</value>
+  </data>
+  <data name="SkinEditor_Property_CornerRadius" xml:space="preserve">
+    <value>Corner Radius</value>
+  </data>
+  <data name="SkinEditor_Property_IconSize" xml:space="preserve">
+    <value>Icon Size</value>
+  </data>
+  <data name="SkinEditor_Property_Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SkinEditor_Property_FontSize" xml:space="preserve">
+    <value>Font Size</value>
+  </data>
+  <data name="SkinEditor_Property_SelectedColor" xml:space="preserve">
+    <value>Selected Color</value>
+  </data>
+  <data name="SkinEditor_Property_UnselectedColor" xml:space="preserve">
+    <value>Unselected Color</value>
+  </data>
+  <data name="SkinEditor_Property_ClearIcon" xml:space="preserve">
+    <value>Clear Icon</value>
+  </data>
+  <data name="SkinEditor_Property_ContentPadding" xml:space="preserve">
+    <value>Content Padding</value>
+  </data>
+  <data name="SkinEditor_Property_ControlHeight" xml:space="preserve">
+    <value>Control Height</value>
+  </data>
+  <data name="SkinEditor_Property_ClearButtonWidth" xml:space="preserve">
+    <value>Clear Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_EmptyMessageFontSize" xml:space="preserve">
+    <value>Empty Message Font Size</value>
+  </data>
+  <data name="SkinEditor_Property_ControlColor" xml:space="preserve">
+    <value>Control Color</value>
+  </data>
+  <data name="SkinEditor_Property_ControlHoverColor" xml:space="preserve">
+    <value>Control Hover Color</value>
+  </data>
+  <data name="SkinEditor_Property_SelectedControlColor" xml:space="preserve">
+    <value>Selected Control Color</value>
+  </data>
+  <data name="SkinEditor_Property_AccentTextColor" xml:space="preserve">
+    <value>Accent Text Color</value>
+  </data>
+  <data name="SkinEditor_Property_SearchWidth" xml:space="preserve">
+    <value>Search Width</value>
+  </data>
+  <data name="SkinEditor_Property_FilterWidth" xml:space="preserve">
+    <value>Filter Width</value>
+  </data>
+  <data name="SkinEditor_Property_SearchIconSize" xml:space="preserve">
+    <value>Search Icon Size</value>
+  </data>
+  <data name="SkinEditor_Property_SearchIconInset" xml:space="preserve">
+    <value>Search Icon Inset</value>
+  </data>
+  <data name="SkinEditor_Property_FeedButtonWidth" xml:space="preserve">
+    <value>Feed Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIcon" xml:space="preserve">
+    <value>Twitch Icon</value>
+  </data>
+  <data name="SkinEditor_Property_AlertsButtonWidth" xml:space="preserve">
+    <value>Alerts Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchButtonWidth" xml:space="preserve">
+    <value>Twitch Button Width</value>
+  </data>
+  <data name="SkinEditor_Property_ActionGap" xml:space="preserve">
+    <value>Action Gap</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIconWidth" xml:space="preserve">
+    <value>Twitch Icon Width</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchIconHeight" xml:space="preserve">
+    <value>Twitch Icon Height</value>
+  </data>
+  <data name="SkinEditor_Property_TwitchColor" xml:space="preserve">
+    <value>Twitch Color</value>
+  </data>
+  <data name="SkinEditor_Property_PositionOffsetX" xml:space="preserve">
+<value>Position Offset X</value>
+</data>
+  <data name="SkinEditor_Property_PositionOffsetY" xml:space="preserve">
+<value>Position Offset Y</value>
+</data>
+  <data name="SkinEditor_Property_SlideFromLeft" xml:space="preserve">
+<value>Slide From Left</value>
+</data>
   <data name="SkinEditor_Metadata" xml:space="preserve">
     <value>元信息</value>
   </data>
@@ -3549,5 +4062,139 @@
   </data>
   <data name="Screen_V2_ResultsScreen" xml:space="preserve">
     <value>结算界面</value>
+  </data>
+  <data name="Screen_Hub_NotificationHeader" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Screen_Hub_UsersHeader" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Screen_Navigation_FriendsOnline" xml:space="preserve">
+    <value>Friends Online</value>
+  </data>
+  <data name="Screen_Hub_SearchUsers" xml:space="preserve">
+    <value>Search users...</value>
+  </data>
+  <data name="Screen_Hub_MapRequestHeader" xml:space="preserve">
+    <value>Map Requests</value>
+  </data>
+  <data name="Screen_Hub_DisplayAlert" xml:space="preserve">
+    <value>Display Alert</value>
+  </data>
+  <data name="Screen_Hub_RequestAlertsOn" xml:space="preserve">
+    <value>Alerts: On</value>
+  </data>
+  <data name="Screen_Hub_RequestAlertsOff" xml:space="preserve">
+    <value>Alerts: Off</value>
+  </data>
+  <data name="Screen_Hub_ConnectTwitch" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="Screen_Hub_UnlinkTwitch" xml:space="preserve">
+    <value>Unlink</value>
+  </data>
+  <data name="Screen_Hub_UnlinkTwitchLoginRequired" xml:space="preserve">
+    <value>You need to be logged in to unlink your Twitch account!</value>
+  </data>
+  <data name="Screen_Hub_RequesterProfile" xml:space="preserve">
+    <value>Requester Profile</value>
+  </data>
+  <data name="Screen_Hub_RequestDetails" xml:space="preserve">
+    <value>Requested from {0}</value>
+  </data>
+  <data name="Screen_Hub_NoRequests" xml:space="preserve">
+    <value>All Clear!
+You do not have any map requests.</value>
+  </data>
+  <data name="Screen_Hub_RequestsLoginRequired" xml:space="preserve">
+    <value>Log in to view your map requests.</value>
+  </data>
+  <data name="Screen_Hub_RequestPlayRequiresSelection" xml:space="preserve">
+    <value>You must be in song select to play map requests!</value>
+  </data>
+  <data name="Screen_Hub_RequestReceivedNotification" xml:space="preserve">
+    <value>You have received a new map request. Click here to view it!</value>
+  </data>
+  <data name="Screen_Hub_UsersFound" xml:space="preserve">
+    <value>{0} Users</value>
+  </data>
+  <data name="Screen_Hub_ViewClan" xml:space="preserve">
+    <value>View Clan</value>
+  </data>
+  <data name="Screen_Hub_AddFriend" xml:space="preserve">
+    <value>Add Friend</value>
+  </data>
+  <data name="Screen_Hub_RemoveFriend" xml:space="preserve">
+    <value>Remove Friend</value>
+  </data>
+  <data name="Screen_Hub_BlockUser" xml:space="preserve">
+    <value>Block User</value>
+  </data>
+  <data name="Screen_Hub_UnblockUser" xml:space="preserve">
+    <value>Unblock User</value>
+  </data>
+  <data name="Screen_Hub_InviteToGame" xml:space="preserve">
+    <value>Invite to Game</value>
+  </data>
+  <data name="Screen_Hub_Spectate" xml:space="preserve">
+    <value>Spectate</value>
+  </data>
+  <data name="Screen_Hub_StopSpectating" xml:space="preserve">
+    <value>Stop Spectating</value>
+  </data>
+  <data name="Screen_Hub_InviteSent" xml:space="preserve">
+    <value>Successfully invited {0} to the game!</value>
+  </data>
+  <data name="Screen_Hub_CannotSpectateNow" xml:space="preserve">
+    <value>Please finish what you're doing before spectating!</value>
+  </data>
+  <data name="Screen_Hub_PrivateChat" xml:space="preserve">
+    <value>Private Chat</value>
+  </data>
+  <data name="Screen_Hub_NotificationRecent" xml:space="preserve">
+    <value>New ({0})</value>
+  </data>
+  <data name="Screen_Hub_NotificationAll" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Screen_Hub_NotificationClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="Screen_Hub_NotificationEmpty" xml:space="preserve">
+    <value>All Clear !
+You do not have any missed Notifications.</value>
+  </data>
+  <data name="Screen_Hub_NotificationInfo" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Screen_Hub_NotificationError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Screen_Hub_NotificationWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Screen_Hub_NotificationSuccess" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Screen_Hub_NotificationInviteDetails" xml:space="preserve">
+    <value>Invited you to join a multiplayer game.</value>
+  </data>
+  <data name="Screen_Hub_NotificationAccept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="Screen_Hub_NotificationDeny" xml:space="preserve">
+    <value>Deny</value>
+  </data>
+  <data name="Screen_Hub_NotificationOpenChat" xml:space="preserve">
+    <value>Open chat</value>
+  </data>
+  <data name="Screen_Options_Title" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Screen_Options_TitleDescription" xml:space="preserve">
+    <value>Adjust Game Settings</value>
+  </data>
+  <data name="Screen_Options_RecentlyChanged" xml:space="preserve">
+    <value>Recently Changed</value>
   </data>
 </root>
