@@ -87,18 +87,22 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         return options;
     }
 
-    private void OnOptionSelected(object sender, DropdownOptionEventArgs<UserMenuAction> e)
+    private void OnOptionSelected(object sender, DropdownOptionEventArgs<UserMenuAction> e) => PerformAction(User, e.Option.Value);
+
+    public static bool PerformAction(User user, UserMenuAction action)
     {
-        var user = User;
+        if (user?.OnlineUser == null)
+            return false;
+
         var id = user.OnlineUser.Id;
 
-        if (e.Option.Value != UserMenuAction.ViewProfile &&
-            e.Option.Value != UserMenuAction.ViewClan &&
-            e.Option.Value != UserMenuAction.SteamProfile &&
+        if (action != UserMenuAction.ViewProfile &&
+            action != UserMenuAction.ViewClan &&
+            action != UserMenuAction.SteamProfile &&
             !OnlineManager.OnlineUsers.TryGetValue(id, out user))
-            return;
+            return false;
 
-        switch (e.Option.Value)
+        switch (action)
         {
             case UserMenuAction.ViewProfile:
                 BrowserHelper.OpenURL($"https://quavergame.com/profile/{id}");
@@ -150,6 +154,8 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
                 OnlineManager.Client?.TransferMultiplayerGameHost(id);
                 break;
         }
+
+        return true;
     }
 
     private static void OpenChat(User user)

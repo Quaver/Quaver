@@ -19,6 +19,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.V2.Options;
+using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
@@ -667,13 +668,17 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void OnProfileClicked(object sender, EventArgs args)
         {
-            if (DialogManager.Dialogs.Count > 0 && DialogManager.Dialogs[DialogManager.Dialogs.Count - 1] is OverlayDialog hubDialog)
+            if (!OnlineManager.Connected || OnlineManager.Self?.OnlineUser == null)
             {
-                hubDialog.ToggleProfileDropdown(ProfileButton, Config.Profile.DropdownGap);
+                ToggleAccountDropdown();
                 return;
             }
 
-            ToggleAccountDropdown();
+            AccountDropdownOpen = false;
+            if (GameBase.Game is QuaverGame game)
+                game.CurrentScreen?.ActiveLoggedInUserDropdown?.Close();
+
+            ProfileViewerDialog.Show(OnlineManager.Self);
         }
 
         private void ToggleAccountDropdown()
@@ -690,7 +695,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (game.CurrentScreen.ActiveLoggedInUserDropdown == null)
             {
-                game.CurrentScreen.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
+                game.CurrentScreen.ActivateLoggedInUserDropdown(
+                    new LoggedInUserDropdown(closed: () => AccountDropdownOpen = false),
                     new ScalableVector2(
                         ProfileButton.AbsolutePosition.X + ProfileButton.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
                         ProfileButton.AbsolutePosition.Y + ProfileButton.AbsoluteSize.Y + Config.Profile.DropdownGap));
