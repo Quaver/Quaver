@@ -24,7 +24,7 @@ public class APIRequestMultiplayerGameInformation : APIRequest<MultiplayerGameIn
     /// <returns></returns>
     public override MultiplayerGameInformationResponse ExecuteRequest()
     {
-        var request = new RestRequest($"{APIEndpoint}multiplayer/games/{Id}", Method.GET);
+        var request = new RestRequest($"{APIEndpoint}multiplayer/game/{Id}", Method.GET);
         var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
         var response = ExecuteApiRequest(client, request);
@@ -32,6 +32,7 @@ public class APIRequestMultiplayerGameInformation : APIRequest<MultiplayerGameIn
         var json = JObject.Parse(response.Content);
 
         var responseParsed = JsonConvert.DeserializeObject<MultiplayerGameInformationResponse>(json.ToString());
+        responseParsed.Status = (int) response.StatusCode;
 
         return responseParsed;
     }

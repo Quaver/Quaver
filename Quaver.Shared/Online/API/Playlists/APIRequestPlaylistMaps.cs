@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quaver.Server.Client;
@@ -25,16 +27,35 @@ namespace Quaver.Shared.Online.API.Playlists
         /// <returns></returns>
         public override PlaylistMapsResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}playlist/{Playlist.OnlineMapPoolId}/maps", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
+            var mapIds = new HashSet<int>();
+            const int pageSize = 25;
+            var page = 0;
 
-            var response = ExecuteApiRequest(client, request);
+            while (true)
+            {
+                var request = new RestRequest($"{APIEndpoint}playlists/{Playlist.OnlineMapPoolId}?page={page}&limit={pageSize}", Method.GET);
+                var response = ExecuteApiRequest(client, request);
+                var status = (int) response.StatusCode;
 
-            var json = JObject.Parse(response.Content);
+                if (status != 200)
+                    return new PlaylistMapsResponse { Status = status, MapIds = mapIds.ToList() };
 
-            var responseParsed = JsonConvert.DeserializeObject<PlaylistMapsResponse>(json.ToString());
+                var json = JObject.Parse(response.Content);
+                var responseParsed = JsonConvert.DeserializeObject<PlaylistInformationResponse>(json.ToString());
+                var mapsets = responseParsed.PlaylistInformation?.Mapsets ?? new List<PlaylistInformationResponseMapset>();
 
-            return responseParsed;
+                foreach (var map in mapsets.SelectMany(x => x.Maps ?? new List<PlaylistInformationResponseMap>()))
+                {
+                    if (map.Map != null)
+                        mapIds.Add(map.Map.Id);
+                }
+
+                if (mapsets.Count < pageSize || mapIds.Count >= responseParsed.PlaylistInformation.MapCount)
+                    return new PlaylistMapsResponse { Status = status, MapIds = mapIds.ToList() };
+
+                page++;
+            }
         }
     }
 }

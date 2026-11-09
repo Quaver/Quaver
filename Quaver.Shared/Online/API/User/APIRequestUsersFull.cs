@@ -24,7 +24,7 @@ namespace Quaver.Shared.Online.API.User
         /// <returns></returns>
         public override APIResponseUsersFull ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}users/full/{UserId}", Method.GET);
+            var request = new RestRequest($"{APIEndpoint}user/{UserId}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = ExecuteApiRequest(client, request);
@@ -32,6 +32,7 @@ namespace Quaver.Shared.Online.API.User
             var json = JObject.Parse(response.Content);
 
             var responseParsed = JsonConvert.DeserializeObject<APIResponseUsersFull>(json.ToString());
+            responseParsed.Status = (int) response.StatusCode;
 
             return responseParsed;
         }

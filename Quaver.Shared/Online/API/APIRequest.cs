@@ -12,7 +12,7 @@ namespace Quaver.Shared.Online.API
     // ReSharper disable once InconsistentNaming
     public abstract class APIRequest<T>
     {
-        public string APIEndpoint { get; } = $"{OnlineClient.API_ENDPOINT}/v1/";
+        public string APIEndpoint { get; } = $"{OnlineClient.API_ENDPOINT}/v2/";
 
         /// <summary>
         ///     Executes a REST request and writes detailed failure information to the network log.
