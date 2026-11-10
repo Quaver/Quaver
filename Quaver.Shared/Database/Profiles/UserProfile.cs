@@ -57,10 +57,10 @@ namespace Quaver.Shared.Database.Profiles
                     switch (mode)
                     {
                         case GameMode.Keys4:
-                            modeStats = stats.User.Keys4;
+                            modeStats = stats.User.StatsKeys4;
                             break;
                         case GameMode.Keys7:
-                            modeStats = stats.User.Keys7;
+                            modeStats = stats.User.StatsKeys7;
                             break;
                         default:
                             continue;
@@ -68,23 +68,23 @@ namespace Quaver.Shared.Database.Profiles
 
                     var currentMode = Stats[mode];
 
-                    currentMode.GlobalRank = modeStats.GlobalRank;
-                    currentMode.CountryRank = modeStats.CountryRank;
-                    currentMode.OverallRating = modeStats.Stats.OverallPerformanceRating;
-                    currentMode.OverallAccuracy = modeStats.Stats.OverallAccuracy;
-                    currentMode.TotalScore = modeStats.Stats.RankedScore;
-                    currentMode.MaxCombo = modeStats.Stats.MaxCombo;
-                    currentMode.PlayCount = modeStats.Stats.PlayCount;
-                    currentMode.FailCount = modeStats.Stats.FailCount;
+                    currentMode.GlobalRank = modeStats.Ranks.Global;
+                    currentMode.CountryRank = modeStats.Ranks.Country;
+                    currentMode.OverallRating = modeStats.OverallPerformanceRating;
+                    currentMode.OverallAccuracy = modeStats.OverallAccuracy;
+                    currentMode.TotalScore = modeStats.RankedScore;
+                    currentMode.MaxCombo = modeStats.MaxCombo;
+                    currentMode.PlayCount = modeStats.PlayCount;
+                    currentMode.FailCount = modeStats.FailCount;
                     currentMode.Scores = new List<Score>();
                     currentMode.JudgementCounts = new Dictionary<Judgement, int>
                     {
-                        [Judgement.Marv] = modeStats.Stats.TotalMarv,
-                        [Judgement.Perf] = modeStats.Stats.TotalPerf,
-                        [Judgement.Great] = modeStats.Stats.TotalGreat,
-                        [Judgement.Good] = modeStats.Stats.TotalGood,
-                        [Judgement.Okay] = modeStats.Stats.TotalOkay,
-                        [Judgement.Miss] = modeStats.Stats.TotalMiss
+                        [Judgement.Marv] = modeStats.TotalMarvelous,
+                        [Judgement.Perf] = modeStats.TotalPerfect,
+                        [Judgement.Great] = modeStats.TotalGreat,
+                        [Judgement.Good] = modeStats.TotalGood,
+                        [Judgement.Okay] = modeStats.TotalOkay,
+                        [Judgement.Miss] = modeStats.TotalMiss
                     };
                 }
             }

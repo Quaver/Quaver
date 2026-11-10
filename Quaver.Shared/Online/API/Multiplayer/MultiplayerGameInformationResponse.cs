@@ -11,11 +11,8 @@ public class MultiplayerGameInformationResponse
     [JsonProperty("status")]
     public int Status { get; set; }
 
-    [JsonProperty("multiplayer_game")]
-    public MultiplayerGameInformationResponseGame MultiplayerGame { get; set; }
-
-    [JsonProperty("matches")]
-    public List<MultiplayerGameInformationResponseMatch> Matches { get; set; }
+    [JsonProperty("game")]
+    public MultiplayerGameInformationResponseGame Game { get; set; }
 }
 
 public class MultiplayerGameInformationResponseGame
@@ -34,6 +31,9 @@ public class MultiplayerGameInformationResponseGame
 
     [JsonProperty("time_created")]
     public DateTime TimeCreated { get; set; }
+
+    [JsonProperty("matches")]
+    public List<MultiplayerGameInformationResponseMatch> Matches { get; set; }
 }
 
 
@@ -42,8 +42,32 @@ public class MultiplayerGameInformationResponseMatch
     [JsonProperty("id")]
     public int Id { get; set; }
 
+    [JsonProperty("game_id")]
+    public int GameId { get; set; }
+
     [JsonProperty("time_played")]
     public DateTime TimePlayed { get; set; }
+
+    [JsonProperty("map_md5")]
+    public string MapMd5 { get; set; }
+
+    [JsonProperty("map_string")]
+    public string MapString { get; set; }
+
+    [JsonProperty("host_id")]
+    public int HostId { get; set; }
+
+    [JsonProperty("game_mode")]
+    public GameMode GameMode { get; set; }
+
+    [JsonProperty("global_modifiers")]
+    public ModIdentifier GlobalModifiers { get; set; }
+
+    [JsonProperty("free_mod_type")]
+    public int FreeModType { get; set; }
+
+    [JsonProperty("aborted")]
+    public bool Aborted { get; set; }
 
     [JsonProperty("aborted_early")]
     public bool AbortedEarly { get; set; }
@@ -59,6 +83,9 @@ public class MultiplayerGameInformationResponseMatch
 
     [JsonProperty("map")]
     public MultiplayerGameInformationResponseMap Map { get; set; }
+
+    [JsonProperty("scores")]
+    public List<MultiplayerGameInformationResponseScore> Scores { get; set; }
 }
 
 public class MultiplayerGameInformationResponseOutcome
@@ -117,6 +144,9 @@ public class MultiplayerGameInformationResponsePlayer
     [JsonProperty("id")]
     public int Id { get; set; }
 
+    [JsonProperty("steam_id")]
+    public string SteamId { get; set; }
+
     [JsonProperty("username")]
     public string Username { get; set; }
 
@@ -132,6 +162,18 @@ public class MultiplayerGameInformationResponsePlayer
 
 public class MultiplayerGameInformationResponseScore
 {
+    [JsonProperty("id")]
+    public int Id { get; set; }
+
+    [JsonProperty("user_id")]
+    public int UserId { get; set; }
+
+    [JsonProperty("match_id")]
+    public int MatchId { get; set; }
+
+    [JsonProperty("modifiers")]
+    public ModIdentifier Modifiers { get; set; }
+
     [JsonProperty("team")]
     public int Team { get; set; }
 
@@ -140,4 +182,34 @@ public class MultiplayerGameInformationResponseScore
 
     [JsonProperty("accuracy")]
     public double Accuracy { get; set; }
+
+    [JsonProperty("max_combo")]
+    public int MaxCombo { get; set; }
+
+    [JsonProperty("count_marvelous")]
+    public int CountMarvelous { get; set; }
+
+    [JsonProperty("count_perfect")]
+    public int CountPerfect { get; set; }
+
+    [JsonProperty("count_great")]
+    public int CountGreat { get; set; }
+
+    [JsonProperty("count_good")]
+    public int CountGood { get; set; }
+
+    [JsonProperty("count_okay")]
+    public int CountOkay { get; set; }
+
+    [JsonProperty("count_miss")]
+    public int CountMiss { get; set; }
+
+    [JsonProperty("count_minehit")]
+    public int CountMineHit { get; set; }
+
+    [JsonProperty("won")]
+    public int Won { get; set; }
+
+    [JsonProperty("user")]
+    public MultiplayerGameInformationResponsePlayer User { get; set; }
 }
