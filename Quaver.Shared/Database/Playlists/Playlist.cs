@@ -197,20 +197,13 @@ namespace Quaver.Shared.Database.Playlists
             if (!IsOnlineMapPool())
                 return new List<int>();
 
-            var missing = new List<int>();
-
             var response = new APIRequestPlaylistMaps(this).ExecuteRequest();
+            var playlistMapIds = Maps
+                .Where(x => x.Game == MapGame.Quaver && x.MapId > 0)
+                .Select(x => x.MapId)
+                .ToHashSet();
 
-            foreach (var id in response.MapIds)
-            {
-                var map = MapManager.FindMapFromOnlineId(id);
-
-                // Map is already in playlist or doesn't exist
-                if (map == null)
-                    missing.Add(id);
-            }
-
-            return missing;
+            return response.MapIds.Where(x => !playlistMapIds.Contains(x)).ToList();
         }
 
         public void OpenUrl() => BrowserHelper.OpenURL($"https://quavergame.com/playlist/{OnlineMapPoolId}");
