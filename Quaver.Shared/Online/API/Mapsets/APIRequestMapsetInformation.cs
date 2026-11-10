@@ -23,7 +23,7 @@ namespace Quaver.Shared.Online.API.Mapsets
         /// <returns></returns>
         public override MapsetInformationResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}mapsets/{Id}", Method.GET);
+            var request = new RestRequest($"{APIEndpoint}mapset/{Id}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = ExecuteApiRequest(client, request);
@@ -31,6 +31,7 @@ namespace Quaver.Shared.Online.API.Mapsets
             var json = JObject.Parse(response.Content);
 
             var responseParsed = JsonConvert.DeserializeObject<MapsetInformationResponse>(json.ToString());
+            responseParsed.Status = (int) response.StatusCode;
 
             return responseParsed;
         }

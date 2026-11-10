@@ -18,8 +18,8 @@ namespace Quaver.Shared.Online.API.Playlists
         [JsonProperty("id")]
         public int Id;
 
-        [JsonProperty("user_id")]
-        public int UserId;
+        [JsonProperty("user")]
+        public PlaylistInformationResponseUser User;
 
         [JsonProperty("name")]
         public string Name;
@@ -27,26 +27,43 @@ namespace Quaver.Shared.Online.API.Playlists
         [JsonProperty("description")]
         public string Description;
 
-        [JsonProperty("like_count")]
-        public int LikeCount;
-
         [JsonProperty("map_count")]
         public int MapCount;
 
-        [JsonProperty("time_created")]
+        [JsonProperty("timestamp")]
         public string TimeCreated;
 
         [JsonProperty("time_last_updated")]
         public string TimeLastUpdated;
 
-        [JsonProperty("owner_id")]
-        public int OwnerId;
+        [JsonProperty("mapsets")]
+        public List<PlaylistInformationResponseMapset> Mapsets;
 
-        [JsonProperty("owner_username")]
-        public string OwnerUsername;
+        [JsonIgnore]
+        public int OwnerId => User?.Id ?? 0;
 
+        [JsonIgnore]
+        public string OwnerUsername => User?.Username;
+    }
+
+    public class PlaylistInformationResponseUser
+    {
+        [JsonProperty("id")]
+        public int Id;
+
+        [JsonProperty("username")]
+        public string Username;
+    }
+
+    public class PlaylistInformationResponseMapset
+    {
         [JsonProperty("maps")]
-        public List<MapInformationResponseMap> Maps;
+        public List<PlaylistInformationResponseMap> Maps;
+    }
 
+    public class PlaylistInformationResponseMap
+    {
+        [JsonProperty("map")]
+        public MapInformationResponseMap Map;
     }
 }

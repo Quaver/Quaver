@@ -24,7 +24,7 @@ namespace Quaver.Shared.Online.API.Maps
         /// <returns></returns>
         public override MapInformationResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}maps/{Id}", Method.GET);
+            var request = new RestRequest($"{APIEndpoint}map/{Id}", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = ExecuteApiRequest(client, request);
@@ -32,6 +32,7 @@ namespace Quaver.Shared.Online.API.Maps
             var json = JObject.Parse(response.Content);
 
             var responseParsed = JsonConvert.DeserializeObject<MapInformationResponse>(json.ToString());
+            responseParsed.Status = (int) response.StatusCode;
 
             return responseParsed;
         }

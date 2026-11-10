@@ -55,6 +55,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ComputerysProfanityFilter" Version="1.1.0" />
     <PackageReference Include="Emik.Rubbish" Version="1.1.0" />
     <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
     <PackageReference Include="HoLLy.osu.DatabaseReader" Version="3.2.0" />

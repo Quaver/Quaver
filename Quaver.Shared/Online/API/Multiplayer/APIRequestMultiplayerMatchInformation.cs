@@ -32,6 +32,7 @@ public class APIRequestMultiplayerMatchInformation : APIRequest<MultiplayerMatch
         var json = JObject.Parse(response.Content);
 
         var responseParsed = JsonConvert.DeserializeObject<MultiplayerMatchInformationResponse>(json.ToString());
+        responseParsed.Status = (int) response.StatusCode;
 
         return responseParsed;
     }
