@@ -615,20 +615,21 @@ namespace Quaver.Shared.Screens.Results
 
         private void InitializeScoreResultsScreen()
         {
-            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay()))
+            var windows = new JudgementWindows
+            {
+                Name = Score.JudgementWindowPreset,
+                Marvelous = Score.JudgementWindowMarv,
+                Perfect = Score.JudgementWindowPerf,
+                Great = Score.JudgementWindowGreat,
+                Good = Score.JudgementWindowGood,
+                Okay = Score.JudgementWindowOkay,
+                Miss = Score.JudgementWindowMiss
+            };
+
+            Processor = new Bindable<ScoreProcessor>(new ScoreProcessorKeys(Score.ToReplay(), windows))
             {
                 Value =
                 {
-                    Windows = new JudgementWindows
-                    {
-                        Name = Score.JudgementWindowPreset,
-                        Marvelous = Score.JudgementWindowMarv,
-                        Perfect = Score.JudgementWindowPerf,
-                        Great = Score.JudgementWindowGreat,
-                        Good = Score.JudgementWindowGood,
-                        Okay = Score.JudgementWindowOkay,
-                        Miss = Score.JudgementWindowMiss
-                    },
                     SteamId = (ulong) Score.SteamId,
                     UserId = Score.PlayerId
                 }
