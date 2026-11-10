@@ -5,7 +5,6 @@ using System.Threading;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Rating;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Multiplayer;
 using Quaver.Server.Client.Objects.Multiplayer;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
@@ -277,26 +276,22 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 players = new List<ScoreProcessor>();
                 var qua = Map.LoadQua();
 
-                foreach (var playerScore in matchInfoResponse.Match.Scores)
+                foreach (var score in matchInfoResponse.Match.Scores)
                 {
-                    var player = playerScore.Player;
-                    var score = playerScore.Score;
-                    var processor = new ScoreProcessorKeys(Map.Qua, score.Mods,
-                        new ScoreProcessorMultiplayer(MultiplayerHealthType.Lives, score.LivesLeft))
+                    var player = score.User;
+                    ulong.TryParse(player.SteamId, out var steamId);
+
+                    var processor = new ScoreProcessorKeys(Map.Qua, score.Modifiers)
                     {
                         PlayerName = player.Username,
                         UserId = player.Id,
-                        MultiplayerProcessor =
-                        {
-                            IsBattleRoyaleEliminated = score.BattleRoyaleRank is > 1
-                        },
+                        SteamId = steamId,
                         Accuracy = (float)score.Accuracy,
                         MaxCombo = score.MaxCombo,
-                        Score = score.Score,
                         CurrentJudgements =
                         {
-                            [Judgement.Marv] = score.CountMarv,
-                            [Judgement.Perf] = score.CountPerf,
+                            [Judgement.Marv] = score.CountMarvelous,
+                            [Judgement.Perf] = score.CountPerfect,
                             [Judgement.Great] = score.CountGreat,
                             [Judgement.Good] = score.CountGood,
                             [Judgement.Okay] = score.CountOkay,
@@ -330,12 +325,14 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 var md5 = Map.Md5Checksum;
                 var gameInfoRequest = new APIRequestMultiplayerGameInformation(Game.GameId);
                 var gameInfoResponse = gameInfoRequest.ExecuteRequest();
+                var matches = gameInfoResponse.Game?.Matches;
 
-                var recentMatch = gameInfoResponse.Matches.Count == 0 
-                    ? null 
-                    : gameInfoResponse.Matches.MaxBy(x => x.TimePlayed);
+                var recentMatch = matches?
+                    .Where(x => x.MapMd5 == md5 || x.Map?.Md5 == md5)
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefault();
 
-                if (recentMatch == null || recentMatch.Map.Md5 != md5)
+                if (recentMatch == null)
                 {
                     Logger.Error("The match is not yet updated on server", LogType.Runtime);
                     matchInfoResponse = null;

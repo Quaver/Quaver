@@ -26,12 +26,23 @@ namespace Quaver.Shared.Screens.Selection.UI.Playlists.Dialogs
                     }
                 }
 
-                if (playlist.OnlineMapPoolId == -1)
-                    PlaylistManager.UploadPlaylist(playlist);
-                else
-                    PlaylistManager.UpdatePlaylist(playlist, removeMissingMaps);
+                if (playlist.OnlineMapPoolId == -1 && string.IsNullOrWhiteSpace(playlist.Description))
+                {
+                    NotificationManager.Show(NotificationLevel.Error,
+                        "A description is required before uploading a playlist.");
+                    return;
+                }
 
-                NotificationManager.Show(NotificationLevel.Success, "Successfully uploaded playlist as an online map pool");
+                bool success;
+                if (playlist.OnlineMapPoolId == -1)
+                    success = PlaylistManager.UploadPlaylist(playlist);
+                else
+                    success = PlaylistManager.UpdatePlaylist(playlist, removeMissingMaps);
+
+                NotificationManager.Show(success ? NotificationLevel.Success : NotificationLevel.Error,
+                    success
+                        ? "Successfully uploaded playlist as an online map pool"
+                        : "Failed to upload playlist as an online map pool");
             })
         {
         }

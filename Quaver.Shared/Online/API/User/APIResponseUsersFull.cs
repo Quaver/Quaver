@@ -15,34 +15,18 @@ namespace Quaver.Shared.Online.API.User
     // ReSharper disable once InconsistentNaming
     public class APIResponseUsersFullUser
     {
-        [JsonProperty("keys4")]
-        public APIResponseUsersFullMode Keys4 { get; set; }
+        [JsonProperty("stats_keys4")]
+        public APIResponseUsersFullMode StatsKeys4 { get; set; }
 
-        [JsonProperty("keys7")]
-        public APIResponseUsersFullMode Keys7 { get; set; }
+        [JsonProperty("stats_keys7")]
+        public APIResponseUsersFullMode StatsKeys7 { get; set; }
     }
 
     // ReSharper disable once InconsistentNaming
     public class APIResponseUsersFullMode
     {
-        [JsonProperty("globalRank")]
-        public int GlobalRank { get; set; }
-
-        [JsonProperty("countryRank")]
-        public int CountryRank { get; set; }
-
-        [JsonProperty("multiplayerWinRank")]
-        public int MultiplayerWinsRank { get; set; }
-
-        [JsonProperty("stats")]
-        public APIRequestUsersFullStats Stats { get; set; }
-    }
-
-    // ReSharper disable once InconsistentNaming
-    public class APIRequestUsersFullStats
-    {
-        [JsonProperty("user_id")]
-        public int UserId { get; set; }
+        [JsonProperty("ranks")]
+        public APIResponseUsersFullRanks Ranks { get; set; }
 
         [JsonProperty("total_score")]
         public long TotalScore { get; set; }
@@ -65,11 +49,11 @@ namespace Quaver.Shared.Online.API.User
         [JsonProperty("max_combo")]
         public int MaxCombo { get; set; }
 
-        [JsonProperty("total_marv")]
-        public int TotalMarv { get; set; }
+        [JsonProperty("total_marvelous")]
+        public int TotalMarvelous { get; set; }
 
-        [JsonProperty("total_perf")]
-        public int TotalPerf { get; set; }
+        [JsonProperty("total_perfect")]
+        public int TotalPerfect { get; set; }
 
         [JsonProperty("total_great")]
         public int TotalGreat { get; set; }
@@ -82,5 +66,14 @@ namespace Quaver.Shared.Online.API.User
 
         [JsonProperty("total_miss")]
         public int TotalMiss { get; set; }
+    }
+
+    public class APIResponseUsersFullRanks
+    {
+        [JsonProperty("global")]
+        public int Global { get; set; }
+
+        [JsonProperty("country")]
+        public int Country { get; set; }
     }
 }

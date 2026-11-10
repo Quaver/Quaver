@@ -21,7 +21,7 @@ namespace Quaver.Shared.Online.API.Playlists
         /// <returns></returns>
         public override PlaylistInformationResponse ExecuteRequest()
         {
-            var request = new RestRequest($"{APIEndpoint}playlist/{Id}", Method.GET);
+            var request = new RestRequest($"{APIEndpoint}playlists/{Id}?limit=1", Method.GET);
             var client = new RestClient(OnlineClient.API_ENDPOINT) { UserAgent = "Quaver" };
 
             var response = ExecuteApiRequest(client, request);
@@ -29,6 +29,7 @@ namespace Quaver.Shared.Online.API.Playlists
             var json = JObject.Parse(response.Content);
 
             var responseParsed = JsonConvert.DeserializeObject<PlaylistInformationResponse>(json.ToString());
+            responseParsed.Status = (int) response.StatusCode;
 
             return responseParsed;
         }

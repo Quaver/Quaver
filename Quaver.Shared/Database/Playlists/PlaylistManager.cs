@@ -418,7 +418,7 @@ namespace Quaver.Shared.Database.Playlists
         ///     Uploads the playlist to the server as a map pool
         /// </summary>
         /// <param name="playlist"></param>
-        public static void UploadPlaylist(Playlist playlist)
+        public static bool UploadPlaylist(Playlist playlist)
         {
             Logger.Important($"Uploading playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
 
@@ -430,7 +430,8 @@ namespace Quaver.Shared.Database.Playlists
             var response = OnlineManager.Client?.UploadPlaylist(playlist.Name, playlist.Description, ids);
 
             // Success
-            if (response?.Status == 200)
+            var success = response?.Status == 200;
+            if (success)
             {
                 playlist.OnlineMapPoolId = response.PlaylistId;
                 playlist.OnlineMapPoolCreatorId = OnlineManager.Self.OnlineUser.Id;
@@ -441,6 +442,7 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Important($"Failed to upload playlist: {playlist.Name} (#{playlist.Id}) online!", LogType.Runtime);
 
             EditPlaylist(playlist, null);
+            return success;
         }
 
         /// <summary>
@@ -448,7 +450,7 @@ namespace Quaver.Shared.Database.Playlists
         /// </summary>
         /// <param name="playlist"></param>
         /// <param name="removeMissingMaps"></param>
-        public static void UpdatePlaylist(Playlist playlist, bool removeMissingMaps)
+        public static bool UpdatePlaylist(Playlist playlist, bool removeMissingMaps)
         {
             Logger.Important($"Updating playlist: {playlist.Name} (#{playlist.Id})", LogType.Runtime);
 
@@ -461,7 +463,8 @@ namespace Quaver.Shared.Database.Playlists
                 playlist.Name, playlist.Description, ids, removeMissingMaps);
 
             // Success
-            if (response == 200)
+            var success = response == 200;
+            if (success)
             {
                 Logger.Important($"Successfully updated playlist: {playlist.Name} (#{playlist.Id}) online: {playlist.OnlineMapPoolId}", LogType.Runtime);
                 playlist.OpenUrl();
@@ -470,6 +473,7 @@ namespace Quaver.Shared.Database.Playlists
                 Logger.Important($"Failed to upload playlist: {playlist.Name} (#{playlist.Id}) online! {playlist.OnlineMapPoolId}", LogType.Runtime);
 
             EditPlaylist(playlist, null);
+            return success;
         }
 
         /// <summary>
