@@ -645,10 +645,10 @@ namespace Quaver.Shared.Screens.V2.Profile
             ModeSelection.X = is4K ? Config.ModeSelectionInset : -Config.ModeSelectionInset;
             ModeLabel.Text = is4K ? "4K" : "7K";
 
-            var apiStats = is4K ? LoadedStats?.User?.Keys4 : LoadedStats?.User?.Keys7;
-            if (apiStats?.Stats != null)
+            var apiStats = is4K ? LoadedStats?.User?.StatsKeys4 : LoadedStats?.User?.StatsKeys7;
+            if (apiStats != null)
             {
-                SetStats(apiStats.GlobalRank, apiStats.Stats.OverallPerformanceRating, apiStats.Stats.OverallAccuracy);
+                SetStats(apiStats.Ranks?.Global ?? -1, apiStats.OverallPerformanceRating, apiStats.OverallAccuracy);
                 return;
             }
 
