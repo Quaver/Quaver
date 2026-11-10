@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Rating;
@@ -89,6 +90,8 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
             CreateAvatar();
             CreateUsername();
 
+            SteamManager.SteamUserAvatarLoaded += OnSteamUserAvatarLoaded;
+
             CreateData();
         }
 
@@ -120,15 +123,76 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
         /// <param name="index"></param>
         public override void UpdateContent(ScoreProcessor item, int index)
         {
-            Rank.Text = $"{index + 1}.";
+            Item = item;
+            Index = index;
 
-            if (SteamManager.UserAvatars != null && SteamManager.UserAvatars.ContainsKey(item.SteamId))
-                Avatar.Image = SteamManager.UserAvatars[item.SteamId];
-            else
+            ScheduleUpdate(() =>
+            {
+                Rank.Text = $"{index + 1}.";
+
+                UpdateAvatar(item);
+
+                Username.Text = $"{item.PlayerName ?? ""}";
+                Username.Tint = GetUsernameColor();
+            });
+        }
+
+        /// <summary>
+        ///     Loads a cached avatar or requests it from Steam when it is not available yet.
+        /// </summary>
+        private void UpdateAvatar(ScoreProcessor item)
+        {
+            if (item.SteamId == 0)
+            {
                 Avatar.Image = UserInterface.UnknownAvatar;
+                Avatar.Alpha = 1;
+                return;
+            }
 
-            Username.Text = $"{item.PlayerName ?? ""}";
-            Username.Tint = GetUsernameColor();
+            var avatar = TryGetAvatar(item.SteamId);
+
+            if (avatar != null)
+            {
+                Avatar.Image = avatar;
+                Avatar.Alpha = 1;
+                return;
+            }
+
+            Avatar.Alpha = 0;
+            SteamManager.SendAvatarRetrievalRequest(item.SteamId);
+        }
+
+        /// <summary>
+        ///     Retrieves an avatar using the same cache preference as the V2 Online Hub.
+        /// </summary>
+        private Texture2D TryGetAvatar(ulong steamId)
+        {
+            if (SteamManager.UserAvatarsLarge.TryGetValue(steamId, out var texture) && texture != UserInterface.UnknownAvatar)
+                return texture;
+
+            if (SteamManager.UserAvatars.TryGetValue(steamId, out texture))
+                return texture;
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Applies an asynchronously loaded avatar if this pooled row still represents that Steam user.
+        /// </summary>
+        private void OnSteamUserAvatarLoaded(object sender, SteamAvatarLoadedEventArgs e)
+        {
+            AddScheduledUpdate(() =>
+            {
+                if (IsDisposed || Item == null || Item.SteamId != e.SteamId)
+                    return;
+
+                var avatar = TryGetAvatar(e.SteamId);
+                if (avatar == null)
+                    return;
+
+                Avatar.Image = avatar;
+                Avatar.Alpha = 1;
+            });
         }
 
         /// <summary>
@@ -283,6 +347,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table.Scrolling
             }
 
             return Color.White;
+        }
+
+        /// <inheritdoc />
+        public override void Destroy()
+        {
+            SteamManager.SteamUserAvatarLoaded -= OnSteamUserAvatarLoaded;
+            base.Destroy();
         }
     }
 }

@@ -279,10 +279,13 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Multiplayer.Table
                 foreach (var score in matchInfoResponse.Match.Scores)
                 {
                     var player = score.User;
+                    ulong.TryParse(player.SteamId, out var steamId);
+
                     var processor = new ScoreProcessorKeys(Map.Qua, score.Modifiers)
                     {
                         PlayerName = player.Username,
                         UserId = player.Id,
+                        SteamId = steamId,
                         Accuracy = (float)score.Accuracy,
                         MaxCombo = score.MaxCombo,
                         CurrentJudgements =
