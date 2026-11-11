@@ -356,6 +356,8 @@ namespace Quaver.Shared.Screens.Loading
         /// </summary>
         public static void AddModsFromIdentifiers(ModIdentifier mods)
         {
+            mods &= ~ModIdentifier.HeatlthAdjust;
+
             if (ModManager.Mods == mods)
                 return;
 

@@ -118,6 +118,32 @@ namespace Quaver.Shared.Screens.Gameplay
         public bool InReplayMode { get; set; }
 
         /// <summary>
+        ///     The active mods, plus the experimental health flag when this play uses it.
+        /// </summary>
+        public ModIdentifier ScoringMods
+        {
+            get
+            {
+                var mods = ModManager.Mods;
+
+                // When watching a replay use the health system it was played with instead of the
+                // current options toggle so the health bar matches the original play.
+                if (InReplayMode)
+                {
+                    var replayMods = LoadedReplay?.Mods ?? 0;
+                    var usesExperimentalHealth = replayMods != ModIdentifier.None && replayMods.HasFlag(ModIdentifier.HeatlthAdjust);
+
+                    return usesExperimentalHealth ? mods | ModIdentifier.HeatlthAdjust : mods;
+                }
+
+                if (ConfigManager.ExperimentalHealth.Value && !IsMultiplayerGame)
+                    return mods | ModIdentifier.HeatlthAdjust;
+
+                return mods;
+            }
+        }
+
+        /// <summary>
         ///     If we're currently in play test mode.
         /// </summary>
         public bool IsPlayTesting { get; }
@@ -1735,7 +1761,7 @@ namespace Quaver.Shared.Screens.Gameplay
             var hitobjectManager = (HitObjectManagerKeys)Ruleset.HitObjectManager;
             hitobjectManager.HandleSkip();
 
-            Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
+            Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ScoringMods, JudgementWindowsDatabaseCache.Selected.Value);
         }
 
         /// <summary>
@@ -1806,7 +1832,7 @@ namespace Quaver.Shared.Screens.Gameplay
             if (!InReplayMode)
             {
                 inputManager.ReplayInputManager = null;
-                Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ModManager.Mods, JudgementWindowsDatabaseCache.Selected.Value);
+                Ruleset.ScoreProcessor = new ScoreProcessorKeys(Map, ScoringMods, JudgementWindowsDatabaseCache.Selected.Value);
 
                 for (var i = 0; i < Map.GetKeyCount(); i++)
                 {
