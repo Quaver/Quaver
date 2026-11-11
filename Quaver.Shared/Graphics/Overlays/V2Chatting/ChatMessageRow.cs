@@ -6,6 +6,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online.Chat;
+using Quaver.Shared.Screens.V2.Profile;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
@@ -19,6 +20,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
     internal sealed class ChatMessageRow : Container
     {
         private const float VerticalPadding = 8;
+
+        private const double ProfilePrefetchDelay = 125;
         private SpriteTextPlus Timestamp { get; }
 
         private TooltipOptions TimestampTooltipOptions { get; } = new TooltipOptions();
@@ -45,9 +48,15 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private Color SenderClanColor { get; set; }
 
+        private ProfileAccentPalette SenderAccent { get; set; }
+
+        private double SenderHoverTime { get; set; }
+
+        private int PrefetchedUserId { get; set; } = -1;
+
         public ChatMessage Item { get; private set; }
 
-        public event Action<User> SenderMenuRequested;
+        public event Action<User, RectangleF> SenderMenuRequested;
 
         public ChatMessageRow(ChatMessage item, float width, ScrollContainer viewport)
         {
@@ -122,11 +131,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             };
             SenderButton.Hovered += (sender, args) => ApplySenderHover(true);
             SenderButton.LeftHover += (sender, args) => ApplySenderHover(false);
-            SenderButton.RightClicked += (sender, args) =>
-            {
-                if (Item?.Sender != null)
-                    SenderMenuRequested?.Invoke(Item.Sender);
-            };
+            SenderButton.Clicked += (sender, args) => ShowSenderProfile();
+            SenderButton.RightClicked += (sender, args) => ShowSenderProfile();
 
             UpdateContent(item, width);
         }
@@ -135,6 +141,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         {
             Item = item;
             Width = width;
+            SenderHoverTime = 0;
+            PrefetchedUserId = -1;
 
             var time = DateTimeOffset.FromUnixTimeMilliseconds((long)item.Time).ToLocalTime();
             Timestamp.Text = $"{time.Hour:00}:{time.Minute:00}:{time.Second:00}";
@@ -154,8 +162,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             SenderClan.Visible = hasClan;
             SenderClan.Text = hasClan ? $"[{clanTag}] " : "";
             var clanColor = !string.IsNullOrEmpty(item.SenderClanAccentColor) ? item.SenderClanAccentColor : item.Sender.OnlineUser.ClanAccentColor;
-            SenderColor = Colors.GetUserChatColor(senderGroups);
-            SenderClanColor = clanColor != null ? ColorHelper.FromHex(clanColor) : SenderColor;
+            ApplySenderColors(clanColor);
 
             Sender.Text = $"{item.SenderName}:";
 
@@ -175,11 +182,54 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Height = Math.Max(40, Message.Height + VerticalPadding * 2);
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (SenderButton.IsHovered && Item?.Sender?.HasUserInfo == true)
+            {
+                var userId = Item.Sender.OnlineUser.Id;
+                if (PrefetchedUserId != userId)
+                {
+                    SenderHoverTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                    if (SenderHoverTime >= ProfilePrefetchDelay)
+                    {
+                        PrefetchedUserId = userId;
+                        ProfileViewerDataCache.Prefetch(Item.Sender);
+                    }
+                }
+            }
+            else
+            {
+                SenderHoverTime = 0;
+            }
+
+            base.Update(gameTime);
+        }
+
+        public void SetSenderAccent(ProfileAccentPalette accent)
+        {
+            SenderAccent = accent;
+            var clanColor = !string.IsNullOrEmpty(Item?.SenderClanAccentColor) ? Item.SenderClanAccentColor : Item?.Sender?.OnlineUser?.ClanAccentColor;
+            ApplySenderColors(clanColor);
+            ApplySenderHover(SenderButton.IsHovered);
+        }
+
+        private void ApplySenderColors(string clanColor)
+        {
+            SenderColor = SenderAccent?.Readable ?? Color.White;
+            SenderClanColor = !string.IsNullOrEmpty(clanColor) ? ColorHelper.FromHex(clanColor) : SenderColor;
+        }
+
         private void ApplySenderHover(bool hovered)
         {
             SenderBadge.Tint = hovered ? Darken(Color.White) : Color.White;
             SenderClan.Tint = hovered ? Darken(SenderClanColor) : SenderClanColor;
             Sender.Tint = hovered ? Darken(SenderColor) : SenderColor;
+        }
+
+        private void ShowSenderProfile()
+        {
+            if (Item?.Sender != null)
+                SenderMenuRequested?.Invoke(Item.Sender, SenderButton.ScreenRectangle);
         }
 
         private static Color Darken(Color color) => new Color(color.R / 2, color.G / 2, color.B / 2);

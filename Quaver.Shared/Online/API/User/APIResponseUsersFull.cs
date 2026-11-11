@@ -15,6 +15,12 @@ namespace Quaver.Shared.Online.API.User
     // ReSharper disable once InconsistentNaming
     public class APIResponseUsersFullUser
     {
+        [JsonProperty("accent_color_customizable")]
+        public bool AccentColorCustomizable { get; set; }
+
+        [JsonProperty("accent_color")]
+        public string AccentColor { get; set; }
+
         [JsonProperty("stats_keys4")]
         public APIResponseUsersFullMode StatsKeys4 { get; set; }
 

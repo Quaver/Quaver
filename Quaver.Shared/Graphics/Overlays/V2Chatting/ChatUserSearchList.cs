@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Handlers;
@@ -43,7 +44,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
     private float PreviousViewportWidth { get; set; }
     private float PreviousViewportHeight { get; set; }
 
-    public event Action<User> OnRowClicked;
+    public event Action<User, RectangleF> OnRowClicked;
 
     public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(), 1, 0, size, size)
     {
@@ -88,7 +89,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         {
             Alpha = 0
         };
-        row.OnClick += user => OnRowClicked?.Invoke(user);
+        row.OnClick += (user, anchor) => OnRowClicked?.Invoke(user, anchor);
         return row;
     }
 

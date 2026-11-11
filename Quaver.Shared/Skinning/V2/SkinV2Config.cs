@@ -12,7 +12,6 @@ using Quaver.Shared.Screens.V2.Multiplayer;
 using Quaver.Shared.Screens.V2.MultiplayerLobby;
 using Quaver.Shared.Screens.V2.Music;
 using Quaver.Shared.Screens.V2.Options;
-using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.Results;
 using Quaver.Shared.Screens.V2.Selection;
 using Quaver.Shared.Screens.V2.Theater;
@@ -75,8 +74,6 @@ namespace Quaver.Shared.Skinning.V2
         [Required]
         public SkinV2ModalConfig Modal { get; set; } = new SkinV2ModalConfig();
 
-        [Required]
-        public SkinV2ProfileViewerConfig ProfileViewer { get; set; } = new SkinV2ProfileViewerConfig();
     }
 
     public sealed class SkinV2BrandConfig

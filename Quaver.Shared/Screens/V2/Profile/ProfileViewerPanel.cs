@@ -23,7 +23,6 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Tooltips;
-using Wobble.Logging;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Profile
@@ -34,7 +33,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private SkinStoreV2Lease Skin { get; }
 
-        private SkinV2ProfileViewerConfig Config { get; }
+        private ProfileViewerStyle Config { get; }
 
         private Action CloseDialog { get; }
 
@@ -74,7 +73,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private SpriteTextPlus Username { get; }
 
-        private SpriteTextPlus Status { get; }
+        private MarqueeSpriteText Status { get; }
 
         private Sprite RoleBadge { get; }
 
@@ -118,8 +117,6 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private GameMode ActiveMode { get; set; } = GameMode.Keys4;
 
-        private int StatsRequestVersion { get; set; }
-
         private bool? LastFriendState { get; set; }
 
         private bool? LastSpectatingState { get; set; }
@@ -132,13 +129,15 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private bool IsOnline => OnlineManager.OnlineUsers?.ContainsKey(User.OnlineUser.Id) == true || IsSelf && OnlineManager.Connected;
 
-        public ProfileViewerPanel(User user, SkinStoreV2Lease skin, Action closeDialog, Container overlayHost)
+        public ProfileViewerPanel(User user, ProfileViewerData data, SkinStoreV2Lease skin, Action closeDialog, Container overlayHost)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
+            LoadedStats = data?.Response;
+            AccentPalette = data?.Accent;
             Skin = skin ?? throw new ArgumentNullException(nameof(skin));
             CloseDialog = closeDialog ?? throw new ArgumentNullException(nameof(closeDialog));
             OverlayHost = overlayHost ?? throw new ArgumentNullException(nameof(overlayHost));
-            Config = Skin.Config.Shared.ProfileViewer;
+            Config = ProfileViewerStyle.Default;
             Size = new ScalableVector2(Config.Width, Config.Height);
 
             if (ConfigManager.SelectedGameMode != null)
@@ -160,10 +159,14 @@ namespace Quaver.Shared.Screens.V2.Profile
             };
             RootLayout.SetItemOptions(StatsPanel, FixedBasis(Config.StatsHeight));
 
-            Cover = new RoundedCoverSprite(Config.Width, Config.IdentityHeight, Config.CornerRadius, SkinV2Color.Parse(Config.IdentityBackgroundColor), Config.ProfileCoverBrightness, Skin.LoadTexture(Config.FallbackCover, UserInterface.DefaultBanner))
+            Cover = new RoundedCoverSprite(Config.Width, Config.IdentityHeight, Config.CornerRadius,
+                SkinV2Color.Parse(Config.IdentityBackgroundColor), Config.ProfileCoverBrightness,
+                UserInterface.DefaultBanner)
             {
                 Parent = IdentityPanel
             };
+            if (data?.Cover != null)
+                Cover.SetSource(data.Cover);
 
             StatsBackground = CreateRoundedSprite(Config.Width, Config.StatsHeight, Config.CornerRadius, SkinV2Color.Parse(Config.StatsBackgroundColor));
             StatsBackground.Parent = StatsPanel;
@@ -180,7 +183,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
             CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityHeight);
 
-            InfoLayout = CreateFlex(IdentityLayout, new ScalableVector2(1, Config.AvatarSize), FlexDirection.Column, FlexJustifyContent.Center, FlexAlignItems.Stretch, Config.InfoGap);
+            InfoLayout = CreateFlex(IdentityLayout, new ScalableVector2(1, Config.AvatarSize), FlexDirection.Column, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.InfoGap);
             IdentityLayout.SetItemOptions(InfoLayout, new FlexItemOptions { Basis = 1, Grow = 1, Shrink = 1 });
 
             NameLayout = CreateFlex(InfoLayout, new ScalableVector2(1, Config.IdentityRowHeight), FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Center);
@@ -212,7 +215,8 @@ namespace Quaver.Shared.Screens.V2.Profile
             Username = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), User.OnlineUser.Username ?? $"#{User.OnlineUser.Id}", Config.UsernameFontSize)
             {
                 Parent = UsernameHost,
-                Tint = SkinV2Color.Parse(Config.TextColor),
+                Alignment = Alignment.MidLeft,
+                Tint = Color.White,
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -222,12 +226,14 @@ namespace Quaver.Shared.Screens.V2.Profile
                 Size = new ScalableVector2(1, Config.StatusHeight)
             };
             InfoLayout.SetItemOptions(StatusHost, FixedBasis(Config.StatusHeight));
-            Status = new SpriteTextPlus(FontManager.GetWobbleFont(Config.SecondaryFont), string.Empty, Config.StatusFontSize)
+            Status = new MarqueeSpriteText(FontManager.GetWobbleFont(Config.SecondaryFont), string.Empty, Config.StatusFontSize, 1)
             {
                 Parent = StatusHost,
-                Tint = SkinV2Color.Parse(Config.SecondaryTextColor),
+                Size = new ScalableVector2(1, Config.StatusHeight),
+                IsActive = true,
                 UsePreviousSpriteBatchOptions = true
             };
+            Status.TextSprite.Tint = SkinV2Color.Parse(Config.SecondaryTextColor);
 
             RoleBadge = new Sprite
             {
@@ -242,10 +248,9 @@ namespace Quaver.Shared.Screens.V2.Profile
                 AlignSelf = FlexAlignSelf.FlexStart
             });
 
-            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityHeight);
-
-            ActionsLayout = CreateFlex(IdentityLayout, new ScalableVector2(Config.ActionsWidth, Config.AvatarSize), FlexDirection.Row, FlexJustifyContent.FlexEnd, FlexAlignItems.FlexEnd, Config.ActionSpacing);
-            IdentityLayout.SetItemOptions(ActionsLayout, FixedBasis(Config.ActionsWidth));
+            ActionsLayout = CreateFlex(IdentityPanel, new ScalableVector2(Config.ActionsWidth, Config.AvatarSize), FlexDirection.Row, FlexJustifyContent.FlexEnd, FlexAlignItems.FlexEnd, Config.ActionSpacing);
+            ActionsLayout.Alignment = Alignment.MidRight;
+            ActionsLayout.X = -Config.ContentPadding;
 
             FriendButton = CreateActionButton(GlobalIcon.HeartWhite, PerformPrimaryAction, 0);
             ChatButton = CreateActionButton(GlobalIcon.Chat, PerformSecondaryAction, 1);
@@ -307,12 +312,10 @@ namespace Quaver.Shared.Screens.V2.Profile
             RefreshIdentity();
             RefreshLayouts();
             RefreshResponsiveText();
+            ApplyAccentPalette();
             UpdateActionStates();
             UpdateStats();
-            RefreshProfileCover();
             RequestAvatar();
-            RequestStats();
-            RequestProfileAccent();
         }
 
         public override void Update(GameTime gameTime)
@@ -321,8 +324,8 @@ namespace Quaver.Shared.Screens.V2.Profile
             if (LastStatusText != statusText)
             {
                 LastStatusText = statusText;
-                Status.Text = statusText;
-                Status.TruncateWithEllipsis((int) Math.Max(1, StatusHost.Width));
+                Status.TextSprite.Text = statusText;
+                Status.ResetPosition();
             }
 
             UpdateActionStates();
@@ -333,7 +336,6 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         public override void Destroy()
         {
-            StatsRequestVersion++;
             SteamManager.SteamUserAvatarLoaded -= OnSteamUserAvatarLoaded;
             DestroyMoreMenu();
 
@@ -351,7 +353,8 @@ namespace Quaver.Shared.Screens.V2.Profile
             ClanUsernameSpacer.Width = Clan.Visible ? Config.IdentitySpacing : 0;
             Username.Text = User.OnlineUser.Username ?? $"#{User.OnlineUser.Id}";
             LastStatusText = GetStatusText();
-            Status.Text = LastStatusText;
+            Status.TextSprite.Text = LastStatusText;
+            Status.ResetPosition();
 
             var role = GetRoleGroup(User.OnlineUser.UserGroups);
             RoleBadge.Visible = role.HasValue;
@@ -362,6 +365,10 @@ namespace Quaver.Shared.Screens.V2.Profile
                 RoleBadge.Region = UserGroupAssets.Get(role.Value, true);
                 RoleBadge.Size = new ScalableVector2(displaySize.X * scale, Config.RoleHeight);
                 RoleBadge.Tint = Color.White;
+            }
+            else
+            {
+                RoleBadge.Parent = IdentityPanel;
             }
         }
 
@@ -378,7 +385,9 @@ namespace Quaver.Shared.Screens.V2.Profile
         private void RefreshResponsiveText()
         {
             Username.TruncateWithEllipsis((int) Math.Max(40, UsernameHost.Width));
-            Status.TruncateWithEllipsis((int) Math.Max(40, StatusHost.Width));
+            Status.Width = Math.Max(40, StatusHost.Width);
+            Status.Height = Config.StatusHeight;
+            Status.ResetPosition();
         }
 
         private RoundedButton CreateActionButton(GlobalIcon icon, Action action, int order)
@@ -611,7 +620,8 @@ namespace Quaver.Shared.Screens.V2.Profile
             }
 
             const float menuWidth = 220;
-            MoreMenu = new UserRightClickOptions(User, menuWidth, Skin.Config.Shared.Dropdown, OverlayHost)
+            MoreMenu = new UserRightClickOptions(User, menuWidth, Skin.Config.Shared.Dropdown, OverlayHost,
+                GetDedicatedActions())
             {
                 Parent = OverlayHost,
                 Position = new ScalableVector2(
@@ -620,6 +630,27 @@ namespace Quaver.Shared.Screens.V2.Profile
             };
             MoreMenu.OptionSelected += OnMoreOptionSelected;
             MoreMenu.Open();
+        }
+
+        private HashSet<UserMenuAction> GetDedicatedActions()
+        {
+            var actions = new HashSet<UserMenuAction>
+            {
+                UserMenuAction.SteamProfile
+            };
+
+            if (IsSelf)
+            {
+                actions.Add(UserMenuAction.ViewProfile);
+                return actions;
+            }
+
+            actions.Add(UserMenuAction.AddFriend);
+            actions.Add(UserMenuAction.RemoveFriend);
+            actions.Add(UserMenuAction.Chat);
+            actions.Add(UserMenuAction.Spectate);
+            actions.Add(UserMenuAction.StopSpectating);
+            return actions;
         }
 
         private void OnMoreOptionSelected(object sender, DropdownOptionEventArgs<UserMenuAction> args) => CloseDialog();
@@ -669,66 +700,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             RefreshStatPillLayout();
         }
 
-        private void RequestStats()
-        {
-            if (User.OnlineUser.Id <= 0)
-                return;
-
-            var requestVersion = ++StatsRequestVersion;
-            var userId = User.OnlineUser.Id;
-            ThreadScheduler.Run(() =>
-            {
-                try
-                {
-                    var response = new APIRequestUsersFull(userId).ExecuteRequest();
-                    AddScheduledUpdate(() =>
-                    {
-                        if (IsDisposed || requestVersion != StatsRequestVersion)
-                            return;
-
-                        LoadedStats = response;
-                        UpdateStats();
-                    });
-                }
-                catch (Exception exception)
-                {
-                    Logger.Error($"Could not load profile viewer stats for user {userId}: {exception}", LogType.Network);
-                }
-            });
-        }
-
-        private void RequestProfileAccent()
-        {
-            if (User.OnlineUser.Id <= 0)
-                return;
-
-            var requestVersion = StatsRequestVersion;
-            var userId = User.OnlineUser.Id;
-            ThreadScheduler.Run(() =>
-            {
-                try
-                {
-                    var response = new APIRequestUserProfile(userId).ExecuteRequest();
-                    AddScheduledUpdate(() =>
-                    {
-                        if (IsDisposed || requestVersion != StatsRequestVersion)
-                            return;
-
-                        if (!ProfileAccentColors.TryCreate(response?.User?.AccentColorCustomizable == true, response?.User?.AccentColor, out var palette))
-                            return;
-
-                        AccentPalette = palette;
-                        ApplyAccentPalette();
-                        UpdateActionStates();
-                    });
-                }
-                catch (Exception exception)
-                {
-                    Logger.Error($"Could not load profile viewer accent for user {userId}: {exception}", LogType.Network);
-                }
-            });
-        }
-
         private void ApplyAccentPalette()
         {
             if (AccentPalette == null)
@@ -752,20 +723,28 @@ namespace Quaver.Shared.Screens.V2.Profile
         private void RequestAvatar()
         {
             var steamId = (ulong) Math.Max(0, User.OnlineUser.SteamId);
-            if (steamId > 0 && (SteamManager.UserAvatarsLarge == null || !SteamManager.UserAvatarsLarge.ContainsKey(steamId)))
+            if (steamId > 0 && TryGetAvatar(steamId) == null)
                 SteamManager.SendAvatarRetrievalRequest(steamId);
         }
 
         private Texture2D GetAvatar()
         {
             if (User.OnlineUser.UserGroups.HasFlag(UserGroups.Bot))
-                return UserInterface.QuaverLogoOnly;
+                return UserInterface.QuaverIcon;
 
             var steamId = (ulong) Math.Max(0, User.OnlineUser.SteamId);
-            if (steamId > 0 && SteamManager.UserAvatarsLarge != null && SteamManager.UserAvatarsLarge.TryGetValue(steamId, out var avatar))
+            return steamId > 0 ? TryGetAvatar(steamId) ?? UserInterface.UnknownAvatar : UserInterface.UnknownAvatar;
+        }
+
+        private static Texture2D TryGetAvatar(ulong steamId)
+        {
+            if (SteamManager.UserAvatarsLarge != null && SteamManager.UserAvatarsLarge.TryGetValue(steamId, out var avatar) && avatar != UserInterface.UnknownAvatar)
                 return avatar;
 
-            return UserInterface.UnknownAvatar;
+            if (SteamManager.UserAvatars != null && SteamManager.UserAvatars.TryGetValue(steamId, out avatar) && avatar != UserInterface.UnknownAvatar)
+                return avatar;
+
+            return null;
         }
 
         private void OnSteamUserAvatarLoaded(object sender, SteamAvatarLoadedEventArgs args)
@@ -780,48 +759,38 @@ namespace Quaver.Shared.Screens.V2.Profile
             });
         }
 
-        private void RefreshProfileCover()
-        {
-            if (!User.OnlineUser.UserGroups.HasFlag(UserGroups.Donator))
-                return;
-
-            var userId = User.OnlineUser.Id;
-            ImageDownloader.DownloadProfileCover(userId).ContinueWith(task =>
-            {
-                var cover = task.Status == System.Threading.Tasks.TaskStatus.RanToCompletion ? task.Result : null;
-                AddScheduledUpdate(() =>
-                {
-                    if (!IsDisposed && cover != null)
-                        Cover.SetSource(cover);
-                });
-            });
-        }
-
         private string GetStatusText()
         {
             if (!IsOnline)
                 return LocalizationManager.Get("ProfileViewer_Status_Offline");
 
-            switch (User.CurrentStatus?.Status)
+            var status = User.CurrentStatus;
+            switch (status?.Status)
             {
                 case ClientStatus.Selecting:
-                    return LocalizationManager.Get("ProfileViewer_Status_Selecting");
+                    return FormatActivityStatus("ProfileViewer_Status_Selecting", status.Content);
                 case ClientStatus.Playing:
                 case ClientStatus.Paused:
-                    return LocalizationManager.Get("ProfileViewer_Status_Playing");
+                    return FormatActivityStatus("ProfileViewer_Status_Playing", status.Content);
                 case ClientStatus.Watching:
-                    return LocalizationManager.Get("ProfileViewer_Status_WatchingReplay");
+                    return FormatActivityStatus("ProfileViewer_Status_WatchingReplay", status.Content);
                 case ClientStatus.Editing:
-                    return LocalizationManager.Get("ProfileViewer_Status_Editing");
+                    return FormatActivityStatus("ProfileViewer_Status_Editing", status.Content);
                 case ClientStatus.InLobby:
-                    return LocalizationManager.Get("ProfileViewer_Status_MultiplayerLobby");
+                    return FormatActivityStatus("ProfileViewer_Status_MultiplayerLobby", status.Content);
                 case ClientStatus.Multiplayer:
-                    return LocalizationManager.Get("ProfileViewer_Status_PlayingMultiplayer");
+                    return FormatActivityStatus("ProfileViewer_Status_PlayingMultiplayer", status.Content);
                 case ClientStatus.Listening:
-                    return LocalizationManager.Get("ProfileViewer_Status_Listening");
+                    return FormatActivityStatus("ProfileViewer_Status_Listening", status.Content);
                 default:
                     return LocalizationManager.Get("ProfileViewer_Status_Idle");
             }
+        }
+
+        private static string FormatActivityStatus(string localizationKey, string activity)
+        {
+            var status = LocalizationManager.Get(localizationKey);
+            return string.IsNullOrWhiteSpace(activity) ? status : $"{status} · {activity}";
         }
 
         private static GlobalUserGroup? GetRoleGroup(UserGroups groups)

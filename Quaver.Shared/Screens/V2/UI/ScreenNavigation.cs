@@ -678,7 +678,7 @@ namespace Quaver.Shared.Screens.V2.UI
             if (GameBase.Game is QuaverGame game)
                 game.CurrentScreen?.ActiveLoggedInUserDropdown?.Close();
 
-            ProfileViewerDialog.Show(OnlineManager.Self);
+            ProfileViewerDialog.Show(OnlineManager.Self, ProfileButton.ScreenRectangle);
         }
 
         private void ToggleAccountDropdown()

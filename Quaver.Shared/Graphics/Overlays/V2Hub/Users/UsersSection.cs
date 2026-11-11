@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Online;
@@ -154,13 +155,13 @@ public class UsersSection : Container
 
     private void UpdateResultsCount(int count) => SearchBox.SetResultsText(LocalizationManager.Get("Screen_Hub_UsersFound", count));
 
-    private void ShowProfileViewer(User user)
+    private void ShowProfileViewer(User user, RectangleF anchor)
     {
         if (PreviewMode)
             return;
 
         FilterDropdown.CloseImmediately();
-        ProfileViewerDialog.Show(user);
+        ProfileViewerDialog.Show(user, anchor);
     }
 
     public void Deactivate()

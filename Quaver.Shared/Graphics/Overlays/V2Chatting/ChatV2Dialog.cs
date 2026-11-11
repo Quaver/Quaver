@@ -895,7 +895,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             RefreshDialogLayout();
         });
 
-        private static void ShowProfileViewer(User user) => ProfileViewerDialog.Show(user);
+        private static void ShowProfileViewer(User user, RectangleF anchor) => ProfileViewerDialog.Show(user, anchor);
 
         private static SkinV2DropdownConfig CreateUserMenuStyle() => new SkinV2DropdownConfig
         {
