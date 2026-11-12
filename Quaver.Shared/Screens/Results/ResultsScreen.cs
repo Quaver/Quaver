@@ -795,7 +795,12 @@ namespace Quaver.Shared.Screens.Results
             if (screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.HeatlthAdjust))
             {
                 IsSubmittingScore.Value = false;
-                NotificationManager.Show(NotificationLevel.Info, ResultsLocalization.Get("Experimental health is enabled, so this score was not submitted online."));
+
+                var passed = !screen.Ruleset.ScoreProcessor.Failed && !screen.FailedDuringGameplay;
+
+                if (passed)
+                    NotificationManager.Show(NotificationLevel.Info, ResultsLocalization.Get("Experimental health is enabled, so this score was not submitted online."));
+
                 Logger.Important($"{skipping} experimental health being enabled", LogType.Network);
                 return false;
             }
