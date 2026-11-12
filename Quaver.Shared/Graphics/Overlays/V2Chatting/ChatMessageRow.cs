@@ -48,8 +48,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private Color SenderClanColor { get; set; }
 
-        private ProfileAccentPalette SenderAccent { get; set; }
-
         private double SenderHoverTime { get; set; }
 
         private int PrefetchedUserId { get; set; } = -1;
@@ -205,18 +203,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             base.Update(gameTime);
         }
 
-        public void SetSenderAccent(ProfileAccentPalette accent)
-        {
-            SenderAccent = accent;
-            var clanColor = !string.IsNullOrEmpty(Item?.SenderClanAccentColor) ? Item.SenderClanAccentColor : Item?.Sender?.OnlineUser?.ClanAccentColor;
-            ApplySenderColors(clanColor);
-            ApplySenderHover(SenderButton.IsHovered);
-        }
-
         private void ApplySenderColors(string clanColor)
         {
-            SenderColor = SenderAccent?.Readable ?? Color.White;
-            SenderClanColor = !string.IsNullOrEmpty(clanColor) ? ColorHelper.FromHex(clanColor) : SenderColor;
+            SenderColor = ProfileAccentColors.TryCreate(true, Item.SenderAccentColor, out var accent)
+                ? accent.Readable
+                : Color.White;
+            SenderClanColor = !string.IsNullOrEmpty(clanColor)
+                ? ColorHelper.FromHex(clanColor)
+                : Colors.GetUserChatColor(Item.Sender.OnlineUser.UserGroups);
         }
 
         private void ApplySenderHover(bool hovered)

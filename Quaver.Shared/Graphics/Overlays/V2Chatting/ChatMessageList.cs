@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
 using Quaver.Shared.Online.Chat;
-using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.UI;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -28,10 +26,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private ChatMessageStore MessageStore { get; set; }
 
         private List<ChatMessage> Messages { get; } = new List<ChatMessage>();
-
-        private Dictionary<int, ProfileAccentPalette> SenderAccents { get; } = new Dictionary<int, ProfileAccentPalette>();
-
-        private HashSet<int> RequestedSenderAccents { get; } = new HashSet<int>();
 
         private List<ChatMessageRow> Rows { get; } = new List<ChatMessageRow>();
 
@@ -249,11 +243,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             row.UpdateWhenInvisible = false;
             row.SenderMenuRequested += OnSenderMenuRequested;
 
-            if (SenderAccents.TryGetValue(message.SenderId, out var accent))
-                row.SetSenderAccent(accent);
-            else
-                RequestSenderAccent(message.SenderId);
-
             AddContainedDrawable(row);
 
             Messages.Add(message);
@@ -263,27 +252,6 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             NeedsReflow = true;
             if (shouldRemainAtBottom)
                 NeedsScrollToBottom = true;
-        }
-
-        private void RequestSenderAccent(int userId)
-        {
-            if (userId <= 0 || !RequestedSenderAccents.Add(userId))
-                return;
-
-            ProfileViewerDataCache.GetApiDataAsync(userId).ContinueWith(task => AddScheduledUpdate(() =>
-            {
-                if (IsDisposed)
-                    return;
-
-                var accent = task.Status == TaskStatus.RanToCompletion ? task.Result?.Accent : null;
-                SenderAccents[userId] = accent;
-
-                foreach (var row in Rows)
-                {
-                    if (row.Item.SenderId == userId)
-                        row.SetSenderAccent(accent);
-                }
-            }));
         }
 
         private void TrimRetainedMessages()

@@ -705,7 +705,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             if (AccentPalette == null)
                 return;
 
-            Username.Tint = AccentPalette.Readable;
             StatsBackground.Tint = Color.Lerp(SkinV2Color.Parse(Config.StatsBackgroundColor), AccentPalette.Accent, Config.AccentSurfaceOpacity);
             RankPill.Tint = AccentPalette.Accent;
             RatingPill.Tint = AccentPalette.Accent;
