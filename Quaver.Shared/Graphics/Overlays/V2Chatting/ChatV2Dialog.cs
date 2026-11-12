@@ -979,7 +979,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 InputBar.ScreenRectangle.Top - ChatSection.ScreenRectangle.Top - Config.Emotes.PickerHeight - Config.Emotes.InputGap);
         }
 
-        private void DismissEmotePicker()
+        private void DismissEmotePicker(bool refocusInput = true)
         {
             if (EmotePicker == null)
                 return;
@@ -987,6 +987,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             EmotePicker.EmoteSelected -= OnEmoteSelected;
             EmotePicker.Destroy();
             EmotePicker = null;
+
+            if (refocusInput && InputBar != null)
+                InputBar.Focused = true;
         }
 
         internal IReadOnlyList<SkinEditorTarget> GetSkinEditorTargets() => new[]
@@ -1044,7 +1047,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             DismissOverflowMenu();
             DismissUserMenu();
-            DismissEmotePicker();
+            DismissEmotePicker(false);
 
             base.Destroy();
 
