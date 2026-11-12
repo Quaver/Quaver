@@ -531,6 +531,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
                 ("advanced.gameplay.combo-alerts", "EnableComboAlerts", Toggle(() => ConfigManager.DisplayComboAlerts)),
                 ("advanced.gameplay.unbeatable-scores", "DisplayUnbeatableScores", Toggle(() => ConfigManager.DisplayUnbeatableScoresDuringGameplay)),
                 ("advanced.gameplay.keep-playing-on-fail", "KeepPlayingUponFailing", Toggle(() => ConfigManager.KeepPlayingUponFailing)),
+                ("advanced.gameplay.experimental-health", "EnableExperimentalHealthUnranked", Toggle(() => ConfigManager.ExperimentalHealth)),
                 ("advanced.gameplay.normalize-scroll-by-rate", "NormaliseScrollVelocityByRatePercentage", Slider(() => ConfigManager.NormaliseScrollVelocityByRatePercentage)));
 
             AddSection(options, OptionCategory.Advanced, "Skin",
