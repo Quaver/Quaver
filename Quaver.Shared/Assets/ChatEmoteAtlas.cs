@@ -8,7 +8,7 @@ namespace Quaver.Shared.Assets;
 
 internal sealed class ChatEmoteAtlas
 {
-    private const int SourceSize = 30;
+    private const int SourceSize = 28;
     private const int SourceStride = 38;
 
     private static readonly string[] EmoteNames =
