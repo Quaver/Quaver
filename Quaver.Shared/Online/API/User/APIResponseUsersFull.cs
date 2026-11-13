@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Quaver.API.Enums;
 
 namespace Quaver.Shared.Online.API.User
 {
@@ -21,11 +22,20 @@ namespace Quaver.Shared.Online.API.User
         [JsonProperty("accent_color")]
         public string AccentColor { get; set; }
 
+        [JsonProperty("misc_information")]
+        public APIResponseUsersFullInformation MiscInformation { get; set; }
+
         [JsonProperty("stats_keys4")]
         public APIResponseUsersFullMode StatsKeys4 { get; set; }
 
         [JsonProperty("stats_keys7")]
         public APIResponseUsersFullMode StatsKeys7 { get; set; }
+    }
+
+    public class APIResponseUsersFullInformation
+    {
+        [JsonProperty("default_mode")]
+        public GameMode DefaultMode { get; set; } = GameMode.Keys4;
     }
 
     // ReSharper disable once InconsistentNaming

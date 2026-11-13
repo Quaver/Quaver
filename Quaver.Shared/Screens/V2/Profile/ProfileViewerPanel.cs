@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Server.Client;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Config;
 using Quaver.Shared.Graphics;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Users;
@@ -17,6 +17,7 @@ using Quaver.Shared.Scheduling;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
@@ -44,8 +45,6 @@ namespace Quaver.Shared.Screens.V2.Profile
         private Container IdentityPanel { get; }
 
         private Container StatsPanel { get; }
-
-        private Sprite StatsBackground { get; }
 
         private FlexContainer IdentityLayout { get; }
 
@@ -81,8 +80,6 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private RoundedButton ChatButton { get; }
 
-        private RoundedButton SteamButton { get; }
-
         private RoundedButton SpectateButton { get; }
 
         private RoundedButton MoreButton { get; }
@@ -93,12 +90,6 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private ProfileStatPill AccuracyPill { get; }
 
-        private RoundedButton ModeButton { get; }
-
-        private Sprite ModeSelection { get; }
-
-        private SpriteTextPlus ModeLabel { get; }
-
         private UserRightClickOptions MoreMenu { get; set; }
 
         private List<IDisposable> TooltipRegistrations { get; } = new List<IDisposable>();
@@ -107,17 +98,17 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private TooltipOptions ChatTooltip { get; }
 
-        private TooltipOptions SteamTooltip { get; }
-
         private TooltipOptions SpectateTooltip { get; }
 
         private APIResponseUsersFull LoadedStats { get; set; }
 
         private ProfileAccentPalette AccentPalette { get; set; }
 
-        private GameMode ActiveMode { get; set; } = GameMode.Keys4;
+        private UserRelationshipStatus Relationship { get; }
 
         private bool? LastFriendState { get; set; }
+
+        private bool? LastFriendRemoveIconState { get; set; }
 
         private bool? LastSpectatingState { get; set; }
 
@@ -134,23 +125,21 @@ namespace Quaver.Shared.Screens.V2.Profile
             User = user ?? throw new ArgumentNullException(nameof(user));
             LoadedStats = data?.Response;
             AccentPalette = data?.Accent;
+            Relationship = data?.Relationship;
             Skin = skin ?? throw new ArgumentNullException(nameof(skin));
             CloseDialog = closeDialog ?? throw new ArgumentNullException(nameof(closeDialog));
             OverlayHost = overlayHost ?? throw new ArgumentNullException(nameof(overlayHost));
             Config = ProfileViewerStyle.Default;
             Size = new ScalableVector2(Config.Width, Config.Height);
 
-            if (ConfigManager.SelectedGameMode != null)
-                ActiveMode = ConfigManager.SelectedGameMode.Value;
+            Cover = new RoundedCoverSprite(Config.Width, Config.Height, Config.CornerRadius, SkinV2Color.Parse(Config.IdentityBackgroundColor), Config.ProfileCoverBrightness, UserInterface.DefaultBanner)
+            {
+                Parent = this
+            };
+            if (data?.Cover != null)
+                Cover.SetSource(data.Cover);
 
             RootLayout = CreateFlex(this, Size, FlexDirection.Column, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.PanelGap);
-
-            IdentityPanel = new Container
-            {
-                Parent = RootLayout,
-                Size = new ScalableVector2(Config.Width, Config.IdentityHeight)
-            };
-            RootLayout.SetItemOptions(IdentityPanel, FixedBasis(Config.IdentityHeight));
 
             StatsPanel = new Container
             {
@@ -159,20 +148,16 @@ namespace Quaver.Shared.Screens.V2.Profile
             };
             RootLayout.SetItemOptions(StatsPanel, FixedBasis(Config.StatsHeight));
 
-            Cover = new RoundedCoverSprite(Config.Width, Config.IdentityHeight, Config.CornerRadius,
-                SkinV2Color.Parse(Config.IdentityBackgroundColor), Config.ProfileCoverBrightness,
-                UserInterface.DefaultBanner)
+            IdentityPanel = new Container
             {
-                Parent = IdentityPanel
+                Parent = RootLayout,
+                Size = new ScalableVector2(Config.Width, Config.IdentityHeight)
             };
-            if (data?.Cover != null)
-                Cover.SetSource(data.Cover);
+            RootLayout.SetItemOptions(IdentityPanel, FixedBasis(Config.IdentityHeight));
 
-            StatsBackground = CreateRoundedSprite(Config.Width, Config.StatsHeight, Config.CornerRadius, SkinV2Color.Parse(Config.StatsBackgroundColor));
-            StatsBackground.Parent = StatsPanel;
-
-            IdentityLayout = CreateFlex(IdentityPanel, IdentityPanel.Size, FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Center);
-            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityHeight);
+            IdentityLayout = CreateFlex(IdentityPanel, new ScalableVector2(Config.Width, Config.IdentityContentHeight), FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.FlexStart);
+            IdentityLayout.Alignment = Alignment.TopLeft;
+            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityContentHeight);
 
             Avatar = new RoundedTextureSprite(Config.AvatarSize, Config.AvatarSize, Config.CornerRadius,
                 GetAvatar())
@@ -181,9 +166,9 @@ namespace Quaver.Shared.Screens.V2.Profile
             };
             IdentityLayout.SetItemOptions(Avatar, FixedBasis(Config.AvatarSize));
 
-            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityHeight);
+            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityContentHeight);
 
-            InfoLayout = CreateFlex(IdentityLayout, new ScalableVector2(1, Config.AvatarSize), FlexDirection.Column, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.InfoGap);
+            InfoLayout = CreateFlex(IdentityLayout, new ScalableVector2(1, Config.IdentityContentHeight), FlexDirection.Column, FlexJustifyContent.FlexStart, FlexAlignItems.Stretch, Config.InfoGap);
             IdentityLayout.SetItemOptions(InfoLayout, new FlexItemOptions { Basis = 1, Grow = 1, Shrink = 1 });
 
             NameLayout = CreateFlex(InfoLayout, new ScalableVector2(1, Config.IdentityRowHeight), FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Center);
@@ -248,59 +233,34 @@ namespace Quaver.Shared.Screens.V2.Profile
                 AlignSelf = FlexAlignSelf.FlexStart
             });
 
-            ActionsLayout = CreateFlex(IdentityPanel, new ScalableVector2(Config.ActionsWidth, Config.AvatarSize), FlexDirection.Row, FlexJustifyContent.FlexEnd, FlexAlignItems.FlexEnd, Config.ActionSpacing);
+            ActionsLayout = CreateFlex(StatsPanel, new ScalableVector2(Config.ActionsWidth, Config.StatsHeight), FlexDirection.Row, FlexJustifyContent.FlexEnd, FlexAlignItems.Center, Config.ActionSpacing);
             ActionsLayout.Alignment = Alignment.MidRight;
             ActionsLayout.X = -Config.ContentPadding;
 
             FriendButton = CreateActionButton(GlobalIcon.HeartWhite, PerformPrimaryAction, 0);
             ChatButton = CreateActionButton(GlobalIcon.Chat, PerformSecondaryAction, 1);
-            SteamButton = CreateActionButton(GlobalIcon.Steam, OpenSteamProfile, 2);
-            SpectateButton = CreateActionButton(GlobalIcon.ViewProfile, PerformTertiaryAction, 3);
-            MoreButton = CreateActionButton(GlobalIcon.Options, ToggleMoreMenu, 4);
+            SpectateButton = CreateActionButton(GlobalIcon.ViewProfile, PerformTertiaryAction, 2);
+            MoreButton = CreateActionButton(GlobalIcon.Options, ToggleMoreMenu, 3);
 
-            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityHeight);
+            CreateSpacer(IdentityLayout, Config.ContentPadding, Config.IdentityContentHeight);
 
             StatsLayout = CreateFlex(StatsPanel, StatsPanel.Size, FlexDirection.Row, FlexJustifyContent.FlexStart, FlexAlignItems.Center);
             CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
             RankPill = CreateStatPill(CapsuleIcon.GlobalRank);
-            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
+            CreateSpacer(StatsLayout, Config.StatSpacing, Config.StatsHeight);
             RatingPill = CreateStatPill(CapsuleIcon.LineChart);
-            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
+            CreateSpacer(StatsLayout, Config.StatSpacing, Config.StatsHeight);
             AccuracyPill = CreateStatPill(CapsuleIcon.Accuracy);
 
             var statsSpacer = CreateSpacer(StatsLayout, 1, Config.StatsHeight);
             StatsLayout.SetItemOptions(statsSpacer, new FlexItemOptions { Basis = 1, Grow = 1, Shrink = 1 });
 
-            ModeButton = new RoundedButton((sender, args) => ToggleMode())
-            {
-                Parent = StatsLayout,
-                Size = new ScalableVector2(Config.ModeWidth, Config.ModeHeight),
-                CornerRadius = Config.ModeHeight / 2,
-                Tint = SkinV2Color.Parse(Config.ModeBackgroundColor),
-                UsePreviousSpriteBatchOptions = true
-            };
-            StatsLayout.SetItemOptions(ModeButton, FixedBasis(Config.ModeWidth));
-            ModeSelection = CreateRoundedSprite(Config.ModeSelectionWidth, Config.ModeSelectionHeight, Config.ModeSelectionHeight / 2, SkinV2Color.Parse(Config.ModeSelectionColor));
-            ModeSelection.Parent = ModeButton;
-            ModeSelection.Alignment = Alignment.MidLeft;
-            ModeSelection.X = Config.ModeSelectionInset;
-            ModeLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Config.PrimaryFont), "4K", Config.ModeFontSize)
-            {
-                Parent = ModeSelection,
-                Alignment = Alignment.MidCenter,
-                Tint = SkinV2Color.Parse(Config.ModeBackgroundColor),
-                UsePreviousSpriteBatchOptions = true
-            };
-            CreateSpacer(StatsLayout, Config.ContentPadding, Config.StatsHeight);
-
             FriendTooltip = new TooltipOptions(LocalizationManager.Get("Screen_Hub_AddFriend"));
             ChatTooltip = new TooltipOptions(LocalizationManager.Get("Screen_Main_Menu_Chat"));
-            SteamTooltip = new TooltipOptions(LocalizationManager.Get("Screen_Multiplayer_SteamProfile"));
             SpectateTooltip = new TooltipOptions(LocalizationManager.Get("Screen_Hub_Spectate"));
 
             TooltipRegistrations.Add(FriendButton.AddTooltip(FriendTooltip));
             TooltipRegistrations.Add(ChatButton.AddTooltip(ChatTooltip));
-            TooltipRegistrations.Add(SteamButton.AddTooltip(SteamTooltip));
             TooltipRegistrations.Add(SpectateButton.AddTooltip(SpectateTooltip));
             TooltipRegistrations.Add(MoreButton.AddTooltip(LocalizationManager.Get("Screen_Selection_Options")));
             TooltipRegistrations.Add(RankPill.AddTooltip(LocalizationManager.Get("Screen_Selection_GlobalRank")));
@@ -333,6 +293,35 @@ namespace Quaver.Shared.Screens.V2.Profile
         }
 
         public bool IsInteractionHovered() => IsHovered() || MoreMenu?.IsHovered() == true;
+
+        public void BeginOpenAnimation(int duration)
+        {
+            var elements = new Sprite[]
+            {
+                Cover,
+                RankPill,
+                RatingPill,
+                AccuracyPill,
+                FriendButton,
+                ChatButton,
+                SpectateButton,
+                MoreButton,
+                Avatar,
+                Flag,
+                Clan,
+                Username,
+                Status.TextSprite,
+                RoleBadge
+            };
+
+            for (var i = 0; i < elements.Length; i++)
+            {
+                var element = elements[i];
+                element.ClearAnimations();
+                element.Alpha = 0;
+                element.FadeTo(1, Easing.OutQuint, duration + i * 12);
+            }
+        }
 
         public override void Destroy()
         {
@@ -449,24 +438,29 @@ namespace Quaver.Shared.Screens.V2.Profile
             }
 
             UpdateActionButtonVisibility(ChatButton, !IsSelf, 1);
-            UpdateActionButtonVisibility(SpectateButton, IsSelf || IsOnline, 3);
+            UpdateActionButtonVisibility(SpectateButton, IsSelf || IsOnline, 2);
 
             if (IsSelf)
             {
                 SetActionEnabled(FriendButton, User.HasUserInfo, Config.ActionButtonColor);
                 SetActionEnabled(ChatButton, false, Config.ActionButtonColor);
-                SetActionEnabled(SteamButton, User.HasUserInfo && User.OnlineUser.SteamId > 0, Config.ActionButtonColor);
                 SetActionEnabled(SpectateButton, User.HasUserInfo, Config.ActionButtonColor);
                 ApplyClickableAccent(MoreButton);
                 return;
             }
 
             var isFriend = OnlineManager.FriendsList?.Contains(User.OnlineUser.Id) == true;
-            if (LastFriendState != isFriend)
+            var showRemoveFriendIcon = isFriend && FriendButton.IsHovered();
+            if (LastFriendState != isFriend || LastFriendRemoveIconState != showRemoveFriendIcon)
             {
                 LastFriendState = isFriend;
+                LastFriendRemoveIconState = showRemoveFriendIcon;
+                var icon = showRemoveFriendIcon ? GlobalIcon.RemoveUser : isFriend ? GlobalIcon.HeartWhite : GlobalIcon.AddUser;
+                FriendButton.SetIcon(GlobalIcons.Get(icon), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
                 FriendTooltip.Text = LocalizationManager.Get(isFriend ? "Screen_Hub_RemoveFriend" : "Screen_Hub_AddFriend");
             }
+
+            var isMutual = isFriend && (Relationship?.IsFriended == true || User is UserFriend { IsMutual: true });
 
             var spectating = OnlineManager.SpectatorClients?.ContainsKey(User.OnlineUser.Id) == true;
             if (LastSpectatingState != spectating)
@@ -475,9 +469,9 @@ namespace Quaver.Shared.Screens.V2.Profile
                 SpectateTooltip.Text = LocalizationManager.Get(spectating ? "Screen_Hub_StopSpectating" : "Screen_Hub_Spectate");
             }
 
-            SetActionEnabled(FriendButton, !IsSelf && User.HasUserInfo, isFriend ? Config.FriendedActionButtonColor : Config.ActionButtonColor, !isFriend);
+            var friendButtonColor = isMutual ? Config.MutualFriendActionButtonColor : isFriend ? Config.FriendedActionButtonColor : Config.ActionButtonColor;
+            SetActionEnabled(FriendButton, !IsSelf && User.HasUserInfo, friendButtonColor, !isFriend);
             SetActionEnabled(ChatButton, !IsSelf && User.HasUserInfo, Config.ActionButtonColor);
-            SetActionEnabled(SteamButton, User.HasUserInfo && User.OnlineUser.SteamId > 0, Config.ActionButtonColor);
             SetActionEnabled(SpectateButton, IsOnline && User.HasUserInfo && OnlineManager.SpectatorClients != null, spectating ? Config.SelectedActionButtonColor : Config.ActionButtonColor);
             ApplyClickableAccent(MoreButton);
         }
@@ -510,21 +504,17 @@ namespace Quaver.Shared.Screens.V2.Profile
             if (IsSelf)
             {
                 FriendButton.SetIcon(GlobalIcons.Get(GlobalIcon.ViewProfile), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
-                SteamButton.SetIcon(GlobalIcons.Get(GlobalIcon.Steam), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
                 SpectateButton.SetIcon(GlobalIcons.Get(GlobalIcon.LogOut), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
 
                 FriendTooltip.Text = LocalizationManager.Get("Screen_Multiplayer_ViewProfile");
-                SteamTooltip.Text = LocalizationManager.Get("Screen_Multiplayer_SteamProfile");
                 SpectateTooltip.Text = LocalizationManager.Get("ProfileViewer_Action_Logout");
                 return;
             }
 
             FriendButton.SetIcon(GlobalIcons.Get(GlobalIcon.HeartWhite), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
             ChatButton.SetIcon(GlobalIcons.Get(GlobalIcon.Chat), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
-            SteamButton.SetIcon(GlobalIcons.Get(GlobalIcon.Steam), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
             SpectateButton.SetIcon(GlobalIcons.Get(GlobalIcon.ViewProfile), new Vector2(Config.ActionIconSize, Config.ActionIconSize));
             ChatTooltip.Text = LocalizationManager.Get("Screen_Main_Menu_Chat");
-            SteamTooltip.Text = LocalizationManager.Get("Screen_Multiplayer_SteamProfile");
         }
 
         private void SetActionEnabled(RoundedButton button, bool enabled, string enabledColor, bool applyAccent = true)
@@ -591,9 +581,13 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private void ToggleFriend()
         {
-            var action = OnlineManager.FriendsList?.Contains(User.OnlineUser.Id) == true ? UserMenuAction.RemoveFriend : UserMenuAction.AddFriend;
-            UserRightClickOptions.PerformAction(User, action);
+            if (OnlineManager.FriendsList?.Contains(User.OnlineUser.Id) == true)
+                OnlineManager.RemoveFriend(User);
+            else
+                OnlineManager.AddFriend(User);
+
             LastFriendState = null;
+            LastFriendRemoveIconState = null;
         }
 
         private void OpenChat()
@@ -601,8 +595,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             if (UserRightClickOptions.PerformAction(User, UserMenuAction.Chat))
                 CloseDialog();
         }
-
-        private void OpenSteamProfile() => UserRightClickOptions.PerformAction(User, UserMenuAction.SteamProfile);
 
         private void ToggleSpectate()
         {
@@ -634,10 +626,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private HashSet<UserMenuAction> GetDedicatedActions()
         {
-            var actions = new HashSet<UserMenuAction>
-            {
-                UserMenuAction.SteamProfile
-            };
+            var actions = new HashSet<UserMenuAction>();
 
             if (IsSelf)
             {
@@ -663,18 +652,12 @@ namespace Quaver.Shared.Screens.V2.Profile
             MoreMenu = null;
         }
 
-        private void ToggleMode()
-        {
-            ActiveMode = ActiveMode == GameMode.Keys4 ? GameMode.Keys7 : GameMode.Keys4;
-            UpdateStats();
-        }
-
         private void UpdateStats()
         {
-            var is4K = ActiveMode == GameMode.Keys4;
-            ModeSelection.Alignment = is4K ? Alignment.MidLeft : Alignment.MidRight;
-            ModeSelection.X = is4K ? Config.ModeSelectionInset : -Config.ModeSelectionInset;
-            ModeLabel.Text = is4K ? "4K" : "7K";
+            var defaultMode = LoadedStats?.User?.MiscInformation?.DefaultMode == GameMode.Keys4
+                ? GameMode.Keys4
+                : GameMode.Keys7;
+            var is4K = defaultMode == GameMode.Keys4;
 
             var apiStats = is4K ? LoadedStats?.User?.StatsKeys4 : LoadedStats?.User?.StatsKeys7;
             if (apiStats != null)
@@ -683,7 +666,7 @@ namespace Quaver.Shared.Screens.V2.Profile
                 return;
             }
 
-            if (User.Stats.TryGetValue(ActiveMode, out var userStats))
+            if (User.Stats.TryGetValue(defaultMode, out var userStats))
             {
                 SetStats(userStats.Rank, userStats.OverallPerformanceRating, userStats.OverallAccuracy);
                 return;
@@ -705,7 +688,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             if (AccentPalette == null)
                 return;
 
-            StatsBackground.Tint = Color.Lerp(SkinV2Color.Parse(Config.StatsBackgroundColor), AccentPalette.Accent, Config.AccentSurfaceOpacity);
             RankPill.Tint = AccentPalette.Accent;
             RatingPill.Tint = AccentPalette.Accent;
             AccuracyPill.Tint = AccentPalette.Accent;
@@ -844,14 +826,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             Basis = basis,
             Grow = 0,
             Shrink = 0
-        };
-
-        private static Sprite CreateRoundedSprite(float width, float height, float radius, Color tint) => new Sprite
-        {
-            Size = new ScalableVector2(width, height),
-            Image = RoundedRectTextureCache.Get(width, height, radius),
-            Tint = tint,
-            UsePreviousSpriteBatchOptions = true
         };
 
         private class RoundedTextureSprite : Sprite

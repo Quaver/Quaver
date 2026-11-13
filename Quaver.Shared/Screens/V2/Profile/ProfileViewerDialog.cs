@@ -8,6 +8,7 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Online;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
@@ -30,6 +31,8 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private ProfileViewerPanel Panel { get; set; }
 
+        private HorizontalClippingContainer RevealClip { get; set; }
+
         private Task<ProfileViewerData> DataTask { get; }
 
         private ProfileViewerData Data { get; set; }
@@ -40,6 +43,8 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private bool IsContentCreated { get; set; }
 
+        private bool RevealFromBottom { get; set; }
+
         public ProfileViewerDialog(User user, RectangleF? anchor = null) : base(0)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
@@ -49,7 +54,7 @@ namespace Quaver.Shared.Screens.V2.Profile
             Anchor = anchor;
             Skin = SkinManager.AcquireV2();
             Config = ProfileViewerStyle.Default;
-            DataTask = ProfileViewerDataCache.GetAsync(User);
+            DataTask = ProfileViewerDataCache.GetViewerDataAsync(User);
             Tint = Color.Transparent;
 
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
@@ -76,14 +81,21 @@ namespace Quaver.Shared.Screens.V2.Profile
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
             Container.Size = Size;
 
-            Panel = new ProfileViewerPanel(User, Data, Skin, Close, Container)
+            RevealClip = new HorizontalClippingContainer
             {
                 Parent = Container,
-                Alignment = Anchor.HasValue ? Alignment.TopLeft : Alignment.MidCenter
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Config.Width, Config.Height)
+            };
+
+            Panel = new ProfileViewerPanel(User, Data, Skin, Close, Container)
+            {
+                Parent = RevealClip,
+                Alignment = Alignment.TopLeft
             };
 
             PositionPanel();
-            FadeTo(1, Easing.Linear, Config.AnimationDurationMilliseconds);
+            BeginOpenAnimation();
         }
 
         public override void Update(GameTime gameTime)
@@ -152,20 +164,60 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private void PositionPanel()
         {
-            if (!Anchor.HasValue || Panel == null)
+            if (Panel == null || RevealClip == null)
                 return;
 
-            var anchor = Anchor.Value;
-            var gap = Config.AnchorGap;
-            var availableBelow = WindowManager.Height - anchor.Bottom - gap;
-            var availableAbove = anchor.Top - gap;
-            var opensBelow = availableBelow >= Panel.Height || availableBelow >= availableAbove;
-            var x = MathHelper.Clamp(anchor.Left, 0, Math.Max(0, WindowManager.Width - Panel.Width));
-            var y = opensBelow ? anchor.Bottom + gap : anchor.Top - gap - Panel.Height;
+            var safetyGap = ScreenNavigation.TopSafetyGap;
+            var maximumX = Math.Max(safetyGap, WindowManager.Width - safetyGap - Panel.Width);
+            var maximumY = Math.Max(safetyGap, WindowManager.Height - safetyGap - Panel.Height);
+            float x;
+            float y;
 
-            Panel.Position = new ScalableVector2(
-                x - Container.ScreenRectangle.Left,
-                MathHelper.Clamp(y, 0, Math.Max(0, WindowManager.Height - Panel.Height)) - Container.ScreenRectangle.Top);
+            if (Anchor.HasValue)
+            {
+                var anchor = Anchor.Value;
+                var gap = Config.AnchorGap;
+                var availableBelow = WindowManager.Height - safetyGap - anchor.Bottom - gap;
+                var availableAbove = anchor.Top - gap - safetyGap;
+                var opensBelow = availableBelow >= Panel.Height || availableBelow >= availableAbove;
+                RevealFromBottom = !opensBelow;
+                x = anchor.Left;
+                y = opensBelow ? anchor.Bottom + gap : anchor.Top - gap - Panel.Height;
+            }
+            else
+            {
+                RevealFromBottom = false;
+                x = (WindowManager.Width - Panel.Width) / 2f;
+                y = (WindowManager.Height - Panel.Height) / 2f;
+            }
+
+            RevealClip.ClearAnimations();
+            Panel.ClearAnimations();
+            RevealClip.Size = Panel.Size;
+            Panel.Position = new ScalableVector2(0, 0);
+            RevealClip.Position = new ScalableVector2(
+                MathHelper.Clamp(x, safetyGap, maximumX) - Container.ScreenRectangle.Left,
+                MathHelper.Clamp(y, safetyGap, maximumY) - Container.ScreenRectangle.Top);
+        }
+
+        private void BeginOpenAnimation()
+        {
+            var duration = Math.Max(1, Config.AnimationDurationMilliseconds);
+            var finalPosition = new Vector2(RevealClip.X, RevealClip.Y);
+            RevealClip.Height = 1;
+
+            if (RevealFromBottom)
+            {
+                var offset = Panel.Height - 1;
+                RevealClip.Y = finalPosition.Y + offset;
+                Panel.Y = -offset;
+                RevealClip.MoveToPosition(finalPosition, Easing.OutQuint, duration);
+                Panel.MoveToPosition(Vector2.Zero, Easing.OutQuint, duration);
+            }
+
+            RevealClip.ChangeHeightTo((int) Math.Round(Panel.Height), Easing.OutQuint, duration);
+            Alpha = 1;
+            Panel.BeginOpenAnimation(duration);
         }
     }
 }
