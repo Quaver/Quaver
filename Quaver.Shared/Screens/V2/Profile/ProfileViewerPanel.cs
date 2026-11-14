@@ -228,7 +228,7 @@ namespace Quaver.Shared.Screens.V2.Profile
                 IsActive = true,
                 UsePreviousSpriteBatchOptions = true
             };
-            Status.TextSprite.Tint = SkinV2Color.Parse(Config.SecondaryTextColor);
+            Status.TextSprite.Tint = SkinV2Color.Parse(Config.TextColor);
 
             RoleBadge = new Sprite
             {
