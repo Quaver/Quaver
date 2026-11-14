@@ -143,6 +143,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D TwitchIconWhite => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon-white.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D Emoji => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emoji.png");
+        public static Texture2D ChatEmoteSheet => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emote-sheet.png");
         public static Texture2D TopicHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/topic-header.png");
         public static Texture2D CloseChannelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/close-channel.png");
         public static Texture2D RoundedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/rounded-panel.png");

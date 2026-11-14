@@ -107,7 +107,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), string.Empty, 18)
             {
                 Parent = this,
-                Tint = ColorHelper.FromHex("#9FA8B6")
+                Tint = ColorHelper.FromHex("#9FA8B6"),
+                UsePreviousSpriteBatchOptions = true
             };
 
             // This button is invisible and is only here to apply the hover effect on the sender components
@@ -169,8 +170,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             var messageWidth = Math.Max(1, width - messageX - 10);
 
             Message.Position = new ScalableVector2(messageX, VerticalPadding);
+            Message.Text = ChatEmoteGlyphs.ReplaceAliases(ConfigManager.ChatCensorEnabled.Value
+                ? ChatCensor.Censor(item.Message)
+                : item.Message ?? string.Empty);
             Message.MaxWidth = messageWidth;
-            Message.Text = ConfigManager.ChatCensorEnabled.Value ? ChatCensor.Censor(item.Message) : item.Message ?? string.Empty;
 
             Height = Math.Max(40, Message.Height + VerticalPadding * 2);
         }

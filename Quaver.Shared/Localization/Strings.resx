@@ -189,6 +189,12 @@
   <data name="Chat_CannotWriteInChannel" xml:space="preserve">
     <value>You cannot write in this channel</value>
   </data>
+  <data name="Chat_Emotes" xml:space="preserve">
+    <value>Emotes</value>
+  </data>
+  <data name="Chat_SearchEmotes" xml:space="preserve">
+    <value>Search emotes...</value>
+  </data>
   <data name="Screen_Options_Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
