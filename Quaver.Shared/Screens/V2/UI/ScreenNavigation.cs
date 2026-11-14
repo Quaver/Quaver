@@ -191,9 +191,6 @@ namespace Quaver.Shared.Screens.V2.UI
             var buttons = new List<RoundedButton>();
             SetTopBar(layout =>
             {
-                buttons.Add(layout.AddIconButton(NavigationBarRegion.Left,
-                    GlobalIcons.Get(GlobalIcon.Jukebox),
-                    LocalizationManager.Get("Screen_Main_Menu_Jukebox"), ShowMusicQueue));
                 buttons.Add(layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Chat),
                     LocalizationManager.Get("Screen_Options_ToggleChatOverlay"), ToggleChat));
                 layout.AddSharedRightControls();

@@ -25,6 +25,10 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(1, 8192)]
         public float BannerHeight { get; set; } = 55;
 
+        [Range(0, 4096)]
+        [SkinEditorIgnore]
+        public float BannerCornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
         [Range(0, 2048)]
         [SkinEditorIgnore]
         public float BannerTextHorizontalPadding { get; set; } = SkinV2MarginsConfig.Md;
@@ -39,6 +43,10 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(0, 2048)]
         [SkinEditorIgnore]
         public float Padding { get; set; } = SkinV2MarginsConfig.Md;
+
+        [Range(0, 2048)]
+        [SkinEditorIgnore]
+        public float ControlsLeftInset { get; set; } = SkinV2Spacing.Spacing2Xs;
 
         [Range(0, 2048)]
         [SkinEditorIgnore]

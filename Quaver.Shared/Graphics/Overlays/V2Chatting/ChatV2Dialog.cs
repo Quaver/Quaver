@@ -48,6 +48,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private bool OwnsSkin { get; }
         private bool PreviewMode { get; }
         private SkinV2Config RootConfig { get; }
+        private ChatEmoteAtlas EmoteAtlas { get; }
         private SkinV2ChatConfig Config => RootConfig.Screens.Chat;
         private float SearchSectionWidth => Config.Layout.SearchSectionWidth;
         private float SectionGap => Config.Layout.Gap;
@@ -79,6 +80,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         private FlexContainer ContentLayout {  get; set; }
         private ChatMessageList MessageList { get; set; }
         private ChatInputBar InputBar { get; set; }
+        private ChatEmotePicker EmotePicker { get; set; }
         private ScrollContainer PreviewMessageList { get; set; }
         private ChatMessageRow PreviewMessageRow { get; set; }
         private ChatPreviewUserList PreviewUserList { get; set; }
@@ -124,6 +126,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             OwnsSkin = skin == null;
             RootConfig = config ?? Skin.Config;
             PreviewMode = previewMode;
+            var fallbackEmotes = UserInterface.ChatEmoteSheet;
+            EmoteAtlas = ChatEmoteAtlas.Create(Skin.LoadTexture(Config.Emotes.Sheet, fallbackEmotes), fallbackEmotes);
             OverflowTabsButtonLayoutOptions.Basis = HeaderButtonSize;
             SearchSectionLayoutOptions.Basis = SearchSectionWidth;
 
@@ -435,6 +439,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             HeaderTabsLayout.Size = HeaderTabsClip.Size;
             RefreshTabOverflow();
+            RefreshEmotePickerLayout();
         }
 
         private void RefreshTabOverflow() => RefreshTabOverflow(0);
@@ -652,10 +657,11 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 AlignSelf = FlexAlignSelf.FlexStart
             });
 
-            InputBar = new ChatInputBar(ChatSession.ActiveChannel, new ScalableVector2(ContentLayout.Width, Config.Layout.InputHeight), Config.Input)
+            InputBar = new ChatInputBar(ChatSession.ActiveChannel, new ScalableVector2(ContentLayout.Width, Config.Layout.InputHeight), Config.Input, EmoteAtlas, Config.Emotes)
             {
                 Parent = ContentLayout,
             };
+            InputBar.EmotePickerRequested += OnEmotePickerRequested;
             ContentLayout.SetItemOptions(InputBar, new FlexItemOptions { Basis = Config.Layout.InputHeight, Shrink = 0 });
 
             UserSearchList = new ChatUserSearchList(ChatSession.ActiveChannel, UserSearchQuery,
@@ -821,6 +827,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
+                if (EmotePicker != null)
+                {
+                    DismissEmotePicker();
+                    return;
+                }
+
                 Close();
                 return;
             }
@@ -830,7 +842,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 if (NotificationManager.IsPointerOverActiveNotification)
                     return;
 
-                if (!Panel.IsHovered() && OverflowMenu?.IsHovered() != true)
+                if (EmotePicker != null && !EmotePicker.IsHovered() && InputBar?.IsEmoteButtonHovered != true)
+                    DismissEmotePicker();
+
+                if (!Panel.IsHovered() && OverflowMenu?.IsHovered() != true && EmotePicker?.IsHovered() != true)
                     Close();
             }
         }
@@ -840,6 +855,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             if (!IsResizing && MouseManager.IsUniquePress(MouseButton.Left) && HeaderLayout.IsHovered() &&
                 !OverflowTabsButton.IsHovered && !ToggleSearchSectionButton.IsHovered)
             {
+                DismissEmotePicker();
                 IsResizing = true;
                 ResizedDuringHeaderPress = false;
                 ResizeStartMouseY = MouseManager.CurrentState.Y;
@@ -894,6 +910,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             if (IsDisposed)
                 return;
 
+            DismissEmotePicker();
             Size = new ScalableVector2(e.Size.X, e.Size.Y);
             Container.Size = Size;
             Panel.Width = e.Size.X;
@@ -916,6 +933,60 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             IconColor = "#8CAFEAFF",
             CornerRadius = SkinV2BorderRadiusConfig.Normal
         };
+
+        private void OnEmotePickerRequested(object sender, EventArgs args)
+        {
+            if (EmotePicker != null)
+            {
+                DismissEmotePicker();
+                return;
+            }
+
+            DismissOverflowMenu();
+
+            var picker = new ChatEmotePicker(EmoteAtlas, Config.Emotes)
+            {
+                Parent = ChatSection
+            };
+            EmotePicker = picker;
+            EmotePicker.EmoteSelected += OnEmoteSelected;
+            RefreshEmotePickerLayout();
+
+            InputBar.Focused = false;
+            UserSearchBox.Focused = false;
+            AddScheduledUpdate(() =>
+            {
+                if (!IsDisposed && ReferenceEquals(EmotePicker, picker))
+                    picker.FocusSearch();
+            });
+        }
+
+        private void OnEmoteSelected(string name) => InputBar.AppendEmote(name);
+
+        private void RefreshEmotePickerLayout()
+        {
+            if (EmotePicker == null)
+                return;
+
+            var width = Math.Min(Config.Emotes.PickerWidth, Math.Max(1, ChatSection.Width - Config.Emotes.Padding - Config.Emotes.RightSpacing));
+            EmotePicker.Resize(width, Config.Emotes.PickerHeight);
+            EmotePicker.Position = new ScalableVector2(
+                ChatSection.Width - Config.Emotes.RightSpacing - width,
+                InputBar.ScreenRectangle.Top - ChatSection.ScreenRectangle.Top - Config.Emotes.PickerHeight - Config.Emotes.InputGap);
+        }
+
+        private void DismissEmotePicker(bool refocusInput = true)
+        {
+            if (EmotePicker == null)
+                return;
+
+            EmotePicker.EmoteSelected -= OnEmoteSelected;
+            EmotePicker.Destroy();
+            EmotePicker = null;
+
+            if (refocusInput && InputBar != null)
+                InputBar.Focused = true;
+        }
 
         internal IReadOnlyList<SkinEditorTarget> GetSkinEditorTargets() => new[]
         {
@@ -967,9 +1038,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 MessageList.SenderMenuRequested -= ShowProfileViewer;
             if (UserSearchList != null)
                 UserSearchList.OnRowClicked -= ShowProfileViewer;
+            if (InputBar != null)
+                InputBar.EmotePickerRequested -= OnEmotePickerRequested;
 
             DismissOverflowMenu();
+            DismissEmotePicker(false);
+
             base.Destroy();
+
             UserSearchQuery.Dispose();
             if (OwnsSkin)
                 Skin.Dispose();

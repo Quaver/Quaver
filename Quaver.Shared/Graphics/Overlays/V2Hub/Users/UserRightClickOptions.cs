@@ -27,7 +27,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
 {
     private User User { get; }
 
-    public UserRightClickOptions(User user, float width, SkinV2DropdownConfig config, Container overlayHost, ISet<UserMenuAction> excludedActions = null) 
+    public UserRightClickOptions(User user, float width, SkinV2DropdownConfig config, Container overlayHost, ISet<UserMenuAction> excludedActions = null)
         : base(width, GetOptions(user, excludedActions), FontManager.GetWobbleFont(Fonts.InterBold), config, overlayHost)
     {
         User = user;

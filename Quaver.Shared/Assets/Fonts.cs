@@ -22,6 +22,7 @@ namespace Quaver.Shared.Assets
         private const int InterImplicitFontSizeReduction = 0;
         private const int InterDefaultSize = 20;
         private const string Folder = "Quaver.Resources/Fonts";
+        private const string ChatEmotes = "ChatEmotes";
         private const string Emoji = "Emoji";
         private const string Cjk = "CJK";
         private const string Inter = "Inter";
@@ -45,6 +46,8 @@ namespace Quaver.Shared.Assets
             // Load fallback fonts or fonts that are used across multiple WobbleFonts
             var emojiFont =
                 GameBase.Game.Resources.Get($@"{Folder}/NotoColorEmoji/NotoColorEmoji.ttf");
+            var chatEmoteFont =
+                GameBase.Game.Resources.Get($@"{Folder}/ChatEmotes/QuaverChatEmotes.ttf");
 
             var notoCjkFont = new WobbleFontFace(
                 GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
@@ -56,6 +59,7 @@ namespace Quaver.Shared.Assets
             Dictionary<string, WobbleFontFace> CreateFallbacks() =>
                 new Dictionary<string, WobbleFontFace>
                 {
+                    { ChatEmotes, new WobbleFontFace(chatEmoteFont) },
                     { Emoji, new WobbleFontFace(emojiFont) },
                     { Cjk, notoCjkFont }
                 };
@@ -134,6 +138,7 @@ namespace Quaver.Shared.Assets
 
         private static Dictionary<string, WobbleFontFace> CreateFallbacks(string cultureName)
         {
+            var chatEmoteFont = GameBase.Game.Resources.Get($@"{Folder}/ChatEmotes/QuaverChatEmotes.ttf");
             var emojiFont = GameBase.Game.Resources.Get($@"{Folder}/NotoColorEmoji/NotoColorEmoji.ttf");
             var notoCjkFont = new WobbleFontFace(
                 GameBase.Game.Resources.Get($@"{Folder}/NotoCJK/NotoSansCJK-VF.ttf.ttc"),
@@ -142,6 +147,7 @@ namespace Quaver.Shared.Assets
 
             return new Dictionary<string, WobbleFontFace>
             {
+                { ChatEmotes, new WobbleFontFace(chatEmoteFont) },
                 { Emoji, new WobbleFontFace(emojiFont) },
                 { Cjk, notoCjkFont }
             };

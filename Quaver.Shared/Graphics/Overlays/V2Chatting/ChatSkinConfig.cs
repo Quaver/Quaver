@@ -20,6 +20,9 @@ public sealed class SkinV2ChatConfig
 
     [Required]
     public SkinV2ChatInputConfig Input { get; set; } = new();
+
+    [Required]
+    public SkinV2ChatEmotesConfig Emotes { get; set; } = new();
 }
 
 public sealed class SkinV2ChatLayoutConfig
@@ -122,4 +125,70 @@ public sealed class SkinV2ChatInputConfig
 
     [ConfigEditable, SkinColor]
     public string TextColor { get; set; } = "#FFFFFFFF";
+}
+
+public sealed class SkinV2ChatEmotesConfig
+{
+    [SkinAssetPath]
+    public string Sheet { get; set; } = "";
+
+    [Range(1, 4096)]
+    public float PickerWidth { get; set; } = 314;
+
+    [Range(1, 4096)]
+    public float PickerHeight { get; set; } = 238;
+
+    [Range(0, 512)]
+    public float Padding { get; set; } = SkinV2MarginsConfig.Md;
+
+    [Range(0, 512)]
+    public float SearchBorderSpacing { get; set; } = SkinV2MarginsConfig.Md;
+
+    [Range(0, 512)]
+    public float InputGap { get; set; } = SkinV2MarginsConfig.Md;
+
+    [Range(0, 512)]
+    public float RightSpacing { get; set; } = SkinV2MarginsConfig.Md;
+
+    [Range(0, 512)]
+    public float ColumnGap { get; set; } = SkinV2Spacing.Spacing2Xs;
+
+    [Range(0, 512)]
+    public float RowGap { get; set; } = SkinV2Spacing.SpacingBase;
+
+    [Range(1, 512)]
+    public float SearchHeight { get; set; } = 28;
+
+    [Range(1, 512)]
+    public float ButtonSize { get; set; } = 28;
+
+    [Range(1, 512)]
+    public float InputIconSize { get; set; } = 26;
+
+    [Range(0, 512)]
+    public float CornerRadius { get; set; } = SkinV2BorderRadiusConfig.Normal;
+
+    [SkinFont]
+    public string SearchFont { get; set; } = SkinV2FontWeightsConfig.SemiBold;
+
+    [Range(1, 256)]
+    public int SearchFontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
+
+    [Range(1, 512)]
+    public float SearchIconSize { get; set; } = 18;
+
+    [Range(0, 512)]
+    public float SearchIconInset { get; set; } = SkinV2MarginsConfig.Md;
+
+    [ConfigEditable, SkinColor]
+    public string BackgroundColor { get; set; } = "#181E25FF";
+
+    [ConfigEditable, SkinColor]
+    public string SearchBackgroundColor { get; set; } = "#273038FF";
+
+    [ConfigEditable, SkinColor]
+    public string SearchTextColor { get; set; } = "#D0DBEDFF";
+
+    [ConfigEditable, SkinColor]
+    public string SearchPlaceholderColor { get; set; } = "#8CAFEA80";
 }
