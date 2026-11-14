@@ -29,9 +29,11 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private bool ShowsBanner => Expanded && Config.ShowBanner;
 
+        private float ControlsLeftInset => Config.ControlsLeftInset;
+
         private Sprite Background { get; }
 
-        private Sprite Banner { get; }
+        private RoundedBanner Banner { get; }
 
         private Sprite BannerBrightness { get; }
 
@@ -84,18 +86,18 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (ShowsBanner)
             {
-                Banner = new Sprite
+                Banner = new RoundedBanner(Config.BannerWidth, Config.BannerHeight, Config.BannerCornerRadius, UserInterface.DefaultBanner)
                 {
                     Parent = this,
-                    Position = new ScalableVector2((Width - Config.BannerWidth) / 2f, Config.Padding),
-                    Size = new ScalableVector2(Config.BannerWidth, Config.BannerHeight),
-                    Image = UserInterface.DefaultBanner
+                    Position = new ScalableVector2((Width - Config.BannerWidth) / 2f, Config.Padding)
                 };
 
                 BannerBrightness = new Sprite
                 {
-                    Parent = Banner,
+                    Parent = this,
+                    Position = Banner.Position,
                     Size = Banner.Size,
+                    Image = RoundedRectTextureCache.Get(Banner.Width, Banner.Height, Config.BannerCornerRadius),
                     Tint = Color.White * Config.BannerBrightness
                 };
 
@@ -107,8 +109,8 @@ namespace Quaver.Shared.Screens.V2.UI
             Controls = new FlexContainer
             {
                 Parent = this,
-                Position = new ScalableVector2(Config.Padding, GetControlsY()),
-                Size = new ScalableVector2(Width - Config.Padding * 2, Config.ControlsHeight),
+                Position = new ScalableVector2(Config.Padding + ControlsLeftInset, GetControlsY()),
+                Size = new ScalableVector2(Width - Config.Padding * 2 - ControlsLeftInset, Config.ControlsHeight),
                 Direction = FlexDirection.Row,
                 AlignItems = FlexAlignItems.Center,
                 ColumnGap = Config.ControlGap
@@ -211,13 +213,15 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (Banner != null)
             {
-                Banner.Width = Math.Min(Config.BannerWidth, Math.Max(1, width - Config.Padding * 2));
+                Banner.Resize(Math.Min(Config.BannerWidth, Math.Max(1, width - Config.Padding * 2)), Config.BannerHeight);
                 Banner.X = (width - Banner.Width) / 2f;
+                BannerBrightness.Position = Banner.Position;
                 BannerBrightness.Size = Banner.Size;
+                BannerBrightness.Image = RoundedRectTextureCache.Get(Banner.Width, Banner.Height, Config.BannerCornerRadius);
                 RefreshBannerMetadataLayout();
             }
 
-            Controls.Width = Math.Max(1, width - Config.Padding * 2);
+            Controls.Width = Math.Max(1, width - Config.Padding * 2 - ControlsLeftInset);
             Controls.RefreshLayout();
             LastProgressWidth = -1;
         }
@@ -305,20 +309,20 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (map == null)
             {
-                Banner.Image = UserInterface.DefaultBanner;
+                Banner.Content.Image = UserInterface.DefaultBanner;
                 return;
             }
 
             var mapset = map.Mapset;
             if (mapset == null)
             {
-                Banner.Image = UserInterface.DefaultBanner;
+                Banner.Content.Image = UserInterface.DefaultBanner;
                 return;
             }
 
             if (BackgroundHelper.MapsetBanners.TryGetValue(mapset.Directory, out var banner) && banner != null && !banner.IsDisposed)
             {
-                Banner.Image = banner;
+                Banner.Content.Image = banner;
                 return;
             }
 
@@ -330,14 +334,14 @@ namespace Quaver.Shared.Screens.V2.UI
             if (args.Mapset != MapManager.Selected?.Value?.Mapset || args.Banner == null || args.Banner.IsDisposed)
                 return;
 
-            Banner.Image = args.Banner;
+            Banner.Content.Image = args.Banner;
         }
 
         private MarqueeSpriteText CreateBannerText(string font, int fontSize, string color)
         {
             var text = new MarqueeSpriteText(FontManager.GetWobbleFont(font), string.Empty, fontSize, Config.BannerWidth - Config.BannerTextHorizontalPadding * 2)
             {
-                Parent = Banner,
+                Parent = this,
                 IsActive = true
             };
             text.TextSprite.Tint = SkinV2Color.Parse(color);
@@ -366,11 +370,11 @@ namespace Quaver.Shared.Screens.V2.UI
             var contentHeight = Title.Height + Config.BannerTextGap + Artist.Height;
             var contentY = (Banner.Height - contentHeight) / 2f;
 
-            Title.Position = new ScalableVector2(Config.BannerTextHorizontalPadding, contentY);
+            Title.Position = new ScalableVector2(Banner.X + Config.BannerTextHorizontalPadding, Banner.Y + contentY);
             Title.ResetPosition();
             UpdateMarqueeAlignment(Title);
 
-            Artist.Position = new ScalableVector2(Config.BannerTextHorizontalPadding, contentY + Title.Height + Config.BannerTextGap);
+            Artist.Position = new ScalableVector2(Banner.X + Config.BannerTextHorizontalPadding, Banner.Y + contentY + Title.Height + Config.BannerTextGap);
             Artist.ResetPosition();
             UpdateMarqueeAlignment(Artist);
         }
@@ -391,6 +395,35 @@ namespace Quaver.Shared.Screens.V2.UI
             var minutes = totalSeconds / 60;
             var seconds = totalSeconds % 60;
             return $"{minutes:00}:{seconds:00}";
+        }
+
+        private sealed class RoundedBanner : SpriteMaskContainer
+        {
+            private float CornerRadius { get; }
+
+            public Sprite Content { get; }
+
+            public RoundedBanner(float width, float height, float cornerRadius, Texture2D image)
+            {
+                CornerRadius = cornerRadius;
+                Size = new ScalableVector2(width, height);
+                Image = RoundedRectTextureCache.Get(width, height, cornerRadius);
+
+                Content = new Sprite
+                {
+                    Alignment = Alignment.TopLeft,
+                    Size = Size,
+                    Image = image
+                };
+                AddContainedSprite(Content);
+            }
+
+            public void Resize(float width, float height)
+            {
+                Size = new ScalableVector2(width, height);
+                Image = RoundedRectTextureCache.Get(width, height, CornerRadius);
+                Content.Size = Size;
+            }
         }
 
     }

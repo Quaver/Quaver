@@ -957,12 +957,21 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             DismissOverflowMenu();
             DismissUserMenu();
 
-            EmotePicker = new ChatEmotePicker(EmoteAtlas, Config.Emotes)
+            var picker = new ChatEmotePicker(EmoteAtlas, Config.Emotes)
             {
                 Parent = ChatSection
             };
+            EmotePicker = picker;
             EmotePicker.EmoteSelected += OnEmoteSelected;
             RefreshEmotePickerLayout();
+
+            InputBar.Focused = false;
+            UserSearchBox.Focused = false;
+            AddScheduledUpdate(() =>
+            {
+                if (!IsDisposed && ReferenceEquals(EmotePicker, picker))
+                    picker.FocusSearch();
+            });
         }
 
         private void OnEmoteSelected(string name) => InputBar.AppendEmote(name);

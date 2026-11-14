@@ -633,7 +633,6 @@ namespace Quaver.Shared.Screens.V2.Main
                 width - Config.Layout.HorizontalPadding * 2);
             var contentHeight = Math.Max(Config.Layout.MinimumContentHeight,
                 height - NavigationBarHeight * 2);
-            Content.Position = new ScalableVector2((width - contentWidth) / 2f, NavigationBarHeight);
             Content.Size = new ScalableVector2(contentWidth, contentHeight);
 
             var fourColumns = contentWidth >= Config.Actions.FourColumnBreakpoint;
@@ -641,18 +640,13 @@ namespace Quaver.Shared.Screens.V2.Main
             var actionWidth = Math.Min(contentWidth, fourColumns ? contentWidth :
                 Math.Max(Config.Layout.MinimumContentWidth, contentWidth - Config.Actions.TwoColumnMargin));
             var basis = (actionWidth - Config.Actions.Gap * (columns - 1)) / columns;
+            var actionRowHeight = fourColumns ? Config.Actions.SingleRowHeight : Config.Actions.WrappedRowHeight;
 
-            ActionRow.Size = new ScalableVector2(actionWidth, fourColumns ? Config.Actions.SingleRowHeight :
-                Config.Actions.WrappedRowHeight);
+            ActionRow.Size = new ScalableVector2(actionWidth, actionRowHeight);
             foreach (var options in ActionOptions)
                 options.Basis = basis;
 
-            Content.SetItemOptions(ActionRow,
-                new FlexItemOptions
-                {
-                    Basis = fourColumns ? Config.Actions.SingleRowHeight : Config.Actions.WrappedRowHeight,
-                    Shrink = 0
-                });
+            Content.SetItemOptions(ActionRow, new FlexItemOptions { Basis = actionRowHeight, Shrink = 0 });
 
             var logoTexture = Logo.Image;
             var logoWidth = Config.Logo.Scale * Math.Min(logoTexture.Width,
@@ -661,6 +655,9 @@ namespace Quaver.Shared.Screens.V2.Main
             var logoHeight = logoWidth * logoTexture.Height / logoTexture.Width;
             Logo.Size = new ScalableVector2(logoWidth, logoHeight);
             LogoOptions.Basis = logoHeight;
+            Content.Position = new ScalableVector2(
+                (width - contentWidth) / 2f,
+                (height - contentHeight - logoHeight + actionRowHeight) / 2f);
 
             News.ApplyWidth(Math.Min(Config.News.MaximumWidth, contentWidth - Config.News.HorizontalMargin));
             Content.RefreshLayout();
