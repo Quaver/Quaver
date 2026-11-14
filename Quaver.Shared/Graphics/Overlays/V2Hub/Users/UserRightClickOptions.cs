@@ -109,6 +109,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         if (action != UserMenuAction.ViewProfile &&
             action != UserMenuAction.ViewClan &&
             action != UserMenuAction.SteamProfile &&
+            action != UserMenuAction.Chat &&
             !OnlineManager.OnlineUsers.TryGetValue(id, out user))
             return false;
 
@@ -188,8 +189,11 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         if (DialogManager.Dialogs.LastOrDefault() is OverlayDialog hubDialog)
             DialogManager.Dismiss(hubDialog);
 
-        if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
+        var chatDialog = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+        if (chatDialog == null)
             DialogManager.Show(new ChatV2Dialog());
+        else
+            chatDialog.RequestInputFocus();
     }
 
     private static void Spectate(User user)

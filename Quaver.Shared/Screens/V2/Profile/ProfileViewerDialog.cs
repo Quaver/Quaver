@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private bool RevealFromBottom { get; set; }
 
-        public ProfileViewerDialog(User user, RectangleF? anchor = null) : base(0)
+        public ProfileViewerDialog(User user, RectangleF? anchor = null) : base(0.5f)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
             if (User.OnlineUser == null)
@@ -55,7 +55,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             Skin = SkinManager.AcquireV2();
             Config = ProfileViewerStyle.Default;
             DataTask = ProfileViewerDataCache.GetViewerDataAsync(User);
-            Tint = Color.Transparent;
 
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
@@ -216,7 +215,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             }
 
             RevealClip.ChangeHeightTo((int) Math.Round(Panel.Height), Easing.OutQuint, duration);
-            Alpha = 1;
             Panel.BeginOpenAnimation(duration);
         }
     }

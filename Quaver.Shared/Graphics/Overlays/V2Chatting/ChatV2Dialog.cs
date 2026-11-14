@@ -802,6 +802,12 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             FocusInputWhenChannelAvailable = false;
         }
 
+        internal void RequestInputFocus()
+        {
+            if (!PreviewMode && !IsClosing)
+                FocusInputWhenChannelAvailable = true;
+        }
+
         private void OnChannelUpdated(ChatChannel channel) => AddScheduledUpdate(() =>
         {
             if (!IsDisposed && ChatChannels.ContainsKey(channel))

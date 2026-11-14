@@ -35,7 +35,7 @@ namespace Quaver.Shared.Online.API.User
     public class APIResponseUsersFullInformation
     {
         [JsonProperty("default_mode")]
-        public GameMode DefaultMode { get; set; } = GameMode.Keys4;
+        public GameMode? DefaultMode { get; set; }
     }
 
     // ReSharper disable once InconsistentNaming
