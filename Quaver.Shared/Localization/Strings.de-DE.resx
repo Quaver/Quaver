@@ -189,6 +189,12 @@
   <data name="Chat_CannotWriteInChannel" xml:space="preserve">
     <value>You cannot write in this channel</value>
   </data>
+  <data name="Chat_Emotes" xml:space="preserve">
+    <value>Emotes</value>
+  </data>
+  <data name="Chat_SearchEmotes" xml:space="preserve">
+    <value>Search emotes...</value>
+  </data>
   <data name="Screen_Options_Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
@@ -4198,5 +4204,35 @@ You do not have any missed Notifications.</value>
   </data>
   <data name="Screen_Options_RecentlyChanged" xml:space="preserve">
     <value>Recently Changed</value>
+  </data>
+  <data name="ProfileViewer_Status_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="ProfileViewer_Status_Selecting" xml:space="preserve">
+    <value>Selecting a song</value>
+  </data>
+  <data name="ProfileViewer_Status_Playing" xml:space="preserve">
+    <value>Playing</value>
+  </data>
+  <data name="ProfileViewer_Status_WatchingReplay" xml:space="preserve">
+    <value>Watching a replay</value>
+  </data>
+  <data name="ProfileViewer_Status_Editing" xml:space="preserve">
+    <value>Editing</value>
+  </data>
+  <data name="ProfileViewer_Status_MultiplayerLobby" xml:space="preserve">
+    <value>Multiplayer lobby</value>
+  </data>
+  <data name="ProfileViewer_Status_PlayingMultiplayer" xml:space="preserve">
+    <value>Playing multiplayer</value>
+  </data>
+  <data name="ProfileViewer_Status_Listening" xml:space="preserve">
+    <value>Listening</value>
+  </data>
+  <data name="ProfileViewer_Status_Idle" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="ProfileViewer_Action_Logout" xml:space="preserve">
+    <value>Log out</value>
   </data>
 </root>
