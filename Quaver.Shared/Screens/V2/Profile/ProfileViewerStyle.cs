@@ -37,6 +37,7 @@ namespace Quaver.Shared.Screens.V2.Profile
         public float ModeBadgeRowY => IdentityRowHeight + StatusHeight + InfoGap * 2 +
                                       (RoleHeight - ModeSelectorHeight) / 2;
         public float CornerRadius { get; } = 6;
+        public float BackgroundDimOpacity { get; } = 0.5f;
         public float ProfileCoverBrightness { get; } = 0.55f;
         public float AccentSurfaceOpacity { get; } = 0.15f;
         public float AccentButtonLightenAmount { get; } = 0.25f;

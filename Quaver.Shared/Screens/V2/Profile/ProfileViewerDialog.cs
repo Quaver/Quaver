@@ -45,7 +45,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
         private bool RevealFromBottom { get; set; }
 
-        public ProfileViewerDialog(User user, RectangleF? anchor = null) : base(0.5f)
+        public ProfileViewerDialog(User user, RectangleF? anchor = null) : base(0)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
             if (User.OnlineUser == null)
@@ -94,6 +94,7 @@ namespace Quaver.Shared.Screens.V2.Profile
             };
 
             PositionPanel();
+            FadeTo(Config.BackgroundDimOpacity, Easing.Linear, Config.AnimationDurationMilliseconds);
             BeginOpenAnimation();
         }
 

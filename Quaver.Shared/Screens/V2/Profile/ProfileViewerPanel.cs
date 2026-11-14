@@ -140,7 +140,7 @@ namespace Quaver.Shared.Screens.V2.Profile
             Config = ProfileViewerStyle.Default;
             Size = new ScalableVector2(Config.Width, Config.Height);
             var defaultMode = LoadedStats?.User?.MiscInformation?.DefaultMode;
-            ActiveMode = defaultMode == GameMode.Keys4 || defaultMode == GameMode.Keys7 ? defaultMode : null;
+            ActiveMode = defaultMode == GameMode.Keys7 ? GameMode.Keys7 : GameMode.Keys4;
 
             Cover = new RoundedCoverSprite(Config.Width, Config.Height, Config.CornerRadius, SkinV2Color.Parse(Config.IdentityBackgroundColor), Config.ProfileCoverBrightness, UserInterface.DefaultBanner)
             {
