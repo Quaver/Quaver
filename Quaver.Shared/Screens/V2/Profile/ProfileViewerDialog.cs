@@ -15,6 +15,7 @@ using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Window;
@@ -30,6 +31,8 @@ namespace Quaver.Shared.Screens.V2.Profile
         private ProfileViewerStyle Config { get; }
 
         private ProfileViewerPanel Panel { get; set; }
+
+        private ScrollContainer PreventScroll { get; }
 
         private HorizontalClippingContainer RevealClip { get; set; }
 
@@ -55,6 +58,17 @@ namespace Quaver.Shared.Screens.V2.Profile
             Skin = SkinManager.AcquireV2();
             Config = ProfileViewerStyle.Default;
             DataTask = ProfileViewerDataCache.GetViewerDataAsync(User);
+            Container.Size = Size;
+
+            PreventScroll = new ScrollContainer(Size, new ScalableVector2(1, 1))
+            {
+                Parent = Container,
+                Tint = Color.Transparent,
+                InputEnabled = true,
+                CapturesMouseWheelInput = true,
+                AllowMiddleMouseDragging = false
+            };
+            PreventScroll.Scrollbar.Visible = false;
 
             WindowManager.VirtualScreenSizeChanged += OnVirtualScreenSizeChanged;
             OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
@@ -142,6 +156,7 @@ namespace Quaver.Shared.Screens.V2.Profile
         {
             WindowManager.VirtualScreenSizeChanged -= OnVirtualScreenSizeChanged;
             OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
+            PreventScroll.Destroy();
             base.Destroy();
             Skin.Dispose();
         }
@@ -159,6 +174,7 @@ namespace Quaver.Shared.Screens.V2.Profile
 
                 Size = new ScalableVector2(args.Size.X, args.Size.Y);
                 Container.Size = Size;
+                PreventScroll.Size = Size;
                 PositionPanel();
             });
 
