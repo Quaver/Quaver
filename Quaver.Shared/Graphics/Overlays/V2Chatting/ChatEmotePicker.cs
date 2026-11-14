@@ -74,7 +74,7 @@ internal sealed class ChatEmotePicker : Sprite
 
     public void Resize(float width, float height) => Size = new ScalableVector2(Math.Max(1, width), Math.Max(1, height));
 
-    public void FocusSearch() => SearchBox.Focused = true;
+    public void FocusSearch() => SearchBox.FocusAtEnd();
 
     protected override void OnRectangleRecalculated()
     {

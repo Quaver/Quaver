@@ -34,8 +34,6 @@ namespace Quaver.Shared.Screens.V2.Main
         private const string HubEditorSurfaceId = "hub";
         private const string ChatEditorSurfaceId = "chat";
         private const string OptionsEditorSurfaceId = "options";
-        private const float BottomOffset = -127;
-
         private SkinStoreV2Lease Skin { get; }
 
         private SkinV2Config RootConfig { get; set; }
@@ -245,7 +243,7 @@ namespace Quaver.Shared.Screens.V2.Main
             {
                 Parent = ContentRoot,
                 Alignment = Alignment.BotCenter,
-                Y = BottomOffset
+                Y = Config.News.BottomOffset
             };
 
             editorTargets = new List<SkinEditorTarget>

@@ -153,6 +153,12 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
             UpdateInputClip();
         }
 
+        public void FocusAtEnd()
+        {
+            Focused = true;
+            MoveCaretTo(RawText.Length);
+        }
+
         protected override void OnRectangleRecalculated()
         {
             base.OnRectangleRecalculated();
