@@ -95,7 +95,7 @@ namespace Quaver.Shared.Graphics.Overlays.Chatting.Messages.Textbox
 
                 var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username,
                     user.OnlineUser.ClanTag, user.OnlineUser.ClanAccentColor,
-                    ActiveChannel.Value.Name, msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                    ActiveChannel.Value.Name, msg, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), OnlineManager.SelfAccentColor)
                 {
                     Sender = user,
                     IsFromSelf = true

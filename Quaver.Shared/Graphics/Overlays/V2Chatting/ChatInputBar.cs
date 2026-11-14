@@ -120,7 +120,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                     text = text.Replace(word, char.ConvertFromUtf32(emoji));
             }
 
-            var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, user.OnlineUser.ClanTag, user.OnlineUser.ClanAccentColor, channel.Name, text, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+            var message = new ChatMessage(user.OnlineUser.Id, user.OnlineUser.Username, user.OnlineUser.ClanTag, user.OnlineUser.ClanAccentColor, channel.Name, text, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), OnlineManager.SelfAccentColor)
             {
                 Sender = user,
                 IsFromSelf = true

@@ -73,6 +73,7 @@ namespace Quaver.Shared.Skinning.V2
 
         [Required]
         public SkinV2ModalConfig Modal { get; set; } = new SkinV2ModalConfig();
+
     }
 
     public sealed class SkinV2BrandConfig
