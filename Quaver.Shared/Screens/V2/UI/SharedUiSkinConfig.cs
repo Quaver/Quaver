@@ -786,109 +786,16 @@ namespace Quaver.Shared.Screens.V2.UI
         public float Width { get; set; } = 526;
 
         [Range(1, 8192)]
-        public float ConnectedHeight { get; set; } = 145;
-
-        [Range(1, 8192)]
         public float OfflineHeight { get; set; } = 68;
-
-        [Range(0, 2048)]
-        public float PanelGap { get; set; } = 5;
 
         [Range(0, 4096)]
         public float CornerRadius { get; set; } = 6;
 
-        [Range(1, 8192)]
-        public float UpperHeight { get; set; } = 100;
-
-        [Range(1, 8192)]
-        public float ProfileWidth { get; set; } = 394;
-
-        [Range(1, 8192)]
-        public float ActionsWidth { get; set; } = 132;
-
-        [Range(1, 8192)]
-        public float StatsHeight { get; set; } = 40;
-
-        [Range(1, 8192)]
-        public float AvatarSize { get; set; } = 80;
-
         [Range(0, 2048)]
         public float ContentPadding { get; set; } = 10;
 
-        [Range(1, 8192)]
-        public float InfoWidth { get; set; } = 284;
-
-        [Range(1, 8192)]
-        public float IdentityHeight { get; set; } = 22;
-
         [Range(0, 2048)]
         public float InfoGap { get; set; } = 2;
-
-        [Range(1, 8192)]
-        public float FlagSize { get; set; } = 22;
-
-        [Range(0, 2048)]
-        public float IdentitySpacing { get; set; } = 6;
-
-        [Range(1, 8192)]
-        public float StatusHeight { get; set; } = 20;
-
-        [Range(1, 8192)]
-        public float RoleHeight { get; set; } = 25;
-
-        [Range(1, 8192)]
-        public float ActionButtonSize { get; set; } = 30;
-
-        [Range(1, 8192)]
-        public float ActionIconSize { get; set; } = 20;
-
-        [Range(0, 2048)]
-        public float ActionTopSpacer { get; set; } = 60;
-
-        [Range(0, 2048)]
-        public float ActionLeftSpacer { get; set; } = 52;
-
-        [Range(0, 2048)]
-        public float ActionSpacing { get; set; } = 10;
-
-        [Range(1, 8192)]
-        public float StatHeight { get; set; } = 30;
-
-        [Range(1, 8192)]
-        public float RankWidth { get; set; } = 121;
-
-        [Range(1, 8192)]
-        public float RatingWidth { get; set; } = 95;
-
-        [Range(1, 8192)]
-        public float AccuracyWidth { get; set; } = 102;
-
-        [Range(1, 8192)]
-        public float ModeWidth { get; set; } = 70;
-
-        [Range(1, 8192)]
-        public float ModeHeight { get; set; } = 20;
-
-        [Range(1, 8192)]
-        public float ModeSelectionWidth { get; set; } = 40;
-
-        [Range(1, 8192)]
-        public float ModeSelectionHeight { get; set; } = 16;
-
-        [Range(0, 2048)]
-        public float ModeSelectionInset { get; set; } = 2;
-
-        [Range(1, 8192)]
-        public float RoleDefaultWidth { get; set; } = 150;
-
-        [Range(0, 2048)]
-        public float RolePadding { get; set; } = 22;
-
-        [Range(1, 8192)]
-        public float RoleIconSize { get; set; } = 16;
-
-        [Range(1, 8192)]
-        public float StatIconSize { get; set; } = 22;
 
         [Range(1, 8192)]
         public float OfflineAvatarSize { get; set; } = 48;
@@ -908,29 +815,11 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(0d, 1d)]
         public float DarknessOpacity { get; set; } = 0.75f;
 
-        [Range(0d, 1d)]
-        public float ProfileCoverBrightness { get; set; } = 0.55f;
-
         [SkinColor]
         public string UpperPanelColor { get; set; } = "#555555FF";
 
         [SkinColor]
-        public string ActionPanelColor { get; set; } = "#444444FF";
-
-        [SkinColor]
         public string ActionButtonColor { get; set; } = "#999999FF";
-
-        [SkinColor]
-        public string StatsPanelColor { get; set; } = "#8D8D8DFF";
-
-        [SkinColor]
-        public string StatPillColor { get; set; } = "#CDCDCDFF";
-
-        [SkinColor]
-        public string RolePillColor { get; set; } = "#929292FF";
-
-        [SkinColor]
-        public string ModeBackgroundColor { get; set; } = "#555555FF";
 
         [SkinColor]
         public string TextColor { get; set; } = "#FFFFFFFF";
@@ -940,21 +829,6 @@ namespace Quaver.Shared.Screens.V2.UI
 
         [SkinFont]
         public string SecondaryFont { get; set; } = Fonts.InterSemiBold;
-
-        [Range(1, 256)]
-        public int UsernameFontSize { get; set; } = 18;
-
-        [Range(1, 256)]
-        public int StatusFontSize { get; set; } = 16;
-
-        [Range(1, 256)]
-        public int RoleFontSize { get; set; } = 14;
-
-        [Range(1, 256)]
-        public int StatFontSize { get; set; } = 15;
-
-        [Range(1, 256)]
-        public int ModeFontSize { get; set; } = 13;
 
         [Range(1, 256)]
         public int OfflineTitleFontSize { get; set; } = 18;
