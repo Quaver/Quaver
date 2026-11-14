@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Config;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Online.Chat;
 using Quaver.Shared.Screens.V2.UI;
 using Wobble.Bindables;
@@ -49,7 +49,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private float PreviousHeight { get; set; } = -1;
 
-        public event Action<User> SenderMenuRequested;
+        public event Action<User, RectangleF> SenderMenuRequested;
 
         public ChatMessageList(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, size)
         {
@@ -323,7 +323,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             return false;
         }
 
-        private void OnSenderMenuRequested(User user) => SenderMenuRequested?.Invoke(user);
+        private void OnSenderMenuRequested(User user, RectangleF anchor) => SenderMenuRequested?.Invoke(user, anchor);
 
         private void OnActiveChannelChanged(object sender, BindableValueChangedEventArgs<ChatChannel> e) => ChangeChannel(e.Value);
         private void OnChatCensorToggled(object sender, BindableValueChangedEventArgs<bool> e) => ReflowRows(true);

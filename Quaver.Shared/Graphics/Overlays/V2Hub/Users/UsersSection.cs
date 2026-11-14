@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Screens.V2.UI.Filters;
 using Quaver.Shared.Skinning.V2;
@@ -13,7 +15,6 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
-using Wobble.Input;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
@@ -31,7 +32,6 @@ public class UsersSection : Container
     private Bindable<UserFilter> Filter { get; } = new Bindable<UserFilter>(UserFilter.All);
     private V2Dropdown<UserFilter> FilterDropdown { get; set; }
     private SkinV2DropdownConfig DropdownStyle { get; set; }
-    private UserRightClickOptions UserDropdownMenu { get; set; }
     
     private FlexContainer Layout { get; set; }
     private UserList Scroll { get; set; }
@@ -148,41 +148,26 @@ public class UsersSection : Container
         V2Scrollbar.Apply(Scroll);
         Layout.SetItemOptions(Scroll, new FlexItemOptions { Basis = 0, Grow = 1 });
 
-        Scroll.OnRowClicked += ShowUserMenu;
+        Scroll.OnRowClicked += ShowProfileViewer;
         Scroll.ResultsCountChanged += UpdateResultsCount;
         UpdateResultsCount(Scroll.AvailableItems.Count);
     }
 
     private void UpdateResultsCount(int count) => SearchBox.SetResultsText(LocalizationManager.Get("Screen_Hub_UsersFound", count));
 
-    private void ShowUserMenu(User user)
+    private void ShowProfileViewer(User user, RectangleF anchor)
     {
         if (PreviewMode)
             return;
 
         FilterDropdown.CloseImmediately();
-        DismissUserMenu();
-
-        UserDropdownMenu = new UserRightClickOptions(user, 200, DropdownStyle, this)
-        {
-            Parent = this,
-            Position = new ScalableVector2(
-                MouseManager.CurrentState.X - AbsolutePosition.X,
-                MouseManager.CurrentState.Y - AbsolutePosition.Y)
-        };
-        UserDropdownMenu.Open();
+        ProfileViewerDialog.Show(user, anchor);
     }
 
-    private void DismissUserMenu()
-    {
-        UserDropdownMenu?.Destroy();
-        UserDropdownMenu = null;
-    }
     public void Deactivate()
     {
         SearchBox.Focused = false;
         FilterDropdown.CloseImmediately();
-        DismissUserMenu();
     }
 
     internal void ResizeHeight(float height)
@@ -199,7 +184,7 @@ public class UsersSection : Container
     {
         Deactivate();
         
-        Scroll.OnRowClicked -= ShowUserMenu;
+        Scroll.OnRowClicked -= ShowProfileViewer;
         Scroll.ResultsCountChanged -= UpdateResultsCount;
         
         base.Destroy();

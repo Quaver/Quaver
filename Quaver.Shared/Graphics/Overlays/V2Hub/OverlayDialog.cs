@@ -26,8 +26,6 @@ public class OverlayDialog : DialogScreen
     /// </summary>
     private HubPanel Hub { get; set; }
     private FlexContainer NavigationHeaderLayout { get; set; }
-    private LoggedInUserDropdown ProfileDropdown { get; set; }
-    private Drawable ProfileDropdownTrigger { get; set; }
     private SkinStoreV2Lease Skin { get; }
     private SkinV2Config RootConfig { get; set; }
     private SkinV2HubConfig Config => RootConfig.Screens.Hub;
@@ -64,10 +62,7 @@ public class OverlayDialog : DialogScreen
     {
         if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
         {
-            if (ProfileDropdown != null)
-                DismissProfileDropdown();
-            else
-                Close();
+            Close();
             return;
         }
 
@@ -76,13 +71,6 @@ public class OverlayDialog : DialogScreen
 
         if (NotificationManager.IsPointerOverActiveNotification)
             return;
-
-        if (ProfileDropdown != null)
-        {
-            if (!ProfileDropdownTrigger.IsHovered() && !ProfileDropdown.IsHovered())
-                DismissProfileDropdown();
-            return;
-        }
 
         if (!Hub.IsHovered())
             Close();
@@ -105,7 +93,6 @@ public class OverlayDialog : DialogScreen
     {
         var selectedSection = Hub?.SelectedTab ?? InitialSection;
         Hub?.Destroy();
-        DismissProfileDropdown();
 
         Hub = new HubPanel(selectedSection, Skin, RootConfig)
         {
@@ -119,31 +106,6 @@ public class OverlayDialog : DialogScreen
 
     }
 
-    internal void ToggleProfileDropdown(Drawable trigger, float dropdownGap)
-    {
-        if (ProfileDropdown != null)
-        {
-            DismissProfileDropdown();
-            return;
-        }
-
-        ProfileDropdownTrigger = trigger;
-        ProfileDropdown = new LoggedInUserDropdown(Container)
-        {
-            Parent = Container,
-            Position = new ScalableVector2(
-                trigger.AbsolutePosition.X + trigger.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value - Container.AbsolutePosition.X,
-                trigger.AbsolutePosition.Y + trigger.AbsoluteSize.Y + dropdownGap - Container.AbsolutePosition.Y)
-        };
-    }
-
-    private void DismissProfileDropdown()
-    {
-        ProfileDropdown?.Destroy();
-        ProfileDropdown = null;
-        ProfileDropdownTrigger = null;
-    }
-    
     /// <summary>
     /// </summary>
     public void Close()
@@ -151,7 +113,6 @@ public class OverlayDialog : DialogScreen
         if(IsClosing) return;
 
         IsClosing = true;
-        DismissProfileDropdown();
 
         ClearAnimations();
         FadeTo(0, Easing.Linear, Config.Layout.AnimationDurationMilliseconds);
@@ -190,7 +151,6 @@ public class OverlayDialog : DialogScreen
     public override void Destroy()
     {
         ScreenNavigation.SetHubOverlayState(false);
-        DismissProfileDropdown();
         base.Destroy();
         Skin.Dispose();
     }

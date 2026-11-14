@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MoreLinq;
 using Quaver.Server.Client.Enums;
 using Quaver.Server.Client.Handlers;
@@ -23,7 +24,7 @@ public class UserList : PoolableScrollContainer<User>
     private readonly Bindable<UsersSection.UserFilter> Filter;
     
     public event Action<int> ResultsCountChanged;
-    public event Action<User> OnRowClicked;
+    public event Action<User, RectangleF> OnRowClicked;
     
     private double timeSinceLastInfoRequest { get; set; } = 0;
     private double timeSinceLastStatusRequest { get; set; } = 0;
@@ -59,7 +60,7 @@ public class UserList : PoolableScrollContainer<User>
         {
             Alpha = 0
         };
-        row.OnClick += user => OnRowClicked?.Invoke(user);
+        row.OnClick += (user, anchor) => OnRowClicked?.Invoke(user, anchor);
         return row;
     }
 

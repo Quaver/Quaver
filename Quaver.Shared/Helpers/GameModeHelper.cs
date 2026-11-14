@@ -28,6 +28,8 @@ namespace Quaver.Shared.Helpers
 
         };
 
+        public static Color GetColor(GameMode mode) => modeColors[mode];
+
         /// <summary>
         /// 
         /// </summary>

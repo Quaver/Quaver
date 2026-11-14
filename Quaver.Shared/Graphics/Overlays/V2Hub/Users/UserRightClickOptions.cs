@@ -27,13 +27,14 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
 {
     private User User { get; }
 
-    public UserRightClickOptions(User user, float width, SkinV2DropdownConfig config, Container overlayHost) : base(width, GetOptions(user), FontManager.GetWobbleFont(Fonts.InterBold), config, overlayHost)
+    public UserRightClickOptions(User user, float width, SkinV2DropdownConfig config, Container overlayHost, ISet<UserMenuAction> excludedActions = null) 
+        : base(width, GetOptions(user, excludedActions), FontManager.GetWobbleFont(Fonts.InterBold), config, overlayHost)
     {
         User = user;
         OptionSelected += OnOptionSelected;
     }
 
-    private static IReadOnlyList<DropdownEntry<UserMenuAction>> GetOptions(User user)
+    private static IReadOnlyList<DropdownEntry<UserMenuAction>> GetOptions(User user, ISet<UserMenuAction> excludedActions)
     {
         var options = new List<DropdownEntry<UserMenuAction>>
         {
@@ -41,7 +42,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         };
 
         if (!user.HasUserInfo)
-            return options;
+            return ExcludeActions(options, excludedActions);
 
         if (user.OnlineUser.SteamId > 0)
             options.Add(new DropdownOption<UserMenuAction>(UserMenuAction.SteamProfile, LocalizationManager.Get("Screen_Multiplayer_SteamProfile"), ColorHelper.HexToColor("#0787E3")));
@@ -52,7 +53,7 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         if (OnlineManager.Self?.OnlineUser?.Id == user.OnlineUser.Id)
         {
             if (OnlineManager.CurrentGame?.Ruleset == MultiplayerGameRuleset.Team) options.Add(new DropdownOption<UserMenuAction>(UserMenuAction.SwitchTeams, LocalizationManager.Get("Screen_Multi_SwitchTeams"), ColorHelper.HexToColor("#F2994A")));
-            return options;
+            return ExcludeActions(options, excludedActions);
         }
 
         var isFriend = OnlineManager.FriendsList?.Contains(user.OnlineUser.Id) == true;
@@ -84,21 +85,35 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
                 options.Add(new DropdownOption<UserMenuAction>(UserMenuAction.SwitchTeams, LocalizationManager.Get("Screen_Multi_SwitchTeams"), ColorHelper.HexToColor("#F2994A")));
         }
 
+        return ExcludeActions(options, excludedActions);
+    }
+
+    private static IReadOnlyList<DropdownEntry<UserMenuAction>> ExcludeActions(List<DropdownEntry<UserMenuAction>> options, ISet<UserMenuAction> excludedActions)
+    {
+        if (excludedActions == null || excludedActions.Count == 0)
+            return options;
+
+        options.RemoveAll(entry => entry is DropdownOption<UserMenuAction> option && excludedActions.Contains(option.Value));
         return options;
     }
 
-    private void OnOptionSelected(object sender, DropdownOptionEventArgs<UserMenuAction> e)
+    private void OnOptionSelected(object sender, DropdownOptionEventArgs<UserMenuAction> e) => PerformAction(User, e.Option.Value);
+
+    public static bool PerformAction(User user, UserMenuAction action)
     {
-        var user = User;
+        if (user?.OnlineUser == null)
+            return false;
+
         var id = user.OnlineUser.Id;
 
-        if (e.Option.Value != UserMenuAction.ViewProfile &&
-            e.Option.Value != UserMenuAction.ViewClan &&
-            e.Option.Value != UserMenuAction.SteamProfile &&
+        if (action != UserMenuAction.ViewProfile &&
+            action != UserMenuAction.ViewClan &&
+            action != UserMenuAction.SteamProfile &&
+            action != UserMenuAction.Chat &&
             !OnlineManager.OnlineUsers.TryGetValue(id, out user))
-            return;
+            return false;
 
-        switch (e.Option.Value)
+        switch (action)
         {
             case UserMenuAction.ViewProfile:
                 BrowserHelper.OpenURL($"https://quavergame.com/profile/{id}");
@@ -150,6 +165,8 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
                 OnlineManager.Client?.TransferMultiplayerGameHost(id);
                 break;
         }
+
+        return true;
     }
 
     private static void OpenChat(User user)
@@ -172,8 +189,11 @@ public sealed class UserRightClickOptions : V2Dropdown<UserMenuAction>
         if (DialogManager.Dialogs.LastOrDefault() is OverlayDialog hubDialog)
             DialogManager.Dismiss(hubDialog);
 
-        if (!DialogManager.Dialogs.OfType<ChatV2Dialog>().Any())
+        var chatDialog = DialogManager.Dialogs.OfType<ChatV2Dialog>().LastOrDefault();
+        if (chatDialog == null)
             DialogManager.Show(new ChatV2Dialog());
+        else
+            chatDialog.RequestInputFocus();
     }
 
     private static void Spectate(User user)

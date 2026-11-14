@@ -71,7 +71,11 @@ namespace Quaver.Shared.Assets
         Random,
         Clan,
         ChatPanel,
-        ChannelList
+        ChannelList,
+        AddUser,
+        RemoveUser,
+        HeartWhite,
+        Steam
     }
 
     /// <summary>
@@ -144,7 +148,11 @@ namespace Quaver.Shared.Assets
                 { GlobalIcon.Random, new Point(2, 18) },
                 { GlobalIcon.Clan, new Point(2, 19) },
                 { GlobalIcon.ChatPanel, new Point(2, 20) },
-                { GlobalIcon.ChannelList, new Point(2, 21) }
+                { GlobalIcon.ChannelList, new Point(2, 21) },
+                { GlobalIcon.AddUser, new Point(2, 21) },
+                { GlobalIcon.RemoveUser, new Point(2, 22) },
+                { GlobalIcon.HeartWhite, new Point(2, 23) },
+                { GlobalIcon.Steam, new Point(2, 24) }
             };
 
         /// <summary>
