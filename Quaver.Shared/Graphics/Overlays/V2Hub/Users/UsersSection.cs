@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Form.Dropdowns;
 using Quaver.Shared.Online;
@@ -15,6 +16,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
@@ -35,6 +37,7 @@ public class UsersSection : Container
     
     private FlexContainer Layout { get; set; }
     private UserList Scroll { get; set; }
+    private SpriteTextPlus OfflineMessage { get; set; }
     internal Sprite Header { get; private set; }
 
     private float HeaderHeight => SectionConfig.ControlHeight + SectionConfig.ContentPadding;
@@ -47,6 +50,7 @@ public class UsersSection : Container
         CreateLayout();
         CreateHeader();
         CreateContent();
+        OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
         
         Layout.RefreshLayout();
     }
@@ -134,7 +138,7 @@ public class UsersSection : Container
     
     private void CreateContent()
     {
-        var userList = OnlineManager.OnlineUsers == null ? new List<User>() : OnlineManager.OnlineUsers.Values.ToList();
+        var userList = OnlineManager.Connected && OnlineManager.OnlineUsers != null ? OnlineManager.OnlineUsers.Values.ToList() : new List<User>();
         var availableHeight = Height - HeaderHeight - SectionConfig.ContentPadding * 2;
         Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Layout.Width, 1), new ScalableVector2(Layout.Width, 1), SearchQuery, Filter)
         {
@@ -151,7 +155,26 @@ public class UsersSection : Container
         Scroll.OnRowClicked += ShowProfileViewer;
         Scroll.ResultsCountChanged += UpdateResultsCount;
         UpdateResultsCount(Scroll.AvailableItems.Count);
+
+        OfflineMessage = new SpriteTextPlus(FontManager.GetWobbleFont(SectionConfig.Font), LocalizationManager.Get("Screen_Hub_UsersLoginRequired"), SectionConfig.EmptyMessageFontSize)
+        {
+            Parent = Scroll,
+            Alignment = Alignment.MidCenter,
+            TextAlignment = TextAlignment.Center,
+            MaxWidth = Scroll.Width - SectionConfig.ContentPadding * 4,
+            Tint = SkinV2Color.Parse(SectionConfig.TextColor),
+            UsePreviousSpriteBatchOptions = true
+        };
+        UpdateConnectionState();
     }
+
+    private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e) => AddScheduledUpdate(() =>
+        {
+            Scroll.RefreshUsers();
+            UpdateConnectionState();
+        });
+
+    private void UpdateConnectionState() => OfflineMessage.Visible = !OnlineManager.Connected;
 
     private void UpdateResultsCount(int count) => SearchBox.SetResultsText(LocalizationManager.Get("Screen_Hub_UsersFound", count));
 
@@ -183,6 +206,7 @@ public class UsersSection : Container
     public override void Destroy()
     {
         Deactivate();
+        OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
         
         Scroll.OnRowClicked -= ShowProfileViewer;
         Scroll.ResultsCountChanged -= UpdateResultsCount;
