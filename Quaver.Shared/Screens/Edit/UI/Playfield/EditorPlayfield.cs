@@ -1397,7 +1397,7 @@ namespace Quaver.Shared.Screens.Edit.UI.Playfield
             {
                 if (MouseManager.CurrentState.LeftButton == ButtonState.Pressed && KeyboardManager.IsCtrlDown())
                 {
-                    if (Tool.Value is EditorCompositionTool.Note or EditorCompositionTool.Mine)
+                    if ((Tool.Value is EditorCompositionTool.Note or EditorCompositionTool.Mine) && LongNoteInDrag == null)
                         HandleHitObjectPlacement();
                 }
 
