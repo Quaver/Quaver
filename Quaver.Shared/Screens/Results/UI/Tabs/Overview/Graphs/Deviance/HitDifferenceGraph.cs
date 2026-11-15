@@ -58,6 +58,12 @@ namespace Quaver.Shared.Screens.Results.UI.Tabs.Overview.Graphs.Deviance
         };
 
         /// <summary>
+        ///     Applies a highlight state to the underlying <see cref="Graph"/>.
+        /// </summary>
+        /// <param name="state"></param>
+        public void ApplyHighlight(DevianceHighlight state) => Graph.ApplyHighlight(state);
+
+        /// <summary>
         /// </summary>
         private void CreateAxesValues()
         {
