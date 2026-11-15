@@ -4083,6 +4083,10 @@ You might want to back up your keymap first.</value>
   <data name="Screen_Hub_SearchUsers" xml:space="preserve">
     <value>Search users...</value>
   </data>
+  <data name="Screen_Hub_UsersLoginRequired" xml:space="preserve">
+    <value>You need to be connected to
+view the online user list.</value>
+  </data>
   <data name="Screen_Hub_MapRequestHeader" xml:space="preserve">
     <value>Map Requests</value>
   </data>
