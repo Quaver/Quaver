@@ -913,7 +913,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public static void SetHubOverlayState(bool opened, FlexContainer controlsHost = null)
         {
-            var navigation = ScreenManager.GetElement<ScreenNavigation>(ElementKey);
+            if (!ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
+                return;
+
             navigation.ApplyHubOverlayState(opened, controlsHost);
         }
 
@@ -1010,15 +1012,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private static void ToggleOnlineHub()
         {
-            if (DialogManager.Dialogs.Count == 0)
-            {
-                DialogManager.Show(new OverlayDialog());
-                return;
-            }
-
-            var topDialog = DialogManager.Dialogs[DialogManager.Dialogs.Count - 1];
-            if (topDialog is OverlayDialog dialog)
-                dialog.Close();
+            if (GameBase.Game is QuaverGame game)
+                game.ToggleOnlineHub();
         }
 
         private enum FooterLayout

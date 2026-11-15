@@ -67,7 +67,7 @@ public class UserList : PoolableScrollContainer<User>
     private void RebuildPool()
     {
         DestroyPool();
-        AvailableItems = OnlineManager.OnlineUsers.Values.Where(MatchUser).ToList();
+        AvailableItems = OnlineManager.Connected ? OnlineManager.OnlineUsers.Values.Where(MatchUser).ToList() : new List<User>();
 
         PoolStartingIndex = 0;
         ContentContainer.Animations.Clear();
@@ -77,8 +77,11 @@ public class UserList : PoolableScrollContainer<User>
         PreviousContentContainerY = 0;
 
         CreatePool();
+        LoadingWheel.Visible = OnlineManager.Connected && Pool.Count == 0;
         NotifyResultsCountChanged();
     }
+
+    public void RefreshUsers() => RebuildPool();
     private bool MatchUser(User user)
     {
         var query = SearchQuery.Value?.Trim();
@@ -176,6 +179,7 @@ public class UserList : PoolableScrollContainer<User>
     public override void Update(GameTime gameTime)
     {
         InputEnabled = IsHovered();
+        LoadingWheel.Visible = OnlineManager.Connected && Pool.Count == 0;
         base.Update(gameTime);
         
         timeSinceLastInfoRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
