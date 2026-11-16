@@ -75,22 +75,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public void Previous()
         {
-            var track = AudioEngine.Track;
-            if (track == null || track.IsDisposed || !CanControlListeningParty())
-                return;
-
-            lock (track)
-            {
-                if (track.Position >= 2000 || Jukebox.TrackListQueuePosition <= 0)
-                {
-                    AudioEngine.LoadCurrentTrack();
-                    AudioEngine.Track?.Play();
-                    OnlineManager.UpdateListeningPartyState(ListeningPartyAction.ChangeSong);
-                    return;
-                }
-
+            if (CanControlListeningParty())
                 Jukebox.SelectNextTrack(Direction.Backward);
-            }
         }
 
         public void Next()
