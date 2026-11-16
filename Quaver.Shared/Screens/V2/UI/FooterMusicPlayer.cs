@@ -25,7 +25,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private MusicPlaybackController Playback { get; }
 
-        private bool Expanded { get; }
+        private bool Expanded { get; set; }
 
         private bool ShowsBanner => Expanded && Config.ShowBanner;
 
@@ -33,13 +33,13 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private Sprite Background { get; }
 
-        private RoundedBanner Banner { get; }
+        private RoundedBanner Banner { get; set; }
 
-        private Sprite BannerBrightness { get; }
+        private Sprite BannerBrightness { get; set; }
 
-        private MarqueeSpriteText Title { get; }
+        private MarqueeSpriteText Title { get; set; }
 
-        private MarqueeSpriteText Artist { get; }
+        private MarqueeSpriteText Artist { get; set; }
 
         private FlexContainer Controls { get; }
 
@@ -85,26 +85,7 @@ namespace Quaver.Shared.Screens.V2.UI
             };
 
             if (ShowsBanner)
-            {
-                Banner = new RoundedBanner(Config.BannerWidth, Config.BannerHeight, Config.BannerCornerRadius, UserInterface.DefaultBanner)
-                {
-                    Parent = this,
-                    Position = new ScalableVector2((Width - Config.BannerWidth) / 2f, Config.Padding)
-                };
-
-                BannerBrightness = new Sprite
-                {
-                    Parent = this,
-                    Position = Banner.Position,
-                    Size = Banner.Size,
-                    Image = RoundedRectTextureCache.Get(Banner.Width, Banner.Height, Config.BannerCornerRadius),
-                    Tint = Color.White * Config.BannerBrightness
-                };
-
-                Title = CreateBannerText(Config.TitleFont, Config.TitleFontSize, Config.TitleColor);
-                Artist = CreateBannerText(Config.ArtistFont, Config.ArtistFontSize, Config.ArtistColor);
-                RefreshBannerMetadataLayout();
-            }
+                EnsureBanner();
 
             Controls = new FlexContainer
             {
@@ -175,11 +156,7 @@ namespace Quaver.Shared.Screens.V2.UI
             Controls.RefreshLayout();
 
             if (ShowsBanner)
-            {
-                MapManager.Selected.ValueChanged += OnSelectedMapChanged;
-                BackgroundHelper.BannerLoaded += OnBannerLoaded;
                 UpdateBanner(MapManager.Selected?.Value);
-            }
         }
 
         public override void Update(GameTime gameTime)
@@ -192,13 +169,47 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public override void Destroy()
         {
-            if (ShowsBanner)
+            if (Banner != null)
             {
                 MapManager.Selected.ValueChanged -= OnSelectedMapChanged;
                 BackgroundHelper.BannerLoaded -= OnBannerLoaded;
             }
 
             base.Destroy();
+        }
+
+        public void SetExpanded(bool expanded)
+        {
+            if (Expanded == expanded)
+                return;
+
+            var showedBanner = ShowsBanner;
+            Expanded = expanded;
+            if (showedBanner == ShowsBanner)
+                return;
+
+            if (ShowsBanner)
+                EnsureBanner();
+
+            if (Banner != null)
+            {
+                Banner.Visible = BannerBrightness.Visible = Title.Visible = Artist.Visible = ShowsBanner;
+                Title.IsActive = Artist.IsActive = ShowsBanner;
+            }
+
+            Height = ShowsBanner ? GetPreferredHeight() : GetCollapsedHeight();
+            Background.Size = Size;
+            Background.Image = RoundedRectTextureCache.Get(Width, Height, Config.CornerRadius);
+            Controls.Y = GetControlsY();
+            if (ShowsBanner)
+                UpdateBanner(MapManager.Selected?.Value);
+        }
+
+        public void ResetInteractionState()
+        {
+            foreach (var control in Controls.Children)
+                if (control is RoundedButton button)
+                    button.ResetInteractionState();
         }
 
         public void ApplyWidth(float width)
@@ -303,8 +314,37 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void OnSelectedMapChanged(object sender, BindableValueChangedEventArgs<Map> args) => UpdateBanner(args.Value);
 
+        private void EnsureBanner()
+        {
+            if (Banner != null)
+                return;
+
+            var width = Math.Min(Config.BannerWidth, Math.Max(1, Width - Config.Padding * 2));
+            Banner = new RoundedBanner(width, Config.BannerHeight, Config.BannerCornerRadius, UserInterface.DefaultBanner)
+            {
+                Parent = this,
+                Position = new ScalableVector2((Width - width) / 2f, Config.Padding)
+            };
+            BannerBrightness = new Sprite
+            {
+                Parent = this,
+                Position = Banner.Position,
+                Size = Banner.Size,
+                Image = RoundedRectTextureCache.Get(Banner.Width, Banner.Height, Config.BannerCornerRadius),
+                Tint = Color.White * Config.BannerBrightness
+            };
+            Title = CreateBannerText(Config.TitleFont, Config.TitleFontSize, Config.TitleColor);
+            Artist = CreateBannerText(Config.ArtistFont, Config.ArtistFontSize, Config.ArtistColor);
+            RefreshBannerMetadataLayout();
+            MapManager.Selected.ValueChanged += OnSelectedMapChanged;
+            BackgroundHelper.BannerLoaded += OnBannerLoaded;
+        }
+
         private void UpdateBanner(Map map)
         {
+            if (!ShowsBanner)
+                return;
+
             SetBannerMetadata(map?.Title ?? string.Empty, map?.Artist ?? string.Empty);
 
             if (map == null)
@@ -331,7 +371,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void OnBannerLoaded(object sender, BannerLoadedEventArgs args)
         {
-            if (args.Mapset != MapManager.Selected?.Value?.Mapset || args.Banner == null || args.Banner.IsDisposed)
+            if (!ShowsBanner || args.Mapset != MapManager.Selected?.Value?.Mapset || args.Banner == null || args.Banner.IsDisposed)
                 return;
 
             Banner.Content.Image = args.Banner;

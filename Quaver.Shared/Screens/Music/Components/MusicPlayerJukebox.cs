@@ -31,6 +31,11 @@ namespace Quaver.Shared.Screens.Music.Components
         private Func<bool> IsActive { get; }
 
         /// <summary>
+        ///     Allows an owner with its own end-of-track behavior to keep manual queue controls.
+        /// </summary>
+        private Func<bool> CanAutoAdvance { get; }
+
+        /// <summary>
         ///     The list of tracks (maps) that were played during this jukebox section,
         ///     so we can go to the previous/next song.
         /// </summary>
@@ -50,10 +55,11 @@ namespace Quaver.Shared.Screens.Music.Components
 
         /// <summary>
         /// </summary>
-        public MusicPlayerJukebox(Bindable<List<Mapset>> availableSongs, Func<bool> isActive = null)
+        public MusicPlayerJukebox(Bindable<List<Mapset>> availableSongs, Func<bool> isActive = null, Func<bool> canAutoAdvance = null)
         {
             AvailableSongs = availableSongs;
             IsActive = isActive ?? (() => true);
+            CanAutoAdvance = canAutoAdvance ?? (() => true);
             MapManager.Selected.ValueChanged += OnMapChanged;
 
             if (OnlineManager.Client != null)
@@ -81,7 +87,7 @@ namespace Quaver.Shared.Screens.Music.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            if (IsActive())
+            if (IsActive() && CanAutoAdvance())
                 SelectNextTrackIfFinished();
 
             base.Update(gameTime);

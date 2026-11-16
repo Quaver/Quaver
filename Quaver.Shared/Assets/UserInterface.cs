@@ -33,6 +33,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D NotificationWarningV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-warning-v2.png");
         public static Texture2D NotificationInfoV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-info-v2.png");
         public static Texture2D NotificationSuccessV2 => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/notif-success-v2.png");
+        public static Texture2D SongRequestDifficulty => TextureManager.Load("Quaver.Resources/Textures/UI/Notifications/difficulty.png");
         public static Texture2D LoadingWheel => TextureManager.Load("Quaver.Resources/Textures/UI/loading-wheel.png");
         public static Texture2D StatusRanked => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-ranked.png");
         public static Texture2D StatusUnranked => TextureManager.Load("Quaver.Resources/Textures/UI/RankedStatus/status-unranked.png");
@@ -88,6 +89,18 @@ namespace Quaver.Shared.Assets
         public static Texture2D WarningRed => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/warning-red.png");
         public static Texture2D Clock => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock.png");
         public static Texture2D ClockV2 => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/clock-v2.png");
+        public static Texture2D SelectionMapPreview => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Icons/map-preview.png");
+        public static Texture2D SelectionLongNotePercentage => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Icons/long-note-percentage.png");
+        public static Texture2D SelectionNotesPerSecond => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Icons/notes-per-second.png");
+        public static Texture2D SelectionBpm => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Icons/bpm.png");
+        public static Texture2D SelectionGradeX => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-x.png");
+        public static Texture2D SelectionGradeSs => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-ss.png");
+        public static Texture2D SelectionGradeS => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-s.png");
+        public static Texture2D SelectionGradeA => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-a.png");
+        public static Texture2D SelectionGradeB => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-b.png");
+        public static Texture2D SelectionGradeC => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-c.png");
+        public static Texture2D SelectionGradeD => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-d.png");
+        public static Texture2D SelectionGradeF => TextureManager.Load(@"Quaver.Resources/Textures/UI/Screens/Selection/Grades/grade-f.png");
         public static Texture2D Triangles => TextureManager.Load(@"Quaver.Resources/Textures/UI/triangles.png");
         public static Texture2D ModifierSelectorBackground => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/modifier-selector-bg.png");
         public static Texture2D Off => TextureManager.Load(@"Quaver.Resources/Textures/UI/SongSelect/off.png");

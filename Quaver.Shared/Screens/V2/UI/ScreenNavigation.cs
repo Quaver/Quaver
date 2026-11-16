@@ -90,9 +90,11 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private FooterMusicPlayer MusicPlayer { get; set; }
 
-        internal Drawable VolumeDialogAnchor => MusicPlayer?.VolumeDialogAnchor;
+        private bool HasMusicPlayer => MusicPlayer != null && !MusicPlayer.IsDisposed && MusicPlayerHost.Parent == BottomBar;
 
-        internal Drawable QueueDialogAnchor => MusicPlayer?.QueueDialogAnchor;
+        internal Drawable VolumeDialogAnchor => HasMusicPlayer ? MusicPlayer.VolumeDialogAnchor : null;
+
+        internal Drawable QueueDialogAnchor => HasMusicPlayer ? MusicPlayer.QueueDialogAnchor : null;
 
         internal MusicPlaybackController MusicPlaybackController => MusicPlayback;
 
@@ -122,6 +124,16 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private List<Drawable> TopLayoutButtons { get; } = new List<Drawable>();
 
+        private Container InactiveControls { get; }
+
+        private Dictionary<QuaverScreenType, RoundedButton> ApplicationButtons { get; } = new();
+
+        private Dictionary<FooterLayout, List<(Drawable Item, NavigationBarRegion Region)>> CachedFooters { get; } = new();
+
+        private Action SelectionBackAction { get; set; }
+
+        private Action SelectionPlayAction { get; set; }
+
         private List<DelayedButtonReveal> DelayedButtonReveals { get; } =
             new List<DelayedButtonReveal>();
 
@@ -144,16 +156,24 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private QuaverScreenType CurrentActiveScreen { get; set; } = QuaverScreenType.None;
 
+        private string Language { get; } = ConfigManager.Language.Value;
+
         private ScreenNavigation(SkinV2Config previewConfig = null)
         {
             Skin = SkinManager.AcquireV2();
             var rootConfig = previewConfig ?? Skin.Config;
+            InactiveControls = new Container
+            {
+                Parent = this,
+                Visible = false,
+                UpdateWhenInvisible = false
+            };
             Config = rootConfig.Shared.Navigation;
             BrandConfig = rootConfig.Shared.Brand;
             MusicPlayerConfig = rootConfig.Shared.MusicPlayer;
             Size = new ScalableVector2(WindowManager.Width, WindowManager.Height);
 
-            MusicPlayback = new MusicPlaybackController(() => MusicPlayer != null && !MusicPlayer.IsDisposed);
+            MusicPlayback = new MusicPlaybackController(() => HasMusicPlayer);
 
             TopBar = CreateBar(Alignment.TopLeft, Config.Bar);
             BottomBar = CreateBar(Alignment.BotLeft, Config.Footer);
@@ -206,8 +226,16 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public void ShowApplicationTopBar(QuaverScreenType activeScreen)
         {
-            if (CurrentTopLayout == TopLayout.Application && CurrentActiveScreen == activeScreen)
+            if (CurrentTopLayout == TopLayout.Application)
+            {
+                if (CurrentActiveScreen != activeScreen)
+                {
+                    foreach (var entry in ApplicationButtons)
+                        entry.Value.AlwaysShowLabel = IsApplicationButtonActive(entry.Key, activeScreen);
+                    CurrentActiveScreen = activeScreen;
+                }
                 return;
+            }
 
             var animateLogoEntrance = CurrentTopLayout != TopLayout.Application;
             DestroyOutgoingApplicationLogo();
@@ -216,20 +244,14 @@ namespace Quaver.Shared.Screens.V2.UI
             SetTopBar(layout =>
             {
                 layout.AddApplicationLogo();
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.Home, "Screen_Main_Menu_Home", NavigateHome,
-                    activeScreen == QuaverScreenType.Menu));
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.SinglePlayer, "Screen_Main_SinglePlayer",
-                    NavigateSinglePlayer, activeScreen == QuaverScreenType.Select));
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.Multiplayer, "Screen_Main_Multiplayer",
-                    NavigateMultiplayer, activeScreen == QuaverScreenType.Lobby ||
-                                         activeScreen == QuaverScreenType.Multiplayer));
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.Download, "Screen_Download_Download",
-                    NavigateDownload, activeScreen == QuaverScreenType.Download));
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.Chat, "Screen_Main_Menu_Chat",
-                    ToggleChat, false));
-                buttons.Add(layout.AddApplicationButton(GlobalIcon.Jukebox,
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.Home, "Screen_Main_Menu_Home", NavigateHome, QuaverScreenType.Menu, activeScreen));
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.SinglePlayer, "Screen_Main_SinglePlayer", NavigateSinglePlayer, QuaverScreenType.Select, activeScreen));
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.Multiplayer, "Screen_Main_Multiplayer", NavigateMultiplayer, QuaverScreenType.Multiplayer, activeScreen));
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.Download, "Screen_Download_Download", NavigateDownload, QuaverScreenType.Download, activeScreen));
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.Chat, "Screen_Main_Menu_Chat", ToggleChat, QuaverScreenType.None, activeScreen));
+                buttons.Add(AddBuiltInApplicationButton(layout, GlobalIcon.Jukebox,
                     "Screen_Overlay_VolumeControl_Music",
-                    ShowMusicQueue, activeScreen == QuaverScreenType.Music));
+                    ShowMusicQueue, QuaverScreenType.Music, activeScreen));
                 layout.AddSharedRightControls();
             });
 
@@ -245,59 +267,67 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public void ShowDefaultFooter()
         {
-            if (CurrentFooterLayout == FooterLayout.Default)
-                return;
-
-            SetFooter(layout =>
-            {
-                AddDefaultFooterButtons(layout);
-                AddMusicPlayer(layout, false);
-            });
-
-            CurrentFooterLayout = FooterLayout.Default;
+            ShowBuiltInFooter(FooterLayout.Default, FooterLayout.Default, false, AddDefaultFooterButtons);
         }
 
         public void ShowMainFooter()
         {
-            if (CurrentFooterLayout == FooterLayout.Main)
-                return;
-
-            SetFooter(layout =>
-            {
-                AddDefaultFooterButtons(layout);
-                AddMusicPlayer(layout, true);
-            });
-
-            CurrentFooterLayout = FooterLayout.Main;
+            ShowBuiltInFooter(FooterLayout.Main, FooterLayout.Default, true, AddDefaultFooterButtons);
         }
 
-        public void ShowSelectionFooter()
+        public void ShowSelectionFooter(Action backAction, Action playAction)
         {
-            if (CurrentFooterLayout == FooterLayout.Selection)
-                return;
-
-            SetFooter(layout =>
+            ShowBuiltInFooter(FooterLayout.Selection, FooterLayout.Selection, false, layout =>
             {
+                layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Back), LocalizationManager.Get("Screen_Selection_Back"), () => SelectionBackAction?.Invoke());
+                layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Options), LocalizationManager.Get("Screen_Main_Options"), () => DialogManager.Show(new OptionsV2Dialog()));
                 layout.AddRoundedButton(NavigationBarRegion.Right, new NavigationBarButtonOptions
-                {
-                    IconRegion = GlobalIcons.Get(GlobalIcon.Play),
-                    IconSize = new Vector2(Config.Button.IconSize, Config.Button.IconSize),
-                    Text = LocalizationManager.Get("Screen_Selection_Play"),
-                    Font = FontManager.GetWobbleFont(Fonts.InterBold),
-                    FontSize = SkinV2FontSizesConfig.TextBase,
-                    WidthMode = ButtonSizeMode.Auto,
-                    Height = Config.Button.Size,
-                    AutoSizePadding = new Vector2(Config.EdgePadding, 0),
-                    CornerRadius = Config.Button.CornerRadius,
-                    BackgroundColor = SkinV2Color.Parse(Config.Button.BackgroundColor),
-                    ForegroundColor = SkinV2Color.Parse(Config.Button.ForegroundColor),
-                    AlwaysShowLabel = true,
-                    ClickAction = (sender, args) => ShowSelectionPlayUnavailable()
-                });
-                AddMusicPlayer(layout, false);
+                    {
+                        IconRegion = GlobalIcons.Get(GlobalIcon.Play),
+                        IconSize = new Vector2(Config.Button.IconSize, Config.Button.IconSize),
+                        Text = LocalizationManager.Get("Screen_Selection_Play"),
+                        Font = FontManager.GetWobbleFont(Fonts.InterBold),
+                        FontSize = SkinV2FontSizesConfig.TextBase,
+                        WidthMode = ButtonSizeMode.Auto,
+                        Height = Config.Button.Size,
+                        AutoSizePadding = new Vector2(Config.EdgePadding, 0),
+                        CornerRadius = Config.Button.CornerRadius,
+                        BackgroundColor = SkinV2Color.Parse(Config.Button.BackgroundColor),
+                        ForegroundColor = SkinV2Color.Parse(Config.Button.ForegroundColor),
+                        AlwaysShowLabel = true,
+                        ClickAction = (sender, args) => SelectionPlayAction?.Invoke()
+                    });
             });
 
-            CurrentFooterLayout = FooterLayout.Selection;
+            // Cached controls must always invoke the current screen, including after a skin reload.
+            SelectionBackAction = backAction;
+            SelectionPlayAction = playAction;
+        }
+
+        private void ShowBuiltInFooter(FooterLayout layoutType, FooterLayout cacheKey, bool expanded, Action<ScreenNavigationLayout> configure)
+        {
+            if (CurrentFooterLayout == layoutType)
+                return;
+
+            ClearFooter();
+            var layout = new ScreenNavigationLayout(this, BottomBar, FooterButtons, TooltipAnchor.TopCenter);
+            if (CachedFooters.TryGetValue(cacheKey, out var items))
+            {
+                foreach (var entry in items)
+                {
+                    layout.Add(entry.Item, entry.Region);
+                    NavigationButtons.Add(entry.Item);
+                }
+            }
+            else
+            {
+                items = new List<(Drawable, NavigationBarRegion)>();
+                configure(new ScreenNavigationLayout(this, BottomBar, FooterButtons, TooltipAnchor.TopCenter, items));
+                CachedFooters.Add(cacheKey, items);
+            }
+
+            AddMusicPlayer(layout, expanded);
+            CurrentFooterLayout = layoutType;
         }
 
         /// <summary>
@@ -327,8 +357,7 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             if (ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
             {
-                if (previewConfig == null &&
-                    navigation.Skin.Generation == SkinManager.SkinV2?.Generation)
+                if (previewConfig == null && navigation.Skin.Generation == SkinManager.SkinV2?.Generation && navigation.Language == ConfigManager.Language.Value)
                 {
                     if (navigation.Parent != parent)
                         navigation.Parent = parent;
@@ -376,7 +405,7 @@ namespace Quaver.Shared.Screens.V2.UI
                     "Shared.Brand", ApplicationLogo));
             }
 
-            if (MusicPlayer != null && !MusicPlayer.IsDisposed)
+            if (HasMusicPlayer)
             {
                 targets.Add(new SkinEditorTarget("footer-music-player",
                     LocalizationManager.Get("Screen_Main_Menu_Jukebox"), "Shared.MusicPlayer",
@@ -415,6 +444,8 @@ namespace Quaver.Shared.Screens.V2.UI
                 SubscribedOnlineHub.UnreadStateChanged -= OnHubUnreadStateChanged;
 
             ProfileButton.Clicked -= OnProfileClicked;
+            SelectionBackAction = null;
+            SelectionPlayAction = null;
 
             MusicPlayback.Destroy();
 
@@ -656,6 +687,27 @@ namespace Quaver.Shared.Screens.V2.UI
             return button;
         }
 
+        private RoundedButton AddBuiltInApplicationButton(ScreenNavigationLayout layout, GlobalIcon icon, string localizationKey, Action action, QuaverScreenType buttonScreen, QuaverScreenType activeScreen)
+        {
+            var active = IsApplicationButtonActive(buttonScreen, activeScreen);
+            if (!ApplicationButtons.TryGetValue(buttonScreen, out var button))
+            {
+                button = layout.AddApplicationButton(icon, localizationKey, action, active);
+                ApplicationButtons.Add(buttonScreen, button);
+            }
+            else
+            {
+                button.AlwaysShowLabel = active;
+                layout.Add(button, NavigationBarRegion.Left);
+                NavigationButtons.Add(button);
+            }
+            return button;
+        }
+
+        private static bool IsApplicationButtonActive(QuaverScreenType buttonScreen, QuaverScreenType activeScreen) =>
+            buttonScreen != QuaverScreenType.None && 
+            buttonScreen == (activeScreen == QuaverScreenType.Lobby ? QuaverScreenType.Multiplayer : activeScreen);
+
         private void AddSharedRightControls()
         {
             TopBar.Add(NavigationBarRegion.Right, HeaderControls);
@@ -706,11 +758,21 @@ namespace Quaver.Shared.Screens.V2.UI
         private void ClearTopLayout()
         {
             TopBar.Clear(destroy: false);
+            DelayedButtonReveals.RemoveAll(reveal => TopLayoutButtons.Contains(reveal.Button));
 
             foreach (var button in TopLayoutButtons)
             {
                 NavigationButtons.Remove(button);
-                button.Destroy();
+                if (button is RoundedButton rounded && ApplicationButtons.ContainsValue(rounded))
+                {
+                    rounded.ClearAnimations();
+                    rounded.Alpha = 1;
+                    rounded.Visible = true;
+                    rounded.IsInteractionEnabled = true;
+                    rounded.Parent = InactiveControls;
+                }
+                else
+                    button.Destroy();
             }
 
             TopLayoutButtons.Clear();
@@ -721,13 +783,22 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void ClearFooter()
         {
+            SelectionBackAction = null;
+            SelectionPlayAction = null;
+            MusicPlayer?.ResetInteractionState();
+            MusicPlayer?.SetExpanded(false);
             foreach (var button in FooterButtons)
+            {
                 NavigationButtons.Remove(button);
+                BottomBar.Remove(button);
+                if (button == MusicPlayerHost || CachedFooters.Values.Any(items => items.Any(entry => entry.Item == button)))
+                    button.Parent = InactiveControls;
+                else
+                    button.Destroy();
+            }
 
             FooterButtons.Clear();
             BottomBar.Clear(destroy: true);
-            MusicPlayerHost = null;
-            MusicPlayer = null;
         }
 
         private void AddDefaultFooterButtons(ScreenNavigationLayout layout)
@@ -748,15 +819,20 @@ namespace Quaver.Shared.Screens.V2.UI
         private void AddMusicPlayer(ScreenNavigationLayout layout, bool expanded)
         {
             var width = GetMusicPlayerWidth();
-            MusicPlayerHost = new Container
+            if (MusicPlayerHost == null)
             {
-                Size = new ScalableVector2(width, Config.Button.Size)
-            };
-            MusicPlayer = new FooterMusicPlayer(Skin, MusicPlayerConfig, MusicPlayback, expanded, ShowMusicQueue, ShowVolume)
-            {
-                Parent = MusicPlayerHost,
-                Alignment = Alignment.BotCenter
-            };
+                MusicPlayerHost = new Container
+                {
+                    Size = new ScalableVector2(width, Config.Button.Size)
+                };
+                MusicPlayer = new FooterMusicPlayer(Skin, MusicPlayerConfig, MusicPlayback, expanded, ShowMusicQueue, ShowVolume)
+                {
+                    Parent = MusicPlayerHost,
+                    Alignment = Alignment.BotCenter
+                };
+            }
+            MusicPlayer.SetExpanded(expanded);
+            MusicPlayerHost.Width = width;
             MusicPlayback.EnsureDefaultTrack();
             MusicPlayer.ApplyWidth(width);
             layout.Add(MusicPlayerHost, NavigationBarRegion.Center);
@@ -809,7 +885,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 BottomBar.Width = WindowManager.Width;
             }
 
-            if (MusicPlayerHost != null && MusicPlayer != null)
+            if (HasMusicPlayer)
             {
                 var width = GetMusicPlayerWidth();
                 MusicPlayerHost.Width = width;
@@ -824,7 +900,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void ShowMusicQueue()
         {
-            if (MusicPlayer != null && !MusicPlayer.IsDisposed)
+            if (HasMusicPlayer)
                 ShowMusicQueue(MusicPlayer.QueueDialogAnchor);
         }
 
@@ -979,8 +1055,7 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void HandleVolumeShortcut()
         {
-            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || MusicPlayer == null ||
-                MusicPlayer.IsDisposed)
+            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || !HasMusicPlayer)
                 return;
 
             var increase = KeyboardManager.IsUniqueKeyPress(Keys.Up);
@@ -1003,10 +1078,6 @@ namespace Quaver.Shared.Screens.V2.UI
                 VolumeDialog.SelectRelativeSlider(selectNext ? 1 : -1);
             DialogManager.Show(VolumeDialog);
         }
-
-        private static void ShowSelectionPlayUnavailable() =>
-            NotificationManager.Show(NotificationLevel.Warning,
-                LocalizationManager.Get("Screen_Main_NotImplemented"));
 
         private static void ToggleOnlineHub()
         {
@@ -1055,19 +1126,23 @@ namespace Quaver.Shared.Screens.V2.UI
 
             private TooltipAnchor TooltipAnchor { get; }
 
+            private List<(Drawable Item, NavigationBarRegion Region)> CachedItems { get; }
+
             public ScreenNavigationLayout(ScreenNavigation navigation, NavigationBar bar,
-                List<Drawable> items, TooltipAnchor tooltipAnchor)
+                List<Drawable> items, TooltipAnchor tooltipAnchor, List<(Drawable Item, NavigationBarRegion Region)> cachedItems = null)
             {
                 Navigation = navigation;
                 Bar = bar;
                 Items = items;
                 TooltipAnchor = tooltipAnchor;
+                CachedItems = cachedItems;
             }
 
             public void Add(Drawable drawable, NavigationBarRegion region)
             {
                 Bar.Add(region, drawable);
                 Items.Add(drawable);
+                CachedItems?.Add((drawable, region));
             }
 
             public RoundedButton AddRoundedButton(NavigationBarRegion region,
@@ -1076,12 +1151,17 @@ namespace Quaver.Shared.Screens.V2.UI
                 var button = Bar.AddRoundedButton(region, options);
                 Navigation.NavigationButtons.Add(button);
                 Items.Add(button);
+                CachedItems?.Add((button, region));
                 return button;
             }
 
             public RoundedButton AddIconButton(NavigationBarRegion region, TextureRegion icon,
-                string tooltip, Action action) =>
-                Navigation.AddIconButton(Bar, region, icon, tooltip, action, TooltipAnchor, Items);
+                string tooltip, Action action)
+            {
+                var button = Navigation.AddIconButton(Bar, region, icon, tooltip, action, TooltipAnchor, Items);
+                CachedItems?.Add((button, region));
+                return button;
+            }
 
             public void AddApplicationLogo()
             {
