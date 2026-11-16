@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
+using Quaver.Shared.Screens.V2;
 using Quaver.Shared.Skinning;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -122,7 +124,7 @@ namespace Quaver.Shared.Graphics.Overlays.Volume
         /// </summary>
         private void HandleInput(GameTime gameTime)
         {
-            if (ConfigManager.UseNewScreens.Value)
+            if (GameBase.Game is QuaverGame { CurrentScreen: SkinV2Screen })
                 return;
 
             // Dictate which slider is the one that is currently focused.
