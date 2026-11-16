@@ -3,13 +3,11 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
-using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Screens.Menu.UI.Jukebox;
 using Quaver.Shared.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites.Text;
-using Wobble.Graphics.UI.Dialogs;
 
 namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
 {
@@ -46,17 +44,8 @@ namespace Quaver.Shared.Graphics.Menu.Border.Components.Buttons
         /// <param name="e"></param>
         private static void OnClicked(object sender, EventArgs e)
         {
-            if (DialogManager.Dialogs.Count == 0)
-            {
-                DialogManager.Show(new OnlineHubDialog());
-                return;
-            }
-
-            if (DialogManager.Dialogs.Last().GetType() != typeof(OnlineHubDialog))
-                return;
-
-            var dialog = (OnlineHubDialog) DialogManager.Dialogs.Last();
-            dialog?.Close();
+            if (GameBase.Game is QuaverGame game)
+                game.ToggleOnlineHub();
         }
     }
 }
