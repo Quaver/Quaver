@@ -17,7 +17,7 @@ public static class ScrollDirectionHelper
             // Case: Config = Split Scroll
             case ScrollDirection.Split:
                 {
-                    var halfIndex = (int)Math.Ceiling(keys / 2.0);
+                    var halfIndex = (keys + 1) / 2;
                     for (var i = 0; i < keys; i++)
                     {
                         if (i >= halfIndex)
@@ -31,7 +31,7 @@ public static class ScrollDirectionHelper
             // Case: Config = Reverse Split Scroll
             case ScrollDirection.SplitReverse:
                 {
-                    var halfIndex = (int)Math.Floor(keys / 2.0);
+                    var halfIndex = keys / 2;
                     for (var i = 0; i < keys; i++)
                     {
                         if (i >= halfIndex)
@@ -60,7 +60,7 @@ public static class ScrollDirectionHelper
             case ScrollDirection.Mid or ScrollDirection.MidReverse:
                 {
                     var startIdx = (keys + 3) / 4;
-                    var count = keys - startIdx * 2;
+                    var count = Math.Max(0, keys - startIdx * 2);
                     var cur = scrollDirection is ScrollDirection.MidReverse
                         ? ScrollDirection.Down
                         : ScrollDirection.Up;
