@@ -19,6 +19,7 @@ namespace Quaver.Shared.Skinning.V2
         private readonly object sync = new object();
         private readonly Dictionary<string, Texture2D> textures =
             new Dictionary<string, Texture2D>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<Texture2D> staleTextures = new HashSet<Texture2D>();
         private readonly HashSet<string> reportedAssetWarnings =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private readonly List<string> warnings = new List<string>();
@@ -104,18 +105,7 @@ namespace Quaver.Shared.Skinning.V2
             try
             {
                 var texture = AssetLoader.LoadTexture2DFromFile(fullPath);
-                lock (sync)
-                {
-                    if (disposed)
-                    {
-                        texture.Dispose();
-                        return fallback;
-                    }
-
-                    textures[fullPath] = texture;
-                }
-
-                return texture;
+                return CacheTexture(fullPath, texture, fallback);
             }
             catch (Exception e)
             {
@@ -143,23 +133,52 @@ namespace Quaver.Shared.Skinning.V2
             {
                 using var stream = new MemoryStream(bytes);
                 var texture = AssetLoader.LoadTexture2D(stream);
-                lock (sync)
-                {
-                    if (disposed)
-                    {
-                        texture.Dispose();
-                        return fallback;
-                    }
-
-                    textures[fullPath] = texture;
-                }
-
-                return texture;
+                return CacheTexture(fullPath, texture, fallback);
             }
             catch (Exception e)
             {
                 return WarnAndFallback(relativePath, e.Message, fallback);
             }
+        }
+
+        internal void InvalidateTextureCache()
+        {
+            lock (sync)
+            {
+                if (disposed)
+                    return;
+
+                foreach (var texture in textures.Values)
+                    RetainStaleTexture(texture);
+                textures.Clear();
+            }
+        }
+
+        private Texture2D CacheTexture(string fullPath, Texture2D texture, Texture2D fallback)
+        {
+            lock (sync)
+            {
+                if (disposed)
+                {
+                    texture.Dispose();
+                    return fallback;
+                }
+
+                if (textures.TryGetValue(fullPath, out var cached) && !cached.IsDisposed)
+                {
+                    texture.Dispose();
+                    return cached;
+                }
+
+                textures[fullPath] = texture;
+                return texture;
+            }
+        }
+
+        private void RetainStaleTexture(Texture2D texture)
+        {
+            if (texture != null && !texture.IsDisposed)
+                staleTextures.Add(texture);
         }
 
         private bool TryResolveTexturePath(string relativePath, out string fullPath, out string reason)
@@ -251,7 +270,14 @@ namespace Quaver.Shared.Skinning.V2
                     texture.Dispose();
             }
 
+            foreach (var texture in staleTextures)
+            {
+                if (texture != null && !texture.IsDisposed)
+                    texture.Dispose();
+            }
+
             textures.Clear();
+            staleTextures.Clear();
         }
     }
 
@@ -270,6 +296,8 @@ namespace Quaver.Shared.Skinning.V2
 
         internal Texture2D LoadTextureFromBytes(string relativePath, byte[] bytes, Texture2D fallback) =>
             store?.LoadTextureFromBytes(relativePath, bytes, fallback) ?? fallback;
+
+        internal void InvalidateTextureCache() => store?.InvalidateTextureCache();
 
         public void Dispose()
         {
