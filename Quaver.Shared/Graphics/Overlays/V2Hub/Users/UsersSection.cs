@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.UI;
@@ -31,8 +33,8 @@ public class UsersSection : Container
     private V2FilterSearchTextbox SearchBox { get; set; }
     private Bindable<string> SearchQuery { get; } = new Bindable<string>(string.Empty);
     
-    private Bindable<UserFilter> Filter { get; } = new Bindable<UserFilter>(UserFilter.All);
-    private V2Dropdown<UserFilter> FilterDropdown { get; set; }
+    private Bindable<OnlineUserListFilter> Filter => ConfigManager.OnlineUserListFilterType;
+    private V2Dropdown<OnlineUserListFilter> FilterDropdown { get; set; }
     private SkinV2DropdownConfig DropdownStyle { get; set; }
     
     private FlexContainer Layout { get; set; }
@@ -122,12 +124,12 @@ public class UsersSection : Container
             CornerRadius = section.CornerRadius
         };
 
-        FilterDropdown = new V2Dropdown<UserFilter>(Config.FilterWidth, Filter,
-            new DropdownEntry<UserFilter>[]
+        FilterDropdown = new V2Dropdown<OnlineUserListFilter>(Config.FilterWidth, Filter,
+            new DropdownEntry<OnlineUserListFilter>[]
             {
-                new DropdownOption<UserFilter>(UserFilter.All, LocalizationManager.Get("Screen_Selection_All")),
-                new DropdownOption<UserFilter>(UserFilter.Friends, LocalizationManager.Get("Screen_Selection_Friends")),
-                new DropdownOption<UserFilter>(UserFilter.Country, LocalizationManager.Get("Screen_Selection_Country"))
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.All, LocalizationManager.Get("Screen_Selection_All")),
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.Friends, LocalizationManager.Get("Screen_Selection_Friends")),
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.Country, LocalizationManager.Get("Screen_Selection_Country"))
             },
             FontManager.GetWobbleFont(section.Font), DropdownStyle, this)
         {
@@ -213,13 +215,5 @@ public class UsersSection : Container
         
         base.Destroy();
         SearchQuery.Dispose();
-        Filter.Dispose();
-    }
-
-    public enum UserFilter
-    {
-        All,
-        Friends,
-        Country
     }
 }

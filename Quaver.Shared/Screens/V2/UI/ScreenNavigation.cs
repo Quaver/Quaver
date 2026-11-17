@@ -981,26 +981,29 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void HandleVolumeShortcut()
         {
-            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || MusicPlayer == null ||
-                MusicPlayer.IsDisposed)
+            if (!KeyboardManager.IsAltDown() || MusicPlayer == null || MusicPlayer.IsDisposed)
                 return;
 
             var increase = KeyboardManager.IsUniqueKeyPress(Keys.Up);
             var decrease = KeyboardManager.IsUniqueKeyPress(Keys.Down);
             var selectPrevious = KeyboardManager.IsUniqueKeyPress(Keys.Left);
             var selectNext = KeyboardManager.IsUniqueKeyPress(Keys.Right);
-            if (!increase && !decrease && !selectPrevious && !selectNext)
+            var scrollUp = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
+            var scrollDown = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
+            if (!increase && !decrease && !selectPrevious && !selectNext && !scrollUp && !scrollDown)
                 return;
 
             if (VolumeDialog != null && !VolumeDialog.IsDisposed && !VolumeDialog.IsClosing)
             {
                 VolumeDialog.EnableKeyboardControl();
+                if (scrollUp || scrollDown)
+                    VolumeDialog.AdjustFocusedSlider(scrollUp ? 5 : -5);
                 return;
             }
 
             VolumeDialog = new VolumeDialog(MusicPlayer.VolumeDialogAnchor, MusicPlayerConfig, true);
-            if (increase || decrease)
-                VolumeDialog.AdjustFocusedSlider(increase ? 5 : -5);
+            if (increase || decrease || scrollUp || scrollDown)
+                VolumeDialog.AdjustFocusedSlider(increase || scrollUp ? 5 : -5);
             else
                 VolumeDialog.SelectRelativeSlider(selectNext ? 1 : -1);
             DialogManager.Show(VolumeDialog);

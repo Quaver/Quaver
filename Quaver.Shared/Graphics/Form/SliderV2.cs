@@ -184,7 +184,7 @@ namespace Quaver.Shared.Graphics.Form
             if (ValuePicker.Focused || !Input.IsHovered)
                 return;
 
-            var step = (BindedValue.MaxValue - BindedValue.MinValue) / 100f;
+            var step = IntegerValue != null ? 1f / IntegerDisplayScale : (BindedValue.MaxValue - BindedValue.MinValue) / 100f;
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
                 BindedValue.Value -= step;
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
