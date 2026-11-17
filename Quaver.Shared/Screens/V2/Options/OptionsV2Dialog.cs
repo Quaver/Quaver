@@ -54,6 +54,7 @@ namespace Quaver.Shared.Screens.V2.Options
         private bool RecentOptionsDirty { get; set; }
         private bool PresetDirtyCheckPending { get; set; }
         private bool AppliedPresetHasChanges { get; set; }
+        private bool SearchFocusPending { get; set; }
 
         /// <summary>
         /// </summary>
@@ -119,6 +120,7 @@ namespace Quaver.Shared.Screens.V2.Options
             OwnsSkin = skin == null;
             RootConfig = config ?? Skin.Config;
             PreviewMode = previewMode;
+            SearchFocusPending = !PreviewMode;
             AppliedPresetId = ConfigManager.SelectedOptionsPresetId.Value;
             CreateLayouts();
 
@@ -1034,6 +1036,12 @@ namespace Quaver.Shared.Screens.V2.Options
             OptionsScroll.InputEnabled = OptionsScroll.IsHovered();
 
             base.Update(gameTime);
+
+            if (SearchFocusPending && MouseManager.CurrentState.LeftButton == ButtonState.Released)
+            {
+                SearchBox.FocusAtEnd();
+                SearchFocusPending = false;
+            }
 
             UpdateVisibleSectionButtons();
             UpdateVisibleOptionRows();
