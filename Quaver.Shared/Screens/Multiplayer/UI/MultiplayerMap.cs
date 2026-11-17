@@ -286,7 +286,8 @@ namespace Quaver.Shared.Screens.Multiplayer.UI
                     Creator.Text = "";
                 else
                     Creator.Text = MultiplayerLocalization.Get("MapInfo", map.Creator, time,
-                        (int) (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods)), (int) map.LNPercentage);
+                        (int) Math.Round(map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods), 
+                        MidpointRounding.AwayFromZero), (int) map.LNPercentage);
 
                 // Inform the server that we now have the map if we didn't before.
                 if (OnlineManager.CurrentGame != null && OnlineManager.CurrentGame.PlayersWithoutMap.Contains(OnlineManager.Self.OnlineUser.Id))
