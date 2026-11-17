@@ -78,7 +78,12 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
             ModifierSprites.ForEach(x => x.Destroy());
             ModifierSprites.Clear();
 
-            var modsList = ModManager.GetModsList(Processor.Value.Mods);
+            var mods = Processor.Value.Mods;
+
+            if (mods != ModIdentifier.None && mods.HasFlag(ModIdentifier.HeatlthAdjust))
+                mods = (mods & ~ModIdentifier.HeatlthAdjust) | ModIdentifier.Paused;
+
+            var modsList = ModManager.GetModsList(mods);
 
             if (modsList.Count == 0)
                 modsList.Add(ModIdentifier.None);
@@ -88,11 +93,6 @@ namespace Quaver.Shared.Screens.Results.UI.Header.Contents.Tabs
             for (var i = modsList.Count - 1; i >= 0; i--)
             {
                 var mod = modsList[i];
-
-                // HealthAdjust doesn't have a proper icon
-                if (mod == ModIdentifier.HeatlthAdjust)
-                    continue;
-
                 var texture = ModManager.GetTexture(mod);
                 const float width = 72f;
 
