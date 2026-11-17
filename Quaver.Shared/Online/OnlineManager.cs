@@ -74,6 +74,7 @@ namespace Quaver.Shared.Online
             {
                 Self = null;
                 SelfAccentColor = null;
+                HasReceivedOnlineUsers = false;
                 OnlineUsers = new Dictionary<int, User>();
                 MultiplayerGames = new Dictionary<string, MultiplayerGame>();
                 ListeningParty = null;
@@ -122,6 +123,11 @@ namespace Quaver.Shared.Online
         ///     Dictionary containing all of the currently online users.
         /// </summary>
         public static Dictionary<int, User> OnlineUsers { get; private set; }
+
+        /// <summary>
+        ///     Whether the server has sent the initial online-user roster for the current connection.
+        /// </summary>
+        internal static bool HasReceivedOnlineUsers { get; private set; }
 
         /// <summary>
         ///     Dictionary containing all the currently available multiplayer games.
@@ -682,6 +688,7 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUsersOnline(object sender, UsersOnlineEventArgs e)
         {
+            HasReceivedOnlineUsers = true;
             var newOnlineUsers = new List<User>();
 
             foreach (var id in e.UserIds)
@@ -2065,6 +2072,7 @@ namespace Quaver.Shared.Online
         private static void ClearOnlineData()
         {
             SelfAccentColor = null;
+            HasReceivedOnlineUsers = false;
             OnlineUsers.Clear();
             Spectators.Clear();
             SpectatorClients.Clear();

@@ -9,6 +9,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Objects;
 using Quaver.Server.Client.Structures;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.V2.UI;
 using Wobble.Bindables;
@@ -21,26 +22,29 @@ public class UserList : PoolableScrollContainer<User>
     private LoadingWheel LoadingWheel { get; set; }
 
     private readonly Bindable<string> SearchQuery;
-    private readonly Bindable<UsersSection.UserFilter> Filter;
+    private readonly Bindable<OnlineUserListFilter> Filter;
     
     public event Action<int> ResultsCountChanged;
     public event Action<User, RectangleF> OnRowClicked;
     
     private double timeSinceLastInfoRequest { get; set; } = 0;
     private double timeSinceLastStatusRequest { get; set; } = 0;
+    private bool IsLoadingUsers => OnlineManager.Connected && !OnlineManager.HasReceivedOnlineUsers;
     
-    public UserList(List<User> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize, Bindable<string> searchQuery, Bindable<UsersSection.UserFilter> filter, bool startFromBottom = false) : base(availableItems, poolSize, poolStartingIndex, size, contentSize, startFromBottom)
+    public UserList(List<User> availableItems, int poolSize, int poolStartingIndex, ScalableVector2 size, ScalableVector2 contentSize, Bindable<string> searchQuery, Bindable<OnlineUserListFilter> filter, bool startFromBottom = false) : base(availableItems, poolSize, poolStartingIndex, size, contentSize, startFromBottom)
     {
         SearchQuery = searchQuery;
         SearchQuery.ValueChanged += OnSearchChanged;
 
         Filter = filter;
         Filter.ValueChanged += OnFilterChanged;
+
+        AvailableItems = AvailableItems.Where(MatchUser).ToList();
         
         CreateLoadingWheel();
         CreatePool();
 
-        LoadingWheel.Visible = Pool.Count == 0;
+        LoadingWheel.Visible = IsLoadingUsers;
         
         if (OnlineManager.Client != null)
         {
@@ -77,7 +81,7 @@ public class UserList : PoolableScrollContainer<User>
         PreviousContentContainerY = 0;
 
         CreatePool();
-        LoadingWheel.Visible = OnlineManager.Connected && Pool.Count == 0;
+        LoadingWheel.Visible = IsLoadingUsers;
         NotifyResultsCountChanged();
     }
 
@@ -90,10 +94,10 @@ public class UserList : PoolableScrollContainer<User>
         var matchFilter = true;
         switch (Filter.Value)
         {
-            case UsersSection.UserFilter.Country:
+            case OnlineUserListFilter.Country:
                 matchFilter = user.HasUserInfo && user.OnlineUser.CountryFlag == OnlineManager.Self.OnlineUser.CountryFlag;
                 break;
-            case UsersSection.UserFilter.Friends:
+            case OnlineUserListFilter.Friends:
                 matchFilter = OnlineManager.FriendsList.Contains(user.OnlineUser.Id);
                 break;
                 
@@ -104,7 +108,7 @@ public class UserList : PoolableScrollContainer<User>
     private void NotifyResultsCountChanged() => ResultsCountChanged?.Invoke(AvailableItems.Count);
     
     private void OnSearchChanged(object sender, BindableValueChangedEventArgs<string> e) => RebuildPool();
-    private void OnFilterChanged(object sender, BindableValueChangedEventArgs<UsersSection.UserFilter> e) => RebuildPool();
+    private void OnFilterChanged(object sender, BindableValueChangedEventArgs<OnlineUserListFilter> e) => RebuildPool();
     
     private void OnUserConnected(object sender, UserConnectedEventArgs e) => AddScheduledUpdate(() => AddUser(e.User));
     private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e) => AddScheduledUpdate(() => RemoveUser(e.UserId));
@@ -146,7 +150,7 @@ public class UserList : PoolableScrollContainer<User>
 
     private void OnUserFriendsListReceived(object sender, UserFriendsListEventArgs e) => AddScheduledUpdate(() =>
     {
-        if (Filter.Value != UsersSection.UserFilter.Friends)
+        if (Filter.Value != OnlineUserListFilter.Friends)
             return;
 
         AvailableItems.ToList().ForEach(userShown =>
@@ -163,7 +167,7 @@ public class UserList : PoolableScrollContainer<User>
     });
     private void OnFriendsListUserChanged(object sender, FriendsListUserChangedEventArgs e) => AddScheduledUpdate(() =>
     {
-        if (Filter.Value != UsersSection.UserFilter.Friends)
+        if (Filter.Value != OnlineUserListFilter.Friends)
             return;
 
         if (!OnlineManager.OnlineUsers.TryGetValue(e.UserId, out var user))
@@ -179,7 +183,7 @@ public class UserList : PoolableScrollContainer<User>
     public override void Update(GameTime gameTime)
     {
         InputEnabled = IsHovered();
-        LoadingWheel.Visible = OnlineManager.Connected && Pool.Count == 0;
+        LoadingWheel.Visible = IsLoadingUsers;
         base.Update(gameTime);
         
         timeSinceLastInfoRequest += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -194,7 +198,7 @@ public class UserList : PoolableScrollContainer<User>
         
             // If a search filter is active, we should look for all rows that matches that search query
             // We also do this when the filter is set to country because some user's info might have not loaded yet
-            if (!string.IsNullOrEmpty(SearchQuery.Value) || Filter.Value == UsersSection.UserFilter.Country)
+            if (!string.IsNullOrEmpty(SearchQuery.Value) || Filter.Value == OnlineUserListFilter.Country)
                 candidates = OnlineManager.OnlineUsers.Values;
         
             // Take 20 row at most to prevent large update pools
