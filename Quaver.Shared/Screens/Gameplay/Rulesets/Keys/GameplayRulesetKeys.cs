@@ -80,13 +80,17 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             var keys = MapManager.Selected.Value.Qua?.GetKeyCount() ?? 4;
 
             var lastDir = playfield.ScrollDirections[0];
-            var lastWidth = playfield.Stage.Receptors[0].Width;
-            var lastPosX = playfield.Stage.Receptors[0].X;
+            var lastWidth = playfield.Stage.Receptors[0].X + playfield.Stage.Receptors[0].Width;
+            var lastPosX = 0f;
             var lastPosY = playfield.TimingLinePositionY[0];
             for (var i = 1; i <= keys; i++)
             {
                 if (i == keys || playfield.ScrollDirections[i] != lastDir || playfield.TimingLinePositionY[i] != lastPosY)
                 {
+                    if (i == keys)
+                    {
+                        lastWidth = playfield.Width - lastPosX;
+                    }
                     TimingLineManagers.Add(new TimingLineManager(this, lastDir, lastPosY, lastWidth, lastPosX));
 
                     if (i == keys)

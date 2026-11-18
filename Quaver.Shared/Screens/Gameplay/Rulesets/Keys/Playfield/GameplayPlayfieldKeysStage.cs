@@ -366,7 +366,6 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys.Playfield
                     Parent = Playfield.ForegroundContainer,
                     Image = Skin.StageHitPositionOverlay,
                     Rotation = param.Reverse ? MathF.PI : 0,
-                    Size = new ScalableVector2(width, sizeY),
                     X = x,
                     Y = param.Y,
                     Width = width,
