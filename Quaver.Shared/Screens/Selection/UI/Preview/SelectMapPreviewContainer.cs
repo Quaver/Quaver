@@ -59,6 +59,11 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
         protected GameplayScreen LoadedGameplayScreen { get; private set; }
 
         /// <summary>
+        ///     If this is true, the next preview gets loaded with autoplay off.
+        /// </summary>
+        private bool StartWithAutoplayOff { get; set; }
+
+        /// <summary>
         ///     Tells the user to press tab to toggle autoplay
         /// </summary>
         private SpriteTextPlus TestPlayPrompt { get; set; }
@@ -201,12 +206,16 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 map.Qua = qua;
                 map.Qua.ApplyMods(ModManager.Mods);
 
-                var autoplay = Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
+                var autoplay = StartWithAutoplayOff ? null :
+                    Replay.GeneratePerfectReplayKeys(new Replay(qua.Mode, "Autoplay", 0, map.Md5Checksum), qua);
 
                 var gameplay = new GameplayScreen(qua, map.Md5Checksum, new List<Score>(), autoplay, true, 0,
                     false, null, null, true);
 
-                gameplay.HandleReplaySeeking();
+                if (gameplay.InReplayMode)
+                    gameplay.HandleReplaySeeking();
+                else
+                    gameplay.HandlePreviewTestPlaySeeking();
 
                 if (token.IsCancellationRequested)
                     gameplay.Destroy();
@@ -336,6 +345,8 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
                 SeekBar?.Destroy();
             }
 
+            StartWithAutoplayOff = false;
+
             RunLoadTask();
         }
 
@@ -404,6 +415,9 @@ namespace Quaver.Shared.Screens.Selection.UI.Preview
 
             Wheel.ClearAnimations();
             Wheel.FadeTo(1, Easing.Linear, 150);
+
+            if (LoadedGameplayScreen != null)
+                StartWithAutoplayOff = !LoadedGameplayScreen.InReplayMode;
 
             LoadGameplayScreenTask.Run(selectedMap, DelayTime);
         }
