@@ -270,7 +270,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             };
             HeaderLayout.SetItemOptions(OverflowTabsButton, OverflowTabsButtonLayoutOptions);
 
-            ToggleSearchSectionButton = CreateHeaderIconButton(HeaderLayout, GlobalIcon.ChannelList, (sender, args) => ToggleSearchSection());
+            ToggleSearchSectionButton = CreateHeaderIconButton(HeaderLayout, GlobalIcon.Burger, (sender, args) => ToggleSearchSection());
             ToggleSearchSectionButton.Tint = SkinV2Color.Parse(Config.Tabs.SelectedColor);
             HeaderLayout.SetItemOptions(ToggleSearchSectionButton, new FlexItemOptions { Basis = HeaderButtonSize, Shrink = 0 });
 
