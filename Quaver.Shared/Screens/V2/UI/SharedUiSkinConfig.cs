@@ -778,12 +778,15 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(1, 256)]
         public int FontSize { get; set; } = 16;
 
+        [ConfigEditable]
         [SkinColor]
         public string BackgroundColor { get; set; } = "#273038FF";
 
+        [ConfigEditable]
         [SkinColor]
         public string TextColor { get; set; } = "#FFFFFFFF";
 
+        [ConfigEditable]
         [SkinColor]
         public string CountColor { get; set; } = "#8CAFEAFF";
     }

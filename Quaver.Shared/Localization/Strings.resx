@@ -3731,6 +3731,9 @@ You might want to back up your keymap first.</value>
   <data name="SkinEditor_Component_NavigationButtons" xml:space="preserve">
     <value>Navigation Buttons</value>
   </data>
+  <data name="SkinEditor_Component_NavigationStats" xml:space="preserve">
+    <value>Navigation Stats</value>
+  </data>
   <data name="SkinEditor_Component_Profile" xml:space="preserve">
     <value>Profile</value>
   </data>

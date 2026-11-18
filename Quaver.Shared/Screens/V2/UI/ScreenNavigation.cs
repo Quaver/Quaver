@@ -364,6 +364,9 @@ namespace Quaver.Shared.Screens.V2.UI
                 new SkinEditorTarget("navigation-buttons",
                 LocalizationManager.Get("SkinEditor_Component_NavigationButtons"),
                 "Shared.Navigation.Button", NavigationButtons.ToArray()),
+                new SkinEditorTarget("navigation-stats",
+                LocalizationManager.Get("SkinEditor_Component_NavigationStats"),
+                "Shared.Navigation.Stats", HeaderControls.StatsContainer),
                 new SkinEditorTarget("navigation-profile",
                 LocalizationManager.Get("SkinEditor_Component_Profile"),
                 "Shared.Navigation.Profile", ProfileButton)
