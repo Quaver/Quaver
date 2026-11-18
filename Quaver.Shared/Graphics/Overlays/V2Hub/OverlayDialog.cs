@@ -121,7 +121,7 @@ public class OverlayDialog : DialogScreen
         if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)
         {
             if (game.CurrentScreen is GameplayScreen gameplay)
-                game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode && gameplay.SpectatorClient == null ? 1 : 0;
+                game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode ? 1 : 0;
         }
 
         if (Hub.SelectedTab == HubPanel.HubSection.Notifications && Hub.NotificationsSection.CurrentFeed == NotificationsSection.NotificationFeed.Recent)
