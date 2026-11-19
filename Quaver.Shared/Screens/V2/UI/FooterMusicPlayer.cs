@@ -75,6 +75,7 @@ namespace Quaver.Shared.Screens.V2.UI
             Playback = playback;
             Expanded = expanded;
             Size = new ScalableVector2(GetPreferredWidth(), ShowsBanner ? GetPreferredHeight() : GetCollapsedHeight());
+            Position = new ScalableVector2(Config.PositionOffsetX, Config.PositionOffsetY);
 
             Background = new Sprite
             {

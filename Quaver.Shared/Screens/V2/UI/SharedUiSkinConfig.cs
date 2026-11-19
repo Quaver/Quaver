@@ -12,6 +12,12 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         public bool ShowBanner { get; set; } = true;
 
+        [Range(-1920, 1920)]
+        public float PositionOffsetX { get; set; } = 0;
+
+        [Range(-1080, 1080)]
+        public float PositionOffsetY { get; set; } = 0;
+
         [Range(1, 8192)]
         public float MinimumWidth { get; set; } = 320;
 
