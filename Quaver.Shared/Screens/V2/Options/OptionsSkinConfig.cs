@@ -86,6 +86,9 @@ public sealed class SkinV2OptionsHeaderConfig
     public string BackgroundColor { get; set; } = "#181E25FF";
 
     [ConfigEditable, SkinColor]
+    public string SearchPlaceholderColor { get; set; } = "#4B5973FF";
+
+    [ConfigEditable, SkinColor]
     public string TextColor { get; set; } = "#FFFFFFFF";
 
     [ConfigEditable, SkinColor]
@@ -135,6 +138,15 @@ public sealed class SkinV2OptionsContentConfig
 {
     [ConfigEditable, SkinColor]
     public string BackgroundColor { get; set; } = "#273038FF";
+
+    [ConfigEditable, SkinColor]
+    public string RowBackgroundColor { get; set; } = "#181E25FF";
+
+    [ConfigEditable, SkinColor]
+    public string RowTextColor { get; set; } = "#FFFFFFFF";
+
+    [ConfigEditable, SkinColor]
+    public string ValueColor { get; set; } = "#8CAFEAFF";
 
     [ConfigEditable, SkinColor]
     public string CategoryHeaderColor { get; set; } = "#4B5973FF";

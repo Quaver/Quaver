@@ -63,7 +63,7 @@ namespace Quaver.Shared.Screens.V2.Options.Model
             ? LocalizationManager.Get(option.LabelName, option.LabelKeyCount.Value)
             : LocalizationManager.Get(option.LabelName);
 
-        public static Drawable CreateControl(OptionsDefinition option, Container container)
+        public static Drawable CreateControl(OptionsDefinition option, Container container, Color rowBackgroundColor, Color valueColor)
         {
             var control = option.ControlFactory?.Invoke(container);
             switch (control)
@@ -72,12 +72,16 @@ namespace Quaver.Shared.Screens.V2.Options.Model
                     toggle.ValueEdited += (_, _) => RecordChanged(option.Id);
                     break;
                 case SliderV2 slider:
+                    slider.SetValueColor(valueColor);
                     slider.ValueEdited += (_, _) => RecordChanged(option.Id);
                     break;
                 case InputRecorderV2 recorder:
+                    recorder.SetValueColor(valueColor);
                     recorder.ValueEdited += (_, _) => RecordChanged(option.Id);
                     break;
                 case V2DropdownBase dropdown:
+                    dropdown.SetTriggerColorInternal(rowBackgroundColor);
+                    dropdown.SetTextColorInternal(valueColor);
                     dropdown.ValueEdited += (_, _) => RecordChanged(option.Id);
                     break;
             }
