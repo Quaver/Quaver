@@ -405,6 +405,11 @@ namespace Quaver.Shared.Config
         internal static Bindable<bool> KeepPlayingUponFailing { get; private set; }
 
         /// <summary>
+        ///     If enabled, single player uses the experimental health drain. These scores are not submitted online.
+        /// </summary>
+        internal static Bindable<bool> ExperimentalHealth { get; private set; }
+
+        /// <summary>
         ///     If enabled, the user will be able to tap to restart instead of having to hold for 200ms to restart.
         /// </summary>
         internal static Bindable<bool> TapToRestart { get; private set; }
@@ -1209,6 +1214,7 @@ namespace Quaver.Shared.Config
             KeyScreenshot = ReadValue(@"KeyScreenshot", Keys.F12, data);
             TapToPause = ReadValue(@"TapToPause", false, data);
             KeepPlayingUponFailing = ReadValue(@"KeepPlayingUponFailing", false, data);
+            ExperimentalHealth = ReadValue(@"ExperimentalHealth", false, data);
             TapToRestart = ReadValue(@"TapToRestart", false, data);
             DisplayFailedLocalScores = ReadValue(@"DisplayFailedLocalScores", true, data);
             EditorScrollSpeedKeys = ReadInt(@"EditorScrollSpeedKeys", 16, 5, 100, data);

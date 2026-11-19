@@ -791,6 +791,20 @@ namespace Quaver.Shared.Screens.Results
                 return false;
             }
 
+            // Don't submit experimental health scores and tell the player why
+            if (screen.Ruleset.ScoreProcessor.Mods.HasFlag(ModIdentifier.HeatlthAdjust))
+            {
+                IsSubmittingScore.Value = false;
+
+                var passed = !screen.Ruleset.ScoreProcessor.Failed && !screen.FailedDuringGameplay;
+
+                if (passed)
+                    NotificationManager.Show(NotificationLevel.Info, ResultsLocalization.Get("Experimental health is enabled, so this score was not submitted online."));
+
+                Logger.Important($"{skipping} experimental health being enabled", LogType.Network);
+                return false;
+            }
+
             // Don't submit scores that have unranked modifiers
             if (ModManager.CurrentModifiersList.Any(x => !x.Ranked()))
             {

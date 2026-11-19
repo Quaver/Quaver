@@ -658,7 +658,12 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
 
             Modifiers = new List<DrawableModifier>();
 
-            var modsList = ModManager.GetModsList((ModIdentifier) Score.Item.Mods);
+            var mods = (ModIdentifier) Score.Item.Mods;
+
+            if (mods != ModIdentifier.None && mods.HasFlag(ModIdentifier.HeatlthAdjust))
+                mods = (mods & ~ModIdentifier.HeatlthAdjust) | ModIdentifier.Paused;
+
+            var modsList = ModManager.GetModsList(mods);
 
             if (modsList.Count == 0)
                 modsList.Add(ModIdentifier.None);

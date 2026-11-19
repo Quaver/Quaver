@@ -57,7 +57,7 @@ namespace Quaver.Shared.Screens.Gameplay.Replays
             Screen = screen;
 
             var name = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
-            var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : ModManager.Mods;
+            var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : Screen.ScoringMods;
 
             Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash);
 

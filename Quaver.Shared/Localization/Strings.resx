@@ -1238,6 +1238,9 @@ Marvelous instead.</value>
   <data name="Screen_Options_KeepPlayingUponFailing" xml:space="preserve">
     <value>Keep Playing Upon Failing</value>
   </data>
+  <data name="Screen_Options_EnableExperimentalHealthUnranked" xml:space="preserve">
+    <value>Enable Experimental Health (Unranked)</value>
+  </data>
   <data name="Screen_Options_NormaliseScrollVelocityByRatePercentage" xml:space="preserve">
     <value>Normalise Scroll Velocity By Rate Percentage</value>
   </data>

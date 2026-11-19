@@ -138,7 +138,7 @@ namespace Quaver.Shared.Screens.Gameplay.Rulesets.Keys
             }
             else
             {
-                processor = new ScoreProcessorKeys(map, ModManager.Mods, windows);
+                processor = new ScoreProcessorKeys(map, Screen.ScoringMods, windows);
             }
 
             processor.PlayerName = ConfigManager.Username.Value;
