@@ -504,12 +504,14 @@ namespace Quaver.Shared.Screens.V2.Main
 
         private void BuildOptionsPreview()
         {
+            var categorySidebarExpanded = OptionsPreview?.IsCategorySidebarExpanded == true;
             DestroySurfacePreviews();
             OptionsPreview = new OptionsV2Dialog(Skin, RootConfig, true)
             {
                 Parent = PreviewRoot,
                 IsInteractionEnabled = false
             };
+            OptionsPreview.RestoreCategorySidebarState(categorySidebarExpanded);
             editorTargets = new List<SkinEditorTarget>(OptionsPreview.GetSkinEditorTargets());
 
             LastWindowWidth = -1;

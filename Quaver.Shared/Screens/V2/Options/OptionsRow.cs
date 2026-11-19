@@ -1,10 +1,8 @@
 using System;
-using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Form.Dropdowns;
-using Quaver.Shared.Helpers;
 using Quaver.Shared.Screens.V2.Options.Model;
-using SQLitePCL;
+using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
 using Wobble.Graphics.Buttons;
 using Wobble.Managers;
@@ -20,7 +18,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
         private Drawable Control { get; set; }
 
-        public OptionsRow(OptionsDefinition definition)
+        public OptionsRow(OptionsDefinition definition, SkinV2OptionsContentConfig config)
         {
             Definition = definition;
 
@@ -34,13 +32,13 @@ namespace Quaver.Shared.Screens.V2.Options
                 Parent = this,
                 Size = new ScalableVector2(1, Height),
                 CornerRadius = 6,
-                Tint = ColorHelper.HexToColor("#181E25"),
+                Tint = SkinV2Color.Parse(config.RowBackgroundColor),
                 PerformHoverFade = false,
                 IsClickable = false
             };
 
             var labelText = Definition.LabelKeyCount.HasValue ? LocalizationManager.Get(Definition.LabelName, Definition.LabelKeyCount.Value) : LocalizationManager.Get(Definition.LabelName);
-            Label.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), labelText, 18, Color.White);
+            Label.SetLabel(FontManager.GetWobbleFont(Fonts.InterBold), labelText, 18, SkinV2Color.Parse(config.RowTextColor));
             Label.Label.Alignment = Alignment.MidLeft;
             Label.Label.X = 15;
 

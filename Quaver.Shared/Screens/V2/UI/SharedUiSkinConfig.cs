@@ -12,6 +12,12 @@ namespace Quaver.Shared.Screens.V2.UI
     {
         public bool ShowBanner { get; set; } = true;
 
+        [Range(-1920, 1920)]
+        public float PositionOffsetX { get; set; } = 0;
+
+        [Range(-1080, 1080)]
+        public float PositionOffsetY { get; set; } = 0;
+
         [Range(1, 8192)]
         public float MinimumWidth { get; set; } = 320;
 
@@ -778,12 +784,15 @@ namespace Quaver.Shared.Screens.V2.UI
         [Range(1, 256)]
         public int FontSize { get; set; } = 16;
 
+        [ConfigEditable]
         [SkinColor]
         public string BackgroundColor { get; set; } = "#273038FF";
 
+        [ConfigEditable]
         [SkinColor]
         public string TextColor { get; set; } = "#FFFFFFFF";
 
+        [ConfigEditable]
         [SkinColor]
         public string CountColor { get; set; } = "#8CAFEAFF";
     }

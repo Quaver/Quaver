@@ -23,6 +23,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         private Bindable<ChatChannel> ActiveChannel { get; }
 
+        private Color MessageColor { get; }
+
         private ChatMessageStore MessageStore { get; set; }
 
         private List<ChatMessage> Messages { get; } = new List<ChatMessage>();
@@ -51,9 +53,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public event Action<User, RectangleF> SenderMenuRequested;
 
-        public ChatMessageList(Bindable<ChatChannel> activeChannel, ScalableVector2 size) : base(size, size)
+        public ChatMessageList(Bindable<ChatChannel> activeChannel, ScalableVector2 size, Color messageColor) : base(size, size)
         {
             ActiveChannel = activeChannel;
+            MessageColor = messageColor;
 
             ScrollSpeed = 220;
             EasingType = Easing.OutQuint;
@@ -239,7 +242,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 return;
 
             var shouldRemainAtBottom = IsNearBottom() || message.IsFromSelf;
-            var row = new ChatMessageRow(message, GetRowWidth(), this);
+            var row = new ChatMessageRow(message, GetRowWidth(), this, MessageColor);
             row.UpdateWhenInvisible = false;
             row.SenderMenuRequested += OnSenderMenuRequested;
 

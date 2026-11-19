@@ -20,6 +20,7 @@ internal sealed class HeaderScreenNavigation : FlexContainer
     private SpriteTextPlus FriendsOnlineCount { get; set; }
     private double StatsRefreshTimeRemaining { get; set; }
     public ProfileSummary ProfileButton { get; private set; }
+    internal Drawable StatsContainer => StatsLayout;
 
     private FlexContainer StatsLayout { get; set; }
 
