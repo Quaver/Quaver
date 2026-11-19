@@ -8,6 +8,7 @@ using Quaver.Server.Client.Structures;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
@@ -23,6 +24,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
 public class UserRow : PoolableSprite<User>
 {
     public override int HEIGHT { get; } = 80;
+
+    private const double ProfilePrefetchDelay = 125;
 
     private RoundedButton Row {get; set;}
     private FlexContainer Layout { get; set; }
@@ -56,7 +59,13 @@ public class UserRow : PoolableSprite<User>
 
     private bool PreviewMode { get; }
 
-    public event Action<User> OnClick;
+    private int AccentRequestVersion { get; set; }
+
+    private double ProfileHoverTime { get; set; }
+
+    private int PrefetchedUserId { get; set; } = -1;
+
+    public event Action<User, RectangleF> OnClick;
     
     public UserRow(PoolableScrollContainer<User> container, User item, int index, bool previewMode = false, float? width = null) : base(container, item, index)
     {
@@ -88,9 +97,15 @@ public class UserRow : PoolableSprite<User>
     {
         Item = item;
         Index = index;
+        ProfileHoverTime = 0;
+        PrefetchedUserId = -1;
+        var accentRequestVersion = ++AccentRequestVersion;
 
         ScheduleUpdate(() =>
         {
+            if (IsDisposed || accentRequestVersion != AccentRequestVersion)
+                return;
+
             var steamId = (ulong)item.OnlineUser.SteamId;
 
             Status.ResetPosition();
@@ -138,10 +153,10 @@ public class UserRow : PoolableSprite<User>
                 Clan.Visible = hasClan;
                 Clan.Text = hasClan ? $"[{clanTag}] " : "";
                 var clanColor = item.OnlineUser.ClanAccentColor;
-                Clan.Tint = clanColor != null ? ColorHelper.FromHex(clanColor) : Colors.GetUserChatColor(item.OnlineUser.UserGroups);
+                Clan.Tint = clanColor != null ? ColorHelper.FromHex(clanColor) : Color.White;
 
                 Username.Text = item.OnlineUser.Username;
-                Username.Tint = Colors.GetUserChatColor(item.OnlineUser.UserGroups);
+                Username.Tint = Color.White;
                 Flag.Region = Flags.GetRegion(item.OnlineUser.CountryFlag);
                 
                 DetailsLayout.RefreshLayout();
@@ -149,7 +164,47 @@ public class UserRow : PoolableSprite<User>
             }
 
             UpdatePresence();
+
+            if (!PreviewMode && item.HasUserInfo)
+                RequestProfileAccent(item.OnlineUser.Id, accentRequestVersion);
         });
+    }
+
+    private void RequestProfileAccent(int userId, int requestVersion)
+    {
+        if (userId <= 0)
+            return;
+
+        ProfileViewerDataCache.GetApiDataAsync(userId).ContinueWith(task => ScheduleUpdate(() =>
+        {
+            if (IsDisposed || requestVersion != AccentRequestVersion || Item?.OnlineUser?.Id != userId)
+                return;
+
+            Username.Tint = task.Status == System.Threading.Tasks.TaskStatus.RanToCompletion ? task.Result?.Accent?.Readable ?? Color.White : Color.White;
+        }));
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        if (!PreviewMode && Row.IsHovered && Item?.HasUserInfo == true)
+        {
+            var userId = Item.OnlineUser.Id;
+            if (PrefetchedUserId != userId)
+            {
+                ProfileHoverTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (ProfileHoverTime >= ProfilePrefetchDelay)
+                {
+                    PrefetchedUserId = userId;
+                    ProfileViewerDataCache.Prefetch(Item);
+                }
+            }
+        }
+        else
+        {
+            ProfileHoverTime = 0;
+        }
+
+        base.Update(gameTime);
     }
 
     private void CreateRow()
@@ -165,8 +220,8 @@ public class UserRow : PoolableSprite<User>
         Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#3D4B64");
         Row.LeftHover += (s, e) => Row.Tint = ColorHelper.FromHex("#181E25");
 
-        Row.Clicked += (s, e) => OnClick?.Invoke(Item);
-        Row.RightClicked += (s, e) => OnClick?.Invoke(Item);
+        Row.Clicked += (s, e) => OnClick?.Invoke(Item, Row.ScreenRectangle);
+        Row.RightClicked += (s, e) => OnClick?.Invoke(Item, Row.ScreenRectangle);
 
         Layout = new FlexContainer
         {

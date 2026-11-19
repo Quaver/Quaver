@@ -177,7 +177,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub
             if (GameBase.Game is QuaverGame game && game.CurrentScreen?.Type == QuaverScreenType.Gameplay)
             {
                 if (game.CurrentScreen is GameplayScreen gameplay)
-                    game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode && gameplay.SpectatorClient == null ? 1 : 0;
+                    game.GlobalUserInterface.Cursor.Alpha = gameplay.InReplayMode ? 1 : 0;
             }
 
             ThreadScheduler.RunAfter(() => DialogManager.Dismiss(this), 300);

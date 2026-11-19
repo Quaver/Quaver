@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Difficulty.Rulesets.Keys;
@@ -38,6 +39,7 @@ using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.V2Hub;
 using Quaver.Shared.Helpers;
+using Quaver.Shared.Online.API.User;
 using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Loading;
 using Quaver.Shared.Screens.Main;
@@ -71,6 +73,8 @@ namespace Quaver.Shared.Online
             private set
             {
                 Self = null;
+                SelfAccentColor = null;
+                HasReceivedOnlineUsers = false;
                 OnlineUsers = new Dictionary<int, User>();
                 MultiplayerGames = new Dictionary<string, MultiplayerGame>();
                 ListeningParty = null;
@@ -111,9 +115,19 @@ namespace Quaver.Shared.Online
         public static User Self { get; private set; }
 
         /// <summary>
+        ///     The active profile accent color of the logged-in user.
+        /// </summary>
+        public static string SelfAccentColor { get; private set; }
+
+        /// <summary>
         ///     Dictionary containing all of the currently online users.
         /// </summary>
         public static Dictionary<int, User> OnlineUsers { get; private set; }
+
+        /// <summary>
+        ///     Whether the server has sent the initial online-user roster for the current connection.
+        /// </summary>
+        internal static bool HasReceivedOnlineUsers { get; private set; }
 
         /// <summary>
         ///     Dictionary containing all the currently available multiplayer games.
@@ -427,6 +441,7 @@ namespace Quaver.Shared.Online
 
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.OnlineUser.Username;
+            _ = LoadSelfAccentColor(e.Self.OnlineUser.Id);
 
             DiscordHelper.Presence.LargeImageText = GetRichPresenceLargeKeyText(GameMode.Keys4);
             DiscordHelper.Presence.EndTimestamp = 0;
@@ -439,6 +454,24 @@ namespace Quaver.Shared.Online
 
             if (game.CurrentScreen != null)
                 Client?.UpdateClientStatus(game.CurrentScreen.GetClientStatus());
+        }
+
+        private static async Task LoadSelfAccentColor(int userId)
+        {
+            try
+            {
+                var response = await Task.Run(() => new APIRequestUsersFull(userId).ExecuteRequest());
+                var user = response?.User;
+
+                if (Self?.OnlineUser?.Id != userId)
+                    return;
+
+                SelfAccentColor = user?.AccentColorCustomizable == true ? user.AccentColor : null;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error($"Failed to load the current user's profile accent color: {exception}", LogType.Network);
+            }
         }
 
         /// <summary>
@@ -655,6 +688,7 @@ namespace Quaver.Shared.Online
         /// <param name="e"></param>
         private static void OnUsersOnline(object sender, UsersOnlineEventArgs e)
         {
+            HasReceivedOnlineUsers = true;
             var newOnlineUsers = new List<User>();
 
             foreach (var id in e.UserIds)
@@ -2037,6 +2071,8 @@ namespace Quaver.Shared.Online
 
         private static void ClearOnlineData()
         {
+            SelfAccentColor = null;
+            HasReceivedOnlineUsers = false;
             OnlineUsers.Clear();
             Spectators.Clear();
             SpectatorClients.Clear();

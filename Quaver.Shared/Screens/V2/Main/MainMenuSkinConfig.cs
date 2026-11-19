@@ -189,6 +189,10 @@ namespace Quaver.Shared.Screens.V2.Main
         [Range(0, 2048)]
         public float HorizontalMargin { get; set; } = 40;
 
+        [Range(-4096, 4096)]
+        [ConfigEditable]
+        public float BottomOffset { get; set; } = -127;
+
         [Range(1, 8192)]
         public float BannerHeight { get; set; } = 128;
 

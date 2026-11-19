@@ -19,6 +19,7 @@ using Quaver.Shared.Online;
 using Quaver.Shared.Screens.Main.UI;
 using Quaver.Shared.Screens.Options;
 using Quaver.Shared.Screens.V2.Options;
+using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Skinning;
 using Quaver.Shared.Skinning.V2;
@@ -190,9 +191,6 @@ namespace Quaver.Shared.Screens.V2.UI
             var buttons = new List<RoundedButton>();
             SetTopBar(layout =>
             {
-                buttons.Add(layout.AddIconButton(NavigationBarRegion.Left,
-                    GlobalIcons.Get(GlobalIcon.Jukebox),
-                    LocalizationManager.Get("Screen_Main_Menu_Jukebox"), ShowMusicQueue));
                 buttons.Add(layout.AddIconButton(NavigationBarRegion.Left, GlobalIcons.Get(GlobalIcon.Chat),
                     LocalizationManager.Get("Screen_Options_ToggleChatOverlay"), ToggleChat));
                 layout.AddSharedRightControls();
@@ -667,13 +665,17 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void OnProfileClicked(object sender, EventArgs args)
         {
-            if (DialogManager.Dialogs.Count > 0 && DialogManager.Dialogs[DialogManager.Dialogs.Count - 1] is OverlayDialog hubDialog)
+            if (!OnlineManager.Connected || OnlineManager.Self?.OnlineUser == null)
             {
-                hubDialog.ToggleProfileDropdown(ProfileButton, Config.Profile.DropdownGap);
+                ToggleAccountDropdown();
                 return;
             }
 
-            ToggleAccountDropdown();
+            AccountDropdownOpen = false;
+            if (GameBase.Game is QuaverGame game)
+                game.CurrentScreen?.ActiveLoggedInUserDropdown?.Close();
+
+            ProfileViewerDialog.Show(OnlineManager.Self, ProfileButton.ScreenRectangle);
         }
 
         private void ToggleAccountDropdown()
@@ -690,7 +692,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
             if (game.CurrentScreen.ActiveLoggedInUserDropdown == null)
             {
-                game.CurrentScreen.ActivateLoggedInUserDropdown(new LoggedInUserDropdown(),
+                game.CurrentScreen.ActivateLoggedInUserDropdown(
+                    new LoggedInUserDropdown(closed: () => AccountDropdownOpen = false),
                     new ScalableVector2(
                         ProfileButton.AbsolutePosition.X + ProfileButton.AbsoluteSize.X - LoggedInUserDropdown.ContainerSize.X.Value,
                         ProfileButton.AbsolutePosition.Y + ProfileButton.AbsoluteSize.Y + Config.Profile.DropdownGap));
@@ -910,7 +913,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public static void SetHubOverlayState(bool opened, FlexContainer controlsHost = null)
         {
-            var navigation = ScreenManager.GetElement<ScreenNavigation>(ElementKey);
+            if (!ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
+                return;
+
             navigation.ApplyHubOverlayState(opened, controlsHost);
         }
 
@@ -976,26 +981,29 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void HandleVolumeShortcut()
         {
-            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || MusicPlayer == null ||
-                MusicPlayer.IsDisposed)
+            if (!KeyboardManager.IsAltDown() || MusicPlayer == null || MusicPlayer.IsDisposed)
                 return;
 
             var increase = KeyboardManager.IsUniqueKeyPress(Keys.Up);
             var decrease = KeyboardManager.IsUniqueKeyPress(Keys.Down);
             var selectPrevious = KeyboardManager.IsUniqueKeyPress(Keys.Left);
             var selectNext = KeyboardManager.IsUniqueKeyPress(Keys.Right);
-            if (!increase && !decrease && !selectPrevious && !selectNext)
+            var scrollUp = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
+            var scrollDown = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
+            if (!increase && !decrease && !selectPrevious && !selectNext && !scrollUp && !scrollDown)
                 return;
 
             if (VolumeDialog != null && !VolumeDialog.IsDisposed && !VolumeDialog.IsClosing)
             {
                 VolumeDialog.EnableKeyboardControl();
+                if (scrollUp || scrollDown)
+                    VolumeDialog.AdjustFocusedSlider(scrollUp ? 5 : -5);
                 return;
             }
 
             VolumeDialog = new VolumeDialog(MusicPlayer.VolumeDialogAnchor, MusicPlayerConfig, true);
-            if (increase || decrease)
-                VolumeDialog.AdjustFocusedSlider(increase ? 5 : -5);
+            if (increase || decrease || scrollUp || scrollDown)
+                VolumeDialog.AdjustFocusedSlider(increase || scrollUp ? 5 : -5);
             else
                 VolumeDialog.SelectRelativeSlider(selectNext ? 1 : -1);
             DialogManager.Show(VolumeDialog);
@@ -1007,15 +1015,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private static void ToggleOnlineHub()
         {
-            if (DialogManager.Dialogs.Count == 0)
-            {
-                DialogManager.Show(new OverlayDialog());
-                return;
-            }
-
-            var topDialog = DialogManager.Dialogs[DialogManager.Dialogs.Count - 1];
-            if (topDialog is OverlayDialog dialog)
-                dialog.Close();
+            if (GameBase.Game is QuaverGame game)
+                game.ToggleOnlineHub();
         }
 
         private enum FooterLayout

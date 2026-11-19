@@ -181,6 +181,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
     {
         private static readonly ISerializer Serializer = new SerializerBuilder()
             .WithNamingConvention(new PascalCaseNamingConvention())
+            .EmitDefaults()
             .Build();
 
         private string initialSerialized;

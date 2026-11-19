@@ -14,6 +14,7 @@ namespace Quaver.Shared.Assets
     {
         public static Texture2D BlankBox => TextureManager.Load($"Quaver.Resources/Textures/UI/blank-box.png");
         public static Texture2D IconsGrid => TextureManager.Load("Quaver.Resources/Textures/UI/Global/IconsGrid.png");
+        public static Texture2D CapsuleIconsGrid => TextureManager.Load("Quaver.Resources/Textures/UI/Global/CapsuleIconsGrid.png");
         public static Texture2D FlagsGrid => TextureManager.Load("Quaver.Resources/Textures/UI/Global/Flags.png");
         public static Texture2D UserGroups => TextureManager.Load("Quaver.Resources/Textures/UI/Global/UserGroups.png");
         public static Texture2D Judgements => TextureManager.Load("Quaver.Resources/Textures/UI/Global/Judgements.png");
@@ -67,6 +68,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D DeselectedMapset => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/deselected-mapset.png");
         public static Texture2D LeaderboardPanel => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/leaderboard-panel.png");
         public static Texture2D Logo => TextureManager.Load("Quaver.Resources/Textures/UI/logo.png");
+        public static Texture2D QuaverLogoOnly => TextureManager.Load("Quaver.Resources/Textures/UI/quaver-logo-only.png");
         public static Texture2D MenuBorderBackground => TextureManager.Load("Quaver.Resources/Textures/UI/Menu/menu-border-background.png");
         public static Texture2D FilterPanelGradient => TextureManager.Load("Quaver.Resources/Textures/UI/SongSelect/filter-panel-gradient.png");
         public static Texture2D DropdownClosed => TextureManager.Load("Quaver.Resources/Textures/UI/Elements/dropdown-closed.png");
@@ -143,6 +145,7 @@ namespace Quaver.Shared.Assets
         public static Texture2D TwitchIconWhite => TextureManager.Load(@"Quaver.Resources/Textures/UI/twitch-icon-white.png");
         public static Texture2D ConnectTwitch => TextureManager.Load(@"Quaver.Resources/Textures/UI/Hub/connect-twitch.png");
         public static Texture2D Emoji => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emoji.png");
+        public static Texture2D ChatEmoteSheet => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/emote-sheet.png");
         public static Texture2D TopicHeader => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/topic-header.png");
         public static Texture2D CloseChannelButton => TextureManager.Load(@"Quaver.Resources/Textures/UI/Chat/close-channel.png");
         public static Texture2D RoundedPanel => TextureManager.Load(@"Quaver.Resources/Textures/UI/rounded-panel.png");
