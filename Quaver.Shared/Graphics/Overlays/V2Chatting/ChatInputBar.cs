@@ -44,9 +44,9 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
         {
             ActiveChannel = activeChannel;
 
-            Tint = SkinV2Color.Parse(config.BackgroundColor);
-            InputText.Tint = SkinV2Color.Parse(config.TextColor);
-            Cursor.Tint = SkinV2Color.Parse(config.TextColor);
+            Tint = SkinV2Color.Parse(config.InputBackgroundColor);
+            InputText.Tint = SkinV2Color.Parse(config.InputColor);
+            Cursor.Tint = SkinV2Color.Parse(config.InputColor);
             InputText.X = 15;
             MaxCharacters = MaximumMessageLength;
 
@@ -56,7 +56,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(size.Y.Value, size.Y.Value),
                 CornerRadius = emoteConfig.CornerRadius,
-                Tint = SkinV2Color.Parse(config.BackgroundColor)
+                Tint = SkinV2Color.Parse(config.InputBackgroundColor)
             };
             EmoteButton.SetIcon(atlas.Get(ChatEmoteAtlas.Names[0]), new Vector2(emoteConfig.InputIconSize, emoteConfig.InputIconSize));
             EmoteButton.Clicked += OnEmoteButtonClicked;

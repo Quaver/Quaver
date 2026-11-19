@@ -3774,7 +3774,7 @@ You might want to back up your keymap first.</value>
     <value>User Search</value>
   </data>
   <data name="SkinEditor_Component_ChatInput" xml:space="preserve">
-    <value>Message Input</value>
+    <value>Message</value>
   </data>
   <data name="SkinEditor_ChatPreviewMessage" xml:space="preserve">
     <value>Welcome to #quaver! This is what a chat message looks like.</value>

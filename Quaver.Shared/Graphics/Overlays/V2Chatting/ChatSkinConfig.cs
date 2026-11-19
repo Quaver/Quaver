@@ -121,10 +121,13 @@ public sealed class SkinV2ChatInputConfig
     public int FontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
 
     [ConfigEditable, SkinColor]
-    public string BackgroundColor { get; set; } = "#181E25FF";
+    public string InputBackgroundColor { get; set; } = "#181E25FF";
 
     [ConfigEditable, SkinColor]
-    public string TextColor { get; set; } = "#FFFFFFFF";
+    public string InputColor { get; set; } = "#FFFFFFFF";
+
+    [ConfigEditable, SkinColor]
+    public string MessageColor { get; set; } = "#9FA8B6FF";
 }
 
 public sealed class SkinV2ChatEmotesConfig

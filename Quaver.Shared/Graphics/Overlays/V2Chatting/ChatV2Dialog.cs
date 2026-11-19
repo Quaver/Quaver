@@ -646,7 +646,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 return;
             }
 
-            MessageList = new ChatMessageList(ChatSession.ActiveChannel, new ScalableVector2(ContentLayout.Width, 0))
+            MessageList = new ChatMessageList(ChatSession.ActiveChannel, new ScalableVector2(ContentLayout.Width, 0), SkinV2Color.Parse(Config.Input.MessageColor))
             {
                 Parent = ContentLayout,
                 Tint = SkinV2Color.Parse(Config.Panels.SectionColor)
@@ -704,14 +704,14 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Sender = quaverBot,
                 Time = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
-            PreviewMessageRow = new ChatMessageRow(previewMessage, 1, PreviewMessageList);
+            PreviewMessageRow = new ChatMessageRow(previewMessage, 1, PreviewMessageList, SkinV2Color.Parse(Config.Input.MessageColor));
             PreviewMessageList.AddContainedDrawable(PreviewMessageRow);
 
             PreviewInputBar = new Sprite
             {
                 Parent = ContentLayout,
                 Size = new ScalableVector2(1, Config.Layout.InputHeight),
-                Tint = SkinV2Color.Parse(Config.Input.BackgroundColor)
+                Tint = SkinV2Color.Parse(Config.Input.InputBackgroundColor)
             };
             ContentLayout.SetItemOptions(PreviewInputBar, new FlexItemOptions { Basis = Config.Layout.InputHeight, Shrink = 0 });
             
@@ -720,7 +720,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Parent = PreviewInputBar,
                 Alignment = Alignment.MidLeft,
                 X = SectionPadding,
-                Tint = SkinV2Color.Parse(Config.Input.TextColor)
+                Tint = SkinV2Color.Parse(Config.Input.InputColor)
             };
 
             PreviewUserList = new ChatPreviewUserList(previewUsers, new ScalableVector2(1, 1), SkinV2Color.Parse(Config.Search.RowBackgroundColor))
