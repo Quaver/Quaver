@@ -106,10 +106,10 @@ public sealed class SkinV2ChatSearchConfig
     public string BackgroundColor { get; set; } = "#273038FF";
 
     [ConfigEditable, SkinColor]
-    public string TextColor { get; set; } = "#FFFFFFFF";
+    public string RowBackgroundColor { get; set; } = "#181E25FF";
 
     [ConfigEditable, SkinColor]
-    public string PlaceholderColor { get; set; } = "#8CAFEA80";
+    public string TextColor { get; set; } = "#FFFFFFFF";
 }
 
 public sealed class SkinV2ChatInputConfig

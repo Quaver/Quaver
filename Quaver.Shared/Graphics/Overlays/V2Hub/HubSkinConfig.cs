@@ -178,6 +178,10 @@ public sealed class SkinV2HubSectionConfig
 public sealed class SkinV2HubUsersConfig
 {
     [ConfigEditable]
+    [SkinColor]
+    public string RowBackgroundColor { get; set; } = "#181E25FF";
+
+    [ConfigEditable]
     [Range(1, 8192)]
     public float SearchWidth { get; set; } = 464;
 

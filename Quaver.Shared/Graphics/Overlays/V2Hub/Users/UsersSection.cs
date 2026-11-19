@@ -142,7 +142,8 @@ public class UsersSection : Container
     {
         var userList = OnlineManager.Connected && OnlineManager.OnlineUsers != null ? OnlineManager.OnlineUsers.Values.ToList() : new List<User>();
         var availableHeight = Height - HeaderHeight - SectionConfig.ContentPadding * 2;
-        Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Layout.Width, 1), new ScalableVector2(Layout.Width, 1), SearchQuery, Filter)
+        Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Layout.Width, 1), new ScalableVector2(Layout.Width, 1), 
+            SearchQuery, Filter, SkinV2Color.Parse(Config.RowBackgroundColor))
         {
             Parent = Layout,
             Tint = SkinV2Color.Parse(SectionConfig.BackgroundColor),

@@ -302,7 +302,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 CornerRadius = Config.Layout.CornerRadius,
                 BackgroundColor = SkinV2Color.Parse(Config.Search.BackgroundColor),
                 TextColor = SkinV2Color.Parse(Config.Search.TextColor),
-                PlaceholderColor = SkinV2Color.Parse(Config.Search.PlaceholderColor),
+                PlaceholderColor = SkinV2Color.Parse(Config.Search.TextColor),
                 CursorColor = SkinV2Color.Parse(Config.Search.TextColor)
             };
             UserSearchBox = new V2FilterSearchTextbox(UserSearchQuery, LocalizationManager.Get("Screen_Hub_SearchUsers"), FontManager.GetWobbleFont(Config.Search.Font), Config.Search.FontSize, searchStyle, SearchSectionWidth - SectionPadding * 2)
@@ -433,6 +433,8 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
             if (UserSearchList != null)
                 UserSearchList.Width = Math.Max(1, SearchLayout.Width + SectionPadding);
+
+            PreviewUserList?.RefreshViewport();
 
             if (!IsResizing && SearchSectionAnimationProgress >= 0.999f)
                 UserSearchList?.RefreshViewport();
@@ -665,7 +667,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             ContentLayout.SetItemOptions(InputBar, new FlexItemOptions { Basis = Config.Layout.InputHeight, Shrink = 0 });
 
             UserSearchList = new ChatUserSearchList(ChatSession.ActiveChannel, UserSearchQuery,
-                new ScalableVector2(SearchLayout.Width, 1))
+                new ScalableVector2(SearchLayout.Width, 1), SkinV2Color.Parse(Config.Search.RowBackgroundColor))
             {
                 Parent = SearchLayout,
                 Tint = SkinV2Color.Parse(Config.Panels.SectionColor),
@@ -718,10 +720,10 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
                 Parent = PreviewInputBar,
                 Alignment = Alignment.MidLeft,
                 X = SectionPadding,
-                Tint = SkinV2Color.Parse(Config.Search.PlaceholderColor)
+                Tint = SkinV2Color.Parse(Config.Input.TextColor)
             };
 
-            PreviewUserList = new ChatPreviewUserList(previewUsers, new ScalableVector2(1, 1))
+            PreviewUserList = new ChatPreviewUserList(previewUsers, new ScalableVector2(1, 1), SkinV2Color.Parse(Config.Search.RowBackgroundColor))
             {
                 Parent = SearchLayout,
                 Tint = SkinV2Color.Parse(Config.Panels.SectionColor)

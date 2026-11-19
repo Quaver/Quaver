@@ -38,6 +38,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
         new Dictionary<string, Dictionary<string, List<User>>>(StringComparer.OrdinalIgnoreCase);
     private List<User> FriendsCache { get; set; }
     private int? LoadingClanId { get; set; }
+    private Color RowBackgroundColor { get; }
 
     private double TimeSinceLastInfoRequest { get; set; }
     private double TimeSinceLastStatusRequest { get; set; }
@@ -46,10 +47,12 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     public event Action<User, RectangleF> OnRowClicked;
 
-    public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size) : base(new List<User>(), 1, 0, size, size)
+    public ChatUserSearchList(Bindable<ChatChannel> activeChannel, Bindable<string> searchQuery, ScalableVector2 size, Color rowBackgroundColor) 
+        : base(new List<User>(), 1, 0, size, size)
     {
         V2Scrollbar.Apply(this);
 
+        RowBackgroundColor = rowBackgroundColor;
         SelectedChannel = activeChannel.Value;
         SearchQuery = searchQuery;
         SubscribedClient = OnlineManager.Client;
@@ -85,7 +88,7 @@ public sealed class ChatUserSearchList : PoolableScrollContainer<User>
 
     protected override PoolableSprite<User> CreateObject(User item, int index)
     {
-        var row = new UserRow(this, item, index, width: V2Scrollbar.GetContentWidth(this))
+        var row = new UserRow(this, item, index, RowBackgroundColor, width: V2Scrollbar.GetContentWidth(this))
         {
             Alpha = 0
         };
