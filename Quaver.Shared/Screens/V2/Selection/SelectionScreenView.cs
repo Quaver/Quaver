@@ -20,6 +20,9 @@ using Wobble.Window;
 
 namespace Quaver.Shared.Screens.V2.Selection
 {
+    /// <summary>
+    ///     Builds and sets the Song Select interface and its skin editor preview
+    /// </summary>
     internal sealed class SelectionScreenView : ScreenView, ISkinV2EditorHost
     {
         private SelectionScreen SelectionScreen => (SelectionScreen)Screen;
@@ -123,11 +126,11 @@ namespace Quaver.Shared.Screens.V2.Selection
             {
                 Parent = ContentRoot,
                 Direction = FlexDirection.Row,
-                AlignItems = FlexAlignItems.Stretch
+                AlignItems = FlexAlignItems.Stretch,
+                JustifyContent = FlexJustifyContent.SpaceBetween
             };
             DetailsViewport = new HorizontalClippingContainer { Parent = Columns };
-            var leftFraction = MathHelper.Clamp(Config.Layout.LeftPanelFraction, 0.1f, 0.8f);
-            Columns.SetItemOptions(DetailsViewport, new FlexItemOptions { Basis = 0, Grow = leftFraction });
+            Columns.SetItemOptions(DetailsViewport, new FlexItemOptions { Basis = Config.Layout.LeftPanelWidth, Shrink = 1 });
             
             DetailsBackground = new Sprite
             {
@@ -141,9 +144,9 @@ namespace Quaver.Shared.Screens.V2.Selection
             Difficulty = CreateDetailsText(Config.Details.FontSize, Config.Details.TextColor);
 
             RightPanel = new Container { Parent = Columns };
-            Columns.SetItemOptions(RightPanel, new FlexItemOptions { Basis = 0, Grow = 1 - leftFraction });
+            Columns.SetItemOptions(RightPanel, new FlexItemOptions { Basis = Config.Layout.RightPanelWidth, Shrink = 1 });
             
-            List = new SelectionMapsetList(Config.List, Config.Mapset, () => SelectionScreen.CanHandleInput, SelectionScreen.SelectMapset)
+            List = new SelectionMapsetList(Config.List, Config.Mapset, Config.Difficulty, () => SelectionScreen.CanHandleInput, SelectionScreen.SelectMapset, SelectionScreen.SelectMap)
             {
                 Parent = RightPanel
             };
@@ -182,10 +185,13 @@ namespace Quaver.Shared.Screens.V2.Selection
                 new("selection-background", LocalizationManager.Get("SkinEditor_Component_Background"), "Screens.Selection.Background", Background),
                 new("selection-details", LocalizationManager.Get("Screen_V2_SelectionScreen"), "Screens.Selection.Details", DetailsViewport),
                 new("selection-list", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.List", List),
-                new("selection-mapset", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.Mapset", List)
+                new("selection-mapset", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.Mapset", List),
+                new("selection-difficulty", LocalizationManager.Get("Screen_Selection_Difficulty"), "Screens.Selection.Difficulty", List)
             };
             Targets.AddRange(navigation.GetSkinEditorTargets());
         }
+
+        internal bool TryMoveDifficultySelection(int direction) => List.TryMoveDifficultySelection(direction);
 
         private void UpdateResponsiveLayout()
         {

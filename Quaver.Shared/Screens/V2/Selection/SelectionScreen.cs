@@ -35,6 +35,9 @@ using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Selection
 {
+    /// <summary>
+    ///     Owns Song Select V2 state, input handling, map selection and gameplay navigation
+    /// </summary>
     internal sealed class SelectionScreen : SkinV2Screen, IHasLeftPanel, ISelectionScreenState
     {
         public override QuaverScreenType Type { get; } = QuaverScreenType.Select;
@@ -102,11 +105,19 @@ namespace Quaver.Shared.Screens.V2.Selection
         {
             if (CanHandleInput)
             {
-                if (KeyboardManager.IsUniqueKeyPress(Keys.Down) ||
-                    KeyboardManager.IsUniqueKeyPress(Keys.Right))
+                if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                {
+                    if (!((SelectionScreenView)View).TryMoveDifficultySelection(1))
+                        MoveSelection(1);
+                }
+                else if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                {
+                    if (!((SelectionScreenView)View).TryMoveDifficultySelection(-1))
+                        MoveSelection(-1);
+                }
+                else if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
                     MoveSelection(1);
-                else if (KeyboardManager.IsUniqueKeyPress(Keys.Up) ||
-                         KeyboardManager.IsUniqueKeyPress(Keys.Left))
+                else if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
                     MoveSelection(-1);
             }
 
@@ -121,6 +132,12 @@ namespace Quaver.Shared.Screens.V2.Selection
             if (CanHandleInput && AvailableMapsets.Contains(mapset) &&
                 !mapset.Maps.Contains(MapManager.Selected.Value))
                 MapManager.SelectMapFromMapset(mapset);
+        }
+
+        internal void SelectMap(Map map)
+        {
+            if (CanHandleInput && map != null && AvailableMapsets.Any(set => set.Maps.Contains(map)))
+                MapManager.Selected.Value = map;
         }
 
         internal void HandleBackAction()
@@ -278,8 +295,10 @@ namespace Quaver.Shared.Screens.V2.Selection
 
         private static void ShowMultiplayerConstraint(string localizationKey, string value) =>
             NotificationManager.Show(NotificationLevel.Error,  $"{LocalizationManager.Get(localizationKey)}{(string.IsNullOrEmpty(value) ? string.Empty : $": {value}")}");
-
-
+        
+        /// <summary>
+        ///     Handle global selection actions while on Song Select screen
+        /// </summary>
         private sealed class SelectionInputToken(SelectionScreen screen) : GlobalInputScopeToken
         {
             public override GlobalInputScope Scope => GlobalInputScope.Selection;

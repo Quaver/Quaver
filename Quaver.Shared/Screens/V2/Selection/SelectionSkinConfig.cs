@@ -12,7 +12,8 @@ namespace Quaver.Shared.Screens.V2.Selection
 
         [Required] public SkinV2SelectionLayoutConfig Layout { get; set; } = new();
         [Required] public SkinV2SelectionListConfig List { get; set; } = new();
-        [Required] public SkinV2SelectionMapsetConfig Mapset { get; set; } = new();
+        [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new() { Height = 100, TitleFont = SkinV2FontWeightsConfig.Bold, TitleFontSize = 22 };
+        [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { SelectedWidth = 925, Height = 60, TitleFontSize = 20 };
         [Required] public SkinV2SelectionDetailsConfig Details { get; set; } = new();
     }
 
@@ -21,11 +22,13 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Range(0, 2048)] public float HorizontalPadding { get; set; } = SkinV2Spacing.SpacingXl;
         [Range(0, 2048)] public float VerticalPadding { get; set; } = SkinV2Spacing.SpacingBase;
         [Range(0, 2048)] public float ContentGap { get; set; } = SkinV2Spacing.SpacingXl;
-        [Range(0.1, 0.8)] public float LeftPanelFraction { get; set; } = 0.4f;
+        [Range(1, 4096)] public float LeftPanelWidth { get; set; } = 725;
+        [Range(1, 4096)] public float RightPanelWidth { get; set; } = 1040;
     }
 
     public sealed class SkinV2SelectionListConfig
     {
+        [Range(0, 128)] public int Gap { get; set; } = 10;
         [Range(1, 8192)] public int ScrollSpeed { get; set; } = 320;
         [Range(1, 10000)] public int ScrollMilliseconds { get; set; } = 400;
         [Range(1, 64)] public int OverscanRows { get; set; } = 4;
@@ -33,19 +36,23 @@ namespace Quaver.Shared.Screens.V2.Selection
         [ConfigEditable, SkinColor] public string ScrollbarColor { get; set; } = "#C5D3E7FF";
     }
 
-    public sealed class SkinV2SelectionMapsetConfig
+    public sealed class SkinV2SelectionRowConfig
     {
+        [Range(1, 4096)] public int Width { get; set; } = 900;
+        [Range(1, 4096)] public int SelectedWidth { get; set; } = 950;
         [Range(40, 512)] public int Height { get; set; } = 80;
-        [Range(0, 128)] public int Gap { get; set; } = 10;
+        [Range(0, 128)] public float CornerRadius { get; set; } = 6;
         [Range(0, 128)] public float Padding { get; set; } = SkinV2Spacing.SpacingBase;
-        [SkinFont] public string Font { get; set; } = SkinV2FontWeightsConfig.SemiBold;
+        [SkinFont] public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+        [SkinFont] public string TitleFont { get; set; } = SkinV2FontWeightsConfig.Bold;
         [Range(1, 256)] public int TitleFontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
-        [Range(1, 256)] public int ArtistFontSize { get; set; } = SkinV2FontSizesConfig.TextSm;
+        [Range(1, 256)] public int ArtistFontSize { get; set; } = 18;
+        [Range(1, 256)] public int CreatorFontSize { get; set; } = 14;
         [ConfigEditable, SkinColor] public string BackgroundColor { get; set; } = "#162333FF";
         [ConfigEditable, SkinColor] public string HoveredBackgroundColor { get; set; } = "#263C55FF";
         [ConfigEditable, SkinColor] public string SelectedBackgroundColor { get; set; } = "#44618CFF";
         [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
-        [ConfigEditable, SkinColor] public string SecondaryTextColor { get; set; } = "#B8C4D1FF";
+        [ConfigEditable, SkinColor] public string SecondaryTextColor { get; set; } = "#FFFFFFFF";
     }
 
     public sealed class SkinV2SelectionDetailsConfig
