@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.V2.Selection.UI;
@@ -11,6 +12,9 @@ using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
+using Wobble.Graphics.Animations;
+using Wobble.Graphics.Buttons;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Navigation;
@@ -39,11 +43,16 @@ namespace Quaver.Shared.Screens.V2.Selection
         private SpriteTextPlus Artist { get; set; }
         private SpriteTextPlus Difficulty { get; set; }
         private Container RightPanel { get; set; }
+        private Container FilterContainer { get; set; }
+        private NineSliceSprite FilterBackground { get; set; }
+        private RoundedButton FilterExpandButton { get; set; }
+        private Container ListRegion { get; set; }
         private SelectionMapsetList List { get; set; }
         private SpriteTextPlus EmptyState { get; set; }
         private float LastWidth { get; set; } = -1;
         private float LastHeight { get; set; } = -1;
         private bool Destroyed { get; set; }
+        private bool FilterExpanded { get; set; }
         private bool EditorLayoutActive { get; set; }
         private float EditorLeftWidth { get; set; }
         private float EditorRightWidth { get; set; }
@@ -145,18 +154,22 @@ namespace Quaver.Shared.Screens.V2.Selection
 
             RightPanel = new Container { Parent = Columns };
             Columns.SetItemOptions(RightPanel, new FlexItemOptions { Basis = Config.Layout.RightPanelWidth, Shrink = 1 });
+
+            ListRegion = new Container { Parent = RightPanel };
             
-            List = new SelectionMapsetList(Config.List, Config.Mapset, Config.Difficulty, () => SelectionScreen.CanHandleInput, SelectionScreen.SelectMapset, SelectionScreen.SelectMap)
+            List = new SelectionMapsetList(Config.List, Config.Mapset, Config.Difficulty, () => SelectionScreen.CanHandleInput && (FilterContainer == null || !FilterContainer.IsHovered()), SelectionScreen.SelectMapset, SelectionScreen.SelectMap)
             {
-                Parent = RightPanel
+                Parent = ListRegion
             };
 
             EmptyState = new SpriteTextPlus(FontManager.GetWobbleFont(Config.Details.Font), SelectionLocalization.Get("No maps found!"), Config.Details.FontSize)
             {
-                Parent = RightPanel,
+                Parent = ListRegion,
                 Alignment = Alignment.MidCenter,
                 Tint = SkinV2Color.Parse(Config.Details.SecondaryTextColor)
             };
+
+            CreateFilterContainer();
             LastWidth = LastHeight = -1;
             UpdateResponsiveLayout();
             List.Initialize(List.Size, SelectionScreen.AvailableMapsets, MapManager.Selected.Value);
@@ -184,6 +197,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             {
                 new("selection-background", LocalizationManager.Get("SkinEditor_Component_Background"), "Screens.Selection.Background", Background),
                 new("selection-details", LocalizationManager.Get("Screen_V2_SelectionScreen"), "Screens.Selection.Details", DetailsViewport),
+                new("selection-filters", LocalizationManager.Get("Screen_Editor_Filter"), "Screens.Selection.Filter", FilterContainer),
                 new("selection-list", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.List", List),
                 new("selection-mapset", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.Mapset", List),
                 new("selection-difficulty", LocalizationManager.Get("Screen_Selection_Difficulty"), "Screens.Selection.Difficulty", List)
@@ -192,6 +206,58 @@ namespace Quaver.Shared.Screens.V2.Selection
         }
 
         internal bool TryMoveDifficultySelection(int direction) => List.TryMoveDifficultySelection(direction);
+
+        private void CreateFilterContainer()
+        {
+            FilterContainer = new Container
+            {
+                Parent = RightPanel,
+                Size = new ScalableVector2(Config.Layout.RightPanelWidth, Config.Filter.Height)
+            };
+
+            var margin = (int) Math.Ceiling(Config.Filter.CornerRadius);
+            var textureSize = Math.Max(2, margin * 2 + 2);
+            FilterBackground = new NineSliceSprite
+            {
+                Parent = FilterContainer,
+                Size = FilterContainer.Size,
+                Image = RoundedRectTextureCache.Get(textureSize, textureSize, new RoundedRectCornerRadii(Config.Filter.CornerRadius, 0, 0, Config.Filter.CornerRadius)),
+                Margins = new SliceMargins(margin),
+                Tint = SkinV2Color.Parse(Config.Filter.BackgroundColor),
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            FilterExpandButton = new RoundedButton((sender, args) => ToggleFilterExpansion())
+            {
+                Parent = FilterContainer,
+                Alignment = Alignment.TopRight,
+                X = -Config.Filter.ExpandButtonRightInset,
+                Y = (Config.Filter.Height - Config.Filter.ExpandButtonSize) / 2f,
+                Size = new ScalableVector2(Config.Filter.ExpandButtonSize, Config.Filter.ExpandButtonSize),
+                CornerRadius = Config.Filter.CornerRadius,
+                Tint = SkinV2Color.Parse(Config.Filter.ExpandButtonColor),
+                UsePreviousSpriteBatchOptions = true
+            };
+
+            SetFilterExpansionIcon();
+            FilterContainer.SizeChanged += (sender, size) => FilterBackground.Size = size;
+        }
+
+        private void ToggleFilterExpansion()
+        {
+            FilterExpanded = !FilterExpanded;
+            SetFilterExpansionIcon();
+
+            FilterContainer.ClearAnimations(AnimationProperty.Height);
+            FilterContainer.ChangeHeightTo((int) Math.Round(FilterExpanded ? Config.Filter.ExpandedHeight : Config.Filter.Height), Easing.OutCubic, Config.Filter.ExpansionMilliseconds);
+        }
+
+        private void SetFilterExpansionIcon()
+        {
+            var icon = FilterExpanded ? GlobalIcon.LessOptions : GlobalIcon.MoreOptions;
+            FilterExpandButton.SetIcon(GlobalIcons.Get(icon), new Vector2(Config.Filter.ExpandIconSize));
+            FilterExpandButton.Icon.Tint = SkinV2Color.Parse(Config.Filter.ExpandIconColor);
+        }
 
         private void UpdateResponsiveLayout()
         {
@@ -218,7 +284,10 @@ namespace Quaver.Shared.Screens.V2.Selection
             Columns.RefreshLayout();
 
             DetailsBackground.Size = DetailsViewport.Size;
-            List.Size = new ScalableVector2(RightPanel.Width + horizontalPadding, RightPanel.Height);
+            FilterContainer.Size = new ScalableVector2(RightPanel.Width + horizontalPadding, FilterExpanded ? Config.Filter.ExpandedHeight : Config.Filter.Height);
+            ListRegion.Position = new ScalableVector2(0, Config.Filter.Height + Config.Layout.FilterListGap);
+            ListRegion.Size = new ScalableVector2(RightPanel.Width, Math.Max(1, RightPanel.Height - ListRegion.Y));
+            List.Size = new ScalableVector2(ListRegion.Width + horizontalPadding, ListRegion.Height);
 
             EmptyState.Text = SelectionLocalization.Get("No maps found!");
             EmptyState.TruncateWithEllipsis((int)Math.Max(1, RightPanel.Width));

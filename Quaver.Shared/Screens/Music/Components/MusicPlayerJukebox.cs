@@ -177,7 +177,8 @@ namespace Quaver.Shared.Screens.Music.Components
                         throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
                 }
 
-                LoadTrack();
+                if (CanAutoAdvance())
+                    LoadTrack();
             }
             catch (Exception e)
             {
@@ -300,6 +301,9 @@ namespace Quaver.Shared.Screens.Music.Components
                     TrackListQueue.Add(e.Value);
                     TrackListQueuePosition = TrackListQueue.Count - 1;
                 }
+
+                if (!CanAutoAdvance())
+                    return;
 
                 LoadTrack();
             }

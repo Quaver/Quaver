@@ -12,6 +12,7 @@ namespace Quaver.Shared.Screens.V2.Selection
 
         [Required] public SkinV2SelectionLayoutConfig Layout { get; set; } = new();
         [Required] public SkinV2SelectionListConfig List { get; set; } = new();
+        [Required] public SkinV2SelectionFilterConfig Filter { get; set; } = new();
         [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new() { Height = 100, TitleFont = SkinV2FontWeightsConfig.Bold, TitleFontSize = 22 };
         [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { SelectedWidth = 925, Height = 60, TitleFontSize = 20 };
         [Required] public SkinV2SelectionDetailsConfig Details { get; set; } = new();
@@ -20,10 +21,25 @@ namespace Quaver.Shared.Screens.V2.Selection
     public sealed class SkinV2SelectionLayoutConfig
     {
         [Range(0, 2048)] public float HorizontalPadding { get; set; } = SkinV2Spacing.SpacingXl;
-        [Range(0, 2048)] public float VerticalPadding { get; set; } = SkinV2Spacing.SpacingBase;
+        [Range(0, 2048)] public float VerticalPadding { get; set; } = SkinV2Spacing.Spacing2Xs;
         [Range(0, 2048)] public float ContentGap { get; set; } = SkinV2Spacing.SpacingXl;
         [Range(1, 4096)] public float LeftPanelWidth { get; set; } = 725;
         [Range(1, 4096)] public float RightPanelWidth { get; set; } = 1040;
+        [Range(0, 256)] public float FilterListGap { get; set; } = 10;
+    }
+
+    public sealed class SkinV2SelectionFilterConfig
+    {
+        [Range(1, 512)] public float Height { get; set; } = 60;
+        [Range(1, 1024)] public float ExpandedHeight { get; set; } = 130;
+        [Range(0, 128)] public float CornerRadius { get; set; } = 6;
+        [Range(1, 256)] public float ExpandButtonSize { get; set; } = 40;
+        [Range(0, 256)] public float ExpandButtonRightInset { get; set; } = 10;
+        [Range(1, 256)] public float ExpandIconSize { get; set; } = 30;
+        [Range(0, 10000)] public int ExpansionMilliseconds { get; set; } = 180;
+        [ConfigEditable, SkinColor] public string BackgroundColor { get; set; } = "#26313BFF";
+        [ConfigEditable, SkinColor] public string ExpandButtonColor { get; set; } = "#161D26FF";
+        [ConfigEditable, SkinColor] public string ExpandIconColor { get; set; } = "#FFFFFFFF";
     }
 
     public sealed class SkinV2SelectionListConfig
