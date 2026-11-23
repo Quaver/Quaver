@@ -48,11 +48,41 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Range(1, 256)] public int TitleFontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
         [Range(1, 256)] public int ArtistFontSize { get; set; } = 18;
         [Range(1, 256)] public int CreatorFontSize { get; set; } = 14;
+        [Range(1, 256)] public float PillHeight { get; set; } = 30;
+        [Range(1, 4096)] public float PillMinimumWidth { get; set; } = 90;
+        [Range(0, 256)] public float PillGap { get; set; } = 8;
+        [Range(0, 256)] public float PillHorizontalPadding { get; set; } = 24;
+        [Range(1, 256)] public int PillFontSize { get; set; } = 14;
+        [Range(1, 256)] public float DifficultyPillHeight { get; set; } = 36;
+        [Range(1, 256)] public float DifficultyGradeSize { get; set; } = 40;
+        [Range(0, 256)] public float DifficultyLeftPadding { get; set; } = 10;
+        [Range(0, 256)] public float DifficultyGradeGap { get; set; } = 10;
+        [Range(1, 4096)] public float DifficultyPillMinimumWidth { get; set; } = 90;
+        [Range(0, 256)] public float DifficultyPillHorizontalPadding { get; set; } = 20;
+        [Range(1, 256)] public int DifficultyPillFontSize { get; set; } = 14;
+        [Range(0, 256)] public float DifficultyContentGap { get; set; } = 12;
+        [Range(0, 256)] public float DifficultyStatsGap { get; set; } = 24;
+        [Range(0, 256)] public float DifficultyStatGroupGap { get; set; } = 15;
+        [Range(0, 256)] public float DifficultyStatItemGap { get; set; } = 8;
+        [Range(0, 256)] public float DifficultyRightPadding { get; set; } = 10;
+        [Range(1, 256)] public float DifficultyStatIconSize { get; set; } = 24;
+        [Range(1, 256)] public int DifficultyStatFontSize { get; set; } = 18;
+        [Range(1, 256)] public float BannerStatPillHeight { get; set; } = 30;
+        [Range(0, 256)] public float BannerStatPillGap { get; set; } = 8;
+        [Range(0, 256)] public float BannerStatPillPadding { get; set; } = 16;
+        [Range(0, 256)] public float BannerStatInset { get; set; } = 8;
+        [Range(1, 256)] public float BannerStatIconSize { get; set; } = 18;
+        [Range(1, 256)] public int BannerStatFontSize { get; set; } = 14;
+        [Range(0, 10000)] public int BannerStatFadeMilliseconds { get; set; } = 180;
         [ConfigEditable, SkinColor] public string BackgroundColor { get; set; } = "#162333FF";
         [ConfigEditable, SkinColor] public string HoveredBackgroundColor { get; set; } = "#263C55FF";
         [ConfigEditable, SkinColor] public string SelectedBackgroundColor { get; set; } = "#44618CFF";
         [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
         [ConfigEditable, SkinColor] public string SecondaryTextColor { get; set; } = "#FFFFFFFF";
+        [ConfigEditable, SkinColor] public string PillTextColor { get; set; } = "#FFFFFFFF";
+        [ConfigEditable, SkinColor] public string DifficultyPillColor { get; set; } = "#111820F2";
+        [ConfigEditable, SkinColor] public string DifficultyStatColor { get; set; } = "#FFFFFFFF";
+        [ConfigEditable, SkinColor] public string BannerStatPillColor { get; set; } = "#111820E6";
     }
 
     public sealed class SkinV2SelectionDetailsConfig

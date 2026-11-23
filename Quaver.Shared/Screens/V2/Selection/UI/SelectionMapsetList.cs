@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Containers;
+using Quaver.Shared.Modifiers;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Shaders;
+using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Selection.UI
 {
@@ -36,14 +39,25 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private Dictionary<Mapset, MapsetExpansion> Expansions { get; } = new();
         private Dictionary<Mapset, int> MapsetIndices { get; } = new();
         private List<SelectionListEntry> VisibleEntries { get; } = new();
+        private List<SelectionMapsetRow> MapsetRows { get; } = new();
+        private List<SelectionDifficultyRow> DifficultyRows { get; } = new();
         private int VisibleRowCount { get; set; }
+        private int MapsetPoolCapacity { get; set; }
+        private int DifficultyPoolCapacity { get; set; }
         private List<Mapset> FinishedExpansions { get; } = new();
         private HashSet<string> PendingBanners { get; } = new();
 
         internal RoundedTextureCache BannerCache { get; } = new(360, 80, 6);
+        internal SkinV2SelectionRowConfig MapsetRowConfig => MapsetConfig;
+        internal SkinV2SelectionRowConfig DifficultyRowConfig => DifficultyConfig;
         internal bool IsInitialized { get; private set; }
         internal bool CanInteract => IsInitialized && CanHandleInput() && AvailableItems.Count > 0;
         internal int RowGap => Config.Gap;
+        internal float DifficultyLongNoteStatWidth { get; private set; }
+        internal float DifficultyNotesPerSecondStatWidth { get; private set; }
+        internal float DifficultyDurationStatWidth { get; private set; }
+        internal float DifficultyBpmStatWidth { get; private set; }
+        internal bool ShowDifficultyTimingStats { get; private set; }
 
         internal SelectionMapsetList(SkinV2SelectionListConfig config, SkinV2SelectionRowConfig mapsetConfig, SkinV2SelectionRowConfig difficultyConfig,
             Func<bool> canHandleInput, Action<Mapset> selectMapset, Action<Map> selectMap)
@@ -65,11 +79,10 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             TimeToCompleteScroll = config.ScrollMilliseconds;
             EasingType = Easing.OutQuint;
 
-            V2Scrollbar.Apply(this, config.ScrollbarWidth, SkinV2Color.Parse(config.ScrollbarColor), Color.Transparent, config.ScrollbarWidth / 2f);
-            ShowScrollbarBackground = false;
-            ShowScrollbarBackgroundWhenContentFits = false;
+            V2Scrollbar.Apply(this, config.ScrollbarWidth, SkinV2Color.Parse(config.ScrollbarColor), cornerRadius: config.ScrollbarWidth / 2f);
             SizeChanged += OnSizeChanged;
             BackgroundHelper.BannerLoaded += OnBannerLoaded;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         public override void Update(GameTime gameTime)
@@ -188,12 +201,61 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                     return;
 
                 PendingBanners.Remove(directory);
-                if (args.Banner == null || args.Banner.IsDisposed || Pool == null)
+                if (args.Banner == null || args.Banner.IsDisposed)
                     return;
 
-                foreach (var row in Pool)
-                    ((SelectionListRow)row).SetBanner(directory, args.Banner);
+                foreach (var row in MapsetRows)
+                    row.SetBanner(directory, args.Banner);
             });
+        }
+
+        private void OnModsChanged(object sender, ModsChangedEventArgs args) => AddScheduledUpdate(() =>
+        {
+            if (IsDisposed)
+                return;
+
+            UpdateDifficultyStatWidths(ExpandedMapset);
+
+            foreach (var row in MapsetRows)
+                row.RefreshDynamicContent();
+
+            foreach (var row in DifficultyRows)
+                row.RefreshDynamicContent();
+        });
+
+        private void UpdateDifficultyStatWidths(Mapset mapset)
+        {
+            if (mapset?.Maps == null || mapset.Maps.Count == 0)
+                return;
+
+            var font = FontManager.GetWobbleFont(DifficultyConfig.Font);
+            var previousFontSize = font.FontSize;
+            font.FontSize = DifficultyConfig.DifficultyStatFontSize;
+
+            try
+            {
+                ShowDifficultyTimingStats = mapset.Maps.Select(map => map.SongLength).Distinct().Count() > 1 ||
+                                            mapset.Maps.Select(map => map.Bpm).Distinct().Count() > 1;
+                
+                var longNoteValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetLongNoteStatText(map)).X);
+                var notesPerSecondValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetNotesPerSecondStatText(map)).X);
+                
+                DifficultyLongNoteStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(longNoteValueWidth);
+                DifficultyNotesPerSecondStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(notesPerSecondValueWidth);
+                
+                if (ShowDifficultyTimingStats)
+                {
+                    var durationValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetDurationStatText(map)).X);
+                    DifficultyDurationStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(durationValueWidth);
+                    
+                    var bpmValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetBpmStatText(map)).X);
+                    DifficultyBpmStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(bpmValueWidth);
+                }
+            }
+            finally
+            {
+                font.FontSize = previousFontSize;
+            }
         }
 
         private static Texture2D CreateRowBackground(SkinV2SelectionRowConfig config)
@@ -252,7 +314,10 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             return true;
         }
 
-        protected override PoolableSprite<SelectionListEntry> CreateObject(SelectionListEntry item, int index) => new SelectionListRow(this, item, index);
+        protected override PoolableSprite<SelectionListEntry> CreateObject(SelectionListEntry item, int index) =>
+            item.IsDifficulty
+                ? new SelectionDifficultyRow(this, item, index)
+                : new SelectionMapsetRow(this, item, index);
 
         /// <summary>
         ///     Gets a mapset's current vertical position, including animated expansions above it
@@ -322,6 +387,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private void SetExpandedMapset(Mapset mapset)
         {
             ExpandedMapset = mapset;
+            UpdateDifficultyStatWidths(mapset);
+
             if (mapset != null && !Expansions.ContainsKey(mapset))
                 Expansions.Add(mapset, new MapsetExpansion(MapsetIndices[mapset], ContentContainer));
 
@@ -412,7 +479,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         /// </summary>
         internal void AttachRow(SelectionListRow row)
         {
-            row.Parent = row.Item.IsDifficulty ? Expansions[row.Item.Mapset].Viewport : ContentContainer;
+            row.Parent = row is SelectionDifficultyRow ? Expansions[row.Item.Mapset].Viewport : ContentContainer;
             PositionRow(row);
         }
 
@@ -422,7 +489,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private void PositionRow(SelectionListRow row)
         {
             var alpha = 1f;
-            if (row.Item.IsDifficulty)
+            if (row is SelectionDifficultyRow)
             {
                 var expansion = Expansions[row.Item.Mapset];
                 var offset = row.Item.DifficultyIndex * (DifficultyConfig.Height + RowGap);
@@ -478,8 +545,11 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private void RefreshPool()
         {
             ContentContainer.Width = Width;
-            var minimumStride = Math.Max(1, Math.Min(MapsetConfig.Height, DifficultyConfig.Height) + RowGap);
-            PoolSize = Math.Max(1, (int)Math.Ceiling(Height / minimumStride) + Math.Max(2, Config.OverscanRows) + 4);
+            var overscanRows = Math.Max(2, Config.OverscanRows) + 2;
+            MapsetPoolCapacity = Math.Max(1, (int) Math.Ceiling(Height / Math.Max(1, MapsetConfig.Height + RowGap)) + overscanRows);
+            DifficultyPoolCapacity = Math.Max(1, (int) Math.Ceiling(Height / Math.Max(1, DifficultyConfig.Height + RowGap)) + overscanRows);
+            PoolSize = MapsetPoolCapacity + DifficultyPoolCapacity;
+            
             RecalculateContainerHeight();
 
             // Resize may make the previous scroll offset invalid. Stop the old animation before clamping
@@ -547,62 +617,126 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                 return;
             }
 
-            var required = VisibleEntries.Count;
-            var previous = Pool ?? new List<PoolableSprite<SelectionListEntry>>();
-            var rows = new PoolableSprite<SelectionListEntry>[required];
+            var availableMapsetRows = new List<SelectionMapsetRow>(MapsetRows);
+            var availableDifficultyRows = new List<SelectionDifficultyRow>(DifficultyRows);
+            var activeRows = new SelectionListRow[VisibleEntries.Count];
 
-            // Retain rows by map identity so insertion does not restart their selection animations
-            for (var i = 0; i < required; i++)
+            // Preserve rows already bound to the same entry so width and selection animations keep running
+            for (var i = 0; i < VisibleEntries.Count; i++)
             {
                 var item = VisibleEntries[i];
-                var match = previous.FindIndex(row => row.Item.HasSameItem(item));
+                SelectionListRow row = item.IsDifficulty
+                    ? TakeMatchingRow(availableDifficultyRows, item)
+                    : TakeMatchingRow(availableMapsetRows, item);
 
-                if (match < 0)
-                    continue;
-
-                rows[i] = previous[match];
-                previous.RemoveAt(match);
+                activeRows[i] = row;
             }
 
-            Pool = new List<PoolableSprite<SelectionListEntry>>(required + previous.Count);
-            for (var i = 0; i < required; i++)
+            for (var i = 0; i < VisibleEntries.Count; i++)
+            {
+                if (activeRows[i] != null)
+                    continue;
+
+                var item = VisibleEntries[i];
+                if (item.IsDifficulty)
+                {
+                    activeRows[i] = availableDifficultyRows.Count > 0
+                        ? TakeFirst(availableDifficultyRows)
+                        : CreateDifficultyRow(item);
+                }
+                else
+                {
+                    activeRows[i] = availableMapsetRows.Count > 0
+                        ? TakeFirst(availableMapsetRows)
+                        : CreateMapsetRow(item);
+                }
+            }
+
+            for (var i = 0; i < activeRows.Length; i++)
             {
                 var item = VisibleEntries[i];
-                var index = MapsetIndices[item.Mapset];
-                var row = rows[i];
-
-                if (row == null && previous.Count > 0)
-                {
-                    row = previous[0];
-                    previous.RemoveAt(0);
-                }
-
-                if (row == null)
-                {
-                    row = CreateObject(item, index);
-                    row.DestroyIfParentIsNull = false;
-                    AddContainedDrawable(row);
-                }
-
-                ((SelectionListRow)row).SetActive(true);
-                row.UpdateContent(item, index);
-                Pool.Add(row);
+                var row = activeRows[i];
+                row.SetActive(true);
+                row.UpdateContent(item, MapsetIndices[item.Mapset]);
             }
 
-            foreach (var row in previous)
-            {
-                if (Pool.Count >= PoolSize)
-                {
-                    row.Destroy();
-                    continue;
-                }
+            DeactivateRows(availableMapsetRows);
+            DeactivateRows(availableDifficultyRows);
 
-                ((SelectionListRow)row).SetActive(false);
+            TrimPool(MapsetRows, availableMapsetRows, MapsetPoolCapacity);
+            TrimPool(DifficultyRows, availableDifficultyRows, DifficultyPoolCapacity);
+
+            Pool = new List<PoolableSprite<SelectionListEntry>>(MapsetRows.Count + DifficultyRows.Count);
+            Pool.AddRange(activeRows);
+            Pool.AddRange(availableMapsetRows);
+            Pool.AddRange(availableDifficultyRows);
+
+            VisibleRowCount = VisibleEntries.Count;
+        }
+
+        private T TakeMatchingRow<T>(List<T> rows, SelectionListEntry item) where T : SelectionListRow
+        {
+            var index = rows.FindIndex(row => row.Item.HasSameItem(item));
+            if (index < 0)
+                return null;
+
+            var row = rows[index];
+            rows.RemoveAt(index);
+
+            return row;
+        }
+
+        private static T TakeFirst<T>(List<T> rows)
+        {
+            var row = rows[0];
+            rows.RemoveAt(0);
+
+            return row;
+        }
+
+        private SelectionMapsetRow CreateMapsetRow(SelectionListEntry item)
+        {
+            var row = new SelectionMapsetRow(this, item, MapsetIndices[item.Mapset])
+            {
+                DestroyIfParentIsNull = false
+            };
+            MapsetRows.Add(row);
+            AddContainedDrawable(row);
+
+            return row;
+        }
+
+        private SelectionDifficultyRow CreateDifficultyRow(SelectionListEntry item)
+        {
+            var row = new SelectionDifficultyRow(this, item, MapsetIndices[item.Mapset])
+            {
+                DestroyIfParentIsNull = false
+            };
+            DifficultyRows.Add(row);
+            AddContainedDrawable(row);
+
+            return row;
+        }
+
+        private void DeactivateRows<T>(List<T> rows) where T : SelectionListRow
+        {
+            foreach (var row in rows)
+            {
+                row.SetActive(false);
                 row.Parent = ContentContainer;
-                Pool.Add(row);
             }
+        }
 
-            VisibleRowCount = required;
+        private static void TrimPool<T>(List<T> pool, List<T> inactiveRows, int capacity)
+            where T : SelectionListRow
+        {
+            while (pool.Count > capacity && inactiveRows.Count > 0)
+            {
+                var row = inactiveRows[^1];
+                inactiveRows.RemoveAt(inactiveRows.Count - 1);
+                pool.Remove(row);
+                row.Destroy();
+            }
         }
 
         /// <summary>
@@ -630,6 +764,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         public override void Destroy()
         {
             BackgroundHelper.BannerLoaded -= OnBannerLoaded;
+            ModManager.ModsChanged -= OnModsChanged;
+
             PendingBanners.Clear();
             SizeChanged -= OnSizeChanged;
             base.Destroy();

@@ -159,7 +159,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             };
             LastWidth = LastHeight = -1;
             UpdateResponsiveLayout();
-            List.Initialize(RightPanel.Size, SelectionScreen.AvailableMapsets, MapManager.Selected.Value);
+            List.Initialize(List.Size, SelectionScreen.AvailableMapsets, MapManager.Selected.Value);
             EmptyState.Visible = SelectionScreen.AvailableMapsets.Count == 0;
         }
 
@@ -218,8 +218,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             Columns.RefreshLayout();
 
             DetailsBackground.Size = DetailsViewport.Size;
-            if (List.IsInitialized)
-                List.Size = RightPanel.Size;
+            List.Size = new ScalableVector2(RightPanel.Width + horizontalPadding, RightPanel.Height);
 
             EmptyState.Text = SelectionLocalization.Get("No maps found!");
             EmptyState.TruncateWithEllipsis((int)Math.Max(1, RightPanel.Width));
