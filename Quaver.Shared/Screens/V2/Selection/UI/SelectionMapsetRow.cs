@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,9 +8,7 @@ using Quaver.Shared.Assets;
 using Quaver.Shared.Config;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
-using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
@@ -103,10 +102,10 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
         protected override void UpdateRowLayout(float rowWidth)
         {
-            var padding = System.Math.Min(Config.Padding, rowWidth / 4f);
+            var padding = Math.Min(Config.Padding, rowWidth / 4f);
             var pillSpace = PillLayout.Visible ? PillLayout.Width + Config.PillGap : 0;
             var bannerSpace = ShowsBanner ? List.BannerCache.Width + BannerRightPadding : 0;
-            var width = (int) System.Math.Max(1, rowWidth - padding * 2 - bannerSpace - pillSpace);
+            var width = (int) Math.Max(1, rowWidth - padding * 2 - bannerSpace - pillSpace);
 
             SetText(Title, Item.Mapset.Title ?? "", width);
 
@@ -120,7 +119,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                 (Artist.Visible ? Artist.TextSprite.CapHeight + TextGap : 0) + 
                 (Creator.Visible ? Creator.TextSprite.CapHeight + TextGap : 0);
 
-            var y = System.Math.Max(0, (Height - textHeight) / 2f);
+            var y = Math.Max(0, (Height - textHeight) / 2f);
             Title.Position = new ScalableVector2(padding, y - Title.TextSprite.CapTopOffset);
 
             y += Title.TextSprite.CapHeight;
@@ -183,14 +182,14 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                 return;
 
             ModePill.Height = StatusPill.Height = Config.PillHeight;
-            ModePill.Width = System.Math.Max(Config.PillMinimumWidth, ModePill.Label.Width + Config.PillHorizontalPadding);
             ModePill.AutoSizePadding = StatusPill.AutoSizePadding = new Vector2(Config.PillHorizontalPadding, 0);
             ModePill.CornerRadius = StatusPill.CornerRadius = Config.PillHeight / 2f;
             ModePill.SetLabel(FontManager.GetWobbleFont(Config.Font), GetModeText(), Config.PillFontSize, SkinV2Color.Parse(Config.PillTextColor));
+            ModePill.Width = Math.Max(Config.PillMinimumWidth, ModePill.Label.Width + Config.PillHorizontalPadding);
             ModePill.Tint = GetModePillColor();
             
-            StatusPill.Width = System.Math.Max(Config.PillMinimumWidth, StatusPill.Label.Width + Config.PillHorizontalPadding);
             StatusPill.SetLabel(FontManager.GetWobbleFont(Config.Font), GetStatusText(), Config.PillFontSize, SkinV2Color.Parse(Config.PillTextColor));
+            StatusPill.Width = Math.Max(Config.PillMinimumWidth, StatusPill.Label.Width + Config.PillHorizontalPadding);
             StatusPill.Tint = GetStatusPillColor();
 
             UpdatePillLayout();
@@ -207,7 +206,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
             var blockHeight = Config.PillHeight * 2 + Config.PillGap;
             PillLayout.RowGap = Config.PillGap;
-            PillLayout.Size = new ScalableVector2(System.Math.Max(ModePill.Width, StatusPill.Width), blockHeight);
+            PillLayout.Size = new ScalableVector2(Math.Max(ModePill.Width, StatusPill.Width), blockHeight);
             PillLayout.Position = new ScalableVector2(right - PillLayout.Width, (Height - blockHeight) / 2f);
             PillLayout.RefreshLayout();
         }
