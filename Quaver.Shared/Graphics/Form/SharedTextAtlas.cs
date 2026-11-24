@@ -97,13 +97,13 @@ namespace Quaver.Shared.Graphics.Form
 
                     definition.Font.FontSize = definition.FontSize * RenderScale;
                     var bounds = definition.Font.Store.TextBounds(definition.Text, Vector2.Zero);
-                    var lineBounds = definition.Font.Store.TextBounds("Hgj", Vector2.Zero);
+                    var lineBounds = definition.Font.Store.TextBounds("H", Vector2.Zero);
                     var padding = Math.Max(2, definition.FontSize * RenderScale * 0.25f);
                     var drawPosition = new Vector2(padding - bounds.X, y + padding - lineBounds.Y);
                     
                     var measured = definition.Font.Store.MeasureString(definition.Text);
                     var contentWidth = Math.Max(measured.X, bounds.X2 - bounds.X);
-                    var contentHeight = Math.Max(definition.Font.Store.LineHeight, lineBounds.Y2 - lineBounds.Y);
+                    var contentHeight = Math.Max(1, lineBounds.Y2 - lineBounds.Y);
 
                     var entryWidth = Math.Max(1, (int) Math.Ceiling(contentWidth + padding * 2));
                     var entryHeight = Math.Max(1, (int) Math.Ceiling(contentHeight + padding * 2));
