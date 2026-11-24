@@ -37,11 +37,8 @@ namespace Quaver.Shared.Screens.V2.Selection
         private Container ContentRoot { get; set; }
         private NavigationBar Background { get; set; }
         private FlexContainer Columns { get; set; }
-        private HorizontalClippingContainer DetailsViewport { get; set; }
-        private Sprite DetailsBackground { get; set; }
-        private SpriteTextPlus Title { get; set; }
-        private SpriteTextPlus Artist { get; set; }
-        private SpriteTextPlus Difficulty { get; set; }
+        private Container DropdownOverlay { get; set; }
+        private SelectionLeftPanel LeftPanel { get; set; }
         private Container RightPanel { get; set; }
         private Container FilterContainer { get; set; }
         private NineSliceSprite FilterBackground { get; set; }
@@ -138,19 +135,12 @@ namespace Quaver.Shared.Screens.V2.Selection
                 AlignItems = FlexAlignItems.Stretch,
                 JustifyContent = FlexJustifyContent.SpaceBetween
             };
-            DetailsViewport = new HorizontalClippingContainer { Parent = Columns };
-            Columns.SetItemOptions(DetailsViewport, new FlexItemOptions { Basis = Config.Layout.LeftPanelWidth, Shrink = 1 });
-            
-            DetailsBackground = new Sprite
+            DropdownOverlay = new Container { Parent = ContentRoot };
+            LeftPanel = new SelectionLeftPanel(SelectionScreen.ActiveLeftPanel, Config.LeftPanel, Config.Modifiers, DropdownOverlay)
             {
-                Parent = DetailsViewport,
-                Tint = SkinV2Color.Parse(Config.Details.BackgroundColor),
-                UsePreviousSpriteBatchOptions = true
+                Parent = Columns
             };
-            
-            Title = CreateDetailsText(Config.Details.TitleFontSize, Config.Details.TextColor);
-            Artist = CreateDetailsText(Config.Details.FontSize, Config.Details.SecondaryTextColor);
-            Difficulty = CreateDetailsText(Config.Details.FontSize, Config.Details.TextColor);
+            Columns.SetItemOptions(LeftPanel, new FlexItemOptions { Basis = Config.Layout.LeftPanelWidth, Shrink = 1 });
 
             RightPanel = new Container { Parent = Columns };
             Columns.SetItemOptions(RightPanel, new FlexItemOptions { Basis = Config.Layout.RightPanelWidth, Shrink = 1 });
@@ -176,14 +166,6 @@ namespace Quaver.Shared.Screens.V2.Selection
             EmptyState.Visible = SelectionScreen.AvailableMapsets.Count == 0;
         }
 
-        private SpriteTextPlus CreateDetailsText(int fontSize, string color) =>
-            new SpriteTextPlus(FontManager.GetWobbleFont(Config.Details.Font), "", fontSize)
-            {
-                Parent = DetailsViewport,
-                Tint = SkinV2Color.Parse(color),
-                UsePreviousSpriteBatchOptions = true
-            };
-
         private void ConfigureNavigation(ScreenNavigation navigation)
         {
             navigation.ShowApplicationTopBar(QuaverScreenType.Select);
@@ -196,7 +178,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             Targets = new List<SkinEditorTarget>
             {
                 new("selection-background", LocalizationManager.Get("SkinEditor_Component_Background"), "Screens.Selection.Background", Background),
-                new("selection-details", LocalizationManager.Get("Screen_V2_SelectionScreen"), "Screens.Selection.Details", DetailsViewport),
+                new("selection-left-panel", LocalizationManager.Get("Screen_V2_SelectionScreen"), "Screens.Selection.LeftPanel", LeftPanel),
                 new("selection-filters", LocalizationManager.Get("Screen_Editor_Filter"), "Screens.Selection.Filter", FilterContainer),
                 new("selection-list", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.List", List),
                 new("selection-mapset", LocalizationManager.Get("Screen_Download_Mapsets"), "Screens.Selection.Mapset", List),
@@ -269,7 +251,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             LastWidth = width;
             LastHeight = height;
             Container.Size = new ScalableVector2(width, height);
-            PreviewRoot.Size = ContentRoot.Size = Background.Size = Container.Size;
+            PreviewRoot.Size = ContentRoot.Size = Background.Size = DropdownOverlay.Size = Container.Size;
 
             var navigation = RootConfig.Shared.Navigation;
             var barHeight = navigation.Button.Size + navigation.EdgePadding * 2;
@@ -283,7 +265,6 @@ namespace Quaver.Shared.Screens.V2.Selection
             Columns.ColumnGap = Math.Min(Config.Layout.ContentGap, Columns.Width / 4f);
             Columns.RefreshLayout();
 
-            DetailsBackground.Size = DetailsViewport.Size;
             FilterContainer.Size = new ScalableVector2(RightPanel.Width + horizontalPadding, FilterExpanded ? Config.Filter.ExpandedHeight : Config.Filter.Height);
             ListRegion.Position = new ScalableVector2(0, Config.Filter.Height + Config.Layout.FilterListGap);
             ListRegion.Size = new ScalableVector2(RightPanel.Width, Math.Max(1, RightPanel.Height - ListRegion.Y));
@@ -292,35 +273,13 @@ namespace Quaver.Shared.Screens.V2.Selection
             EmptyState.Text = SelectionLocalization.Get("No maps found!");
             EmptyState.TruncateWithEllipsis((int)Math.Max(1, RightPanel.Width));
 
-            UpdateDetails();
             UpdateEditorLayout();
-        }
-
-        private void UpdateDetails()
-        {
-            var map = MapManager.Selected.Value;
-            var padding = Math.Min(Config.Details.Padding, DetailsViewport.Width / 4f);
-            var textWidth = Math.Max(1, DetailsViewport.Width - padding * 2);
-            var y = padding;
-
-            SetDetailsText(Title, map?.Title ?? "", padding, ref y, textWidth);
-            SetDetailsText(Artist, map?.Artist ?? "", padding, ref y, textWidth);
-            SetDetailsText(Difficulty, map?.DifficultyName ?? "", padding, ref y, textWidth);
-        }
-
-        private void SetDetailsText(SpriteTextPlus text, string value, float x, ref float y, float width)
-        {
-            text.Text = value;
-            text.TruncateWithEllipsis((int)width);
-            text.Position = new ScalableVector2(x, y);
-            y += text.Height + Config.Details.Gap;
         }
 
         private void OnLibraryChanged()
         {
             List.SetMapsets(SelectionScreen.AvailableMapsets, MapManager.Selected.Value);
             EmptyState.Visible = SelectionScreen.AvailableMapsets.Count == 0;
-            UpdateDetails();
         }
 
         private void OnSelectedMapChanged(object sender, BindableValueChangedEventArgs<Map> args)
@@ -330,7 +289,6 @@ namespace Quaver.Shared.Screens.V2.Selection
                 if (Destroyed)
                     return;
                 List.SetSelectedMap(MapManager.Selected.Value, true);
-                UpdateDetails();
             });
         }
 

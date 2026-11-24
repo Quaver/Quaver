@@ -50,7 +50,7 @@ namespace Quaver.Shared.Screens.V2.Selection
 
         SelectScrollContainerType ISelectionScreenState.ActiveScrollContainer => SelectScrollContainerType.Mapsets;
 
-        SelectContainerPanel ISelectionScreenState.ActiveLeftPanel => SelectContainerPanel.Leaderboard;
+        SelectContainerPanel ISelectionScreenState.ActiveLeftPanel => ActiveLeftPanel.Value;
 
         private bool IsMultiplayer { get; }
         private SelectJukebox Jukebox { get; }
@@ -65,6 +65,7 @@ namespace Quaver.Shared.Screens.V2.Selection
         // Keep the factory signature compatible while the remaining panels are rebuilt.
         internal SelectionScreen(SelectScrollContainerType? activeScrollContainer = null, SelectContainerPanel activeLeftPanel = SelectContainerPanel.Leaderboard)
         {
+            ActiveLeftPanel.Value = activeLeftPanel;
             IsMultiplayer = OnlineManager.CurrentGame != null;
             if (ModManager.IsActivated(ModIdentifier.Paused))
                 ModManager.RemoveMod(ModIdentifier.Paused);

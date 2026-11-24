@@ -13,6 +13,8 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Required] public SkinV2SelectionLayoutConfig Layout { get; set; } = new();
         [Required] public SkinV2SelectionListConfig List { get; set; } = new();
         [Required] public SkinV2SelectionFilterConfig Filter { get; set; } = new();
+        [Required] public SkinV2SelectionLeftPanelConfig LeftPanel { get; set; } = new();
+        [Required] public SkinV2SelectionModifiersConfig Modifiers { get; set; } = new();
         [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new() { Height = 100, TitleFont = SkinV2FontWeightsConfig.Bold, TitleFontSize = 22 };
         [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { SelectedWidth = 925, Height = 60, TitleFontSize = 20 };
         [Required] public SkinV2SelectionDetailsConfig Details { get; set; } = new();
@@ -40,6 +42,47 @@ namespace Quaver.Shared.Screens.V2.Selection
         [ConfigEditable, SkinColor] public string BackgroundColor { get; set; } = "#26313BFF";
         [ConfigEditable, SkinColor] public string ExpandButtonColor { get; set; } = "#161D26FF";
         [ConfigEditable, SkinColor] public string ExpandIconColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2SelectionLeftPanelConfig
+    {
+        [Range(1, 512)] public float HeaderHeight { get; set; } = 60;
+        [Range(1, 512)] public float ModifiersFooterHeight { get; set; } = 60;
+        [Range(0, 256)] public float Gap { get; set; } = 10;
+        [Range(0, 256)] public float Padding { get; set; } = 10;
+        [Range(0, 256)] public float ButtonGap { get; set; } = 10;
+        [Range(0, 256)] public float ButtonHorizontalPadding { get; set; } = 10;
+        [Range(1, 512)] public float ButtonHeight { get; set; } = 40;
+        [Range(0, 128)] public float CornerRadius { get; set; } = 6;
+        [SkinFont] public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+        [Range(1, 256)] public int FontSize { get; set; } = 18;
+        [ConfigEditable, SkinColor] public string HeaderColor { get; set; } = "#273038FF";
+        [ConfigEditable, SkinColor] public string ContentColor { get; set; } = "#273038FF";
+        [ConfigEditable, SkinColor] public string FooterColor { get; set; } = "#273038FF";
+        [ConfigEditable, SkinColor] public string SelectedButtonColor { get; set; } = "#6B83B2FF";
+        [ConfigEditable, SkinColor] public string UnselectedButtonColor { get; set; } = "#181E25FF";
+        [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2SelectionModifiersConfig
+    {
+        [Range(1, 256)] public float RowHeight { get; set; } = 40;
+        [Range(0, 256)] public float RowGap { get; set; } = 10;
+        [Range(0, 256)] public float HorizontalInset { get; set; } = 10;
+        [Range(1, 2048)] public float JudgementLabelWidth { get; set; } = 460;
+        [Range(1, 2048)] public float SpeedLabelWidth { get; set; } = 303;
+        [Range(0, 128)] public float CornerRadius { get; set; } = 6;
+        [Range(0, 256)] public float LabelPadding { get; set; } = 10;
+        [Range(0, 256)] public float ControlPadding { get; set; } = 10;
+        [Range(1, 1024)] public float SpeedTrackWidth { get; set; } = 290;
+        [Range(1, 256)] public float SpeedTrackHeight { get; set; } = 22;
+        [Range(1, 512)] public float ResetButtonWidth { get; set; } = 205;
+        [SkinFont] public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+        [Range(1, 256)] public int FontSize { get; set; } = 18;
+        [ConfigEditable, SkinColor] public string RowColor { get; set; } = "#181E25FF";
+        [ConfigEditable, SkinColor] public string SectionColor { get; set; } = "#53617FFF";
+        [ConfigEditable, SkinColor] public string SectionTextColor { get; set; } = "#FFFFFFFF";
+        [ConfigEditable, SkinColor] public string DescriptionColor { get; set; } = "#B9C8E5FF";
     }
 
     public sealed class SkinV2SelectionListConfig
