@@ -989,7 +989,9 @@ namespace Quaver.Shared.Screens.V2.UI
 
         public static void SetHubOverlayState(bool opened, FlexContainer controlsHost = null)
         {
-            var navigation = ScreenManager.GetElement<ScreenNavigation>(ElementKey);
+            if (!ScreenManager.TryGetElement<ScreenNavigation>(ElementKey, out var navigation))
+                return;
+
             navigation.ApplyHubOverlayState(opened, controlsHost);
         }
 
@@ -1055,25 +1057,29 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private void HandleVolumeShortcut()
         {
-            if (!ConfigManager.UseNewScreens.Value || !KeyboardManager.IsAltDown() || !HasMusicPlayer)
+            if (!KeyboardManager.IsAltDown() || !HasMusicPlayer)
                 return;
 
             var increase = KeyboardManager.IsUniqueKeyPress(Keys.Up);
             var decrease = KeyboardManager.IsUniqueKeyPress(Keys.Down);
             var selectPrevious = KeyboardManager.IsUniqueKeyPress(Keys.Left);
             var selectNext = KeyboardManager.IsUniqueKeyPress(Keys.Right);
-            if (!increase && !decrease && !selectPrevious && !selectNext)
+            var scrollUp = MouseManager.IsScrollingUp(ConfigManager.InvertScrolling.Value);
+            var scrollDown = MouseManager.IsScrollingDown(ConfigManager.InvertScrolling.Value);
+            if (!increase && !decrease && !selectPrevious && !selectNext && !scrollUp && !scrollDown)
                 return;
 
             if (VolumeDialog != null && !VolumeDialog.IsDisposed && !VolumeDialog.IsClosing)
             {
                 VolumeDialog.EnableKeyboardControl();
+                if (scrollUp || scrollDown)
+                    VolumeDialog.AdjustFocusedSlider(scrollUp ? 5 : -5);
                 return;
             }
 
             VolumeDialog = new VolumeDialog(MusicPlayer.VolumeDialogAnchor, MusicPlayerConfig, true);
-            if (increase || decrease)
-                VolumeDialog.AdjustFocusedSlider(increase ? 5 : -5);
+            if (increase || decrease || scrollUp || scrollDown)
+                VolumeDialog.AdjustFocusedSlider(increase || scrollUp ? 5 : -5);
             else
                 VolumeDialog.SelectRelativeSlider(selectNext ? 1 : -1);
             DialogManager.Show(VolumeDialog);
@@ -1081,15 +1087,8 @@ namespace Quaver.Shared.Screens.V2.UI
 
         private static void ToggleOnlineHub()
         {
-            if (DialogManager.Dialogs.Count == 0)
-            {
-                DialogManager.Show(new OverlayDialog());
-                return;
-            }
-
-            var topDialog = DialogManager.Dialogs[DialogManager.Dialogs.Count - 1];
-            if (topDialog is OverlayDialog dialog)
-                dialog.Close();
+            if (GameBase.Game is QuaverGame game)
+                game.ToggleOnlineHub();
         }
 
         private enum FooterLayout

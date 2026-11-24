@@ -1208,7 +1208,7 @@ namespace Quaver.Shared
         /// <summary>
         ///     Handles input when opening the online hub
         /// </summary>
-        private void ToggleOnlineHub()
+        internal void ToggleOnlineHub()
         {
             if (CloseOnlineHubDialog())
                 return;

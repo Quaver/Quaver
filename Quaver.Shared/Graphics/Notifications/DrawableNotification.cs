@@ -2,12 +2,12 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Shared.Assets;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Graphics.Overlays.Hub;
 using Quaver.Shared.Graphics.Overlays.Hub.Notifications;
 using Quaver.Shared.Graphics.Overlays.V2Hub.Notifications;
 using Quaver.Shared.Helpers;
-using Quaver.Shared.Screens.V2;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -66,7 +66,7 @@ namespace Quaver.Shared.Graphics.Notifications
         /// <param name="index"></param>
         public DrawableNotification(PoolableScrollContainer<NotificationInfo> container, NotificationInfo item, int index) : base(container, item, index)
         {
-            var useV2Style = container == null && GameBase.Game is QuaverGame game && game.CurrentScreen is SkinV2Screen;
+            var useV2Style = container == null && ConfigManager.UseNewScreens?.Value == true;
 
             if (useV2Style)
             {

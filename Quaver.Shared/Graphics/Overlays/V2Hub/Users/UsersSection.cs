@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using Quaver.Server.Client;
 using Quaver.Server.Client.Structures;
+using Quaver.Shared.Config;
 using Quaver.Shared.Graphics.Form.Dropdowns;
+using Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Screens.V2.Profile;
 using Quaver.Shared.Screens.V2.UI;
@@ -15,6 +18,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Graphics.Overlays.V2Hub.Users;
@@ -29,12 +33,13 @@ public class UsersSection : Container
     private V2FilterSearchTextbox SearchBox { get; set; }
     private Bindable<string> SearchQuery { get; } = new Bindable<string>(string.Empty);
     
-    private Bindable<UserFilter> Filter { get; } = new Bindable<UserFilter>(UserFilter.All);
-    private V2Dropdown<UserFilter> FilterDropdown { get; set; }
+    private Bindable<OnlineUserListFilter> Filter => ConfigManager.OnlineUserListFilterType;
+    private V2Dropdown<OnlineUserListFilter> FilterDropdown { get; set; }
     private SkinV2DropdownConfig DropdownStyle { get; set; }
     
     private FlexContainer Layout { get; set; }
     private UserList Scroll { get; set; }
+    private SpriteTextPlus OfflineMessage { get; set; }
     internal Sprite Header { get; private set; }
 
     private float HeaderHeight => SectionConfig.ControlHeight + SectionConfig.ContentPadding;
@@ -47,6 +52,7 @@ public class UsersSection : Container
         CreateLayout();
         CreateHeader();
         CreateContent();
+        OnlineManager.Status.ValueChanged += OnConnectionStatusChanged;
         
         Layout.RefreshLayout();
     }
@@ -118,12 +124,12 @@ public class UsersSection : Container
             CornerRadius = section.CornerRadius
         };
 
-        FilterDropdown = new V2Dropdown<UserFilter>(Config.FilterWidth, Filter,
-            new DropdownEntry<UserFilter>[]
+        FilterDropdown = new V2Dropdown<OnlineUserListFilter>(Config.FilterWidth, Filter,
+            new DropdownEntry<OnlineUserListFilter>[]
             {
-                new DropdownOption<UserFilter>(UserFilter.All, LocalizationManager.Get("Screen_Selection_All")),
-                new DropdownOption<UserFilter>(UserFilter.Friends, LocalizationManager.Get("Screen_Selection_Friends")),
-                new DropdownOption<UserFilter>(UserFilter.Country, LocalizationManager.Get("Screen_Selection_Country"))
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.All, LocalizationManager.Get("Screen_Selection_All")),
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.Friends, LocalizationManager.Get("Screen_Selection_Friends")),
+                new DropdownOption<OnlineUserListFilter>(OnlineUserListFilter.Country, LocalizationManager.Get("Screen_Selection_Country"))
             },
             FontManager.GetWobbleFont(section.Font), DropdownStyle, this)
         {
@@ -134,7 +140,7 @@ public class UsersSection : Container
     
     private void CreateContent()
     {
-        var userList = OnlineManager.OnlineUsers == null ? new List<User>() : OnlineManager.OnlineUsers.Values.ToList();
+        var userList = OnlineManager.Connected && OnlineManager.OnlineUsers != null ? OnlineManager.OnlineUsers.Values.ToList() : new List<User>();
         var availableHeight = Height - HeaderHeight - SectionConfig.ContentPadding * 2;
         Scroll = new UserList(userList, (int) Math.Ceiling(Math.Max(0, availableHeight) / 80) + 3, 0, new ScalableVector2(Layout.Width, 1), new ScalableVector2(Layout.Width, 1), SearchQuery, Filter)
         {
@@ -151,7 +157,26 @@ public class UsersSection : Container
         Scroll.OnRowClicked += ShowProfileViewer;
         Scroll.ResultsCountChanged += UpdateResultsCount;
         UpdateResultsCount(Scroll.AvailableItems.Count);
+
+        OfflineMessage = new SpriteTextPlus(FontManager.GetWobbleFont(SectionConfig.Font), LocalizationManager.Get("Screen_Hub_UsersLoginRequired"), SectionConfig.EmptyMessageFontSize)
+        {
+            Parent = Scroll,
+            Alignment = Alignment.MidCenter,
+            TextAlignment = TextAlignment.Center,
+            MaxWidth = Scroll.Width - SectionConfig.ContentPadding * 4,
+            Tint = SkinV2Color.Parse(SectionConfig.TextColor),
+            UsePreviousSpriteBatchOptions = true
+        };
+        UpdateConnectionState();
     }
+
+    private void OnConnectionStatusChanged(object sender, BindableValueChangedEventArgs<ConnectionStatus> e) => AddScheduledUpdate(() =>
+        {
+            Scroll.RefreshUsers();
+            UpdateConnectionState();
+        });
+
+    private void UpdateConnectionState() => OfflineMessage.Visible = !OnlineManager.Connected;
 
     private void UpdateResultsCount(int count) => SearchBox.SetResultsText(LocalizationManager.Get("Screen_Hub_UsersFound", count));
 
@@ -183,19 +208,12 @@ public class UsersSection : Container
     public override void Destroy()
     {
         Deactivate();
+        OnlineManager.Status.ValueChanged -= OnConnectionStatusChanged;
         
         Scroll.OnRowClicked -= ShowProfileViewer;
         Scroll.ResultsCountChanged -= UpdateResultsCount;
         
         base.Destroy();
         SearchQuery.Dispose();
-        Filter.Dispose();
-    }
-
-    public enum UserFilter
-    {
-        All,
-        Friends,
-        Country
     }
 }

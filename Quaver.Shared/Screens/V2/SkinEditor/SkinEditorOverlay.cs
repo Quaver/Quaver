@@ -105,6 +105,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
         private int thumbnailReadInFlight;
         private Task<IReadOnlyList<SkinEditorAsset>> assetScanTask;
         private CancellationTokenSource assetScanCancellation;
+        private bool reloadTexturesAfterAssetScan;
         private List<string> folderValues = new List<string>();
         private string selectedFolder = string.Empty;
         private string search = string.Empty;
@@ -1098,7 +1099,7 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
             CreateButton(assetPanel, LocalizationManager.Get("SkinEditor_Refresh"), 640, 10, 88, 34, () =>
             {
-                BeginAssetRefresh();
+                BeginAssetRefresh(true);
             }, FieldColor);
             CreateButton(assetPanel, LocalizationManager.Get("SkinEditor_OpenFolder"), 738, 10, 120, 34,
                 () => Utils.NativeUtils.OpenNatively(SkinManager.SkinV2.RootDirectory), FieldColor);
@@ -1114,11 +1115,12 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             BuildAssetButtons();
         }
 
-        private void BeginAssetRefresh()
+        private void BeginAssetRefresh(bool reloadTextures = false)
         {
             assetScanCancellation?.Cancel();
             assetScanCancellation?.Dispose();
             assetScanCancellation = new CancellationTokenSource();
+            reloadTexturesAfterAssetScan = reloadTextures;
             var token = assetScanCancellation.Token;
             var rootDirectory = SkinManager.SkinV2.RootDirectory;
 
@@ -1136,6 +1138,8 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
 
             var completedTask = assetScanTask;
             assetScanTask = null;
+            var reloadTextures = reloadTexturesAfterAssetScan;
+            reloadTexturesAfterAssetScan = false;
             try
             {
                 assets = completedTask.GetAwaiter().GetResult();
@@ -1163,6 +1167,11 @@ namespace Quaver.Shared.Screens.V2.SkinEditor
             selectedFolder = string.Empty;
             RefreshAssetBreadcrumb();
             BuildAssetButtons();
+            if (reloadTextures)
+            {
+                skin.InvalidateTextureCache();
+                QueuePreview();
+            }
         }
 
         private void RefreshAssetBreadcrumb()

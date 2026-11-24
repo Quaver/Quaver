@@ -399,7 +399,7 @@ namespace Quaver.Shared.Graphics.Overlays.Hub.OnlineUsers.Scrolling
                 TextAlignment = TextAlignment.Center
             };
 
-            AddScheduledUpdate(() => OfflineNotice.Text = "You must be logged in to \nview the online user list!".ToUpper());
+            AddScheduledUpdate(() => OfflineNotice.Text = LocalizationManager.Get("Screen_Hub_UsersLoginRequired").ToUpper());
         }
 
         /// <summary>
