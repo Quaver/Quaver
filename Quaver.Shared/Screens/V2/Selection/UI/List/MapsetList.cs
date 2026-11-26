@@ -15,12 +15,12 @@ using Wobble.Graphics.Animations;
 using Wobble.Graphics.Shaders;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
     ///     Manages song select scrolling, row pooling, selection and mapset expansion
     /// </summary>
-    internal sealed class SelectionMapsetList : PoolableScrollContainer<SelectionListEntry>
+    internal sealed class MapsetList : PoolableScrollContainer<SelectionListEntry>
     {
         private const int ExpansionAnimationMilliseconds = 240;
 
@@ -39,8 +39,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private Dictionary<Mapset, MapsetExpansion> Expansions { get; } = new();
         private Dictionary<Mapset, int> MapsetIndices { get; } = new();
         private List<SelectionListEntry> VisibleEntries { get; } = new();
-        private List<SelectionMapsetRow> MapsetRows { get; } = new();
-        private List<SelectionDifficultyRow> DifficultyRows { get; } = new();
+        private List<MapsetRow> MapsetRows { get; } = new();
+        private List<DifficultyRow> DifficultyRows { get; } = new();
         private int VisibleRowCount { get; set; }
         private int MapsetPoolCapacity { get; set; }
         private int DifficultyPoolCapacity { get; set; }
@@ -59,7 +59,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         internal float DifficultyBpmStatWidth { get; private set; }
         internal bool ShowDifficultyTimingStats { get; private set; }
 
-        internal SelectionMapsetList(SkinV2SelectionListConfig config, SkinV2SelectionRowConfig mapsetConfig, SkinV2SelectionRowConfig difficultyConfig,
+        internal MapsetList(SkinV2SelectionListConfig config, SkinV2SelectionRowConfig mapsetConfig, SkinV2SelectionRowConfig difficultyConfig,
             Func<bool> canHandleInput, Action<Mapset> selectMapset, Action<Map> selectMap)
             : base(new List<SelectionListEntry>(), 1, 0, new ScalableVector2(1, 1), new ScalableVector2(1, 1))
         {
@@ -237,18 +237,18 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                 ShowDifficultyTimingStats = mapset.Maps.Select(map => map.SongLength).Distinct().Count() > 1 ||
                                             mapset.Maps.Select(map => map.Bpm).Distinct().Count() > 1;
                 
-                var longNoteValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetLongNoteStatText(map)).X);
-                var notesPerSecondValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetNotesPerSecondStatText(map)).X);
+                var longNoteValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(DifficultyRow.GetLongNoteStatText(map)).X);
+                var notesPerSecondValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(DifficultyRow.GetNotesPerSecondStatText(map)).X);
                 
                 DifficultyLongNoteStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(longNoteValueWidth);
                 DifficultyNotesPerSecondStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(notesPerSecondValueWidth);
                 
                 if (ShowDifficultyTimingStats)
                 {
-                    var durationValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetDurationStatText(map)).X);
+                    var durationValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(DifficultyRow.GetDurationStatText(map)).X);
                     DifficultyDurationStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(durationValueWidth);
                     
-                    var bpmValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(SelectionDifficultyRow.GetBpmStatText(map)).X);
+                    var bpmValueWidth = mapset.Maps.Max(map => font.Store.MeasureString(DifficultyRow.GetBpmStatText(map)).X);
                     DifficultyBpmStatWidth = DifficultyConfig.DifficultyStatIconSize + DifficultyConfig.DifficultyStatItemGap + (float) Math.Ceiling(bpmValueWidth);
                 }
             }
@@ -316,8 +316,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
         protected override PoolableSprite<SelectionListEntry> CreateObject(SelectionListEntry item, int index) =>
             item.IsDifficulty
-                ? new SelectionDifficultyRow(this, item, index)
-                : new SelectionMapsetRow(this, item, index);
+                ? new DifficultyRow(this, item, index)
+                : new MapsetRow(this, item, index);
 
         /// <summary>
         ///     Gets a mapset's current vertical position, including animated expansions above it
@@ -479,7 +479,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         /// </summary>
         internal void AttachRow(SelectionListRow row)
         {
-            row.Parent = row is SelectionDifficultyRow ? Expansions[row.Item.Mapset].Viewport : ContentContainer;
+            row.Parent = row is DifficultyRow ? Expansions[row.Item.Mapset].Viewport : ContentContainer;
             PositionRow(row);
         }
 
@@ -489,7 +489,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private void PositionRow(SelectionListRow row)
         {
             var alpha = 1f;
-            if (row is SelectionDifficultyRow)
+            if (row is DifficultyRow)
             {
                 var expansion = Expansions[row.Item.Mapset];
                 var offset = row.Item.DifficultyIndex * (DifficultyConfig.Height + RowGap);
@@ -617,8 +617,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
                 return;
             }
 
-            var availableMapsetRows = new List<SelectionMapsetRow>(MapsetRows);
-            var availableDifficultyRows = new List<SelectionDifficultyRow>(DifficultyRows);
+            var availableMapsetRows = new List<MapsetRow>(MapsetRows);
+            var availableDifficultyRows = new List<DifficultyRow>(DifficultyRows);
             var activeRows = new SelectionListRow[VisibleEntries.Count];
 
             // Preserve rows already bound to the same entry so width and selection animations keep running
@@ -694,9 +694,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             return row;
         }
 
-        private SelectionMapsetRow CreateMapsetRow(SelectionListEntry item)
+        private MapsetRow CreateMapsetRow(SelectionListEntry item)
         {
-            var row = new SelectionMapsetRow(this, item, MapsetIndices[item.Mapset])
+            var row = new MapsetRow(this, item, MapsetIndices[item.Mapset])
             {
                 DestroyIfParentIsNull = false
             };
@@ -706,9 +706,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             return row;
         }
 
-        private SelectionDifficultyRow CreateDifficultyRow(SelectionListEntry item)
+        private DifficultyRow CreateDifficultyRow(SelectionListEntry item)
         {
-            var row = new SelectionDifficultyRow(this, item, MapsetIndices[item.Mapset])
+            var row = new DifficultyRow(this, item, MapsetIndices[item.Mapset])
             {
                 DestroyIfParentIsNull = false
             };

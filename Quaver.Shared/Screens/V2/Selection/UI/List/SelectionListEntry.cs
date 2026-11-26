@@ -1,6 +1,6 @@
 using Quaver.Shared.Database.Maps;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
     ///     Data and layout information for a mapset or difficulty in the song select list

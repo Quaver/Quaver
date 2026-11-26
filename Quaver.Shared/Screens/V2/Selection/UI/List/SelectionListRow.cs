@@ -11,7 +11,7 @@ using Wobble.Graphics.Sprites.Text;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
     ///     Provides selection and interaction behavior shared by mapset and difficulty rows
@@ -20,7 +20,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
     {
         private const int SelectionAnimationMilliseconds = 180;
 
-        protected SelectionMapsetList List { get; }
+        protected MapsetList List { get; }
         protected SkinV2SelectionRowConfig Config { get; }
 
         private NineSliceSprite Background { get; }
@@ -34,7 +34,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
         public override int HEIGHT => Config.Height + List.RowGap;
 
-        protected SelectionListRow(SelectionMapsetList list, SelectionListEntry item, int index, SkinV2SelectionRowConfig config) : base(list, item, index)
+        protected SelectionListRow(MapsetList list, SelectionListEntry item, int index, SkinV2SelectionRowConfig config) : base(list, item, index)
         {
             List = list;
             Config = config;
@@ -182,7 +182,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         /// <summary>
         ///     Restricts row click handling to the active Song Select viewport
         /// </summary>
-        private sealed class RowButton(SelectionMapsetList list, SelectionListRow row) : ImageButton(WobbleAssets.WhiteBox)
+        private sealed class RowButton(MapsetList list, SelectionListRow row) : ImageButton(WobbleAssets.WhiteBox)
         {
             protected override bool IsMouseInClickArea() => list.CanInteract && list.IsInteractive(row.Item) && list.IsHovered() && base.IsMouseInClickArea();
 

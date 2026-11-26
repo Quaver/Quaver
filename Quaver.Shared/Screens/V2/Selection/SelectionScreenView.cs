@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Screens.Selection;
-using Quaver.Shared.Screens.V2.Selection.UI;
+using Quaver.Shared.Screens.V2.Selection.UI.List;
+using Quaver.Shared.Screens.V2.Selection.UI.Panel;
 using Quaver.Shared.Screens.V2.SkinEditor;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning;
@@ -38,13 +39,13 @@ namespace Quaver.Shared.Screens.V2.Selection
         private NavigationBar Background { get; set; }
         private FlexContainer Columns { get; set; }
         private Container DropdownOverlay { get; set; }
-        private SelectionLeftPanel LeftPanel { get; set; }
+        private Panel LeftPanel { get; set; }
         private Container RightPanel { get; set; }
         private Container FilterContainer { get; set; }
         private NineSliceSprite FilterBackground { get; set; }
         private RoundedButton FilterExpandButton { get; set; }
         private Container ListRegion { get; set; }
-        private SelectionMapsetList List { get; set; }
+        private MapsetList List { get; set; }
         private SpriteTextPlus EmptyState { get; set; }
         private float LastWidth { get; set; } = -1;
         private float LastHeight { get; set; } = -1;
@@ -136,7 +137,8 @@ namespace Quaver.Shared.Screens.V2.Selection
                 JustifyContent = FlexJustifyContent.SpaceBetween
             };
             DropdownOverlay = new Container { Parent = ContentRoot };
-            LeftPanel = new SelectionLeftPanel(SelectionScreen.ActiveLeftPanel, Config.LeftPanel, Config.Modifiers, DropdownOverlay)
+            LeftPanel = new Panel(SelectionScreen.ActiveLeftPanel, Config.LeftPanel,
+                Config.Leaderboard, Config.Modifiers, DropdownOverlay)
             {
                 Parent = Columns
             };
@@ -147,7 +149,7 @@ namespace Quaver.Shared.Screens.V2.Selection
 
             ListRegion = new Container { Parent = RightPanel };
             
-            List = new SelectionMapsetList(Config.List, Config.Mapset, Config.Difficulty, () => SelectionScreen.CanHandleInput && (FilterContainer == null || !FilterContainer.IsHovered()), SelectionScreen.SelectMapset, SelectionScreen.SelectMap)
+            List = new MapsetList(Config.List, Config.Mapset, Config.Difficulty, () => SelectionScreen.CanHandleInput && (FilterContainer == null || !FilterContainer.IsHovered()), SelectionScreen.SelectMapset, SelectionScreen.SelectMap)
             {
                 Parent = ListRegion
             };

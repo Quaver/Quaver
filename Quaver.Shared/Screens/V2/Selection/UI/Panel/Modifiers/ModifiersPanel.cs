@@ -25,12 +25,12 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.Panel.Modifiers
 {
     /// <summary>
     ///     Displays gameplay modifier controls
     /// </summary>
-    internal sealed class SelectionModifiersPanel : Container
+    internal sealed class ModifiersPanel : Container
     {
         private SkinV2SelectionModifiersConfig Config { get; }
         private Container OverlayHost { get; }
@@ -43,7 +43,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private List<ModifierToggleRow> UnrankedRows { get; }
         private RoundedButton ResetButton { get; }
 
-        internal SelectionModifiersPanel(SkinV2SelectionModifiersConfig config, Container overlayHost, Container footerHost)
+        internal ModifiersPanel(SkinV2SelectionModifiersConfig config, Container overlayHost, Container footerHost)
         {
             Config = config;
             OverlayHost = overlayHost;

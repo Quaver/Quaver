@@ -16,12 +16,12 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
     ///     Displays one mapset with its metadata, source pills, banner and selection-only banner statistics
     /// </summary>
-    internal sealed class SelectionMapsetRow : SelectionListRow
+    internal sealed class MapsetRow : SelectionListRow
     {
         private const float TextGap = 12;
         private const int BannerRightPadding = 10;
@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private bool BannerEnabled { get; set; }
         private bool ShowsBanner => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
 
-        internal SelectionMapsetRow(SelectionMapsetList list, SelectionListEntry item, int index) : base(list, item, index, list.MapsetRowConfig)
+        internal MapsetRow(MapsetList list, SelectionListEntry item, int index) : base(list, item, index, list.MapsetRowConfig)
         {
             Title = CreateText(Config.TitleFont, Config.TitleFontSize, Config.TextColor);
             Artist = CreateText(Config.Font, Config.ArtistFontSize, Config.SecondaryTextColor);
@@ -299,10 +299,10 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             var various = Item.Mapset.Maps.Select(map => map.SongLength).Distinct().Count() > 1 ||
                           Item.Mapset.Maps.Select(map => map.Bpm).Distinct().Count() > 1;
 
-            var duration = various ? "VARIOUS" : SelectionDifficultyRow.GetDurationStatText(Item.Mapset.Maps[0]);
+            var duration = various ? "VARIOUS" : DifficultyRow.GetDurationStatText(Item.Mapset.Maps[0]);
             SetBannerStatLabel(BannerDurationPill, duration);
 
-            var bpm = various ? "VARIOUS" : $"{SelectionDifficultyRow.GetBpmStatText(Item.Mapset.Maps[0])} BPM";
+            var bpm = various ? "VARIOUS" : $"{DifficultyRow.GetBpmStatText(Item.Mapset.Maps[0])} BPM";
             SetBannerStatLabel(BannerBpmPill, bpm);
 
             SetBannerStatsAlpha(0);

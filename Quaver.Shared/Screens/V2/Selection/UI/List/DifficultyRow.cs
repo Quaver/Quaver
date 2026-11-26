@@ -14,12 +14,12 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
     ///     Displays one difficulty row with its gameplay statistics
     /// </summary>
-    internal sealed class SelectionDifficultyRow : SelectionListRow
+    internal sealed class DifficultyRow : SelectionListRow
     {
         private FlexContainer Layout { get; }
         private FlexContainer MainLayout { get; }
@@ -41,7 +41,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private SpriteTextPlus DurationValue { get; }
         private SpriteTextPlus BpmValue { get; }
 
-        internal SelectionDifficultyRow(SelectionMapsetList list, SelectionListEntry item, int index) : base(list, item, index, list.DifficultyRowConfig)
+        internal DifficultyRow(MapsetList list, SelectionListEntry item, int index) : base(list, item, index, list.DifficultyRowConfig)
         {
             Layout = new FlexContainer
             {
@@ -312,7 +312,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         internal static string GetBpmStatText(Map map) =>
             (map.Bpm * ModHelper.GetRateFromMods(ModManager.Mods)).ToString("0", CultureInfo.InvariantCulture);
 
-        private static Texture2D GetGradeTexture(Grade grade) => grade switch
+        internal static Texture2D GetGradeTexture(Grade grade) => grade switch
         {
             Grade.X => UserInterface.SelectionGradeX,
             Grade.SS => UserInterface.SelectionGradeSs,

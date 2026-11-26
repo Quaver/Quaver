@@ -8,6 +8,8 @@ using Quaver.Shared.Modifiers;
 using Quaver.Shared.Modifiers.Mods;
 using Quaver.Shared.Screens.Selection;
 using Quaver.Shared.Screens.Selection.UI;
+using Quaver.Shared.Screens.V2.Selection.UI.Panel.Leaderboard;
+using Quaver.Shared.Screens.V2.Selection.UI.Panel.Modifiers;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -16,12 +18,12 @@ using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Managers;
 
-namespace Quaver.Shared.Screens.V2.Selection.UI
+namespace Quaver.Shared.Screens.V2.Selection.UI.Panel
 {
     /// <summary>
     ///     Owns the Song Select left-side tabs and its content
     /// </summary>
-    internal sealed class SelectionLeftPanel : Container
+    internal sealed class Panel : Container
     {
         private const float MapViewButtonSize = 40;
 
@@ -34,6 +36,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private Container Content { get; }
         private Container FooterGap { get; }
         private Container Footer { get; }
+        private Container LeaderboardFooterContent { get; }
+        private Container ModifiersFooterContent { get; }
         private RoundedButton LeaderboardButton { get; }
         private RoundedButton ModifiersButton { get; }
         private RoundedButton MapViewButton { get; }
@@ -42,9 +46,13 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
         private Container LeaderboardContent { get; }
         private Container ModifiersContent { get; }
         private Container MapPreviewContent { get; }
-        private SelectionModifiersPanel ModifiersPanel { get; }
+        private LeaderboardPanel LeaderboardPanel { get; }
+        private ModifiersPanel ModifiersPanel { get; }
 
-        internal SelectionLeftPanel(Bindable<SelectContainerPanel> activePanel, SkinV2SelectionLeftPanelConfig config, SkinV2SelectionModifiersConfig modifiersConfig, Container overlayHost)
+        internal Panel(Bindable<SelectContainerPanel> activePanel,
+            SkinV2SelectionLeftPanelConfig config,
+            SkinV2SelectionLeaderboardConfig leaderboardConfig,
+            SkinV2SelectionModifiersConfig modifiersConfig, Container overlayHost)
         {
             ActivePanel = activePanel;
             Config = config;
@@ -101,8 +109,18 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
             Footer = CreatePanel(Layout, Config.FooterColor);
             Layout.SetItemOptions(Footer, new FlexItemOptions { Basis = 0, Shrink = 0 });
+            Footer.SizeChanged += OnFooterSizeChanged;
+            LeaderboardFooterContent = new Container { Parent = Footer };
+            ModifiersFooterContent = new Container { Parent = Footer };
 
-            ModifiersPanel = new SelectionModifiersPanel(modifiersConfig, overlayHost, Footer)
+            LeaderboardPanel = new LeaderboardPanel(leaderboardConfig, overlayHost, LeaderboardFooterContent)
+            {
+                Parent = LeaderboardContent,
+                Size = LeaderboardContent.Size
+            };
+
+            ModifiersPanel = new ModifiersPanel(modifiersConfig, overlayHost,
+                ModifiersFooterContent)
             {
                 Parent = ModifiersContent,
                 Size = ModifiersContent.Size
@@ -232,7 +250,14 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             LeaderboardContent.Size = size;
             ModifiersContent.Size = size;
             MapPreviewContent.Size = size;
+            LeaderboardPanel.Size = size;
             ModifiersPanel.Size = size;
+        }
+
+        private void OnFooterSizeChanged(object sender, ScalableVector2 size)
+        {
+            LeaderboardFooterContent.Size = size;
+            ModifiersFooterContent.Size = size;
         }
 
         private void OnActivePanelChanged(object sender,
@@ -252,6 +277,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
 
             LeaderboardContent.Visible = leaderboardSelected;
             LeaderboardContent.UpdateWhenInvisible = leaderboardSelected;
+            LeaderboardPanel.SetActive(leaderboardSelected);
 
             ModifiersContent.Visible = modifiersSelected;
             ModifiersContent.UpdateWhenInvisible = modifiersSelected;
@@ -259,11 +285,24 @@ namespace Quaver.Shared.Screens.V2.Selection.UI
             MapPreviewContent.Visible = mapPreviewSelected;
             MapPreviewContent.UpdateWhenInvisible = mapPreviewSelected;
 
-            Layout.SetItemOptions(FooterGap, new FlexItemOptions { Basis = modifiersSelected ? Config.Gap : 0, Shrink = 0 });
-            Layout.SetItemOptions(Footer, new FlexItemOptions { Basis = modifiersSelected ? Config.ModifiersFooterHeight : 0, Shrink = 0 });
+            var footerHeight = leaderboardSelected
+                ? Config.LeaderboardFooterHeight
+                : modifiersSelected ? Config.ModifiersFooterHeight : 0;
+            var footerVisible = footerHeight > 0;
+            Layout.SetItemOptions(Content, leaderboardSelected
+                ? new FlexItemOptions { Basis = Config.LeaderboardContentHeight, Grow = 0, Shrink = 0 }
+                : new FlexItemOptions { Basis = 0, Grow = 1, Shrink = 1 });
+            Layout.SetItemOptions(FooterGap,
+                new FlexItemOptions { Basis = footerVisible ? Config.Gap : 0, Shrink = 0 });
+            Layout.SetItemOptions(Footer,
+                new FlexItemOptions { Basis = footerHeight, Shrink = 0 });
 
-            Footer.Visible = modifiersSelected;
-            Footer.UpdateWhenInvisible = modifiersSelected;
+            Footer.Visible = footerVisible;
+            Footer.UpdateWhenInvisible = footerVisible;
+            LeaderboardFooterContent.Visible = leaderboardSelected;
+            LeaderboardFooterContent.UpdateWhenInvisible = leaderboardSelected;
+            ModifiersFooterContent.Visible = modifiersSelected;
+            ModifiersFooterContent.UpdateWhenInvisible = modifiersSelected;
 
             Layout.RefreshLayout();
         }

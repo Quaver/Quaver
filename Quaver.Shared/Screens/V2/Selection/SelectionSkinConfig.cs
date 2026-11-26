@@ -14,6 +14,7 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Required] public SkinV2SelectionListConfig List { get; set; } = new();
         [Required] public SkinV2SelectionFilterConfig Filter { get; set; } = new();
         [Required] public SkinV2SelectionLeftPanelConfig LeftPanel { get; set; } = new();
+        [Required] public SkinV2SelectionLeaderboardConfig Leaderboard { get; set; } = new();
         [Required] public SkinV2SelectionModifiersConfig Modifiers { get; set; } = new();
         [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new() { Height = 100, TitleFont = SkinV2FontWeightsConfig.Bold, TitleFontSize = 22 };
         [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { SelectedWidth = 925, Height = 60, TitleFontSize = 20 };
@@ -47,6 +48,8 @@ namespace Quaver.Shared.Screens.V2.Selection
     public sealed class SkinV2SelectionLeftPanelConfig
     {
         [Range(1, 512)] public float HeaderHeight { get; set; } = 60;
+        [Range(1, 2048)] public float LeaderboardContentHeight { get; set; } = 700;
+        [Range(1, 512)] public float LeaderboardFooterHeight { get; set; } = 140;
         [Range(1, 512)] public float ModifiersFooterHeight { get; set; } = 60;
         [Range(0, 256)] public float Gap { get; set; } = 10;
         [Range(0, 256)] public float Padding { get; set; } = 10;
@@ -62,6 +65,41 @@ namespace Quaver.Shared.Screens.V2.Selection
         [ConfigEditable, SkinColor] public string SelectedButtonColor { get; set; } = "#6B83B2FF";
         [ConfigEditable, SkinColor] public string UnselectedButtonColor { get; set; } = "#181E25FF";
         [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
+    }
+
+    public sealed class SkinV2SelectionLeaderboardConfig
+    {
+        [Range(0, 256)] public float Padding { get; set; } = 10;
+        [Range(0, 256)] public float Gap { get; set; } = 10;
+        [Range(1, 512)] public float HeaderHeight { get; set; } = 40;
+        [Range(1, 512)] public float RowHeight { get; set; } = 70;
+        [Range(1, 2048)] public float LeftControlWidth { get; set; } = 300;
+        [Range(1, 2048)] public float TypeDropdownWidth { get; set; } = 204;
+        [Range(1, 256)] public float GradeSize { get; set; } = 40;
+        [Range(1, 256)] public float AvatarSize { get; set; } = 50;
+        [Range(1, 256)] public float FlagSize { get; set; } = 24;
+        [Range(1, 256)] public float ModifierIconWidth { get; set; } = 45;
+        [Range(1, 256)] public float ModifierIconHeight { get; set; } = 18;
+        [Range(1, 256)] public float BeatabilityBarWidth { get; set; } = 5;
+        [Range(1, 256)] public float BeatabilityBarHeight { get; set; } = 50;
+        [Range(0, 128)] public float BeatabilityBarRadius { get; set; } = 2;
+        [Range(0, 128)] public float CornerRadius { get; set; } = 6;
+        [Range(1, 128)] public float ScrollbarWidth { get; set; } = 10;
+        [SkinFont] public string Font { get; set; } = SkinV2FontWeightsConfig.Bold;
+        [Range(1, 256)] public int FontSize { get; set; } = 18;
+        [Range(1, 256)] public int MetadataFontSize { get; set; } = 14;
+        [Range(1, 256)] public int RatingFontSize { get; set; } = 22;
+        [ConfigEditable, SkinColor] public string ComponentColor { get; set; } = "#181E25FF";
+        [ConfigEditable, SkinColor] public string FooterLabelColor { get; set; } = "#4B5973FF";
+        [ConfigEditable, SkinColor] public string HoverColor { get; set; } = "#354451FF";
+        [ConfigEditable, SkinColor] public string SelectedColor { get; set; } = "#6B83B2FF";
+        [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
+        [ConfigEditable, SkinColor] public string MetadataColor { get; set; } = "#A3B2CDFF";
+        [ConfigEditable, SkinColor] public string RatingColor { get; set; } = "#F2C94CFF";
+        [ConfigEditable, SkinColor] public string BeatableColor { get; set; } = "#5DC7F9FF";
+        [ConfigEditable, SkinColor] public string UnbeatableColor { get; set; } = "#FF3A6FFF";
+        [ConfigEditable, SkinColor] public string ScrollbarColor { get; set; } = "#D9E3F4FF";
+        [ConfigEditable, SkinColor] public string ScrollbarTrackColor { get; set; } = "#181E25FF";
     }
 
     public sealed class SkinV2SelectionModifiersConfig

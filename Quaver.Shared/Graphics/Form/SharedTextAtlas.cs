@@ -36,13 +36,17 @@ namespace Quaver.Shared.Graphics.Form
         internal Vector2 DisplaySize { get; }
         internal Vector2 ContentSize { get; }
         internal Vector2 ContentInset { get; }
+        internal Vector2 LayoutSize { get; }
+        internal float CapTopOffset { get; }
 
-        internal SharedTextAtlasEntry(Rectangle source, float scale, float contentWidth, float contentHeight, float padding)
+        internal SharedTextAtlasEntry(Rectangle source, float scale, float contentWidth, float contentHeight, float padding, float layoutWidth, float layoutHeight, float capTopOffset)
         {
             Source = source;
             DisplaySize = new Vector2(source.Width / scale, source.Height / scale);
             ContentSize = new Vector2(contentWidth / scale, contentHeight / scale);
             ContentInset = new Vector2(padding / scale);
+            LayoutSize = new Vector2(layoutWidth / scale, layoutHeight / scale);
+            CapTopOffset = capTopOffset / scale;
         }
     }
 
@@ -52,6 +56,7 @@ namespace Quaver.Shared.Graphics.Form
     internal sealed class SharedTextAtlas : IDisposable
     {
         private const int EntryGap = 2;
+        private const int MaximumAtlasWidth = 4096;
 
         private sealed class LayoutEntry
         {
@@ -62,6 +67,36 @@ namespace Quaver.Shared.Graphics.Form
             {
                 Definition = definition;
                 DrawPosition = drawPosition;
+            }
+        }
+
+        private sealed class MeasuredEntry
+        {
+            internal SharedTextAtlasDefinition Definition { get; }
+            internal Vector2 DrawOffset { get; }
+            internal float ContentWidth { get; }
+            internal float ContentHeight { get; }
+            internal float Padding { get; }
+            internal float LayoutWidth { get; }
+            internal float LayoutHeight { get; }
+            internal float CapTopOffset { get; }
+            internal int Width { get; }
+            internal int Height { get; }
+
+            internal MeasuredEntry(SharedTextAtlasDefinition definition, Vector2 drawOffset,
+                float contentWidth, float contentHeight, float padding, float layoutWidth,
+                float layoutHeight, float capTopOffset, int width, int height)
+            {
+                Definition = definition;
+                DrawOffset = drawOffset;
+                ContentWidth = contentWidth;
+                ContentHeight = contentHeight;
+                Padding = padding;
+                LayoutWidth = layoutWidth;
+                LayoutHeight = layoutHeight;
+                CapTopOffset = capTopOffset;
+                Width = width;
+                Height = height;
             }
         }
 
@@ -85,37 +120,37 @@ namespace Quaver.Shared.Graphics.Form
 
             RenderScale = Math.Max(1, Math.Max(WindowManager.ScreenScale.X, WindowManager.ScreenScale.Y));
             var previousSizes = definitions.Select(x => x.Font).Distinct().ToDictionary(font => font, font => font.FontSize);
-            var y = 0;
-            var width = 1;
+            var measuredEntries = new List<MeasuredEntry>(definitions.Count);
+            var keys = new HashSet<string>();
 
             try
             {
                 foreach (var definition in definitions)
                 {
-                    if (Entries.ContainsKey(definition.Key))
+                    if (!keys.Add(definition.Key))
                         throw new ArgumentException($"Duplicate text atlas key: {definition.Key}", nameof(definitions));
 
                     definition.Font.FontSize = definition.FontSize * RenderScale;
                     var bounds = definition.Font.Store.TextBounds(definition.Text, Vector2.Zero);
                     var lineBounds = definition.Font.Store.TextBounds("H", Vector2.Zero);
                     var padding = Math.Max(2, definition.FontSize * RenderScale * 0.25f);
-                    var drawPosition = new Vector2(padding - bounds.X, y + padding - lineBounds.Y);
+                    var drawOffset = new Vector2(padding - bounds.X, padding - lineBounds.Y);
                     
                     var measured = definition.Font.Store.MeasureString(definition.Text);
                     var contentWidth = Math.Max(measured.X, bounds.X2 - bounds.X);
                     var contentHeight = Math.Max(1, lineBounds.Y2 - lineBounds.Y);
+                    
+                    var fullBounds = definition.Font.Store.TextBounds("Hgj", Vector2.Zero);
+                    var fullHeight = fullBounds.Y2 - fullBounds.Y;
+                    
+                    var extensionHeight = Math.Max(0, fullHeight - contentHeight);
+                    var layoutHeight = Math.Max(definition.Font.Store.LineHeight, contentHeight + extensionHeight * 2f);
 
+                    var capTopOffset = (layoutHeight - contentHeight) / 2f;
+                    var layoutWidth = (float) Math.Ceiling(measured.X);
                     var entryWidth = Math.Max(1, (int) Math.Ceiling(contentWidth + padding * 2));
                     var entryHeight = Math.Max(1, (int) Math.Ceiling(contentHeight + padding * 2));
-                    var source = new Rectangle(0, y, entryWidth, entryHeight);
-
-                    var entry = new SharedTextAtlasEntry(source, RenderScale, contentWidth, contentHeight, padding);
-
-                    Entries.Add(definition.Key, entry);
-                    Layout.Add(new LayoutEntry(definition, drawPosition));
-
-                    width = Math.Max(width, entryWidth);
-                    y += entryHeight + EntryGap;
+                    measuredEntries.Add(new MeasuredEntry(definition, drawOffset, contentWidth, contentHeight, padding, layoutWidth, layoutHeight, capTopOffset, entryWidth, entryHeight));
                 }
             }
             finally
@@ -124,8 +159,31 @@ namespace Quaver.Shared.Graphics.Form
                     pair.Key.FontSize = pair.Value;
             }
 
-            AtlasWidth = width;
-            AtlasHeight = Math.Max(1, y - EntryGap);
+            var x = 0;
+            var y = 0;
+            var rowHeight = 0;
+            var atlasWidth = 1;
+
+            foreach (var measured in measuredEntries)
+            {
+                if (x > 0 && x + measured.Width > MaximumAtlasWidth)
+                {
+                    x = 0;
+                    y += rowHeight + EntryGap;
+                    rowHeight = 0;
+                }
+
+                var source = new Rectangle(x, y, measured.Width, measured.Height);
+                Entries.Add(measured.Definition.Key, new SharedTextAtlasEntry(source, RenderScale, measured.ContentWidth, measured.ContentHeight, measured.Padding, measured.LayoutWidth, measured.LayoutHeight, measured.CapTopOffset));
+                Layout.Add(new LayoutEntry(measured.Definition, new Vector2(x, y) + measured.DrawOffset));
+
+                x += measured.Width + EntryGap;
+                rowHeight = Math.Max(rowHeight, measured.Height);
+                atlasWidth = Math.Max(atlasWidth, x - EntryGap);
+            }
+
+            AtlasWidth = atlasWidth;
+            AtlasHeight = Math.Max(1, y + rowHeight);
             GameBase.Game.ScheduleRenderTargetDraw(Build);
         }
 
@@ -226,10 +284,14 @@ namespace Quaver.Shared.Graphics.Form
         private SharedTextAtlas Atlas { get; }
         internal SharedTextAtlasEntry Entry { get; private set; } = null!;
         private string Key { get; set; } = string.Empty;
+        private bool Displayed { get; set; } = true;
 
         internal float ContentWidth => Entry.ContentSize.X;
         internal float ContentHeight => Entry.ContentSize.Y;
         internal Vector2 ContentInset => Entry.ContentInset;
+        internal float LayoutWidth => Entry.LayoutSize.X;
+        internal float LayoutHeight => Entry.LayoutSize.Y;
+        internal float CapTopOffset => Entry.CapTopOffset;
 
         internal SharedTextAtlasSprite(SharedTextAtlas atlas, string key)
         {
@@ -252,13 +314,22 @@ namespace Quaver.Shared.Graphics.Form
         private void OnTextureChanged(object? sender, EventArgs args) => RefreshRegion();
 
         /// <summary>
+        ///     Preserves the requested visibility when the deferred atlas texture becomes available
+        /// </summary>
+        internal void SetDisplayed(bool displayed)
+        {
+            Displayed = displayed;
+            RefreshRegion();
+        }
+
+        /// <summary>
         ///     Connects the sprite to its texture region after the deferred atlas build completes
         /// </summary>
         private void RefreshRegion()
         {
             var region = Atlas.GetRegion(Key);
 
-            Visible = region.HasValue;
+            Visible = Displayed && region.HasValue;
             if (region.HasValue)
                 Region = region.Value;
         }
