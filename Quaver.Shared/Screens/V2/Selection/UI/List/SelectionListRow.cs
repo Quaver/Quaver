@@ -1,8 +1,8 @@
+using System;
 using Microsoft.Xna.Framework;
 using Quaver.Shared.Graphics.Containers;
 using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
-using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
@@ -22,6 +22,11 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
 
         protected MapsetList List { get; }
         protected SkinV2SelectionRowConfig Config { get; }
+        protected virtual bool DrawsCustomBackground => false;
+        protected virtual bool UsesInteractionOverlay => false;
+        protected virtual bool ChangesWidthWhenSelected => true;
+        protected virtual float RightInset => 0;
+        protected bool IsHovered => Button.IsHovered;
 
         private NineSliceSprite Background { get; }
         private RowButton Button { get; }
@@ -64,7 +69,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
 
             if (sameItem && BoundContentWidth == contentWidth && Height == Config.Height)
             {
-                UpdateRowLayout(System.Math.Min(Width, GetRowWidth()));
+                UpdateRowLayout(Math.Min(Width, GetRowWidth()));
                 return;
             }
 
@@ -77,7 +82,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             HoverColor = SkinV2Color.Parse(Config.HoveredBackgroundColor);
             SelectedColor = SkinV2Color.Parse(Config.SelectedBackgroundColor);
             Background.Image = List.GetRowBackground(Item);
-            Background.Margins = new SliceMargins((int) System.Math.Ceiling(Config.CornerRadius));
+            Background.Margins = new SliceMargins((int) Math.Ceiling(Config.CornerRadius));
 
             UpdateRowContent(sameItem);
 
@@ -97,14 +102,18 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
 
         internal abstract void RefreshDynamicContent();
 
-        private int GetRowWidth() => System.Math.Min(List.IsSelected(Item) ? Config.SelectedWidth : Config.Width, (int) V2Scrollbar.GetContentWidth(List));
+        private int GetRowWidth()
+        {
+            var width = ChangesWidthWhenSelected && List.IsSelected(Item) ? Config.SelectedWidth : Config.Width;
+            return Math.Min(width, (int) V2Scrollbar.GetContentWidth(List));
+        }
 
         private void OnSizeChanged(object sender, ScalableVector2 size)
         {
             if (IsDisposed || Button.IsDisposed)
                 return;
 
-            X = V2Scrollbar.GetContentWidth(List) - Width;
+            X = V2Scrollbar.GetContentWidth(List) - Width - RightInset;
             Background.Size = Size;
             Button.Size = Size;
 
@@ -121,14 +130,17 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             {
                 TargetWidth = targetWidth;
                 ClearAnimations();
-                UpdateRowLayout(System.Math.Min(Width, TargetWidth));
+                UpdateRowLayout(Math.Min(Width, TargetWidth));
 
                 if (Width != TargetWidth)
                     ChangeWidthTo(TargetWidth, Easing.OutCubic, SelectionAnimationMilliseconds);
             }
 
             Button.IsInteractionEnabled = List.CanInteract && List.IsInteractive(Item);
-            Background.Tint = List.IsSelected(Item) ? SelectedColor : Button.IsHovered ? HoverColor : NormalColor;
+            Background.Tint = DrawsCustomBackground
+                ? Color.Transparent
+                : UsesInteractionOverlay ? NormalColor
+                : List.IsSelected(Item) ? SelectedColor : Button.IsHovered ? HoverColor : NormalColor;
             UpdateRow(gameTime);
 
             base.Update(gameTime);
@@ -165,7 +177,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             Visible = active;
         }
 
-        private void OnClicked(object sender, System.EventArgs args) => List.Select(Item);
+        private void OnClicked(object sender, EventArgs args) => List.Select(Item);
 
         public override void DrawToSpriteBatch()
         {

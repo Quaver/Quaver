@@ -263,7 +263,7 @@ namespace Quaver.Shared.Screens.V2.Selection
             Columns.Position = new ScalableVector2(horizontalPadding, barHeight + verticalPadding);
             Columns.Size = new ScalableVector2(
                 Math.Max(1, width - horizontalPadding * 2),
-                Math.Max(1, height - barHeight * 2 - verticalPadding * 2));
+                Math.Max(1, height - barHeight * 2 - verticalPadding - Config.Layout.FooterGap));
             Columns.ColumnGap = Math.Min(Config.Layout.ContentGap, Columns.Width / 4f);
             Columns.RefreshLayout();
 

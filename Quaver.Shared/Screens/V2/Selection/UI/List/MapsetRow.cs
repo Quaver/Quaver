@@ -10,7 +10,6 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Helpers;
 using Quaver.Shared.Skinning.V2;
 using Wobble.Graphics;
-using Wobble.Graphics.Animations;
 using Wobble.Graphics.Buttons;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Sprites.Text;
@@ -19,33 +18,38 @@ using Wobble.Managers;
 namespace Quaver.Shared.Screens.V2.Selection.UI.List
 {
     /// <summary>
-    ///     Displays one mapset with its metadata, source pills, banner and selection-only banner statistics
+    ///     Displays one mapset with its banner background, metadata and source
     /// </summary>
     internal sealed class MapsetRow : SelectionListRow
     {
         private const float TextGap = 12;
-        private const int BannerRightPadding = 10;
         private const int BannerLoadDelayMilliseconds = 200;
 
         private MarqueeSpriteText Title { get; }
         private MarqueeSpriteText Artist { get; }
         private MarqueeSpriteText Creator { get; }
         private FlexContainer PillLayout { get; }
+        private FlexContainer TopPillLayout { get; }
+        private FlexContainer BottomPillLayout { get; }
         private RoundedButton ModePill { get; }
         private RoundedButton StatusPill { get; }
-        private Container BannerStatsHost { get; }
-        private FlexContainer BannerStatsLayout { get; }
         private RoundedButton BannerDurationPill { get; }
         private RoundedButton BannerBpmPill { get; }
-        private Sprite Banner { get; set; }
-        private bool BannerStatsSelected { get; set; }
+        private MapsetRowSurface Surface { get; }
+        private Texture2D BannerSource { get; set; }
         private double TimeSinceBannerBound { get; set; }
         private bool BannerRequested { get; set; }
         private bool BannerEnabled { get; set; }
         private bool ShowsBanner => ConfigManager.DisplaySongSelectBanners?.Value ?? true;
+        protected override bool DrawsCustomBackground => Surface.Visible;
+        protected override bool UsesInteractionOverlay => true;
+        protected override bool ChangesWidthWhenSelected => false;
 
         internal MapsetRow(MapsetList list, SelectionListEntry item, int index) : base(list, item, index, list.MapsetRowConfig)
         {
+            Surface = new MapsetRowSurface(list.MapsetSurfaceCache, this) { Size = Size };
+            SizeChanged += OnMapsetSizeChanged;
+
             Title = CreateText(Config.TitleFont, Config.TitleFontSize, Config.TextColor);
             Artist = CreateText(Config.Font, Config.ArtistFontSize, Config.SecondaryTextColor);
             Creator = CreateText(Config.Font, Config.CreatorFontSize, Config.SecondaryTextColor);
@@ -58,25 +62,25 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                 RowGap = Config.PillGap
             };
 
-            ModePill = CreateMetadataPill();
-            StatusPill = CreateMetadataPill();
-
-            PillLayout.SetItemOptions(ModePill, new FlexItemOptions { Basis = Config.PillHeight, Shrink = 0 });
-            PillLayout.SetItemOptions(StatusPill, new FlexItemOptions { Basis = Config.PillHeight, Shrink = 0 });
-
-            BannerStatsHost = new Container { Parent = this, Visible = false };
-            BannerStatsLayout = new FlexContainer
+            TopPillLayout = new FlexContainer
             {
-                Parent = BannerStatsHost,
+                Parent = PillLayout,
                 Direction = FlexDirection.Row,
                 AlignItems = FlexAlignItems.Center,
-                ColumnGap = Config.BannerStatPillGap
+                ColumnGap = Config.PillGap
+            };
+            BottomPillLayout = new FlexContainer
+            {
+                Parent = PillLayout,
+                Direction = FlexDirection.Row,
+                AlignItems = FlexAlignItems.Center,
+                ColumnGap = Config.PillGap
             };
 
-            BannerDurationPill = CreateBannerStatPill(CapsuleIcons.Get(CapsuleIcon.Time));
-            BannerBpmPill = CreateBannerStatPill(UserInterface.SelectionBpm);
-            BannerStatsLayout.SetItemOptions(BannerDurationPill, new FlexItemOptions { Shrink = 0 });
-            BannerStatsLayout.SetItemOptions(BannerBpmPill, new FlexItemOptions { Shrink = 0 });
+            ModePill = CreateMetadataPill(TopPillLayout);
+            StatusPill = CreateMetadataPill(TopPillLayout);
+            BannerDurationPill = CreateBannerStatPill(BottomPillLayout, CapsuleIcons.Get(CapsuleIcon.Time));
+            BannerBpmPill = CreateBannerStatPill(BottomPillLayout, UserInterface.SelectionBpm);
         }
 
         protected override void UpdateRowContent(bool sameItem)
@@ -95,24 +99,29 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             UpdatePillContent();
 
             if (!sameItem)
+            {
+                Surface.Reset();
                 UpdateBannerContent();
+            }
 
             UpdateBannerStatsContent();
+            UpdateTimingPillVisibility();
+            UpdatePillLayout();
         }
 
         protected override void UpdateRowLayout(float rowWidth)
         {
             var padding = Math.Min(Config.Padding, rowWidth / 4f);
             var pillSpace = PillLayout.Visible ? PillLayout.Width + Config.PillGap : 0;
-            var bannerSpace = ShowsBanner ? List.BannerCache.Width + BannerRightPadding : 0;
-            var width = (int) Math.Max(1, rowWidth - padding * 2 - bannerSpace - pillSpace);
+            var width = (int) Math.Max(1, rowWidth - padding * 2 - pillSpace);
 
             SetText(Title, Item.Mapset.Title ?? "", width);
 
             SetText(Artist, Item.Mapset.Artist ?? "", width);
             Artist.Visible = !string.IsNullOrEmpty(Artist.TextSprite.Text);
 
-            SetText(Creator, Item.Mapset.Creator ?? "", width);
+            var creator = Item.Mapset.Creator;
+            SetText(Creator, string.IsNullOrEmpty(creator) ? "" : $"By: {creator}", width);
             Creator.Visible = !string.IsNullOrEmpty(Creator.TextSprite.Text);
 
             var textHeight = Title.TextSprite.CapHeight +
@@ -134,7 +143,6 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                 Creator.Position = new ScalableVector2(padding, y + TextGap - Creator.TextSprite.CapTopOffset);
 
             UpdatePillLayout();
-            UpdateBannerStatsLayout();
         }
 
         protected override void UpdateRow(GameTime gameTime)
@@ -157,14 +165,21 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                 }
             }
 
-            UpdateBannerStatsAnimation();
+            var selected = List.IsSelected(Item);
+            Surface.Set(ShowsBanner ? BannerSource : null, IsHovered, selected);
+
+            UpdateTimingPillVisibility();
         }
 
-        internal override void RefreshDynamicContent() => UpdateBannerStatsContent();
-
-        private RoundedButton CreateMetadataPill() => new()
+        internal override void RefreshDynamicContent()
         {
-            Parent = PillLayout,
+            UpdateBannerStatsContent();
+            UpdatePillLayout();
+        }
+
+        private RoundedButton CreateMetadataPill(Container parent) => new()
+        {
+            Parent = parent,
             CornerRadius = 15,
             WidthMode = ButtonSizeMode.Fixed,
             AutoSizePadding = new Vector2(Config.PillHorizontalPadding, 0),
@@ -191,8 +206,6 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             StatusPill.SetLabel(FontManager.GetWobbleFont(Config.Font), GetStatusText(), Config.PillFontSize, SkinV2Color.Parse(Config.PillTextColor));
             StatusPill.Width = Math.Max(Config.PillMinimumWidth, StatusPill.Label.Width + Config.PillHorizontalPadding);
             StatusPill.Tint = GetStatusPillColor();
-
-            UpdatePillLayout();
         }
 
         private void UpdatePillLayout()
@@ -200,16 +213,35 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             if (!PillLayout.Visible)
                 return;
 
-            var right = ShowsBanner
-                ? Width - BannerRightPadding - List.BannerCache.Width - Config.PillGap
-                : Width - Config.Padding;
+            TopPillLayout.ColumnGap = Config.PillGap;
+            TopPillLayout.Size = new ScalableVector2(
+                ModePill.Width + Config.PillGap + StatusPill.Width,
+                Math.Max(ModePill.Height, StatusPill.Height));
 
-            var blockHeight = Config.PillHeight * 2 + Config.PillGap;
+            TopPillLayout.SetItemOptions(ModePill, new FlexItemOptions { Basis = ModePill.Width, Shrink = 0 });
+            TopPillLayout.SetItemOptions(StatusPill, new FlexItemOptions { Basis = StatusPill.Width, Shrink = 0 });
+            TopPillLayout.RefreshLayout();
+
+            BottomPillLayout.ColumnGap = Config.PillGap;
+            BottomPillLayout.Size = new ScalableVector2(
+                BannerDurationPill.Width + Config.PillGap + BannerBpmPill.Width,
+                Math.Max(BannerDurationPill.Height, BannerBpmPill.Height));
+
+            BottomPillLayout.SetItemOptions(BannerDurationPill, new FlexItemOptions { Basis = BannerDurationPill.Width, Shrink = 0 });
+            BottomPillLayout.SetItemOptions(BannerBpmPill, new FlexItemOptions { Basis = BannerBpmPill.Width, Shrink = 0 });
+            BottomPillLayout.RefreshLayout();
+
+            var blockHeight = TopPillLayout.Height + Config.PillGap + BottomPillLayout.Height;
             PillLayout.RowGap = Config.PillGap;
-            PillLayout.Size = new ScalableVector2(Math.Max(ModePill.Width, StatusPill.Width), blockHeight);
-            PillLayout.Position = new ScalableVector2(right - PillLayout.Width, (Height - blockHeight) / 2f);
+            PillLayout.Size = new ScalableVector2(Math.Max(TopPillLayout.Width, BottomPillLayout.Width), blockHeight);
+            PillLayout.SetItemOptions(TopPillLayout, new FlexItemOptions { Basis = TopPillLayout.Height, Shrink = 0 });
+            PillLayout.SetItemOptions(BottomPillLayout, new FlexItemOptions { Basis = BottomPillLayout.Height, Shrink = 0 });
+            PillLayout.Position = new ScalableVector2(Width - Config.Padding - PillLayout.Width, (Height - blockHeight) / 2f);
             PillLayout.RefreshLayout();
         }
+
+        private void UpdateTimingPillVisibility() =>
+            BottomPillLayout.Visible = List.IsSelected(Item) || IsHovered;
 
         private string GetModeText() => string.Join("/", Item.Mapset.Maps.Select(map => ModeHelper.ToShortHand(map.Mode)).Distinct());
 
@@ -266,11 +298,11 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             };
         }
 
-        private RoundedButton CreateBannerStatPill(TextureRegion icon)
+        private RoundedButton CreateBannerStatPill(Container parent, TextureRegion icon)
         {
             var pill = new RoundedButton
             {
-                Parent = BannerStatsLayout,
+                Parent = parent,
                 WidthMode = ButtonSizeMode.Fixed,
                 Height = Config.BannerStatPillHeight,
                 CornerRadius = Config.BannerStatPillHeight / 2f,
@@ -289,12 +321,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
         private void UpdateBannerStatsContent()
         {
             if (Item.Mapset?.Maps?.Count == 0)
-            {
-                SetBannerStatsAlpha(0);
-                BannerStatsSelected = false;
-                BannerStatsHost.Visible = false;
                 return;
-            }
 
             var various = Item.Mapset.Maps.Select(map => map.SongLength).Distinct().Count() > 1 ||
                           Item.Mapset.Maps.Select(map => map.Bpm).Distinct().Count() > 1;
@@ -304,69 +331,12 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
 
             var bpm = various ? "VARIOUS" : $"{DifficultyRow.GetBpmStatText(Item.Mapset.Maps[0])} BPM";
             SetBannerStatLabel(BannerBpmPill, bpm);
-
-            SetBannerStatsAlpha(0);
-
-            BannerStatsSelected = false;
-            BannerStatsHost.Visible = ShowsBanner;
-            BannerStatsHost.Parent = this;
-
-            UpdateBannerStatsLayout();
         }
 
         private void SetBannerStatLabel(RoundedButton pill, string text)
         {
             pill.SetLabel(FontManager.GetWobbleFont(Config.Font), text, Config.BannerStatFontSize, SkinV2Color.Parse(Config.DifficultyStatColor));
             pill.Width = pill.Icon.Width + 8 + pill.Label.Width + Config.BannerStatPillPadding;
-        }
-
-        private void UpdateBannerStatsLayout()
-        {
-            if (!BannerStatsHost.Visible)
-                return;
-
-            BannerStatsLayout.ColumnGap = Config.BannerStatPillGap;
-            BannerStatsLayout.Size = new ScalableVector2(
-                BannerDurationPill.Width + Config.BannerStatPillGap + BannerBpmPill.Width,
-                Config.BannerStatPillHeight);
-
-            var bannerX = Width - BannerRightPadding - List.BannerCache.Width;
-            var bannerY = (Height - List.BannerCache.Height) / 2f;
-
-            BannerStatsHost.Size = BannerStatsLayout.Size;
-            BannerStatsHost.Position = new ScalableVector2(
-                bannerX + List.BannerCache.Width - Config.BannerStatInset - BannerStatsLayout.Width,
-                bannerY + List.BannerCache.Height - Config.BannerStatInset - BannerStatsLayout.Height);
-
-            BannerStatsLayout.Position = new ScalableVector2(0, 0);
-
-            BannerStatsLayout.RefreshLayout();
-        }
-
-        private void UpdateBannerStatsAnimation()
-        {
-            var selected = ShowsBanner && List.IsSelected(Item);
-            BannerStatsHost.Visible = ShowsBanner;
-
-            if (BannerStatsSelected == selected)
-                return;
-
-            BannerStatsSelected = selected;
-
-            BannerDurationPill.ClearAnimations(AnimationProperty.Alpha);
-            BannerDurationPill.FadeTo(selected ? 1 : 0, Easing.OutCubic, Config.BannerStatFadeMilliseconds);
-
-            BannerBpmPill.ClearAnimations(AnimationProperty.Alpha);
-            BannerBpmPill.FadeTo(selected ? 1 : 0, Easing.OutCubic, Config.BannerStatFadeMilliseconds);
-        }
-
-        private void SetBannerStatsAlpha(float alpha)
-        {
-            BannerDurationPill.ClearAnimations(AnimationProperty.Alpha);
-            BannerDurationPill.Alpha = alpha;
-
-            BannerBpmPill.ClearAnimations(AnimationProperty.Alpha);
-            BannerBpmPill.Alpha = alpha;
         }
 
         private void UpdateBannerContent()
@@ -377,42 +347,34 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             BannerEnabled = ShowsBanner;
             if (!BannerEnabled)
             {
-                if (Banner != null)
-                    List.BannerCache.Unbind(Banner);
+                BannerSource = null;
                 return;
-            }
-            if (Banner == null)
-            {
-                Banner = new Sprite
-                {
-                    Parent = this,
-                    Size = new ScalableVector2(List.BannerCache.Width, List.BannerCache.Height),
-                    Alignment = Alignment.MidRight,
-                    X = -BannerRightPadding,
-                    UsePreviousSpriteBatchOptions = true,
-                    Visible = false
-                };
             }
 
             var image = List.GetCachedBanner(Item.Mapset);
-            List.BannerCache.Bind(Banner, image ?? UserInterface.DefaultBanner);
+            BannerSource = image ?? UserInterface.DefaultBanner;
             BannerRequested = image != null;
         }
 
         internal void SetBanner(string directory, Texture2D image)
         {
-            if (IsDisposed || !ShowsBanner || Banner == null || Item.Mapset.Directory != directory ||
+            if (IsDisposed || !ShowsBanner || Item.Mapset.Directory != directory ||
                 image == null || image.IsDisposed)
                 return;
 
-            List.BannerCache.Bind(Banner, image);
+            BannerSource = image;
             BannerRequested = true;
+        }
+
+        private void OnMapsetSizeChanged(object sender, ScalableVector2 size)
+        {
+            Surface.Size = size;
         }
 
         public override void Destroy()
         {
-            if (Banner != null)
-                List.BannerCache.Unbind(Banner);
+            SizeChanged -= OnMapsetSizeChanged;
+            Surface.Dispose();
 
             base.Destroy();
         }

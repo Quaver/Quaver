@@ -21,6 +21,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
     /// </summary>
     internal sealed class DifficultyRow : SelectionListRow
     {
+        protected override bool ChangesWidthWhenSelected => false;
+        protected override float RightInset => 10;
+
         private FlexContainer Layout { get; }
         private FlexContainer MainLayout { get; }
         private FlexContainer BadgeLayout { get; }

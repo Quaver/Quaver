@@ -16,8 +16,18 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Required] public SkinV2SelectionLeftPanelConfig LeftPanel { get; set; } = new();
         [Required] public SkinV2SelectionLeaderboardConfig Leaderboard { get; set; } = new();
         [Required] public SkinV2SelectionModifiersConfig Modifiers { get; set; } = new();
-        [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new() { Height = 100, TitleFont = SkinV2FontWeightsConfig.Bold, TitleFontSize = 22 };
-        [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { SelectedWidth = 925, Height = 60, TitleFontSize = 20 };
+        [Required] public SkinV2SelectionRowConfig Mapset { get; set; } = new()
+        {
+            Width = 955,
+            SelectedWidth = 955,
+            Height = 100,
+            TitleFont = SkinV2FontWeightsConfig.Bold,
+            TitleFontSize = 22,
+            BackgroundColor = "#181D25FF",
+            HoveredBackgroundColor = "#222C3AFF",
+            SelectedOverlayColor = "#394458FF"
+        };
+        [Required] public SkinV2SelectionRowConfig Difficulty { get; set; } = new() { Width = 935, SelectedWidth = 935, Height = 60, TitleFontSize = 20, BackgroundColor = "#181D25FF" };
         [Required] public SkinV2SelectionDetailsConfig Details { get; set; } = new();
     }
 
@@ -25,6 +35,7 @@ namespace Quaver.Shared.Screens.V2.Selection
     {
         [Range(0, 2048)] public float HorizontalPadding { get; set; } = SkinV2Spacing.SpacingXl;
         [Range(0, 2048)] public float VerticalPadding { get; set; } = SkinV2Spacing.Spacing2Xs;
+        [Range(0, 2048)] public float FooterGap { get; set; } = SkinV2Spacing.Spacing2Xs;
         [Range(0, 2048)] public float ContentGap { get; set; } = SkinV2Spacing.SpacingXl;
         [Range(1, 4096)] public float LeftPanelWidth { get; set; } = 725;
         [Range(1, 4096)] public float RightPanelWidth { get; set; } = 1040;
@@ -131,6 +142,7 @@ namespace Quaver.Shared.Screens.V2.Selection
         [Range(1, 64)] public int OverscanRows { get; set; } = 4;
         [Range(1, 64)] public float ScrollbarWidth { get; set; } = 10;
         [ConfigEditable, SkinColor] public string ScrollbarColor { get; set; } = "#C5D3E7FF";
+        [ConfigEditable, SkinColor] public string ExpandedMapsetBackgroundColor { get; set; } = "#273038FF";
     }
 
     public sealed class SkinV2SelectionRowConfig
@@ -174,6 +186,7 @@ namespace Quaver.Shared.Screens.V2.Selection
         [ConfigEditable, SkinColor] public string BackgroundColor { get; set; } = "#162333FF";
         [ConfigEditable, SkinColor] public string HoveredBackgroundColor { get; set; } = "#263C55FF";
         [ConfigEditable, SkinColor] public string SelectedBackgroundColor { get; set; } = "#44618CFF";
+        [ConfigEditable, SkinColor] public string SelectedOverlayColor { get; set; } = "#394458FF";
         [ConfigEditable, SkinColor] public string TextColor { get; set; } = "#FFFFFFFF";
         [ConfigEditable, SkinColor] public string SecondaryTextColor { get; set; } = "#FFFFFFFF";
         [ConfigEditable, SkinColor] public string PillTextColor { get; set; } = "#FFFFFFFF";

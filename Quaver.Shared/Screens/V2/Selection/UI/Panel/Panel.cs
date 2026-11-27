@@ -290,17 +290,18 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.Panel
                 : modifiersSelected ? Config.ModifiersFooterHeight : 0;
             var footerVisible = footerHeight > 0;
             Layout.SetItemOptions(Content, leaderboardSelected
-                ? new FlexItemOptions { Basis = Config.LeaderboardContentHeight, Grow = 0, Shrink = 0 }
+                ? new FlexItemOptions { Basis = Config.LeaderboardContentHeight, Grow = 1, Shrink = 1 }
                 : new FlexItemOptions { Basis = 0, Grow = 1, Shrink = 1 });
-            Layout.SetItemOptions(FooterGap,
-                new FlexItemOptions { Basis = footerVisible ? Config.Gap : 0, Shrink = 0 });
-            Layout.SetItemOptions(Footer,
-                new FlexItemOptions { Basis = footerHeight, Shrink = 0 });
+            
+            Layout.SetItemOptions(FooterGap, new FlexItemOptions { Basis = footerVisible ? Config.Gap : 0, Shrink = 0 });
+            Layout.SetItemOptions(Footer, new FlexItemOptions { Basis = footerHeight, Shrink = 0 });
 
             Footer.Visible = footerVisible;
             Footer.UpdateWhenInvisible = footerVisible;
+
             LeaderboardFooterContent.Visible = leaderboardSelected;
             LeaderboardFooterContent.UpdateWhenInvisible = leaderboardSelected;
+
             ModifiersFooterContent.Visible = modifiersSelected;
             ModifiersFooterContent.UpdateWhenInvisible = modifiersSelected;
 

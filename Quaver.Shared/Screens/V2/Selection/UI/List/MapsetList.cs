@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Shared.Assets;
 using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Graphics.Backgrounds;
 using Quaver.Shared.Graphics.Containers;
@@ -13,6 +14,7 @@ using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Animations;
 using Wobble.Graphics.Shaders;
+using Wobble.Graphics.Sprites;
 using Wobble.Managers;
 
 namespace Quaver.Shared.Screens.V2.Selection.UI.List
@@ -36,18 +38,20 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
         private Map SelectedMap { get; set; }
         private Mapset SelectedMapset { get; set; }
         private Mapset ExpandedMapset { get; set; }
+        private Mapset PendingMapsetCenter { get; set; }
         private Dictionary<Mapset, MapsetExpansion> Expansions { get; } = new();
         private Dictionary<Mapset, int> MapsetIndices { get; } = new();
         private List<SelectionListEntry> VisibleEntries { get; } = new();
         private List<MapsetRow> MapsetRows { get; } = new();
         private List<DifficultyRow> DifficultyRows { get; } = new();
+        private Dictionary<string, Texture2D> MapsetBanners { get; } = new();
         private int VisibleRowCount { get; set; }
         private int MapsetPoolCapacity { get; set; }
         private int DifficultyPoolCapacity { get; set; }
         private List<Mapset> FinishedExpansions { get; } = new();
         private HashSet<string> PendingBanners { get; } = new();
 
-        internal RoundedTextureCache BannerCache { get; } = new(360, 80, 6);
+        internal MapsetRowSurfaceCache MapsetSurfaceCache { get; }
         internal SkinV2SelectionRowConfig MapsetRowConfig => MapsetConfig;
         internal SkinV2SelectionRowConfig DifficultyRowConfig => DifficultyConfig;
         internal bool IsInitialized { get; private set; }
@@ -65,7 +69,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
         {
             Config = config;
             MapsetConfig = mapsetConfig;
+
             MapsetBackground = CreateRowBackground(mapsetConfig);
+            MapsetSurfaceCache = new MapsetRowSurfaceCache(mapsetConfig);
 
             DifficultyConfig = difficultyConfig;
             DifficultyBackground = difficultyConfig.CornerRadius == mapsetConfig.CornerRadius ? MapsetBackground : CreateRowBackground(difficultyConfig);
@@ -81,7 +87,6 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
 
             V2Scrollbar.Apply(this, config.ScrollbarWidth, SkinV2Color.Parse(config.ScrollbarColor), cornerRadius: config.ScrollbarWidth / 2f);
             SizeChanged += OnSizeChanged;
-            BackgroundHelper.BannerLoaded += OnBannerLoaded;
             ModManager.ModsChanged += OnModsChanged;
         }
 
@@ -130,7 +135,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             {
                 SetExpandedMapset(ExpandedMapset);
                 var expansion = Expansions[ExpandedMapset];
-                expansion.Height = ExpandedMapset.Maps.Count * (DifficultyConfig.Height + RowGap);
+                expansion.Height = GetExpandedMapsetHeight(ExpandedMapset);
                 expansion.Animation = null;
             }
 
@@ -149,6 +154,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             var mapset = FindMapset(selected);
             SelectedMap = selected;
             SelectedMapset = mapset;
+            var centerMapset = PendingMapsetCenter == mapset;
+            if (centerMapset)
+                PendingMapsetCenter = null;
 
             if (ExpandedMapset != null && ExpandedMapset != SelectedMapset)
                 SetExpandedMapset(null);
@@ -156,11 +164,13 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             if (previousMapset == SelectedMapset && ExpandedMapset == null)
                 return;
 
+            var scrollPosition = centerMapset ? GetMapsetScrollPosition(mapset) : GetSelectedScrollPosition();
+
             if (animate)
-                ScrollTo(GetSelectedScrollPosition(), Config.ScrollMilliseconds);
+                ScrollTo(scrollPosition, Config.ScrollMilliseconds);
             else
             {
-                SetScrollImmediately(GetSelectedScrollPosition());
+                SetScrollImmediately(scrollPosition);
                 HandlePoolShifting();
             }
         }
@@ -174,7 +184,8 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             if (mapset == null || string.IsNullOrEmpty(mapset.Directory))
                 return null;
 
-            return BackgroundHelper.MapsetBanners.TryGetValue(mapset.Directory, out var banner) && banner != null && !banner.IsDisposed ? banner : null;
+            return MapsetBanners.TryGetValue(mapset.Directory, out var banner) &&
+                   banner != null && !banner.IsDisposed ? banner : null;
         }
 
         internal Texture2D RequestBanner(Mapset mapset)
@@ -184,28 +195,59 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                 return banner;
 
             if (mapset != null && !string.IsNullOrEmpty(mapset.Directory) && PendingBanners.Add(mapset.Directory))
-                BackgroundHelper.LoadMapsetBanner(mapset);
+                BackgroundHelper.LoadMapsetBanner(mapset, MapsetConfig.Width, MapsetConfig.Height, OnBannerLoaded);
 
             return null;
         }
 
-        private void OnBannerLoaded(object sender, BannerLoadedEventArgs args)
+        private void OnBannerLoaded(Texture2D banner, Mapset mapset)
         {
-            if (IsDisposed || args.Mapset == null)
+            if (mapset == null)
                 return;
 
-            var directory = args.Mapset.Directory;
+            if (IsDisposed)
+            {
+                DisposeBanner(banner);
+                return;
+            }
+
+            var directory = mapset.Directory;
             AddScheduledUpdate(() =>
             {
                 if (IsDisposed)
+                {
+                    DisposeBanner(banner);
                     return;
+                }
 
                 PendingBanners.Remove(directory);
-                if (args.Banner == null || args.Banner.IsDisposed)
+                if (banner == null || banner.IsDisposed)
                     return;
 
+                if (MapsetBanners.TryGetValue(directory, out var existing))
+                {
+                    if (existing != banner)
+                        DisposeBanner(banner);
+
+                    banner = existing;
+                }
+                else
+                    MapsetBanners.Add(directory, banner);
+
                 foreach (var row in MapsetRows)
-                    row.SetBanner(directory, args.Banner);
+                    row.SetBanner(directory, banner);
+            });
+        }
+
+        private static void DisposeBanner(Texture2D banner)
+        {
+            if (banner == null || banner == UserInterface.DefaultBanner || banner.IsDisposed)
+                return;
+
+            GameBase.Game.ScheduleRenderTargetDraw(() =>
+            {
+                if (!banner.IsDisposed)
+                    banner.Dispose();
             });
         }
 
@@ -284,18 +326,24 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             }
             else if (entry.Mapset == SelectedMapset)
             {
-                // A row click occurs while the pool is updatin, so we rebind its rows on the next update
+                var collapse = ExpandedMapset == entry.Mapset;
+
+                // A row click occurs while the pool is updating, so we rebind its rows on the next update
                 AddScheduledUpdate(() =>
                 {
-                    if (!IsDisposed && CanInteract && entry.Mapset == SelectedMapset)
+                    if (!IsDisposed && CanInteract)
                     {
                         SetScrollImmediately(ContentContainer.Y);
-                        SetExpandedMapset(ExpandedMapset == entry.Mapset ? null : entry.Mapset);
+                        SetExpandedMapset(collapse ? null : entry.Mapset);
+                        ScrollTo(GetMapsetScrollPosition(entry.Mapset), Config.ScrollMilliseconds);
                     }
                 });
             }
             else
+            {
+                PendingMapsetCenter = entry.Mapset;
                 SelectMapset(entry.Mapset);
+            }
         }
 
         internal bool TryMoveDifficultySelection(int direction)
@@ -368,10 +416,16 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             foreach (var expansion in Expansions.Values)
             {
                 contentHeight += expansion.Height;
-                expansion.Viewport.Y = GetItemOffset(expansion.MapsetIndex) + MapsetConfig.Height + RowGap;
+                var overlap = MapsetConfig.CornerRadius;
+                expansion.Viewport.Y = GetItemOffset(expansion.MapsetIndex) + MapsetConfig.Height - overlap;
                 expansion.Viewport.Width = Width;
-                expansion.Viewport.Height = Math.Max(0, expansion.Height - RowGap);
-                expansion.Viewport.Visible = expansion.Viewport.Height > 0;
+                expansion.Viewport.Height = overlap + Math.Max(0, expansion.Height);
+                expansion.Viewport.Visible = expansion.Height > 0;
+
+                var contentWidth = V2Scrollbar.GetContentWidth(this);
+                var backgroundWidth = Math.Min(MapsetConfig.Width, contentWidth);
+                expansion.Background.Position = new ScalableVector2(contentWidth - backgroundWidth, 0);
+                expansion.Background.Size = new ScalableVector2(backgroundWidth, expansion.Viewport.Height);
             }
 
             ContentContainer.Height = Math.Max(Height, contentHeight);
@@ -380,6 +434,9 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
         private Mapset FindMapset(Map selected) => selected == null ? null : Mapsets.Find(set => set.Maps.Contains(selected));
 
         private int FindMapsetIndex(Mapset mapset) => mapset != null && MapsetIndices.TryGetValue(mapset, out var index) ? index : -1;
+
+        private float GetExpandedMapsetHeight(Mapset mapset) =>
+            mapset.Maps.Count * (DifficultyConfig.Height + RowGap) + RowGap;
 
         /// <summary>
         ///     Opens the requested mapset and collapses every other active expansion
@@ -390,12 +447,13 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             UpdateDifficultyStatWidths(mapset);
 
             if (mapset != null && !Expansions.ContainsKey(mapset))
-                Expansions.Add(mapset, new MapsetExpansion(MapsetIndices[mapset], ContentContainer));
+                Expansions.Add(mapset, new MapsetExpansion(MapsetIndices[mapset], ContentContainer,
+                    SkinV2Color.Parse(Config.ExpandedMapsetBackgroundColor), DifficultyConfig.CornerRadius));
 
             foreach (var entry in Expansions)
             {
                 var expansion = entry.Value;
-                var target = entry.Key == mapset ? mapset.Maps.Count * (DifficultyConfig.Height + RowGap) : 0;
+                var target = entry.Key == mapset ? GetExpandedMapsetHeight(mapset) : 0;
                 if (expansion.Animation?.End == target)
                     continue;
 
@@ -494,7 +552,7 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                 var expansion = Expansions[row.Item.Mapset];
                 var offset = row.Item.DifficultyIndex * (DifficultyConfig.Height + RowGap);
                 alpha = MathHelper.Clamp((expansion.Height - offset) / (DifficultyConfig.Height + RowGap), 0, 1);
-                row.Y = offset - DifficultyConfig.Height * (1 - alpha);
+                row.Y = MapsetConfig.CornerRadius + RowGap + offset - DifficultyConfig.Height * (1 - alpha);
             }
             else
                 row.Y = GetItemOffset(row.Index);
@@ -522,6 +580,19 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
             }
 
             return MathHelper.Clamp(Height / 2f - offset - height / 2f, Math.Min(0, Height - ContentContainer.Height), 0);
+        }
+
+        /// <summary>
+        ///     Gets the scroll position that centers a specific mapset row
+        /// </summary>
+        private float GetMapsetScrollPosition(Mapset mapset)
+        {
+            var index = FindMapsetIndex(mapset);
+            if (index < 0)
+                return ContentContainer.Y;
+
+            var offset = GetItemOffset(index);
+            return MathHelper.Clamp(Height / 2f - offset - MapsetConfig.Height / 2f, Math.Min(0, Height - ContentContainer.Height), 0);
         }
 
         /// <summary>
@@ -589,9 +660,11 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                     continue;
 
                 var stride = DifficultyConfig.Height + RowGap;
-                var first = Math.Max(0, (int)Math.Floor((top - groupTop) / stride));
-                var last = Math.Min(Mapsets[i].Maps.Count - 1,
-                    (int)Math.Ceiling(Math.Min(expansion.Height, bottom - groupTop + DifficultyConfig.Height) / stride) - 1);
+                var difficultyTop = groupTop + MapsetConfig.CornerRadius + RowGap;
+
+                var first = Math.Max(0, (int)Math.Floor((top - difficultyTop) / stride));
+                var last = Math.Min(Mapsets[i].Maps.Count - 1, 
+                    (int)Math.Ceiling(Math.Min(expansion.Height, bottom - difficultyTop + DifficultyConfig.Height) / stride) - 1);
 
                 for (var difficulty = first; difficulty <= last; difficulty++)
                     VisibleEntries.Add(new SelectionListEntry(Mapsets[i], difficulty));
@@ -745,11 +818,12 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
         private sealed class MapsetExpansion
         {
             public HorizontalClippingContainer Viewport { get; }
+            public NineSliceSprite Background { get; }
             public int MapsetIndex { get; }
             public float Height { get; set; }
             public Animation Animation { get; set; }
 
-            public MapsetExpansion(int mapsetIndex, Container parent)
+            public MapsetExpansion(int mapsetIndex, Container parent, Color backgroundColor, float cornerRadius)
             {
                 MapsetIndex = mapsetIndex;
                 Viewport = new HorizontalClippingContainer
@@ -758,18 +832,36 @@ namespace Quaver.Shared.Screens.V2.Selection.UI.List
                     Visible = false,
                     UpdateWhenInvisible = false
                 };
+                var margin = (int)Math.Ceiling(cornerRadius);
+                var textureSize = Math.Max(2, margin * 2 + 2);
+                Background = new NineSliceSprite
+                {
+                    Parent = Viewport,
+                    Image = RoundedRectTextureCache.Get(textureSize, textureSize, new RoundedRectCornerRadii(0, 0, cornerRadius, cornerRadius)),
+                    Margins = new SliceMargins(margin),
+                    Tint = backgroundColor,
+                    UsePreviousSpriteBatchOptions = true
+                };
+
+                parent.Children.Remove(Viewport);
+                parent.Children.Insert(0, Viewport);
             }
         }
 
         public override void Destroy()
         {
-            BackgroundHelper.BannerLoaded -= OnBannerLoaded;
             ModManager.ModsChanged -= OnModsChanged;
 
             PendingBanners.Clear();
             SizeChanged -= OnSizeChanged;
             base.Destroy();
-            BannerCache.Dispose();
+
+            MapsetSurfaceCache.Dispose();
+
+            foreach (var banner in MapsetBanners.Values.Distinct())
+                DisposeBanner(banner);
+
+            MapsetBanners.Clear();
         }
     }
 }

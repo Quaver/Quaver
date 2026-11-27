@@ -12,7 +12,7 @@ namespace Quaver.Shared.Screens.V2.UI
     /// <summary>
     ///     Caches rounded render-target copies so repeated images can use the normal sprite batch
     /// </summary>
-    internal sealed class RoundedTextureCache(int width, int height, float radius) : IDisposable
+    internal sealed class RoundedTextureCache(int width, int height, float radius, bool cropToFill = false) : IDisposable
     {
         private const int MaximumCachedTextures = 64;
 
@@ -20,31 +20,33 @@ namespace Quaver.Shared.Screens.V2.UI
         public int Height { get; } = height;
 
         private float Radius { get; } = radius;
+        private bool CropToFill { get; } = cropToFill;
         private object SyncRoot { get; } = new();
-        private Dictionary<Texture2D, CachedTexture> Textures { get; } = new();
+        private Dictionary<TextureKey, CachedTexture> Textures { get; } = new();
         private Dictionary<Sprite, CachedTexture> Bindings { get; } = new();
         private Shader Shader { get; set; }
         private long LastUsed { get; set; }
         private bool IsDisposed { get; set; }
 
-        public void Bind(Sprite sprite, Texture2D source)
+        public void Bind(Sprite sprite, Texture2D source, Texture2D overlay = null)
         {
             lock (SyncRoot)
             {
                 if (IsDisposed || sprite.IsDisposed)
                     return;
 
-                if (Bindings.TryGetValue(sprite, out var previous) && previous.Source == source)
+                var key = new TextureKey(source, overlay);
+                if (Bindings.TryGetValue(sprite, out var previous) && previous.Key == key)
                     return;
 
                 Unbind(sprite);
-                if (source == null || source.IsDisposed)
+                if (source == null || source.IsDisposed || overlay?.IsDisposed == true)
                     return;
 
-                if (!Textures.TryGetValue(source, out var cached))
+                if (!Textures.TryGetValue(key, out var cached))
                 {
-                    cached = new CachedTexture(source);
-                    Textures.Add(source, cached);
+                    cached = new CachedTexture(key);
+                    Textures.Add(key, cached);
                     var pending = cached;
                     GameBase.Game.ScheduleRenderTargetDraw(() => CreateTexture(pending));
                 }
@@ -82,21 +84,21 @@ namespace Quaver.Shared.Screens.V2.UI
         {
             lock (SyncRoot)
             {
-                if (IsDisposed || !Textures.TryGetValue(cached.Source, out var current) || current != cached)
+                if (IsDisposed || !Textures.TryGetValue(cached.Key, out var current) || current != cached)
                     return;
 
                 if (cached.Users.Count == 0)
                 {
-                    Textures.Remove(cached.Source);
+                    Textures.Remove(cached.Key);
                     return;
                 }
 
-                if (cached.Source.IsDisposed)
+                if (cached.Key.Source.IsDisposed || cached.Key.Overlay?.IsDisposed == true)
                     return;
 
                 try
                 {
-                    cached.Texture = RenderTexture(cached.Source);
+                    cached.Texture = RenderTexture(cached.Key.Source, cached.Key.Overlay);
                     foreach (var sprite in cached.Users)
                     {
                         if (!sprite.IsDisposed)
@@ -110,7 +112,7 @@ namespace Quaver.Shared.Screens.V2.UI
             }
         }
 
-        private RenderTarget2D RenderTexture(Texture2D source)
+        private RenderTarget2D RenderTexture(Texture2D source, Texture2D overlay)
         {
             var game = GameBase.Game;
             var device = game.GraphicsDevice;
@@ -119,7 +121,9 @@ namespace Quaver.Shared.Screens.V2.UI
             var viewport = device.Viewport;
             var scissor = device.ScissorRectangle;
 
-            var target = new RenderTarget2D(device, Width, Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            var target = new RenderTarget2D(device, Width, Height, false, SurfaceFormat.Color,
+                DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            RenderTarget2D combined = null;
 
             try
             {
@@ -131,12 +135,31 @@ namespace Quaver.Shared.Screens.V2.UI
                     RoundedRectShader.UpdateSize(Shader, new Vector2(Width, Height));
                 }
 
+                var roundedSource = source;
+                if (overlay != null)
+                {
+                    combined = new RenderTarget2D(device, Width, Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+                    device.SetRenderTarget(combined);
+                    device.Clear(Color.Transparent);
+
+                    game.BeginBatch(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+                    game.SpriteBatch.Draw(source, new Rectangle(0, 0, Width, Height), CropToFill ? GetFillSourceRectangle(source) : null, Color.White);
+                    game.TryEndBatch();
+
+                    game.BeginBatch(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
+                    game.SpriteBatch.Draw(overlay, new Rectangle(0, 0, Width, Height), Color.White);
+                    game.TryEndBatch();
+
+                    roundedSource = combined;
+                }
+
                 device.SetRenderTarget(target);
                 device.Clear(Color.Transparent);
 
                 // Preserve straight alpha so the ordinary sprite applies blending only once
                 game.BeginBatch(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, Shader.ShaderEffect, Matrix.Identity);
-                game.SpriteBatch.Draw(source, new Rectangle(0, 0, Width, Height), Color.White);
+                game.SpriteBatch.Draw(roundedSource, new Rectangle(0, 0, Width, Height),
+                    overlay == null && CropToFill ? GetFillSourceRectangle(source) : null, Color.White);
                 game.TryEndBatch();
 
                 return target;
@@ -153,7 +176,23 @@ namespace Quaver.Shared.Screens.V2.UI
                 device.SetRenderTargets(previousTargets);
                 device.Viewport = viewport;
                 device.ScissorRectangle = scissor;
+                combined?.Dispose();
             }
+        }
+
+        private Rectangle GetFillSourceRectangle(Texture2D source)
+        {
+            var targetRatio = Width / (float) Height;
+            var sourceRatio = source.Width / (float) source.Height;
+
+            if (sourceRatio > targetRatio)
+            {
+                var width = Math.Max(1, (int) Math.Round(source.Height * targetRatio));
+                return new Rectangle((source.Width - width) / 2, 0, width, source.Height);
+            }
+
+            var height = Math.Max(1, (int) Math.Round(source.Width / targetRatio));
+            return new Rectangle(0, (source.Height - height) / 2, source.Width, height);
         }
 
         private void TrimCache()
@@ -171,7 +210,7 @@ namespace Quaver.Shared.Screens.V2.UI
                 if (oldest == null)
                     return;
 
-                Textures.Remove(oldest.Source);
+                Textures.Remove(oldest.Key);
 
                 var texture = oldest.Texture;
                 if (texture != null)
@@ -206,9 +245,11 @@ namespace Quaver.Shared.Screens.V2.UI
         /// <summary>
         ///     Tracks one generated texture and every sprite currently using it
         /// </summary>
-        private sealed class CachedTexture(Texture2D source)
+        private readonly record struct TextureKey(Texture2D Source, Texture2D Overlay);
+
+        private sealed class CachedTexture(TextureKey key)
         {
-            public Texture2D Source { get; } = source;
+            public TextureKey Key { get; } = key;
             public RenderTarget2D Texture { get; set; }
             public HashSet<Sprite> Users { get; } = new();
             public long LastUsed { get; set; }
