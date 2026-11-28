@@ -142,6 +142,8 @@ namespace Quaver.Shared.Graphics.Form
             UpdateFill();
         }
 
+        internal void SetValueColor(Color color) => ValuePicker.InputText.Tint = color;
+
         private void OnValueChanged(object sender, BindableValueChangedEventArgs<float> e)
         {
             UpdateFill();

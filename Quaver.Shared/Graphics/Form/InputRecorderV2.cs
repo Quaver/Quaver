@@ -32,6 +32,8 @@ namespace Quaver.Shared.Graphics.Form
         private RoundedButton RecorderButton { get; set; }
         private FlexContainer Layout { get; set; }
         private FlexItemOptions RecorderLayoutOptions { get; set; }
+        private SpriteTextPlus ModLabel { get; set; }
+        private Color ValueColor { get; set; } = ColorHelper.HexToColor("#8CAFEA");
 
         // GlobalKeybindActions specific
         private GlobalKeybindActions? Action { get; }
@@ -101,7 +103,7 @@ namespace Quaver.Shared.Graphics.Form
                 CornerRadius = 6,
                 Tint = ColorHelper.HexToColor("#273038")
             };
-            RecorderButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), string.Empty, 18, ColorHelper.HexToColor("#8CAFEA"));
+            RecorderButton.SetLabel(FontManager.GetWobbleFont(Fonts.InterSemiBold), string.Empty, 18, ValueColor);
             RecorderLayoutOptions = new FlexItemOptions { Basis = width, Shrink = 0 };
             Layout.SetItemOptions(RecorderButton, RecorderLayoutOptions);
 
@@ -123,17 +125,17 @@ namespace Quaver.Shared.Graphics.Form
                 ColumnGap = 8
             };
 
-            var modLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Editor_Free"), 18)
+            ModLabel = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterBold), LocalizationManager.Get("Screen_Editor_Free"), 18)
             {
                 Parent = ModLayout,
-                Tint = ColorHelper.HexToColor("#8CAFEA")
+                Tint = ValueColor
             };
-            ModLayout.SetItemOptions(modLabel, new FlexItemOptions { Basis = modLabel.Width, Shrink = 0 });
+            ModLayout.SetItemOptions(ModLabel, new FlexItemOptions { Basis = ModLabel.Width, Shrink = 0 });
 
             var modToggle = new ToggleV2(FreeModEnabled) { Parent = ModLayout };
             ModLayout.SetItemOptions(modToggle, new FlexItemOptions { Basis = modToggle.Width, Shrink = 0 });
 
-            ModLayout.Width = modLabel.Width + ModLayout.ColumnGap + modToggle.Width;
+            ModLayout.Width = ModLabel.Width + ModLayout.ColumnGap + modToggle.Width;
             Layout.SetItemOptions(ModLayout, new FlexItemOptions { Basis = ModLayout.Width, Shrink = 0 });
 
             ModLayout.RefreshLayout();
@@ -241,11 +243,21 @@ namespace Quaver.Shared.Graphics.Form
                 if (string.IsNullOrWhiteSpace(text))
                     text = LocalizationManager.Get("Screen_Editor_None");
 
-                var color = GlobalInputConfig.ConflictingActions.Contains(Action.Value) ? Color.Crimson : ColorHelper.HexToColor("#8CAFEA");
+                var color = GlobalInputConfig.ConflictingActions.Contains(Action.Value) ? Color.Crimson : ValueColor;
                 ShowText(text, color);
             }
             else
-                ShowText(string.Join(" ", BindedKeys.Select(key => key.Value.GetName())), ColorHelper.HexToColor("#8CAFEA"));
+                ShowText(string.Join(" ", BindedKeys.Select(key => key.Value.GetName())), ValueColor);
+        }
+
+        internal void SetValueColor(Color color)
+        {
+            ValueColor = color;
+
+            if (ModLabel != null)
+                ModLabel.Tint = color;
+
+            ShowBoundKeys();
         }
 
         private void ShowText(string text, Color color)

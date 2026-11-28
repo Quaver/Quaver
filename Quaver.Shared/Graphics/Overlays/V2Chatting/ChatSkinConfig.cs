@@ -106,10 +106,10 @@ public sealed class SkinV2ChatSearchConfig
     public string BackgroundColor { get; set; } = "#273038FF";
 
     [ConfigEditable, SkinColor]
-    public string TextColor { get; set; } = "#FFFFFFFF";
+    public string RowBackgroundColor { get; set; } = "#181E25FF";
 
     [ConfigEditable, SkinColor]
-    public string PlaceholderColor { get; set; } = "#8CAFEA80";
+    public string TextColor { get; set; } = "#FFFFFFFF";
 }
 
 public sealed class SkinV2ChatInputConfig
@@ -121,10 +121,13 @@ public sealed class SkinV2ChatInputConfig
     public int FontSize { get; set; } = SkinV2FontSizesConfig.TextLg;
 
     [ConfigEditable, SkinColor]
-    public string BackgroundColor { get; set; } = "#181E25FF";
+    public string InputBackgroundColor { get; set; } = "#181E25FF";
 
     [ConfigEditable, SkinColor]
-    public string TextColor { get; set; } = "#FFFFFFFF";
+    public string InputColor { get; set; } = "#FFFFFFFF";
+
+    [ConfigEditable, SkinColor]
+    public string MessageColor { get; set; } = "#9FA8B6FF";
 }
 
 public sealed class SkinV2ChatEmotesConfig

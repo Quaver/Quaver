@@ -56,7 +56,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
 
         public event Action<User, RectangleF> SenderMenuRequested;
 
-        public ChatMessageRow(ChatMessage item, float width, ScrollContainer viewport)
+        public ChatMessageRow(ChatMessage item, float width, ScrollContainer viewport, Color messageColor)
         {
             Size = new ScalableVector2(width, 40);
 
@@ -114,7 +114,7 @@ namespace Quaver.Shared.Graphics.Overlays.V2Chatting
             Message = new SpriteTextPlus(FontManager.GetWobbleFont(Fonts.InterSemiBold), string.Empty, 18)
             {
                 Parent = this,
-                Tint = ColorHelper.FromHex("#9FA8B6"),
+                Tint = messageColor,
                 UsePreviousSpriteBatchOptions = true
             };
 

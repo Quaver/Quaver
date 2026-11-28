@@ -82,6 +82,7 @@ namespace Quaver.Shared.Screens.V2.Options
         private SpriteTextPlus IconRecentSearchText;
         private RoundedButton IconToggle;
         private bool IsIconListExpanded;
+        internal bool IsCategorySidebarExpanded => IsIconListExpanded;
 
         private OptionCategory? CurrentCategory { get; set; } = null;
         private readonly HashSet<(OptionCategory Category, string Name)> SelectedCategorySections = new();
@@ -164,7 +165,7 @@ namespace Quaver.Shared.Screens.V2.Options
                 CornerRadius = Config.Layout.CornerRadius,
                 BackgroundColor = SkinV2Color.Parse(Config.Header.BackgroundColor),
                 TextColor = SkinV2Color.Parse(Config.Header.TextColor),
-                PlaceholderColor = SkinV2Color.Parse(Config.Header.CategoryColor),
+                PlaceholderColor = SkinV2Color.Parse(Config.Header.SearchPlaceholderColor),
                 CursorColor = SkinV2Color.Parse(Config.Header.TextColor)
             };
 
@@ -523,7 +524,7 @@ namespace Quaver.Shared.Screens.V2.Options
 
             foreach (var option in options)
             {
-                var control = OptionsList.CreateControl(option, Container);
+                var control = OptionsList.CreateControl(option, Container, SkinV2Color.Parse(Config.Content.RowBackgroundColor), SkinV2Color.Parse(Config.Content.ValueColor));
                 if (control == null)
                     continue;
 
@@ -533,7 +534,7 @@ namespace Quaver.Shared.Screens.V2.Options
                     SectionStarts.Add((option.Category, option.SectionName, header, new List<OptionsRow>()));
                 }
 
-                var row = new OptionsRow(option)
+                var row = new OptionsRow(option, Config.Content)
                 {
                     Parent = OptionsRows,
                     Size = new ScalableVector2(1, 54)
@@ -596,8 +597,13 @@ namespace Quaver.Shared.Screens.V2.Options
             return header;
         }
 
-        private void ExpandIconList(bool expanded)
+        internal void RestoreCategorySidebarState(bool expanded) => ExpandIconList(expanded, false);
+
+        private void ExpandIconList(bool expanded, bool animate = true)
         {
+            if (IsIconListExpanded == expanded)
+                return;
+
             IsIconListExpanded = expanded;
 
             IconList.ClearAnimations();
@@ -606,21 +612,35 @@ namespace Quaver.Shared.Screens.V2.Options
                 new Vector2(Config.Sidebar.IconSize, Config.Sidebar.IconSize));
 
             var targetWidth = expanded ? MenuLayout.Width + 1 : IconListContainer.Width; // Don't ask why +1, idk why it doesn't grow properly
-            IconList.ChangeWidthTo((int)Math.Round(targetWidth),
-                expanded ? Easing.OutCubic : Easing.InCubic,
-                Config.Layout.AnimationDurationMilliseconds);
-            IconList.Children.ForEach(sprite =>
-            {
-                sprite.ChangeWidthTo((int)Math.Round(targetWidth - Config.Layout.ContentPadding * 2),
+            var contentWidth = targetWidth - Config.Layout.ContentPadding * 2;
+            if (animate)
+                IconList.ChangeWidthTo((int)Math.Round(targetWidth),
                     expanded ? Easing.OutCubic : Easing.InCubic,
                     Config.Layout.AnimationDurationMilliseconds);
+            else
+                IconList.Width = targetWidth;
+
+            IconList.Children.ForEach(sprite =>
+            {
+                sprite.ClearAnimations(AnimationProperty.Width);
+
+                if (animate)
+                    sprite.ChangeWidthTo((int)Math.Round(contentWidth),
+                        expanded ? Easing.OutCubic : Easing.InCubic,
+                        Config.Layout.AnimationDurationMilliseconds);
+                else
+                    sprite.Width = contentWidth;
+
                 sprite.Children.ForEach(child => {
                     if (child is SpriteTextPlus spriteText)
                     {
                         spriteText.ClearAnimations(AnimationProperty.Alpha);
-                        spriteText.FadeTo(expanded ? 1f : 0f,
-                            expanded ? Easing.OutCubic : Easing.InCubic,
-                            Config.Layout.AnimationDurationMilliseconds);
+                        if (animate)
+                            spriteText.FadeTo(expanded ? 1f : 0f,
+                                expanded ? Easing.OutCubic : Easing.InCubic,
+                                Config.Layout.AnimationDurationMilliseconds);
+                        else
+                            spriteText.Alpha = expanded ? 1f : 0f;
 
                     }
                 });
@@ -1138,19 +1158,19 @@ namespace Quaver.Shared.Screens.V2.Options
         {
             new SkinEditorTarget("options-layout",
                 LocalizationManager.Get("SkinEditor_Component_OptionsLayout"),
-                "Screens.Options.Layout", Panel),
+                "Screens.Options.Layout", () => ExpandIconList(false), Panel),
             new SkinEditorTarget("options-panel",
                 LocalizationManager.Get("SkinEditor_Component_OptionsPanel"),
-                "Screens.Options.Panel", Panel),
+                "Screens.Options.Panel", () => ExpandIconList(false), Panel),
             new SkinEditorTarget("options-header",
                 LocalizationManager.Get("SkinEditor_Component_OptionsHeader"),
-                "Screens.Options.Header", HeaderMenuLayout, HeaderContentLayout),
+                "Screens.Options.Header", () => ExpandIconList(false), HeaderMenuLayout, HeaderContentLayout),
             new SkinEditorTarget("options-sidebar",
                 LocalizationManager.Get("SkinEditor_Component_OptionsSidebar"),
-                "Screens.Options.Sidebar", IconList, MenuLayout),
+                "Screens.Options.Sidebar", () => ExpandIconList(true), IconList, MenuLayout),
             new SkinEditorTarget("options-content",
                 LocalizationManager.Get("SkinEditor_Component_OptionsContent"),
-                "Screens.Options.Content", ContentBackground)
+                "Screens.Options.Content", () => ExpandIconList(false), ContentBackground)
         };
 
         internal void RefreshPreviewLayout() => UpdateLayout();

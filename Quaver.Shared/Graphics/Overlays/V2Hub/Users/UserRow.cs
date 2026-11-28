@@ -59,6 +59,8 @@ public class UserRow : PoolableSprite<User>
 
     private bool PreviewMode { get; }
 
+    private Color RowBackgroundColor { get; }
+
     private int AccentRequestVersion { get; set; }
 
     private double ProfileHoverTime { get; set; }
@@ -67,9 +69,11 @@ public class UserRow : PoolableSprite<User>
 
     public event Action<User, RectangleF> OnClick;
     
-    public UserRow(PoolableScrollContainer<User> container, User item, int index, bool previewMode = false, float? width = null) : base(container, item, index)
+    public UserRow(PoolableScrollContainer<User> container, User item, int index, Color rowBackgroundColor, bool previewMode = false, float? width = null) 
+        : base(container, item, index)
     {
         PreviewMode = previewMode;
+        RowBackgroundColor = rowBackgroundColor;
         Size = new ScalableVector2(width ?? container.Width, HEIGHT);
         
         CreateRow();
@@ -214,11 +218,11 @@ public class UserRow : PoolableSprite<User>
             Parent = this,
             Size = new ScalableVector2(Width, 70),
             CornerRadius = SkinV2BorderRadiusConfig.Normal,
-            Tint = ColorHelper.FromHex("#181E25"),
+            Tint = RowBackgroundColor,
             PerformHoverFade = false
         };
         Row.Hovered += (s, e) => Row.Tint = ColorHelper.FromHex("#3D4B64");
-        Row.LeftHover += (s, e) => Row.Tint = ColorHelper.FromHex("#181E25");
+        Row.LeftHover += (s, e) => Row.Tint = RowBackgroundColor;
 
         Row.Clicked += (s, e) => OnClick?.Invoke(Item, Row.ScreenRectangle);
         Row.RightClicked += (s, e) => OnClick?.Invoke(Item, Row.ScreenRectangle);

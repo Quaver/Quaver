@@ -87,6 +87,10 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         internal abstract void CloseImmediatelyFromRegistry();
 
         internal abstract void SetExternalAlphaInternal(float alpha);
+
+        internal abstract void SetTriggerColorInternal(Color color);
+
+        internal abstract void SetTextColorInternal(Color color);
     }
 
     internal static class V2DropdownRegistry
@@ -438,6 +442,20 @@ namespace Quaver.Shared.Graphics.Form.Dropdowns
         }
 
         internal override void SetExternalAlphaInternal(float alpha) => SetExternalAlpha(alpha);
+
+        internal override void SetTriggerColorInternal(Color color)
+        {
+            Config.TriggerColor = SkinV2Color.ToHexAlpha(color);
+            Trigger.Tint = color;
+        }
+
+        internal override void SetTextColorInternal(Color color)
+        {
+            Config.TextColor = SkinV2Color.ToHexAlpha(color);
+
+            RefreshTrigger();
+            RefreshOptionButtons();
+        }
 
         private void ToggleMenu()
         {
