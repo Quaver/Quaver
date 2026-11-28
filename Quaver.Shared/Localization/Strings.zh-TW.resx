@@ -570,7 +570,7 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>你需要上線才能查看這個排行榜!</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>你不能以現在的模組超越這個分數!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">

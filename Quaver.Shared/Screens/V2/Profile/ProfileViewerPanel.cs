@@ -14,6 +14,7 @@ using Quaver.Shared.Helpers;
 using Quaver.Shared.Online;
 using Quaver.Shared.Online.API.User;
 using Quaver.Shared.Scheduling;
+using Quaver.Shared.Screens.V2.UI;
 using Quaver.Shared.Skinning.V2;
 using Wobble;
 using Wobble.Graphics;
@@ -886,36 +887,6 @@ namespace Quaver.Shared.Screens.V2.Profile
             Grow = 0,
             Shrink = 0
         };
-
-        private class RoundedTextureSprite : Sprite
-        {
-            private SpriteBatchOptions PlainScissorOptions { get; } = RoundedRectShader.CreateScissorSafeOptions();
-
-            public RoundedTextureSprite(float width, float height, float cornerRadius, Texture2D image)
-            {
-                Size = new ScalableVector2(width, height);
-                var shader = RoundedRectShader.Create(cornerRadius);
-                RoundedRectShader.UpdateSize(shader, new Vector2(width, height));
-                SpriteBatchOptions = new SpriteBatchOptions
-                {
-                    RasterizerState = RoundedRectShader.ScissorSafeRasterizerState,
-                    Shader = shader
-                };
-                SetSource(image);
-            }
-
-            public void SetSource(Texture2D source)
-            {
-                if (source != null && !source.IsDisposed)
-                    Image = source;
-            }
-
-            public override void Draw(GameTime gameTime)
-            {
-                base.Draw(gameTime);
-                PlainScissorOptions.Begin();
-            }
-        }
 
         private sealed class RoundedCoverSprite : RoundedTextureSprite
         {

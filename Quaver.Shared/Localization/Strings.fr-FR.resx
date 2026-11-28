@@ -570,7 +570,7 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>Vous devez être connecté pour accéder à ce classement !</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>Vous ne pouvez pas battre ce score avec vos modificateurs actuellement activés !</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">

@@ -570,7 +570,7 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>Musisz być online, aby uzyskać dostęp do tej tablicy wyników!</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>Nie możesz zrobić lepszego wyniku z obecnie aktywnymi modyfikatorami!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">

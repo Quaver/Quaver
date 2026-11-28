@@ -594,8 +594,12 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>You must be online to access this leaderboard!</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>You cannot beat this score with your currently activated modifiers!</value>
+  </data>
+  <data name="Screen_Selection_RequiredAccuracyToBeatScore" xml:space="preserve">
+    <value>In order to beat this score with your current modifiers,
+you must achieve higher than {0} accuracy.</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">
     <value>Your map is outdated. Please update it!</value>

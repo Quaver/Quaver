@@ -119,7 +119,7 @@ namespace Quaver.Shared.Screens.Selection.Components
             if (AudioTrackStoppedInLastFrame && !LoadTrackTask.IsRunning || MapManager.GetAudioPath(AudioEngine.Map) != MapManager.GetAudioPath(MapManager.Selected.Value))
                 LoadTrackTask.Run(0);
 
-            AudioTrackStoppedInLastFrame = AudioEngine.Track.IsDisposed;
+            AudioTrackStoppedInLastFrame = AudioEngine.Track.IsDisposed || AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped;
         }
 
         /// <summary>

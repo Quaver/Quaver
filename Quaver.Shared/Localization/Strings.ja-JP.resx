@@ -570,7 +570,7 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>You must be online to access this leaderboard!</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>You cannot beat this score with your currently activated modifiers!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">

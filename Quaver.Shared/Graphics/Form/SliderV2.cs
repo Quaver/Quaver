@@ -30,6 +30,8 @@ namespace Quaver.Shared.Graphics.Form
 
         private int DecimalPrecision { get; }
 
+        private string ValuePrefix { get; }
+
         private Container SliderArea { get; }
 
         private Sprite Fill { get; }
@@ -39,8 +41,8 @@ namespace Quaver.Shared.Graphics.Form
         private ValuePickerTextbox ValuePicker { get; }
 
         public SliderV2(BindableInt bindedValue, ScalableVector2 sliderSize, int decimalPrecision = 0,
-            float displayScale = 1f, bool pickerOnRight = true)
-            : this(CreateFloatValue(bindedValue, displayScale), sliderSize, decimalPrecision, pickerOnRight)
+            float displayScale = 1f, bool pickerOnRight = true, string valuePrefix = "", Color? accentColor = null)
+            : this(CreateFloatValue(bindedValue, displayScale), sliderSize, decimalPrecision, pickerOnRight, valuePrefix, accentColor)
         {
             IntegerValue = bindedValue;
             IntegerDisplayScale = displayScale;
@@ -59,9 +61,10 @@ namespace Quaver.Shared.Graphics.Form
             return new BindableFloat(value.Value / scale, value.MinValue / scale, value.MaxValue / scale);
         }
 
-        public SliderV2(BindableFloat bindedValue, ScalableVector2 sliderSize, int decimalPrecision, bool pickerOnRight = true)
+        public SliderV2(BindableFloat bindedValue, ScalableVector2 sliderSize, int decimalPrecision, bool pickerOnRight = true, string valuePrefix = "", Color? accentColor = null)
         {
             BindedValue = bindedValue ?? new BindableFloat(0f, 0f, 100f);
+            ValuePrefix = valuePrefix ?? string.Empty;
 
             if (decimalPrecision < 0 || decimalPrecision > 9)
                 throw new ArgumentOutOfRangeException(nameof(decimalPrecision), "Decimal precision must be between 0 and 9.");
@@ -107,7 +110,7 @@ namespace Quaver.Shared.Graphics.Form
             {
                 Parent = SliderArea,
                 Size = sliderSize,
-                Tint = ColorHelper.FromHex("#6B83B2")
+                Tint = accentColor ?? ColorHelper.FromHex("#6B83B2")
             };
 
             Input = new RoundedButton
@@ -130,7 +133,7 @@ namespace Quaver.Shared.Graphics.Form
                 MaxCharacters = Math.Max(FormatValue(BindedValue.MinValue).Length, FormatValue(BindedValue.MaxValue).Length),
                 AllowedCharacters = new Regex(CreateValuePattern(), RegexOptions.Compiled)
             };
-            ValuePicker.InputText.Tint = ColorHelper.FromHex("#8CAFEA");
+            ValuePicker.InputText.Tint = accentColor ?? ColorHelper.FromHex("#8CAFEA");
             ValuePicker.Cursor.Tint = ColorHelper.FromHex("#FFFFFF");
             layout.SetItemOptions(ValuePicker, new FlexItemOptions { Basis = 72, Shrink = 0, Order = pickerOnRight ? 1 : 0 });
             layout.RefreshLayout();
@@ -216,9 +219,14 @@ namespace Quaver.Shared.Graphics.Form
             ValuePicker.RawText = FormatValue(BindedValue.Value);
         }
 
-        private static bool TryParseValue(string text, out float value) =>
-            float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) &&
-            !float.IsNaN(value) && !float.IsInfinity(value);
+        private bool TryParseValue(string text, out float value)
+        {
+            if (!string.IsNullOrEmpty(ValuePrefix) && text.StartsWith(ValuePrefix, StringComparison.Ordinal))
+                text = text.Substring(ValuePrefix.Length);
+
+            return float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) &&
+                   !float.IsNaN(value) && !float.IsInfinity(value);
+        }
 
         private string FormatValue(float value)
         {
@@ -227,7 +235,7 @@ namespace Quaver.Shared.Graphics.Form
 
             if (TryParseValue(text, out var displayed) &&
                 displayed >= BindedValue.MinValue && displayed <= BindedValue.MaxValue)
-                return text;
+                return ValuePrefix + text;
 
             var scale = Math.Pow(10, DecimalPrecision);
             var insideValue = displayed < BindedValue.MinValue ? Math.Ceiling(BindedValue.MinValue * scale) / scale : Math.Floor(BindedValue.MaxValue * scale) / scale;
@@ -237,13 +245,14 @@ namespace Quaver.Shared.Graphics.Form
                 displayed < BindedValue.MinValue || displayed > BindedValue.MaxValue)
                 throw new ArgumentException("Decimal precision is too low to display a value within the slider range.");
 
-            return text;
+            return ValuePrefix + text;
         }
 
         private string CreateValuePattern()
         {
+            var prefix = Regex.Escape(ValuePrefix);
             var sign = BindedValue.MinValue < 0 ? "-?" : string.Empty;
-            return DecimalPrecision == 0 ? $"^{sign}\\d*$" : $"^{sign}\\d*(?:\\.\\d{{0,{DecimalPrecision}}})?$";
+            return DecimalPrecision == 0 ? $"^{prefix}{sign}\\d*$" : $"^{prefix}{sign}\\d*(?:\\.\\d{{0,{DecimalPrecision}}})?$";
         }
 
         private void UpdateValue()

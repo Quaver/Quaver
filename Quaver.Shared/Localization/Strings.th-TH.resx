@@ -570,7 +570,7 @@
   <data name="Screen_Selection_Youmustbeonlinetoaccessthisleaderboard" xml:space="preserve">
     <value>คุณต้องออนไลน์เพื่อเข้าถึงกระดานจัดอันดับนี้!</value>
   </data>
-  <data name="Screen_Selection_Youcannotbeatthisscorewithyourcurrentlyactivatedmodifiers" xml:space="preserve">
+  <data name="Screen_Selection_CannotBeatScoreWithModifiers" xml:space="preserve">
     <value>คุณไม่สามารถทำคะแนนให้ดีกว่านี้ด้วยตัวดัดแปลงที่ใช้อยู่ได้!</value>
   </data>
   <data name="Screen_Selection_YourmapisoutdatedPleaseupdateit" xml:space="preserve">

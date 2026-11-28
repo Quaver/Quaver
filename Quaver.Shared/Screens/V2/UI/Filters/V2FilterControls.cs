@@ -102,13 +102,13 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
 
         private SpriteTextPlus ResultsText { get; }
 
+        private RoundedButton ClearButton { get; }
+
         private float ResultsTextInset { get; }
         private float IconSize { get; }
 
-        public V2FilterSearchTextbox(Bindable<string> query, string placeholder,
-            WobbleFontStore font, int fontSize, V2FilterFieldStyle style, float width)
-            : base(new ScalableVector2(width, style.Height), font, style, fontSize,
-                query.Value, placeholder)
+        public V2FilterSearchTextbox(Bindable<string> query, string placeholder, WobbleFontStore font, int fontSize, V2FilterFieldStyle style, float width, bool showClearButton = false)
+            : base(new ScalableVector2(width, style.Height), font, style, fontSize, query.Value, placeholder)
         {
             Query = query;
             ResultsTextInset = style.SearchIconInset;
@@ -141,6 +141,21 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
                 Tint = style.PlaceholderColor,
                 UsePreviousSpriteBatchOptions = true
             };
+            if (showClearButton)
+            {
+                ClearButton = new RoundedButton((sender, args) => Query.Value = string.Empty)
+                {
+                    Parent = this,
+                    Alignment = Alignment.MidRight,
+                    Size = new ScalableVector2(style.Height / 2f, style.Height / 2f),
+                    CornerRadius = style.Height / 4f,
+                    Tint = style.TextColor,
+                    Depth = -100,
+                    UsePreviousSpriteBatchOptions = true
+                };
+                ClearButton.SetIcon(FontAwesome.Get(FontAwesomeIcon.fa_times), new Vector2(style.Height / 5f));
+                ClearButton.Icon.Tint = style.BackgroundColor;
+            }
             UpdateInputClip();
 
             OnStoppedTyping += OnQueryChanged;
@@ -182,6 +197,15 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
         {
             var reservedWidth = ResultsText.Width + ResultsTextInset * 2;
 
+            if (ClearButton != null)
+            {
+                ClearButton.Visible = !string.IsNullOrEmpty(Query.Value);
+                ClearButton.IsInteractionEnabled = ClearButton.Visible;
+                ClearButton.X = -reservedWidth;
+                if (ClearButton.Visible)
+                    reservedWidth += ClearButton.Width + ResultsTextInset;
+            }
+
             InputClip.Position = new ScalableVector2(IconSize, 0);
             InputClip.Size = new ScalableVector2(Math.Max(1, Width - IconSize - reservedWidth), Height);
 
@@ -205,7 +229,11 @@ namespace Quaver.Shared.Screens.V2.UI.Filters
         {
             var value = args.Value ?? string.Empty;
             if (RawText != value)
+            {
                 RawText = value;
+                ReadjustTextbox();
+            }
+            UpdateInputClip();
         }
     }
 

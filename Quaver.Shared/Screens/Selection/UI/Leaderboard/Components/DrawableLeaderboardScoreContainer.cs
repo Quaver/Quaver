@@ -502,7 +502,7 @@ namespace Quaver.Shared.Screens.Selection.UI.Leaderboard.Components
             };
 
             UnbeatableTooltipRegistration = CantBeatAlert.AddTooltip(new TooltipOptions(
-                SelectionLocalization.Get("You cannot beat this score with your currently activated modifiers!"))
+                LocalizationManager.Get("Screen_Selection_CannotBeatScoreWithModifiers"))
             {
                 HoverDelayMilliseconds = 350,
                 Style = new TooltipStyle

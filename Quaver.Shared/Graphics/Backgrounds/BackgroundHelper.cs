@@ -74,7 +74,7 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <summary>
         ///     A list of banners that are queued to be loaded on the load thread
         /// </summary>
-        private static List<Mapset> MapsetBannersToLoad { get; } = new List<Mapset>();
+        private static List<MapsetBannerRequest> MapsetBannersToLoad { get; } = new List<MapsetBannerRequest>();
 
         /// <summary>
         ///     A list of playlist banners to load
@@ -88,12 +88,6 @@ namespace Quaver.Shared.Graphics.Backgrounds
         private const int BannerWidth = 421;
 
         private const int BannerHeight = 82;
-
-        private const int ResizedBannerWidth = 448;
-
-        private const int ResizedBannerHeight = 252;
-
-        private const int ResizedBannerCropY = 20;
 
         /// <summary>
         ///     Event invoked when a new background has been loaded
@@ -229,7 +223,27 @@ namespace Quaver.Shared.Graphics.Backgrounds
         /// <param name="mapset"></param>
         public static void LoadMapsetBanner(Mapset mapset)
         {
-            MapsetBannersToLoad.Add(mapset);
+            LoadMapsetBanner(mapset, BannerWidth, BannerHeight, AddBanner);
+        }
+
+        /// <summary>
+        ///     Loads a mapset banner using the requested dimensions
+        /// </summary>
+        public static void LoadMapsetBanner(Mapset mapset, int width, int height, Action<Texture2D, Mapset> loaded)
+        {
+            if (mapset == null)
+                throw new ArgumentNullException(nameof(mapset));
+
+            if (width <= 0)
+                throw new ArgumentOutOfRangeException(nameof(width));
+
+            if (height <= 0)
+                throw new ArgumentOutOfRangeException(nameof(height));
+            
+            if (loaded == null)
+                throw new ArgumentNullException(nameof(loaded));
+
+            MapsetBannersToLoad.Add(new MapsetBannerRequest(mapset, width, height, loaded));
         }
 
         /// <summary>
@@ -277,42 +291,28 @@ namespace Quaver.Shared.Graphics.Backgrounds
             if (MapsetBannersToLoad.Count == 0)
                 return;
 
-            var bannersToRemove = new List<Mapset>();
+            var bannersToRemove = new List<MapsetBannerRequest>();
 
             for (var i = 0; i < MapsetBannersToLoad.Count; i++)
             {
-                var mapset = MapsetBannersToLoad[i];
-
-                // Give custom banners first priority
-                var bannerExists = true;
+                var request = MapsetBannersToLoad[i];
+                var mapset = request.Mapset;
 
                 var path = MapManager.GetMapsetBannerPath(mapset);
 
                 // Give map backgrounds second priority
                 if (!File.Exists(path))
-                {
-                    path = MapManager.GetBackgroundPath(mapset.Maps.First());
-                    bannerExists = false;
-                }
+                    path = mapset.Maps.Count > 0 ? MapManager.GetBackgroundPath(mapset.Maps.First()) : "";
 
                 if (!File.Exists(path))
                 {
-                    AddBanner(DefaultBanner, mapset);
-                    bannersToRemove.Add(mapset);
+                    request.Loaded(DefaultBanner, mapset);
+                    bannersToRemove.Add(request);
                     continue;
                 }
 
-                // Custom banners already have the final banner dimensions, so they can be used directly.
-                if (bannerExists)
-                {
-                    AddBanner(LoadBannerTexture(path), mapset);
-                    bannersToRemove.Add(mapset);
-                    continue;
-                }
-
-                CreateBanner(path, mapset);
-
-                bannersToRemove.Add(mapset);
+                CreateBanner(path, request.Width, request.Height, banner => request.Loaded(banner, mapset));
+                bannersToRemove.Add(request);
             }
 
             for (var i = 0; i < bannersToRemove.Count; i++)
@@ -385,19 +385,13 @@ namespace Quaver.Shared.Graphics.Backgrounds
         ///     Makes and creates a banner to use for song select/playlists
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="mapset"></param>
-        private static void CreateBanner(string path, Mapset mapset) => CreateBanner(path, banner => AddBanner(banner, mapset));
-
-        /// <summary>
-        ///     Makes and creates a banner to use for playlists
-        /// </summary>
-        /// <param name="path"></param>
         /// <param name="playlist"></param>
-        private static void CreateBanner(string path, Playlist playlist) => CreateBanner(path, banner => AddBanner(banner, playlist));
+        private static void CreateBanner(string path, Playlist playlist) => 
+            CreateBanner(path, BannerWidth, BannerHeight, banner => AddBanner(banner, playlist));
 
-        private static void CreateBanner(string path, Action<Texture2D> addBanner)
+        private static void CreateBanner(string path, int width, int height, Action<Texture2D> addBanner)
         {
-            var bannerData = CreateBannerData(path);
+            var bannerData = CreateBannerData(path, width, height);
 
             if (bannerData == null)
             {
@@ -432,19 +426,37 @@ namespace Quaver.Shared.Graphics.Backgrounds
             }
         }
 
-        private static byte[] CreateBannerData(string path)
+        private static byte[] CreateBannerData(string path, int width, int height)
         {
             try
             {
                 using (var source = SKImage.FromEncodedData(path))
-                using (var surface = SKSurface.Create(new SKImageInfo(BannerWidth, BannerHeight, SKColorType.Rgba8888, SKAlphaType.Premul)))
+                using (var surface = SKSurface.Create(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul)))
                 using (var paint = new SKPaint { IsAntialias = true })
                 {
                     if (source == null || surface == null)
                         return null;
 
+                    // Resize source banner to requested ratio if found
+                    var targetRatio = width / (float) height;
+                    var sourceRatio = source.Width / (float) source.Height;
+                    SKRect sourceRectangle;
+
+                    if (sourceRatio > targetRatio)
+                    {
+                        var cropWidth = source.Height * targetRatio;
+                        var left = (source.Width - cropWidth) / 2f;
+                        sourceRectangle = new SKRect(left, 0, left + cropWidth, source.Height);
+                    }
+                    else
+                    {
+                        var cropHeight = source.Width / targetRatio;
+                        var top = (source.Height - cropHeight) / 2f;
+                        sourceRectangle = new SKRect(0, top, source.Width, top + cropHeight);
+                    }
+
                     surface.Canvas.Clear(SKColors.Transparent);
-                    surface.Canvas.DrawImage(source, new SKRect(0, -ResizedBannerCropY, ResizedBannerWidth, ResizedBannerHeight - ResizedBannerCropY), new SKSamplingOptions(SKFilterMode.Linear), paint);
+                    surface.Canvas.DrawImage(source, sourceRectangle, new SKRect(0, 0, width, height), new SKSamplingOptions(SKFilterMode.Linear), paint);
                     surface.Canvas.Flush();
 
                     using (var image = surface.Snapshot())
@@ -496,5 +508,25 @@ namespace Quaver.Shared.Graphics.Backgrounds
             if (banner != existingBanner && banner != DefaultBanner && !banner.IsDisposed)
                 banner.Dispose();
         }
+
+        /// <summary>
+        ///     %apset banner request informations handled by the banner loader
+        /// </summary>
+        private sealed class MapsetBannerRequest
+        {
+            public Mapset Mapset { get; }
+            public int Width { get; }
+            public int Height { get; }
+            public Action<Texture2D, Mapset> Loaded { get; }
+
+            public MapsetBannerRequest(Mapset mapset, int width, int height, Action<Texture2D, Mapset> loaded)
+            {
+                Mapset = mapset;
+                Width = width;
+                Height = height;
+                Loaded = loaded;
+            }
+        }
+
     }
 }

@@ -9,7 +9,9 @@ using Quaver.Shared.Database.Maps;
 using Quaver.Shared.Database.Playlists;
 using Quaver.Shared.Graphics.Notifications;
 using Quaver.Shared.Online;
+using Quaver.Shared.Screens;
 using Quaver.Shared.Screens.Music.Components;
+using Wobble;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Managers;
@@ -33,7 +35,7 @@ namespace Quaver.Shared.Screens.V2.UI
         public MusicPlaybackController(Func<bool> isActive)
         {
             RefreshAvailableSongs();
-            Jukebox = new MusicPlayerJukebox(AvailableSongs, isActive);
+            Jukebox = new MusicPlayerJukebox(AvailableSongs, isActive, () => ((QuaverGame)GameBase.Game).CurrentScreen?.Type != QuaverScreenType.Select);
 
             ConfigManager.MusicPlayerOrderMapsBy.ValueChanged += OnOrderMapsByChanged;
             PlaylistManager.Selected.ValueChanged += OnPlaylistChanged;

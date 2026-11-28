@@ -44,7 +44,7 @@ namespace Quaver.Shared.Screens.Selection.UI.FilterPanel.MapInformation.Metadata
             if (Map.Value == null)
                 return 0;
 
-            return (int) Math.Round(Map.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods), 
+            return (int) Math.Round(Map.Value.Bpm * ModHelper.GetRateFromMods(ModManager.Mods),
                 MidpointRounding.AwayFromZero);
         }
 
